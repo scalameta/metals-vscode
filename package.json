@@ -101,9 +101,7 @@
     "watch": "tsc -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install",
     "test": "npm run compile && node ./node_modules/vscode/bin/test",
-    "prebuild": "cp ../README.md . && cp ../LICENSE LICENSE.md",
-    "build": "vsce package",
-    "postbuild": "rm README.md && rm LICENSE.md"
+    "build": "vsce package"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.42",
