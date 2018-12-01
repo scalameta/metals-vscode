@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+  - "lts/*"
+
+stages:
+  - name: build
+
+jobs:
+  include:
+    - script:
+        # test that the extension builds correctly
+        - yarn build
+
+cache: yarn
