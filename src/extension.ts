@@ -18,7 +18,9 @@ import {
   LanguageClientOptions,
   ServerOptions,
   RevealOutputChannelOn,
-  ExecuteCommandRequest
+  ExecuteCommandRequest,
+  ShutdownRequest,
+  ExitNotification
 } from "vscode-languageclient";
 import { exec } from "child_process";
 import { Commands } from "./commands";
@@ -108,14 +110,13 @@ function startServer(context: ExtensionContext, javaHome: string) {
 
   context.subscriptions.push(
     commands.registerCommand("metals.restartServer", async () => {
-      const serverPid = client["_serverProcess"].pid;
-      await exec(`kill ${serverPid}`);
+      await client.sendRequest(ShutdownRequest.type);
+      client.sendNotification(ExitNotification.type);
       const showLogsAction = "Show server logs";
       const selectedAction = await window.showInformationMessage(
         "Metals Language Server killed, it should restart in a few seconds",
         showLogsAction
       );
-
       if (selectedAction === showLogsAction) {
         client.outputChannel.show(true);
       }
