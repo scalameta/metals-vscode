@@ -112,17 +112,20 @@ function startServer(context: ExtensionContext, javaHome: string) {
     commands.registerCommand("metals.restartServer", () => {
       // First try to gracefully shutdown the server with LSP `shutdown` and `exit`.
       // If Metals doesn't respond within 4 seconds we kill the process.
-      const killTimeout = setTimeout(() => {
+      const timeout = (ms: number) =>
+        new Promise((_resolve, reject) => setTimeout(reject, ms));
+      const gracefullyTerminate = client
+        .sendRequest(ShutdownRequest.type)
+        .then(() => {
+          client.sendNotification(ExitNotification.type);
+          window.showInformationMessage("Metals is restarting");
+        });
+      Promise.race([gracefullyTerminate, timeout(4000)]).catch(() => {
         window.showWarningMessage(
           "Metals is unresponsive, killing the process and starting a new server."
         );
         const serverPid = client["_serverProcess"].pid;
         exec(`kill ${serverPid}`);
-      }, 4000);
-      client.sendRequest(ShutdownRequest.type).then(() => {
-        clearTimeout(killTimeout);
-        client.sendNotification(ExitNotification.type);
-        window.showInformationMessage("Metals is restarting");
       });
     })
   );
