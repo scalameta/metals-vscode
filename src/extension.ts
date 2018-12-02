@@ -18,7 +18,9 @@ import {
   LanguageClientOptions,
   ServerOptions,
   RevealOutputChannelOn,
-  ExecuteCommandRequest
+  ExecuteCommandRequest,
+  ShutdownRequest,
+  ExitNotification
 } from "vscode-languageclient";
 import { exec } from "child_process";
 import { Commands } from "./commands";
@@ -107,18 +109,24 @@ function startServer(context: ExtensionContext, javaHome: string) {
   );
 
   context.subscriptions.push(
-    commands.registerCommand("metals.restartServer", async () => {
-      const serverPid = client["_serverProcess"].pid;
-      await exec(`kill ${serverPid}`);
-      const showLogsAction = "Show server logs";
-      const selectedAction = await window.showInformationMessage(
-        "Metals Language Server killed, it should restart in a few seconds",
-        showLogsAction
-      );
-
-      if (selectedAction === showLogsAction) {
-        client.outputChannel.show(true);
-      }
+    commands.registerCommand("metals.restartServer", () => {
+      // First try to gracefully shutdown the server with LSP `shutdown` and `exit`.
+      // If Metals doesn't respond within 4 seconds we kill the process.
+      const timeout = (ms: number) =>
+        new Promise((_resolve, reject) => setTimeout(reject, ms));
+      const gracefullyTerminate = client
+        .sendRequest(ShutdownRequest.type)
+        .then(() => {
+          client.sendNotification(ExitNotification.type);
+          window.showInformationMessage("Metals is restarting");
+        });
+      Promise.race([gracefullyTerminate, timeout(4000)]).catch(() => {
+        window.showWarningMessage(
+          "Metals is unresponsive, killing the process and starting a new server."
+        );
+        const serverPid = client["_serverProcess"].pid;
+        exec(`kill ${serverPid}`);
+      });
     })
   );
 
