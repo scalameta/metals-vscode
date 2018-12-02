@@ -4,18 +4,33 @@
 
 ![Goto Definition](https://user-images.githubusercontent.com/1408093/48776422-1f764f00-ecd0-11e8-96d1-170f2354d50e.gif)
 
+Metals is still in early development so you may run into rough edges. The
+following table shows the status of various features.
+
+| Feature          | Status | Notes                                                              |
+| ---------------- | :----: | ------------------------------------------------------------------ |
+| Import build     |   ✅   | Works with sbt and Bloop                                           |
+| Compile errors   |   ✅   | Triggered on file save                                             |
+| Goto definition  |   ✅   | Works for both project sources and Java/Scala library dependencies |
+| Code completions |   ❌   | Not on the near roadmap                                            |
+| Find references  |   ❌   |                                                                    |
+| Workspace symbol |   ❌   |                                                                    |
+| Rename symbol    |   ❌   |                                                                    |
+| Hover            |   ❌   |                                                                    |
+| Formatting       |   ❌   |                                                                    |
+| Refactoring      |   ❌   |                                                                    |
+| Folding          |   ❌   |                                                                    |
 
 ## Requirements
 
-**Java 8**. Metals does not work with Java 11 yet so make sure JAVA_HOME is configured
-to use Java 8.
+**Java 8**. Metals does not work with Java 11 yet so make sure JAVA_HOME is
+configured to use Java 8.
 
 **macOS, Linux or Windows**. Metals is developed on macOS and every PR is tested
 on Ubuntu+Windows.
 
-**Scala 2.12 and 2.11**. Metals works only with Scala versions
-2.12.{7,6,5,4} and 2.11.{12,11,10,9}.
-Note that 2.10.x and 2.13.0-M5 are not supported.
+**Scala 2.12 and 2.11**. Metals works only with Scala versions 2.12.{7,6,5,4}
+and 2.11.{12,11,10,9}. Note that 2.10.x and 2.13.0-M5 are not supported.
 
 ## Installation
 
@@ -61,7 +76,6 @@ Click "Import changes" and that will restart the `sbt bloopInstall` step. Select
 To manually trigger a build import, execute the "Import build" command by
 opening the "Command palette" (`Cmd + Shift + P`) and search for "import build".
 
-
 ![Import build command](img/vscode-import-build.png)
 
 ## Configure Java version
@@ -97,5 +111,3 @@ Execute the "Run Doctor" from the command palette to troubleshoot potential
 configuration problems in your workspace.
 
 ![VS Code Run Doctor command](img/vscode-run-doctor.png)
-
-
