@@ -177,7 +177,7 @@ function startServer(context: ExtensionContext, javaHome: string) {
 
     // Handle the metals/executeClientCommand extension notification.
     client.onNotification(ExecuteClientCommand.type, params => {
-      if (params.command == "metals-run-doctor") {
+      if (params.command == "metals-doctor-run") {
         const html = params.arguments[0];
         if (typeof html === "string") {
           const panel = getDoctorPanel();
