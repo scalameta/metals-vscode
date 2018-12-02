@@ -8,7 +8,7 @@
     "language server",
     "scalameta"
   ],
-  "version": "0.2.5",
+  "version": "0.2.8",
   "publisher": "scalameta",
   "contributors": [
     {
@@ -30,7 +30,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/scalameta/metals.git"
+    "url": "https://github.com/scalameta/metals-vscode.git"
   },
   "homepage": "http://metals.rocks",
   "engines": {
