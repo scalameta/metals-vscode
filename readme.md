@@ -12,7 +12,7 @@ following table shows the status of various features.
 | Import build     |   ✅   | Works with sbt and Bloop                                           |
 | Compile errors   |   ✅   | Triggered on file save                                             |
 | Goto definition  |   ✅   | Works for both project sources and Java/Scala library dependencies |
-| Code completions |   ❌   | Not on the near roadmap                                            |
+| Code completions |   ❌   |                                                                    |
 | Find references  |   ❌   |                                                                    |
 | Workspace symbol |   ❌   |                                                                    |
 | Rename symbol    |   ❌   |                                                                    |
