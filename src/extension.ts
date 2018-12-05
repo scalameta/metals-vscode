@@ -92,8 +92,8 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
         serverProperties
       );
     },
-    _ => {
-      let msg = `Failed to download Metals, make sure you have an internet connection and that the Metals version '${serverVersion}' is correct`;
+    () => {
+      const msg = `Failed to download Metals, make sure you have an internet connection and that the Metals version '${serverVersion}' is correct`;
       outputChannel.show();
       window.showErrorMessage(msg);
     }
@@ -310,7 +310,7 @@ function launchMetals(
   });
 }
 
-async function trackDownloadProgress(
+function trackDownloadProgress(
   title: string,
   output: OutputChannel,
   download: ChildProcessPromise
@@ -321,7 +321,7 @@ async function trackDownloadProgress(
     stdout += out.toString().trim();
   });
   download.stderr.on("data", (err: Buffer) => {
-    let msg = err.toString().trim();
+    const msg = err.toString().trim();
     if (!msg.startsWith("Downloading")) {
       output.appendLine(msg);
     }
@@ -332,8 +332,7 @@ async function trackDownloadProgress(
       throw Error(`coursier exit: ${code}`);
     }
   });
-  await download;
-  return stdout;
+  return download.then(() => stdout);
 }
 
 function readableSeconds(totalSeconds: number): string {

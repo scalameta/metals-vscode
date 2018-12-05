@@ -24,10 +24,12 @@ export class LazyProgress {
                 resolve();
               }, 2000);
             }
-            download.then(() => {
-              output.hide();
-              complete();
-            }, complete);
+            download
+              .then(() => {
+                /// Hide the output channel on success but keep it open on error.
+                output.hide();
+              })
+              .then(complete, complete);
           })
       );
     }
