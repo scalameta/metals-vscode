@@ -33,6 +33,7 @@ import {
   ExecuteClientCommand
 } from "./protocol";
 import { LazyProgress } from "./lazy-progress";
+import * as fs from "fs";
 
 export async function activate(context: ExtensionContext) {
   const userJavaHome = workspace.getConfiguration("metals").get("javaHome");
@@ -48,8 +49,16 @@ export async function activate(context: ExtensionContext) {
 
 function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   const outputChannel = window.createOutputChannel("Metals");
-  outputChannel.appendLine(`Java home: ${javaHome}`);
 
+  if (fs.existsSync(dottyIdeArtifact())) {
+    outputChannel.appendLine(
+      `Metals will not start since Dotty is enabled for this workspace. ` +
+        `To enable Metals, remove the file ${dottyIdeArtifact()} and run 'Reload window'`
+    );
+    return;
+  }
+
+  outputChannel.appendLine(`Java home: ${javaHome}`);
   const javaPath = path.join(javaHome, "bin", "java");
   const coursierPath = path.join(context.extensionPath, "./coursier");
 
@@ -386,4 +395,8 @@ function enableScaladocIndentation() {
       }
     ]
   });
+}
+
+function dottyIdeArtifact(): string {
+  return path.join(workspace.rootPath, ".dotty-ide-artifact");
 }
