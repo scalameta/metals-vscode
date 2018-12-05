@@ -1,6 +1,7 @@
 "use strict";
 
 import * as path from "path";
+import { spawn, ChildProcessPromise } from "promisify-child-process";
 import {
   workspace,
   ExtensionContext,
@@ -11,7 +12,8 @@ import {
   IndentAction,
   languages,
   WebviewPanel,
-  ViewColumn
+  ViewColumn,
+  OutputChannel
 } from "vscode";
 import {
   LanguageClient,
@@ -30,31 +32,30 @@ import {
   MetalsDidFocus,
   ExecuteClientCommand
 } from "./protocol";
-import { type } from "os";
+import { LazyProgress } from "./lazy-progress";
 
 export async function activate(context: ExtensionContext) {
-  // Make editing Scala docstrings slightly nicer.
-  enableScaladocIndentation();
-
   const userJavaHome = workspace.getConfiguration("metals").get("javaHome");
   if (typeof userJavaHome === "string" && userJavaHome !== "") {
-    startServer(context, userJavaHome);
+    fetchAndLaunchMetals(context, userJavaHome);
   } else {
     require("find-java-home")((err, javaHome) => {
       if (err) window.showErrorMessage("Unable to find Java home.");
-      startServer(context, javaHome);
+      fetchAndLaunchMetals(context, javaHome);
     });
   }
 }
 
-function startServer(context: ExtensionContext, javaHome: string) {
+function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
+  const outputChannel = window.createOutputChannel("Metals");
+  outputChannel.appendLine(`Java home: ${javaHome}`);
+
   const javaPath = path.join(javaHome, "bin", "java");
   const coursierPath = path.join(context.extensionPath, "./coursier");
 
-  const serverVersion = workspace
+  const serverVersion: string = workspace
     .getConfiguration("metals")
     .get("serverVersion");
-
   const serverProperties: string[] = workspace
     .getConfiguration("metals")
     .get("serverProperties")
@@ -62,31 +63,64 @@ function startServer(context: ExtensionContext, javaHome: string) {
     .split(" ")
     .filter(e => e.length > 0);
 
-  const javaArgs = serverProperties.concat([
+  const process = spawn(
+    javaPath,
+    serverProperties.concat([
+      "-jar",
+      coursierPath,
+      "fetch",
+      "-p",
+      `org.scalameta:metals_2.12:${serverVersion}`,
+      "-r",
+      "bintray:scalacenter/releases",
+      "-r",
+      "sonatype:releases",
+      "-r",
+      "sonatype:snapshots",
+      "-p"
+    ]),
+    { env: { COURSIER_NO_TERM: "true" } }
+  );
+  const title = `Downloading Metals v${serverVersion}`;
+  trackDownloadProgress(title, outputChannel, process).then(
+    classpath => {
+      launchMetals(
+        outputChannel,
+        context,
+        javaPath,
+        classpath,
+        serverProperties
+      );
+    },
+    _ => {
+      let msg = `Failed to download Metals, make sure you have an internet connection and that the Metals version '${serverVersion}' is correct`;
+      outputChannel.show();
+      window.showErrorMessage(msg);
+    }
+  );
+}
+
+function launchMetals(
+  outputChannel: OutputChannel,
+  context: ExtensionContext,
+  javaPath: string,
+  metalsClasspath: string,
+  serverProperties: string[]
+) {
+  // Make editing Scala docstrings slightly nicer.
+  enableScaladocIndentation();
+
+  const launchArgs = serverProperties.concat([
     `-Dmetals.client=vscode`,
     `-Xss4m`,
     `-Xms1G`,
     `-Xmx4G`,
     `-XX:+UseG1GC`,
     `-XX:+UseStringDeduplication`,
-    "-jar",
-    coursierPath
-  ]);
-
-  const coursierLaunchArgs = [
-    "launch",
-    "-r",
-    "bintray:scalacenter/releases",
-    "-r",
-    "sonatype:releases",
-    "-r",
-    "sonatype:snapshots",
-    `org.scalameta:metals_2.12:${serverVersion}`,
-    "-M",
+    "-classpath",
+    metalsClasspath,
     "scala.meta.metals.Main"
-  ];
-
-  const launchArgs = javaArgs.concat(coursierLaunchArgs);
+  ]);
 
   const serverOptions: ServerOptions = {
     run: { command: javaPath, args: launchArgs },
@@ -98,7 +132,8 @@ function startServer(context: ExtensionContext, javaHome: string) {
     synchronize: {
       configurationSection: "metals"
     },
-    revealOutputChannelOn: RevealOutputChannelOn.Never
+    revealOutputChannelOn: RevealOutputChannelOn.Never,
+    outputChannel: outputChannel
   };
 
   const client = new LanguageClient(
@@ -273,6 +308,32 @@ function startServer(context: ExtensionContext, javaHome: string) {
       });
     });
   });
+}
+
+async function trackDownloadProgress(
+  title: string,
+  output: OutputChannel,
+  download: ChildProcessPromise
+): Promise<string> {
+  const progress = new LazyProgress();
+  let stdout = "";
+  download.stdout.on("data", (out: Buffer) => {
+    stdout += out.toString().trim();
+  });
+  download.stderr.on("data", (err: Buffer) => {
+    let msg = err.toString().trim();
+    if (!msg.startsWith("Downloading")) {
+      output.appendLine(msg);
+    }
+    progress.startOrContinue(title, output, download);
+  });
+  download.on("close", (code: number) => {
+    if (code != 0) {
+      throw Error(`coursier exit: ${code}`);
+    }
+  });
+  await download;
+  return stdout;
 }
 
 function readableSeconds(totalSeconds: number): string {
