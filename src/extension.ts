@@ -212,7 +212,10 @@ function launchMetals(
 
     // Handle the metals/executeClientCommand extension notification.
     client.onNotification(ExecuteClientCommand.type, params => {
-      if (params.command == "metals-doctor-run") {
+      if (
+        params.command === "metals-doctor-run" ||
+        (doctor !== undefined && params.command === "metals-doctor-reload")
+      ) {
         const html = params.arguments[0];
         if (typeof html === "string") {
           const panel = getDoctorPanel();
