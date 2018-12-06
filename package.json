@@ -39,9 +39,7 @@
   },
   "icon": "images/logo.png",
   "categories": [
-    "Linters",
-    "Formatters",
-    "Other"
+    "Programming Languages"
   ],
   "activationEvents": [
     "onLanguage:scala",
