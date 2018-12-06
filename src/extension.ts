@@ -62,9 +62,11 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   const javaPath = path.join(javaHome, "bin", "java");
   const coursierPath = path.join(context.extensionPath, "./coursier");
 
-  const serverVersion: string = workspace
-    .getConfiguration("metals")
-    .get("serverVersion");
+  const config = workspace.getConfiguration("metals");
+  const serverVersionConfig: string = config.get("serverVersion");
+  const serverVersion = serverVersionConfig
+    ? serverVersionConfig
+    : config.inspect("serverVersion").defaultValue;
   const serverProperties: string[] = workspace
     .getConfiguration("metals")
     .get("serverProperties")
