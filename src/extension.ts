@@ -214,7 +214,7 @@ function launchMetals(
     client.onNotification(ExecuteClientCommand.type, params => {
       if (
         params.command === "metals-doctor-run" ||
-        (doctor !== undefined && params.command === "metals-doctor-reload")
+        (doctor && params.command === "metals-doctor-reload")
       ) {
         const html = params.arguments[0];
         if (typeof html === "string") {
