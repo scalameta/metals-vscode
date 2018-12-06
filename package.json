@@ -43,7 +43,9 @@
     "Other"
   ],
   "activationEvents": [
-    "onLanguage:scala"
+    "onLanguage:scala",
+    "workspaceContains:build.sbt",
+    "workspaceContains:project/build.properties"
   ],
   "contributes": {
     "configuration": {
