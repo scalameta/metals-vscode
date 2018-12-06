@@ -177,7 +177,7 @@ function launchMetals(
   context.subscriptions.push(client.start());
 
   client.onReady().then(_ => {
-    var doctor: WebviewPanel;
+    let doctor: WebviewPanel;
     function getDoctorPanel(): WebviewPanel {
       if (!doctor) {
         doctor = window.createWebviewPanel(
@@ -204,7 +204,7 @@ function launchMetals(
     // Open or close the extension output channel. The user may have to trigger
     // this command twice in case the channel has been focused through another
     // button. There is no `isFocused` API to check if a channel is focused.
-    var channelOpen = false;
+    let channelOpen = false;
     commands.registerCommand(Commands.TOGGLE_LOGS, () => {
       if (channelOpen) {
         client.outputChannel.hide();
@@ -289,7 +289,7 @@ function launchMetals(
             client.outputChannel.show(true);
 
             // Update total running time every second.
-            var seconds = 0;
+            let seconds = 0;
             const interval = setInterval(() => {
               seconds += 1;
               progress.report({ message: readableSeconds(seconds) });
