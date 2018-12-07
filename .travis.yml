@@ -26,7 +26,7 @@ jobs:
         - yarn version --new-version $NEW_VERSION
         # push the changes to package.json
         - git checkout -b temp
-        - git push "https://${GITHUB_TOKEN}@github.com/$TRAVIS_REPO_SLUG}" temp:master
+        - git push "https://${GITHUB_TOKEN}@github.com/$TRAVIS_REPO_SLUG}" HEAD:master
         # publish the extension to the Marketplace
         - yarn vscode:publish -p $VS_MARKETPLACE_TOKEN
 
