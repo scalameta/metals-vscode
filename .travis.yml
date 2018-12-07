@@ -4,11 +4,25 @@ node_js:
 
 stages:
   - name: build
+  - name: release
+    if: tag IS present
 
 jobs:
   include:
-    - script:
+    - stage: build
+      script:
         # test that the extension builds correctly
         - yarn build
+    - stage: release
+      script:
+        # configure git so that we can commit and push the new version
+        - git config --global user.email "metals@scalameta.org"
+        - git config --global user.name "Metals CI"
+        # drop the v prefix in vX.Y.Z
+        - NEW_VERSION=${TRAVIS_TAG#"v"}
+        # set the version and publish the extension to the Marketplace
+        - yarn vscode:publish $NEW_VERSION -p $VS_MARKETPLACE_TOKEN
+        # sync back the new version
+        - git push && git push --tags
 
 cache: yarn
