@@ -8,7 +8,7 @@
     "language server",
     "scalameta"
   ],
-  "version": "0.3.0",
+  "version": "0.3.1",
   "publisher": "scalameta",
   "contributors": [
     {
@@ -97,23 +97,23 @@
   },
   "main": "./out/extension",
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "yarn compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "npm run compile && node ./node_modules/vscode/bin/test",
-    "build": "vsce package",
-    "vscode:publish": "vsce publish"
+    "test": "yarn compile && node ./node_modules/vscode/bin/test",
+    "build": "vsce package --yarn",
+    "vscode:publish": "vsce publish --yarn"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.42",
     "@types/node": "^8.10.25",
     "typescript": "^2.6.1",
-    "vsce": "^1.51.6"
+    "vsce": "^1.53.2"
   },
   "dependencies": {
-    "promisify-child-process": "3.1.0",
     "find-java-home": "0.2.0",
+    "promisify-child-process": "3.1.0",
     "vscode": "^1.1.21",
     "vscode-languageclient": "^5.1.0"
   },
