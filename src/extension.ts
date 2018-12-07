@@ -36,6 +36,8 @@ import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
 
 export async function activate(context: ExtensionContext) {
+  detectLaunchConfigurationChanges();
+
   const userJavaHome = workspace.getConfiguration("metals").get("javaHome");
   if (typeof userJavaHome === "string" && userJavaHome !== "") {
     fetchAndLaunchMetals(context, userJavaHome);
@@ -404,4 +406,26 @@ function enableScaladocIndentation() {
 
 function dottyIdeArtifact(): string {
   return path.join(workspace.rootPath, ".dotty-ide-artifact");
+}
+
+function detectLaunchConfigurationChanges() {
+  workspace.onDidChangeConfiguration(e => {
+    const promptRestartKeys = ["serverVersion", "javaHome"];
+    const shouldPromptRestart = promptRestartKeys.some(k =>
+      e.affectsConfiguration(`metals.${k}`)
+    );
+    if (shouldPromptRestart) {
+      window
+        .showInformationMessage(
+          "Server launch configuration change detected. Reload the window for changes to take effect",
+          "Reload Window",
+          "Not now"
+        )
+        .then(choice => {
+          if (choice === "Reload Window") {
+            commands.executeCommand("workbench.action.reloadWindow");
+          }
+        });
+    }
+  });
 }
