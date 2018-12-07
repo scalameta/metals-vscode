@@ -24,8 +24,8 @@ jobs:
         - NEW_VERSION=${TRAVIS_TAG#"v"}
         # change the version in package.json
         - yarn version --no-git-tag-version --new-version $NEW_VERSION
+        - git commit -m "$TRAVIS_TAG"
         # push the changes to package.json
-        - git checkout -b temp
         - git push "https://${GITHUB_TOKEN}@github.com/$TRAVIS_REPO_SLUG" HEAD:master
         # publish the extension to the Marketplace
         - yarn vscode:publish -p $VS_MARKETPLACE_TOKEN
