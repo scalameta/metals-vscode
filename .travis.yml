@@ -23,7 +23,7 @@ jobs:
         # drop the v prefix in vX.Y.Z
         - NEW_VERSION=${TRAVIS_TAG#"v"}
         # change the version in package.json
-        - yarn version --new-version $NEW_VERSION
+        - yarn version --no-git-tag-version --new-version $NEW_VERSION
         # push the changes to package.json
         - git checkout -b temp
         - git push "https://${GITHUB_TOKEN}@github.com/$TRAVIS_REPO_SLUG}" HEAD:master
