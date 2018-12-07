@@ -20,12 +20,14 @@ jobs:
         # configure git so that we can commit and push the new version
         - git config --global user.email "metals@scalameta.org"
         - git config --global user.name "Metals CI"
+        # quick test, remove me later
+        - git checkout master
         # drop the v prefix in vX.Y.Z
         - NEW_VERSION=${TRAVIS_TAG#"v"}
         # change the version in package.json
         - yarn version --new-version $NEW_VERSION
         # push the changes to package.json
-        - git push "https://${GITHUB_TOKEN}@github.com/$TRAVIS_REPO_SLUG} master HEAD:master"
+        - git push "https://${GITHUB_TOKEN}@github.com/$TRAVIS_REPO_SLUG}" master
         # publish the extension to the Marketplace
         - yarn vscode:publish -p $VS_MARKETPLACE_TOKEN
 
