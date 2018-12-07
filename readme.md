@@ -29,7 +29,7 @@ configured to use Java 8.
 **macOS, Linux or Windows**. Metals is developed on macOS and every PR is tested
 on Ubuntu+Windows.
 
-**Scala 2.12 and 2.11**. Metals works only with Scala versions 2.12.{7,6,5,4}
+**Scala 2.12 and 2.11**. Metals works only with Scala versions 2.12.{8,7,6,5,4}
 and 2.11.{12,11,10,9}. Note that 2.10.x and 2.13.0-M5 are not supported.
 
 ## Installation
