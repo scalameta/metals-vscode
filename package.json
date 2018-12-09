@@ -118,12 +118,14 @@
   "devDependencies": {
     "@types/mocha": "^2.2.42",
     "@types/node": "^8.10.25",
+    "@types/semver": "^5.5.0",
     "typescript": "^2.6.1",
     "vsce": "^1.53.2"
   },
   "dependencies": {
     "find-java-home": "0.2.0",
     "promisify-child-process": "3.1.0",
+    "semver": "^5.6.0",
     "vscode": "^1.1.21",
     "vscode-languageclient": "^5.1.0"
   },
