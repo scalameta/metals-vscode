@@ -335,9 +335,9 @@ function trackDownloadProgress(
   download: ChildProcessPromise
 ): Promise<string> {
   const progress = new LazyProgress();
-  let stdout = "";
+  let stdout: Buffer[] = [];
   download.stdout.on("data", (out: Buffer) => {
-    stdout += out.toString().trim();
+    stdout.push(out);
   });
   download.stderr.on("data", (err: Buffer) => {
     const msg = err.toString().trim();
@@ -348,10 +348,14 @@ function trackDownloadProgress(
   });
   download.on("close", (code: number) => {
     if (code != 0) {
+      // something went wrong, print stdout to the console to help troubleshoot.
+      stdout.forEach(buffer => output.append(buffer.toString()));
       throw Error(`coursier exit: ${code}`);
     }
   });
-  return download.then(() => stdout);
+  return download.then(() =>
+    stdout.map(buffer => buffer.toString().trim()).join("")
+  );
 }
 
 function readableSeconds(totalSeconds: number): string {
