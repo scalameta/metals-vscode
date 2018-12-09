@@ -438,7 +438,16 @@ function checkServerVersion() {
   const serverVersion = config.get<string>("serverVersion");
   const latestServerVersion = config.inspect<string>("serverVersion")
     .defaultValue;
-  const isOutdated = semver.lt(serverVersion, latestServerVersion);
+  const isOutdated = (() => {
+    try {
+      return semver.lt(serverVersion, latestServerVersion);
+    } catch (_e) {
+      // serverVersion has an invalid format
+      // ignore the exception here, and let subsequent checks handle this
+      return false;
+    }
+  })();
+
   if (isOutdated) {
     const upgradeAction = `Upgrade to ${latestServerVersion} now`;
     const openSettingsAction = "Open settings";
