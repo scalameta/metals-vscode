@@ -13,7 +13,8 @@ import {
   languages,
   WebviewPanel,
   ViewColumn,
-  OutputChannel
+  OutputChannel,
+  ConfigurationTarget
 } from "vscode";
 import {
   LanguageClient,
@@ -34,9 +35,11 @@ import {
 } from "./protocol";
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
+import * as semver from "semver";
 
 export async function activate(context: ExtensionContext) {
   detectLaunchConfigurationChanges();
+  checkServerVersion();
 
   const userJavaHome = workspace.getConfiguration("metals").get("javaHome");
   if (typeof userJavaHome === "string" && userJavaHome !== "") {
@@ -428,4 +431,37 @@ function detectLaunchConfigurationChanges() {
         });
     }
   });
+}
+
+function checkServerVersion() {
+  const config = workspace.getConfiguration("metals");
+  const serverVersion = config.get<string>("serverVersion");
+  const latestServerVersion = config.inspect<string>("serverVersion")
+    .defaultValue;
+  const isOutdated = semver.lt(serverVersion, latestServerVersion);
+  if (isOutdated) {
+    const upgradeAction = `Upgrade to ${latestServerVersion} now`;
+    const openSettingsAction = "Open settings";
+    window
+      .showWarningMessage(
+        `You are running an out-of-date version of Metals. Latest version is ${latestServerVersion}, but you have configured a custom server version ${serverVersion}`,
+        upgradeAction,
+        openSettingsAction,
+        "Not now"
+      )
+      .then(choice => {
+        switch (choice) {
+          case upgradeAction:
+            config.update(
+              "serverVersion",
+              latestServerVersion,
+              ConfigurationTarget.Global
+            );
+            break;
+          case openSettingsAction:
+            commands.executeCommand("workbench.action.openSettings");
+            break;
+        }
+      });
+  }
 }
