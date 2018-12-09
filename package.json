@@ -26,14 +26,13 @@
   ],
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/scalameta/metals/issues"
+    "url": "https://github.com/scalameta/metals-vscode/issues"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/scalameta/metals-vscode.git"
   },
   "homepage": "http://metals.rocks",
-  "qna": "https://github.com/scalameta/metals/issues",
   "engines": {
     "vscode": "^1.27.0"
   },
