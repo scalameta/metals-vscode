@@ -102,7 +102,31 @@
         "category": "Metals",
         "title": "Run doctor"
       }
-    ]
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "metals.restartServer",
+          "when": "editorLangId == scala"
+        },
+        {
+          "command": "metals.build-import",
+          "when": "editorLangId == scala"
+        },
+        {
+          "command": "metals.build-connect",
+          "when": "editorLangId == scala"
+        },
+        {
+          "command": "metals.sources-scan",
+          "when": "editorLangId == scala"
+        },
+        {
+          "command": "metals.doctor-run",
+          "when": "editorLangId == scala"
+        }
+      ]
+    }
   },
   "main": "./out/extension",
   "scripts": {
