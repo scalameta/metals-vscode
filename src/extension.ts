@@ -86,6 +86,11 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
       coursierPath,
       "fetch",
       "-p",
+      "--ttl",
+      // Use infinite ttl to avoid redunant "Checking..." logs when using SNAPSHOT
+      // versions. Metals SNAPSHOT releases are effectively immutable since we
+      // never publish the same version twice.
+      "Inf",
       `org.scalameta:metals_2.12:${serverVersion}`,
       "-r",
       "bintray:scalacenter/releases",
