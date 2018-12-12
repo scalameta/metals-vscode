@@ -1,4 +1,4 @@
-import findJavaHome = require("find-java-home");
+import locateJavaHome from "locate-java-home";
 import { workspace } from "vscode";
 
 export function getJavaHome(): Promise<string> {
@@ -7,11 +7,11 @@ export function getJavaHome(): Promise<string> {
     return Promise.resolve(userJavaHome);
   } else {
     return new Promise((resolve, reject) => {
-      findJavaHome((err, javaHome) => {
+      locateJavaHome({ version: "1.8" }, (err, javaHomes) => {
         if (err) {
           reject(err);
         } else {
-          resolve(javaHome);
+          resolve(javaHomes[0].path);
         }
       });
     });

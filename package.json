@@ -60,7 +60,7 @@
         },
         "metals.javaHome": {
           "type": "string",
-          "markdownDescription": "Optional path to the Java home directory. Requires reloading the window.\n\nDefaults to the environment variable `JAVA_HOME` computed by the `find-java-home` npm package."
+          "markdownDescription": "Optional path to the Java home directory. Requires reloading the window.\n\nDefaults to the environment variable `JAVA_HOME` computed by the `locate-java-home` npm package."
         },
         "metals.sbtLauncher": {
           "type": "string",
@@ -146,7 +146,7 @@
     "vsce": "^1.53.2"
   },
   "dependencies": {
-    "find-java-home": "0.2.0",
+    "locate-java-home": "^1.1.2",
     "promisify-child-process": "3.1.0",
     "semver": "^5.6.0",
     "vscode": "^1.1.21",
