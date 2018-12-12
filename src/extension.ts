@@ -36,20 +36,15 @@ import {
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
 import * as semver from "semver";
+import { getJavaHome } from "./getJavaHome";
 
 export async function activate(context: ExtensionContext) {
   detectLaunchConfigurationChanges();
   checkServerVersion();
 
-  const userJavaHome = workspace.getConfiguration("metals").get("javaHome");
-  if (typeof userJavaHome === "string" && userJavaHome !== "") {
-    fetchAndLaunchMetals(context, userJavaHome);
-  } else {
-    require("find-java-home")((err, javaHome) => {
-      if (err) window.showErrorMessage("Unable to find Java home.");
-      fetchAndLaunchMetals(context, javaHome);
-    });
-  }
+  getJavaHome()
+    .then(javaHome => fetchAndLaunchMetals(context, javaHome))
+    .catch(() => window.showErrorMessage("Unable to find Java home."));
 }
 
 function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
