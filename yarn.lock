@@ -141,6 +141,13 @@ assert-plus@1.0.0, assert-plus@^1.0.0:
   resolved "https://registry.yarnpkg.com/assert-plus/-/assert-plus-1.0.0.tgz#f12e0f3c5d77b0b1cdd9146942e4e96c1e4dd525"
   integrity sha1-8S4PPF13sLHN2RRpQuTpbB5N1SU=
 
+async@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/async/-/async-2.6.1.tgz#b245a23ca71930044ec53fa46aa00a3e87c6a610"
+  integrity sha512-fNEiL2+AZt6AlAw/29Cr0UDe4sRAHCpEHh54WMz+Bb7QfNcFw4h3loofyJpLeQs4Yx7yuqu/2dLgM5hKOs6HlQ==
+  dependencies:
+    lodash "^4.17.10"
+
 asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
@@ -554,14 +561,6 @@ fill-range@^2.1.0:
     randomatic "^3.0.0"
     repeat-element "^1.1.2"
     repeat-string "^1.5.2"
-
-find-java-home@0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/find-java-home/-/find-java-home-0.2.0.tgz#5c500bbad3018832abb9886f7d0f03f57146cddc"
-  integrity sha512-nq5PFOHxE1VSEbdDVkLoA2bAcRnG4ETqJO8ipFq3glIWA52hdWCXYX3emuUyMAQfaqFU4Ea85gqcgaPmOApEPA==
-  dependencies:
-    which "~1.0.5"
-    winreg "~1.2.2"
 
 first-chunk-stream@^1.0.0:
   version "1.0.0"
@@ -1128,6 +1127,14 @@ linkify-it@^2.0.0:
   dependencies:
     uc.micro "^1.0.1"
 
+locate-java-home@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/locate-java-home/-/locate-java-home-1.1.2.tgz#8cc6af243ad7ae4e53f0b8c3a671986750f69f36"
+  integrity sha512-cyylBBX0lBYYOpWGb5pJED40PZvFVru315HUaArT842bC5681AxOxbuQu0AlcNA+WCUBB+n0OQ21FaCKg9Jx5Q==
+  dependencies:
+    async "^2.6.1"
+    semver "^5.5.1"
+
 lodash.isequal@^4.0.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
@@ -1666,7 +1673,7 @@ safer-buffer@^2.0.2, safer-buffer@^2.1.0, safer-buffer@~2.1.0:
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
-semver@^5.1.0, semver@^5.4.1, semver@^5.5.0, semver@^5.6.0:
+semver@^5.1.0, semver@^5.4.1, semver@^5.5.0, semver@^5.5.1, semver@^5.6.0:
   version "5.6.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.6.0.tgz#7e74256fbaa49c75aa7c7a205cc22799cac80004"
   integrity sha512-RS9R6R35NYgQn++fkDWaOmqGoj4Ek9gGs+DPxNUZKuwE183xjJroKvyo1IzVFeXvUrvmALy6FWD5xrdJT25gMg==
@@ -2152,16 +2159,6 @@ vso-node-api@6.1.2-preview:
     tunnel "0.0.4"
     typed-rest-client "^0.9.0"
     underscore "^1.8.3"
-
-which@~1.0.5:
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/which/-/which-1.0.9.tgz#460c1da0f810103d0321a9b633af9e575e64486f"
-  integrity sha1-RgwdoPgQED0DIam2M6+eV15kSG8=
-
-winreg@~1.2.2:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/winreg/-/winreg-1.2.4.tgz#ba065629b7a925130e15779108cf540990e98d1b"
-  integrity sha1-ugZWKbepJRMOFXeRCM9UCZDpjRs=
 
 wrappy@1:
   version "1.0.2"

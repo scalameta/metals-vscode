@@ -36,25 +36,31 @@ import {
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
 import * as semver from "semver";
+import { getJavaHome } from "./getJavaHome";
+
+const outputChannel = window.createOutputChannel("Metals");
+const openSettingsAction = "Open settings";
 
 export async function activate(context: ExtensionContext) {
   detectLaunchConfigurationChanges();
   checkServerVersion();
 
-  const userJavaHome = workspace.getConfiguration("metals").get("javaHome");
-  if (typeof userJavaHome === "string" && userJavaHome !== "") {
-    fetchAndLaunchMetals(context, userJavaHome);
-  } else {
-    require("find-java-home")((err, javaHome) => {
-      if (err) window.showErrorMessage("Unable to find Java home.");
-      fetchAndLaunchMetals(context, javaHome);
+  getJavaHome()
+    .then(javaHome => fetchAndLaunchMetals(context, javaHome))
+    .catch(err => {
+      const message =
+        "Unable to find Java 8 home. To fix this problem, update the 'Java Home' setting to point to a Java 8 home directory";
+      outputChannel.appendLine(message);
+      outputChannel.appendLine(err);
+      window.showErrorMessage(message, openSettingsAction).then(choice => {
+        if (choice === openSettingsAction) {
+          commands.executeCommand("workbench.action.openSettings");
+        }
+      });
     });
-  }
 }
 
 function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
-  const outputChannel = window.createOutputChannel("Metals");
-
   if (fs.existsSync(dottyIdeArtifact())) {
     outputChannel.appendLine(
       `Metals will not start since Dotty is enabled for this workspace. ` +
@@ -459,7 +465,7 @@ function checkServerVersion() {
 
   if (isOutdated) {
     const upgradeAction = `Upgrade to ${latestServerVersion} now`;
-    const openSettingsAction = "Open settings";
+
     window
       .showWarningMessage(
         `You are running an out-of-date version of Metals. Latest version is ${latestServerVersion}, but you have configured a custom server version ${serverVersion}`,
