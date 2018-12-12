@@ -38,18 +38,23 @@ import * as fs from "fs";
 import * as semver from "semver";
 import { getJavaHome } from "./getJavaHome";
 
+const outputChannel = window.createOutputChannel("Metals");
+
 export async function activate(context: ExtensionContext) {
   detectLaunchConfigurationChanges();
   checkServerVersion();
 
   getJavaHome()
     .then(javaHome => fetchAndLaunchMetals(context, javaHome))
-    .catch(() => window.showErrorMessage("Unable to find Java home."));
+    .catch(err => {
+      const message = "Unable to detect Java home";
+      outputChannel.appendLine(message);
+      outputChannel.appendLine(err);
+      window.showErrorMessage(message);
+    });
 }
 
 function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
-  const outputChannel = window.createOutputChannel("Metals");
-
   if (fs.existsSync(dottyIdeArtifact())) {
     outputChannel.appendLine(
       `Metals will not start since Dotty is enabled for this workspace. ` +
