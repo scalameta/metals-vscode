@@ -39,6 +39,7 @@ import * as semver from "semver";
 import { getJavaHome } from "./getJavaHome";
 
 const outputChannel = window.createOutputChannel("Metals");
+const openSettingsAction = "Open settings";
 
 export async function activate(context: ExtensionContext) {
   detectLaunchConfigurationChanges();
@@ -47,10 +48,15 @@ export async function activate(context: ExtensionContext) {
   getJavaHome()
     .then(javaHome => fetchAndLaunchMetals(context, javaHome))
     .catch(err => {
-      const message = "Unable to detect Java home";
+      const message =
+        "Unable to find Java 8 home. To fix this problem, update the 'Java Home' setting to point to a Java 8 home directory";
       outputChannel.appendLine(message);
       outputChannel.appendLine(err);
-      window.showErrorMessage(message);
+      window.showErrorMessage(message, openSettingsAction).then(choice => {
+        if (choice === openSettingsAction) {
+          commands.executeCommand("workbench.action.openSettings");
+        }
+      });
     });
 }
 
@@ -459,7 +465,7 @@ function checkServerVersion() {
 
   if (isOutdated) {
     const upgradeAction = `Upgrade to ${latestServerVersion} now`;
-    const openSettingsAction = "Open settings";
+
     window
       .showWarningMessage(
         `You are running an out-of-date version of Metals. Latest version is ${latestServerVersion}, but you have configured a custom server version ${serverVersion}`,
