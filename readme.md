@@ -61,7 +61,7 @@ build. Click "Import build" to start the installation step.
 - "Not now" disables this prompt for 2 minutes.
 - "Don't show again" disables this prompt forever, use `rm -rf .metals/` to
   re-enable the prompt.
-- Behind the scenese, Metals uses [Bloop](https://scalacenter.github.io/bloop/)
+- Behind the scenes, Metals uses [Bloop](https://scalacenter.github.io/bloop/)
   to import sbt builds, but you don't need Bloop installed on your machine to
   run this step.
 
@@ -70,6 +70,18 @@ files.
 
 Once the sources have compiled successfully, you can navigate the codebase with
 "goto definition" with `Cmd+Click`.
+
+### Custom sbt launcher
+
+By default, Metals runs an embedded `sbt-launch.jar` launcher that respects
+`.sbtopts` and `.jvmopts`. The environment variables `SBT_OPTS` and `JAVA_OPTS`
+are also respected, but may not available to the Metals process in case it's
+started from a GUI application.
+
+Update the "Sbt Script" setting to use a custom `sbt` script instead of the
+embedded launcher.
+
+![Sbt Launcher](assets/vscode-sbt-script.png)
 
 ### Speeding up import
 
@@ -129,4 +141,17 @@ command to copy the Java 8 home path.
 
 ```sh
 /usr/libexec/java_home -v 1.8 | pbcopy
+```
+
+## Gitignore `.metals/` and `.bloop/`
+
+The Metals server places logs and other files in the `.metals/` directory. The
+Bloop compile server places logs and compilation artifacts in the `.bloop`
+directory. It's recommended to ignore these directories from version control
+systems like git.
+
+```sh
+# ~/.gitignore
+.metals/
+.bloop/
 ```
