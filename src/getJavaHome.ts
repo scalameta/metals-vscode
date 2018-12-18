@@ -13,7 +13,12 @@ export function getJavaHome(): Promise<string> {
         } else if (javaHomes.length === 0) {
           reject(new Error("No suitable Java version found"));
         } else {
-          resolve(javaHomes[0].path);
+          const jdkHome = javaHomes.find(j => j.isJDK);
+          if (jdkHome) {
+            resolve(jdkHome.path);
+          } else {
+            resolve(javaHomes[0].path);
+          }
         }
       });
     });
