@@ -2081,10 +2081,10 @@ vinyl@^2.0.0, vinyl@^2.0.1, vinyl@^2.0.2:
     remove-trailing-separator "^1.0.1"
     replace-ext "^1.0.0"
 
-vsce@^1.53.2:
-  version "1.53.2"
-  resolved "https://registry.yarnpkg.com/vsce/-/vsce-1.53.2.tgz#50ec10cf698638ce37fa191caf7faf259c8d23df"
-  integrity sha512-yo7ctgQPK7hKnez/be3Tj7RG3eZzgkFhx/27y9guwzhMxHfjlU1pusAsFT8wBEZKZlYA5HNJAx8oClw4WDWi+A==
+vsce@^1.54.0:
+  version "1.54.0"
+  resolved "https://registry.yarnpkg.com/vsce/-/vsce-1.54.0.tgz#6ece94b538b8036f49c4f064319519cd672ccf18"
+  integrity sha512-E0Cnz50JK/TzUzTxDQ9oj3/Ichot1qmyin/8yHrH2BrQiXWUTX/FbuzMKFf1gTkNr6VvI3HbEf4VxSP/IASFIg==
   dependencies:
     cheerio "^1.0.0-rc.1"
     commander "^2.8.1"

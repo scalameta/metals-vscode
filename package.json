@@ -65,6 +65,10 @@
         "metals.sbtScript": {
           "type": "string",
           "markdownDescription": "Optional absolute path to an `sbt` executable to use for running `sbt bloopInstall`.\n\nBy default, Metals uses `java -jar sbt-launch.jar` with an embedded launcher while respecting `.jvmopts` and `.sbtopts`.\n\nUpdate this setting if your `sbt` script requires more customizations like using environment variables."
+        },
+        "metals.scalafmtConfigPath": {
+          "type": "string",
+          "markdownDescription": "Optional custom path to the .scalafmt.conf file.\n\nShould be relative to the workspace root directory and use forward slashes `/` for file separators (even on Windows)."
         }
       }
     },
@@ -135,7 +139,7 @@
     "@types/node": "^8.10.25",
     "@types/semver": "^5.5.0",
     "typescript": "^2.6.1",
-    "vsce": "^1.53.2"
+    "vsce": "^1.54.0"
   },
   "dependencies": {
     "locate-java-home": "^1.1.2",
