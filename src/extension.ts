@@ -428,7 +428,7 @@ function dottyIdeArtifact(): string {
 
 function detectLaunchConfigurationChanges() {
   workspace.onDidChangeConfiguration(e => {
-    const promptRestartKeys = ["serverVersion", "javaHome"];
+    const promptRestartKeys = ["serverVersion", "serverProperties", "javaHome"];
     const shouldPromptRestart = promptRestartKeys.some(k =>
       e.affectsConfiguration(`metals.${k}`)
     );
