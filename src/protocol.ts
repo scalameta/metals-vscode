@@ -1,5 +1,6 @@
 import { RequestType, NotificationType } from "vscode-jsonrpc";
 import { ExecuteCommandParams } from "vscode-languageclient";
+import { InputBoxOptions } from "vscode";
 
 "use strict";
 
@@ -40,4 +41,18 @@ export interface MetalsStatusParams {
   hide?: boolean;
   tooltip?: string;
   command?: string;
+}
+
+export namespace MetalsInputBox {
+  export const type = new RequestType<
+    InputBoxOptions,
+    MetalsInputBoxResult,
+    void,
+    void
+  >("metals/inputBox");
+}
+
+export interface MetalsInputBoxResult {
+  value?: string;
+  cancelled?: boolean;
 }

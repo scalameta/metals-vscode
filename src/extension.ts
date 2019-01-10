@@ -23,7 +23,8 @@ import {
   RevealOutputChannelOn,
   ExecuteCommandRequest,
   ShutdownRequest,
-  ExitNotification
+  ExitNotification,
+  CancellationToken
 } from "vscode-languageclient";
 import { exec } from "child_process";
 import { Commands } from "./commands";
@@ -31,7 +32,8 @@ import {
   MetalsSlowTask,
   MetalsStatus,
   MetalsDidFocus,
-  ExecuteClientCommand
+  ExecuteClientCommand,
+  MetalsInputBox
 } from "./protocol";
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
@@ -290,6 +292,16 @@ function launchMetals(
           editor.document.uri.toString()
         );
       }
+    });
+
+    client.onRequest(MetalsInputBox.type, (options, requestToken) => {
+      return window.showInputBox(options, requestToken).then(result => {
+        if (result === undefined) {
+          return { cancelled: true };
+        } else {
+          return { value: result };
+        }
+      });
     });
 
     // Long running tasks such as "import project" trigger start a progress
