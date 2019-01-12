@@ -147,17 +147,16 @@ function launchMetals(
   // Make editing Scala docstrings slightly nicer.
   enableScaladocIndentation();
 
-  const launchArgs = serverProperties.concat([
+  const baseProperties = [
     `-Dmetals.client=vscode`,
     `-Xss4m`,
-    `-Xms1G`,
-    `-Xmx4G`,
+    `-Xms100m`,
     `-XX:+UseG1GC`,
-    `-XX:+UseStringDeduplication`,
-    "-classpath",
-    metalsClasspath,
-    "scala.meta.metals.Main"
-  ]);
+    `-XX:+UseStringDeduplication`
+  ];
+  const mainArgs = ["-classpath", metalsClasspath, "scala.meta.metals.Main"];
+  // let user properties override base properties
+  const launchArgs = baseProperties.concat(serverProperties).concat(mainArgs);
 
   const serverOptions: ServerOptions = {
     run: { command: javaPath, args: launchArgs },
