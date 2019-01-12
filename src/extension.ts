@@ -27,7 +27,7 @@ import {
   CancellationToken
 } from "vscode-languageclient";
 import { exec } from "child_process";
-import { Commands } from "./commands";
+import { ClientCommands } from "./client-commands";
 import {
   MetalsSlowTask,
   MetalsStatus,
@@ -225,7 +225,7 @@ function launchMetals(
     // this command twice in case the channel has been focused through another
     // button. There is no `isFocused` API to check if a channel is focused.
     let channelOpen = false;
-    commands.registerCommand(Commands.TOGGLE_LOGS, () => {
+    commands.registerCommand(ClientCommands.TOGGLE_LOGS, () => {
       if (channelOpen) {
         client.outputChannel.hide();
         channelOpen = false;
@@ -235,8 +235,12 @@ function launchMetals(
       }
     });
 
-    commands.registerCommand(Commands.FOCUS_DIAGNOSTICS, () => {
+    commands.registerCommand(ClientCommands.FOCUS_DIAGNOSTICS, () => {
       commands.executeCommand("workbench.action.problems.focus");
+    });
+
+    commands.registerCommand(ClientCommands.RUN_DOCTOR, () => {
+      commands.executeCommand("metals.doctor-run");
     });
 
     // Handle the metals/executeClientCommand extension notification.
@@ -257,7 +261,7 @@ function launchMetals(
     // The server updates the client with a brief text message about what
     // it is currently doing, for example "Compiling..".
     const item = window.createStatusBarItem(StatusBarAlignment.Right, 100);
-    item.command = Commands.TOGGLE_LOGS;
+    item.command = ClientCommands.TOGGLE_LOGS;
     item.hide();
     client.onNotification(MetalsStatus.type, params => {
       item.text = params.text;
