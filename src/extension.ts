@@ -42,6 +42,7 @@ import { getJavaHome } from "./getJavaHome";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
+const openSettingsCommand = "workbench.action.openSettings";
 
 export async function activate(context: ExtensionContext) {
   detectLaunchConfigurationChanges();
@@ -122,9 +123,16 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
       );
     },
     () => {
-      const msg = `Failed to download Metals, make sure you have an internet connection and that the Metals version '${serverVersion}' is correct`;
+      const msg =
+        `Failed to download Metals, make sure you have an internet connection, ` +
+        `the Metals version '${serverVersion}' is correct and the Java Home '${javaPath}' is valid. ` +
+        `You can configure the Metals version and Java Home under settings.`;
       outputChannel.show();
-      window.showErrorMessage(msg);
+      window.showErrorMessage(msg, openSettingsAction).then(choice => {
+        if (choice === openSettingsAction) {
+          commands.executeCommand(openSettingsCommand);
+        }
+      });
     }
   );
 }
@@ -495,7 +503,7 @@ function checkServerVersion() {
             );
             break;
           case openSettingsAction:
-            commands.executeCommand("workbench.action.openSettings");
+            commands.executeCommand(openSettingsCommand);
             break;
         }
       });
