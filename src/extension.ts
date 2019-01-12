@@ -221,13 +221,18 @@ function launchMetals(
       }
       return doctor;
     }
-    ["build-import", "build-connect", "sources-scan", "doctor-run"].forEach(
-      command => {
-        registerCommand("metals." + command, async () =>
-          client.sendRequest(ExecuteCommandRequest.type, { command: command })
-        );
-      }
-    );
+    [
+      "build-import",
+      "build-connect",
+      "sources-scan",
+      "doctor-run",
+      "compile-cascade",
+      "compile-cancel"
+    ].forEach(command => {
+      registerCommand("metals." + command, async () =>
+        client.sendRequest(ExecuteCommandRequest.type, { command: command })
+      );
+    });
 
     let channelOpen = false;
     const clientCommands: {
