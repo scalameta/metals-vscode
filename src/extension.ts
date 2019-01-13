@@ -27,7 +27,7 @@ import {
   CancellationToken
 } from "vscode-languageclient";
 import { exec } from "child_process";
-import { Commands } from "./commands";
+import { ClientCommands } from "./client-commands";
 import {
   MetalsSlowTask,
   MetalsStatus,
@@ -179,27 +179,29 @@ function launchMetals(
     clientOptions
   );
 
-  context.subscriptions.push(
-    commands.registerCommand("metals.restartServer", () => {
-      // First try to gracefully shutdown the server with LSP `shutdown` and `exit`.
-      // If Metals doesn't respond within 4 seconds we kill the process.
-      const timeout = (ms: number) =>
-        new Promise((_resolve, reject) => setTimeout(reject, ms));
-      const gracefullyTerminate = client
-        .sendRequest(ShutdownRequest.type)
-        .then(() => {
-          client.sendNotification(ExitNotification.type);
-          window.showInformationMessage("Metals is restarting");
-        });
-      Promise.race([gracefullyTerminate, timeout(4000)]).catch(() => {
-        window.showWarningMessage(
-          "Metals is unresponsive, killing the process and starting a new server."
-        );
-        const serverPid = client["_serverProcess"].pid;
-        exec(`kill ${serverPid}`);
+  function registerCommand(command: string, callback: (...args: any[]) => any) {
+    context.subscriptions.push(commands.registerCommand(command, callback));
+  }
+
+  registerCommand("metals.restartServer", () => {
+    // First try to gracefully shutdown the server with LSP `shutdown` and `exit`.
+    // If Metals doesn't respond within 4 seconds we kill the process.
+    const timeout = (ms: number) =>
+      new Promise((_resolve, reject) => setTimeout(reject, ms));
+    const gracefullyTerminate = client
+      .sendRequest(ShutdownRequest.type)
+      .then(() => {
+        client.sendNotification(ExitNotification.type);
+        window.showInformationMessage("Metals is restarting");
       });
-    })
-  );
+    Promise.race([gracefullyTerminate, timeout(4000)]).catch(() => {
+      window.showWarningMessage(
+        "Metals is unresponsive, killing the process and starting a new server."
+      );
+      const serverPid = client["_serverProcess"].pid;
+      exec(`kill ${serverPid}`);
+    });
+  });
 
   context.subscriptions.push(client.start());
 
@@ -221,30 +223,35 @@ function launchMetals(
     }
     ["build-import", "build-connect", "sources-scan", "doctor-run"].forEach(
       command => {
-        const cancel = commands.registerCommand("metals." + command, async () =>
+        registerCommand("metals." + command, async () =>
           client.sendRequest(ExecuteCommandRequest.type, { command: command })
         );
-        context.subscriptions.push(cancel);
       }
     );
 
-    // Open or close the extension output channel. The user may have to trigger
-    // this command twice in case the channel has been focused through another
-    // button. There is no `isFocused` API to check if a channel is focused.
     let channelOpen = false;
-    commands.registerCommand(Commands.TOGGLE_LOGS, () => {
-      if (channelOpen) {
-        client.outputChannel.hide();
-        channelOpen = false;
-      } else {
-        client.outputChannel.show(true);
-        channelOpen = true;
+    const clientCommands: {
+      [k in keyof typeof ClientCommands]: (...args: unknown[]) => unknown
+    } = {
+      focusDiagnostics: () =>
+        commands.executeCommand("workbench.action.problems.focus"),
+      runDoctor: () => commands.executeCommand("metals.doctor-run"),
+      // Open or close the extension output channel. The user may have to trigger
+      // this command twice in case the channel has been focused through another
+      // button. There is no `isFocused` API to check if a channel is focused.
+      toggleLogs: () => {
+        if (channelOpen) {
+          client.outputChannel.hide();
+          channelOpen = false;
+        } else {
+          client.outputChannel.show(true);
+          channelOpen = true;
+        }
       }
-    });
-
-    commands.registerCommand(Commands.FOCUS_DIAGNOSTICS, () => {
-      commands.executeCommand("workbench.action.problems.focus");
-    });
+    };
+    Object.keys(clientCommands).forEach(k =>
+      registerCommand(k, clientCommands[k])
+    );
 
     // Handle the metals/executeClientCommand extension notification.
     client.onNotification(ExecuteClientCommand.type, params => {
@@ -264,7 +271,7 @@ function launchMetals(
     // The server updates the client with a brief text message about what
     // it is currently doing, for example "Compiling..".
     const item = window.createStatusBarItem(StatusBarAlignment.Right, 100);
-    item.command = Commands.TOGGLE_LOGS;
+    item.command = ClientCommands.toggleLogs;
     item.hide();
     client.onNotification(MetalsStatus.type, params => {
       item.text = params.text;
@@ -280,7 +287,7 @@ function launchMetals(
         item.command = params.command;
         commands.getCommands().then(values => {
           if (values.indexOf(params.command) < 0) {
-            commands.registerCommand(params.command, () => {
+            registerCommand(params.command, () => {
               client.sendRequest(ExecuteCommandRequest.type, {
                 command: params.command
               });
