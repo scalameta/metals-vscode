@@ -208,7 +208,7 @@ function launchMetals(
 
   client.onReady().then(_ => {
     let doctor: WebviewPanel;
-    function getDoctorPanel(): WebviewPanel {
+    function getDoctorPanel(isReload: boolean): WebviewPanel {
       if (!doctor) {
         doctor = window.createWebviewPanel(
           "metals-doctor",
@@ -219,6 +219,8 @@ function launchMetals(
         doctor.onDidDispose(() => {
           doctor = undefined;
         });
+      } else if (!isReload) {
+        doctor.reveal();
       }
       return doctor;
     }
@@ -261,13 +263,12 @@ function launchMetals(
 
     // Handle the metals/executeClientCommand extension notification.
     client.onNotification(ExecuteClientCommand.type, params => {
-      if (
-        params.command === "metals-doctor-run" ||
-        (doctor && params.command === "metals-doctor-reload")
-      ) {
+      const isRun = params.command === "metals-doctor-run";
+      const isReload = params.command === "metals-doctor-reload";
+      if (isRun || (doctor && isReload)) {
         const html = params.arguments[0];
         if (typeof html === "string") {
-          const panel = getDoctorPanel();
+          const panel = getDoctorPanel(isReload);
           panel.webview.html = html;
         }
       }
