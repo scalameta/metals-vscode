@@ -148,6 +148,7 @@ function launchMetals(
   enableScaladocIndentation();
 
   const baseProperties = [
+    `-Dmetals.input-box=on`,
     `-Dmetals.client=vscode`,
     `-Xss4m`,
     `-Xms100m`,
