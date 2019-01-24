@@ -157,7 +157,10 @@ function launchMetals(
   ];
   const mainArgs = ["-classpath", metalsClasspath, "scala.meta.metals.Main"];
   // let user properties override base properties
-  const launchArgs = baseProperties.concat(serverProperties).concat(mainArgs);
+  const launchArgs = baseProperties
+    .concat(jvmopts())
+    .concat(serverProperties)
+    .concat(mainArgs);
 
   const serverOptions: ServerOptions = {
     run: { command: javaPath, args: launchArgs },
@@ -521,4 +524,27 @@ function checkServerVersion() {
         }
       });
   }
+}
+
+function jvmopts(): string[] {
+  const opts: string[] = [];
+  const jvmoptsPath = path.join(workspace.rootPath, ".jvmopts");
+  if (fs.existsSync(jvmoptsPath)) {
+    outputChannel.appendLine("JVM options: " + jvmoptsPath);
+    const text = fs.readFileSync(jvmoptsPath, "utf8");
+    text.match(/[^\r\n]+/g).forEach(line => {
+      if (
+        line.startsWith("-") &&
+        // We care most about enabling options like HTTP proxy settings.
+        // We don't include memory options because Metals does not have the same
+        // memory requirements as for example the sbt build.
+        !line.startsWith("-Xms") &&
+        !line.startsWith("-Xmx") &&
+        !line.startsWith("-Xss")
+      ) {
+        opts.push(line);
+      }
+    });
+  }
+  return opts;
 }
