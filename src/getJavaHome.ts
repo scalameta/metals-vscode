@@ -13,6 +13,10 @@ export function getJavaHome(): Promise<string> {
         } else if (javaHomes.length === 0) {
           reject(new Error("No suitable Java version found"));
         } else {
+          // Sort by reverse security number so the highest number comes first.
+          javaHomes.sort((a, b) => {
+            return b.security - a.security;
+          });
           const jdkHome = javaHomes.find(j => j.isJDK);
           if (jdkHome) {
             resolve(jdkHome.path);
