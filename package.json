@@ -1,6 +1,6 @@
 {
   "name": "metals",
-  "displayName": "Metals",
+  "displayName": "Scala (Metals)",
   "description": "Work in progress language server for Scala",
   "keywords": [
     "scala",
