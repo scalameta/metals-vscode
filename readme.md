@@ -7,20 +7,20 @@
 Metals is still in early development so you may run into rough edges. The
 following table shows the status of various features.
 
-| Feature          | Status | Notes                                                              |
-| ---------------- | :----: | ------------------------------------------------------------------ |
-| Import build     |   ✅   | Works with sbt and Bloop                                           |
-| Compile errors   |   ✅   | Triggered on file save                                             |
-| Goto definition  |   ✅   | Works for both project sources and Java/Scala library dependencies |
-| Document symbols |   ✅   |                                                                    |
-| Formatting       |   ✅   | Uses Scalafmt                                                      |
-| Code completions |   ❌   |                                                                    |
-| Find references  |   ❌   |                                                                    |
-| Workspace symbol |   ❌   |                                                                    |
-| Rename symbol    |   ❌   |                                                                    |
-| Hover            |   ❌   |                                                                    |
-| Refactoring      |   ❌   |                                                                    |
-| Folding          |   ❌   |                                                                    |
+| Feature          | Status | Notes                                                                                                                    |
+| ---------------- | :----: | ------------------------------------------------------------------------------------------------------------------------ |
+| Import build     |   ✅   | Works with sbt and Bloop.                                                                                                |
+| Compile errors   |   ✅   | Triggered on file save.                                                                                                  |
+| Goto definition  |   ✅   | Works for both project sources and Java/Scala library dependencies.                                                      |
+| Document symbols |   ✅   |                                                                                                                          |
+| Formatting       |   ✅   | Uses Scalafmt.                                                                                                           |
+| Find references  |   ✅   |                                                                                                                          |
+| Workspace symbol |   ✅   | Works for both project sources and Java/Scala library dependencies. All-lowercase queries are case-insensitive searches. |
+| Code completions |   ❌   |                                                                                                                          |
+| Rename symbol    |   ❌   |                                                                                                                          |
+| Hover            |   ❌   |                                                                                                                          |
+| Refactoring      |   ❌   |                                                                                                                          |
+| Folding          |   ❌   |                                                                                                                          |
 
 ## Requirements
 
@@ -70,17 +70,17 @@ Once the import step completes, compilation starts for your open `*.scala`
 files.
 
 Once the sources have compiled successfully, you can navigate the codebase with
-"goto definition" with `Cmd+Click`.
+goto definition.
 
 ### Custom sbt launcher
 
 By default, Metals runs an embedded `sbt-launch.jar` launcher that respects
-`.sbtopts` and `.jvmopts`. The environment variables `SBT_OPTS` and `JAVA_OPTS`
-are also respected, but may not available to the Metals process in case it's
-started from a GUI application.
+`.sbtopts` and `.jvmopts`. However, the environment variables `SBT_OPTS` and
+`JAVA_OPTS` are not respected.
 
 Update the "Sbt Script" setting to use a custom `sbt` script instead of the
-embedded launcher.
+default Metals launcher if you need further customizations like reading
+environment variables.
 
 ![Sbt Launcher](assets/vscode-sbt-script.png)
 
@@ -156,3 +156,18 @@ systems like git.
 .metals/
 .bloop/
 ```
+
+## Show document symbols
+
+Run the "Explorer: Focus on Outline View" command to open the symbol outline for
+the current file in the sidebar.
+
+![Document Symbols Outline](https://i.imgur.com/T0kVJsr.gif)
+
+Run the "Open Symbol in File" command to search for a symbol in the current file
+without opening the sidebar.
+
+![Document Symbols Command](https://i.imgur.com/0PJ4brd.png)
+
+As you type, the symbol outline is also visible at the top of the file.
+![Document Symbols Outline](https://i.imgur.com/L217n4q.png)
