@@ -1,31 +1,31 @@
 import * as fs from "fs";
 import * as path from "path";
 import { workspace, OutputChannel } from "vscode";
+import { parse } from "shell-quote";
 
-function jvmOpts(outputChannel: OutputChannel): string | undefined {
+function jvmOpts(outputChannel: OutputChannel): string[] {
   const jvmoptsPath = path.join(workspace.rootPath, ".jvmopts");
   if (fs.existsSync(jvmoptsPath)) {
     outputChannel.appendLine("Using JVM options set in " + jvmoptsPath);
-    return fs.readFileSync(jvmoptsPath, "utf8");
+    const raw = fs.readFileSync(jvmoptsPath, "utf8");
+    return raw.match(/[^\r\n]+/g);
   }
+  return [];
 }
 
-function javaOpts(outputChannel: OutputChannel): string | undefined {
+function javaOpts(outputChannel: OutputChannel): string[] {
   const javaOpts = process.env.JAVA_OPTS;
   if (javaOpts) {
     outputChannel.appendLine("Using JAVA options set in JAVA_OPTS");
-    return javaOpts;
+    return parse(javaOpts);
   }
-}
-
-function parseOpts(opts: string | undefined): string[] {
-  return opts.match(/[^\r\n]+/g);
+  return [];
 }
 
 export function getJavaOptions(outputChannel: OutputChannel): string[] {
   const combinedOptions = [
-    ...parseOpts(javaOpts(outputChannel)),
-    ...parseOpts(jvmOpts(outputChannel))
+    ...javaOpts(outputChannel),
+    ...jvmOpts(outputChannel)
   ];
   const options = combinedOptions.reduce(
     (options, line) => {
