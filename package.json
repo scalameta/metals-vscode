@@ -51,12 +51,12 @@
       "properties": {
         "metals.serverVersion": {
           "type": "string",
-          "default": "0.4.0",
+          "default": "0.4.1",
           "markdownDescription": "The version of the Metals server artifact. Requires reloading the window.\n\n**Change only if you know what you're doing**"
         },
         "metals.serverProperties": {
           "type": "string",
-          "markdownDescription": "Optional space separated system properties to pass along to the Metals server.\n\nExample: `-Dmetals.bloop-protocol=tcp`"
+          "markdownDescription": "Optional space separated system properties to pass along to the Metals server. By default, the environment variable `JAVA_OPTS` and `.jvmopts` file are respected. \n\nExample: `-Dhttps.proxyHost=… -Dhttps.proxyPort=…` or `-Dmetals.statistics=all`"
         },
         "metals.javaHome": {
           "type": "string",
