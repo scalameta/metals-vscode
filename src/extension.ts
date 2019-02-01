@@ -39,6 +39,7 @@ import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
 import * as semver from "semver";
 import { getJavaHome } from "./getJavaHome";
+import { getJavaOptions } from "./getJavaOptions";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -88,9 +89,11 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
     .split(" ")
     .filter(e => e.length > 0);
 
+  const javaOptions = getJavaOptions(outputChannel);
+
   const process = spawn(
     javaPath,
-    serverProperties.concat([
+    javaOptions.concat(serverProperties).concat([
       "-jar",
       coursierPath,
       "fetch",
@@ -119,7 +122,8 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
         context,
         javaPath,
         classpath,
-        serverProperties
+        serverProperties,
+        javaOptions
       );
     },
     () => {
@@ -142,7 +146,8 @@ function launchMetals(
   context: ExtensionContext,
   javaPath: string,
   metalsClasspath: string,
-  serverProperties: string[]
+  serverProperties: string[],
+  javaOptions: string[]
 ) {
   // Make editing Scala docstrings slightly nicer.
   enableScaladocIndentation();
@@ -158,7 +163,7 @@ function launchMetals(
   const mainArgs = ["-classpath", metalsClasspath, "scala.meta.metals.Main"];
   // let user properties override base properties
   const launchArgs = baseProperties
-    .concat(jvmopts())
+    .concat(javaOptions)
     .concat(serverProperties)
     .concat(mainArgs);
 
@@ -524,27 +529,4 @@ function checkServerVersion() {
         }
       });
   }
-}
-
-function jvmopts(): string[] {
-  const opts: string[] = [];
-  const jvmoptsPath = path.join(workspace.rootPath, ".jvmopts");
-  if (fs.existsSync(jvmoptsPath)) {
-    outputChannel.appendLine("JVM options: " + jvmoptsPath);
-    const text = fs.readFileSync(jvmoptsPath, "utf8");
-    text.match(/[^\r\n]+/g).forEach(line => {
-      if (
-        line.startsWith("-") &&
-        // We care most about enabling options like HTTP proxy settings.
-        // We don't include memory options because Metals does not have the same
-        // memory requirements as for example the sbt build.
-        !line.startsWith("-Xms") &&
-        !line.startsWith("-Xmx") &&
-        !line.startsWith("-Xss")
-      ) {
-        opts.push(line);
-      }
-    });
-  }
-  return opts;
 }
