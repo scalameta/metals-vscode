@@ -18,11 +18,16 @@ function javaOpts(outputChannel: OutputChannel): string | undefined {
   }
 }
 
+function parseOpts(opts: string | undefined): string[] {
+  return opts.match(/[^\r\n]+/g);
+}
+
 export function getJavaOptions(outputChannel: OutputChannel): string[] {
-  const combinedOptions = (javaOpts(outputChannel) || "").concat(
-    jvmOpts(outputChannel) || ""
-  );
-  const options = combinedOptions.match(/[^\r\n]+/g).reduce(
+  const combinedOptions = [
+    ...parseOpts(javaOpts(outputChannel)),
+    ...parseOpts(jvmOpts(outputChannel))
+  ];
+  const options = combinedOptions.reduce(
     (options, line) => {
       if (
         line.startsWith("-") &&
