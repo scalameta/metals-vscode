@@ -2,6 +2,10 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.2.6 (2019/02/02 20:50 +00:00)
+- [89a5b7e](https://github.com/scalameta/metals-vscode/commit/89a5b7e21815b00612305a239c94a2357d093335) Upgrade to Scalameta v0.4.4 (@olafurpg)
+- [544aec7](https://github.com/scalameta/metals-vscode/commit/544aec7f6532aa8b1124e2ccbfa90cadf96c6789) v1.2.5
+
 ### v1.2.5 (2019/02/02 11:05 +00:00)
 - [53fe047](https://github.com/scalameta/metals-vscode/commit/53fe0473d12c7b045bc5d169030a7e43d9c297b7) Update to Metals 0.4.3 (@gabro)
 - [51eabad](https://github.com/scalameta/metals-vscode/commit/51eabad2ee7fb728eb201ff3e21a2ff6116f5125) Add link to Metals release notes in CHANGELOG.md (@gabro)
@@ -94,8 +98,8 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [37ec5e5](https://github.com/scalameta/metals-vscode/commit/37ec5e524ac8276713b3ee95c532fdd4baa20408) Bump default serverVersion to 0.3.1 (@gabro)
 - [bea5fff](https://github.com/scalameta/metals-vscode/commit/bea5fff1a328f0afab1df9c68872ab6c3b5a01e8) Use markdown for configuration description (@gabro)
 - [54c0e1f](https://github.com/scalameta/metals-vscode/commit/54c0e1ffdf118b3812826a4a9cbae0e515463599) Detect when javaHome and serverVersion change and prompt to reload (@gabro)
-- [1d2f396](https://github.com/scalameta/metals-vscode/commit/1d2f3969b4d59614c332c1766a889fbcc79bb6a1) Fix the publishing from the CI (@gabro)
 - [6eb23d2](https://github.com/scalameta/metals-vscode/commit/6eb23d29c915ccdbde64225b81c530ad8e397a27) v0.3.2
+- [1d2f396](https://github.com/scalameta/metals-vscode/commit/1d2f3969b4d59614c332c1766a889fbcc79bb6a1) Fix the publishing from the CI (@gabro)
 
 ### v0.3.1 (2018/12/07 11:10 +00:00)
 - [b382a95](https://github.com/scalameta/metals-vscode/commit/b382a95b6e968b599f01a1edeb91eb6698686782) Use yarn version instead of vsce publish <version> (@gabro)
