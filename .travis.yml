@@ -26,7 +26,8 @@ jobs:
         - git checkout -b travis-temp
         # change the version in package.json
         - yarn version --no-git-tag-version --new-version $NEW_VERSION
-        - yarn github-changes -o scalameta -r metals-vscode --no-merges -k $GITHUB_TOKEN
+        - yarn github-changes -o scalameta -r metals-vscode --no-merges -t "VSCode Extension Changelog" -k $GITHUB_TOKEN
+        - sed -i '1i Check out the Metals release notes at [https://scalameta.org/metals/blog/](https://scalameta.org/metals/blog/)\n' CHANGELOG.md
         - git commit -am "$TRAVIS_TAG"
         # push the changes to package.json
         - git push "https://${GITHUB_TOKEN}@github.com/$TRAVIS_REPO_SLUG" HEAD:master
