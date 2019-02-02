@@ -1,4 +1,11 @@
-## Change Log
+Check out the Metals release notes at [https://scalameta.org/metals/blog/](https://scalameta.org/metals/blog/)
+
+## VSCode Extension Changelog
+
+### v1.2.5 (2019/02/02 11:05 +00:00)
+- [53fe047](https://github.com/scalameta/metals-vscode/commit/53fe0473d12c7b045bc5d169030a7e43d9c297b7) Update to Metals 0.4.3 (@gabro)
+- [51eabad](https://github.com/scalameta/metals-vscode/commit/51eabad2ee7fb728eb201ff3e21a2ff6116f5125) Add link to Metals release notes in CHANGELOG.md (@gabro)
+- [2640b23](https://github.com/scalameta/metals-vscode/commit/2640b2323830d6592b0528ffbf35050b993bcc2f) v1.2.4
 
 ### v1.2.4 (2019/02/02 09:21 +00:00)
 - [2f98813](https://github.com/scalameta/metals-vscode/commit/2f9881330ea9441591b7dd8aa773f2ec674f35ab) Fix changelog format (@gabro)
