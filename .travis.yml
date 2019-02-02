@@ -26,6 +26,7 @@ jobs:
         - git checkout -b travis-temp
         # change the version in package.json
         - yarn version --no-git-tag-version --new-version $NEW_VERSION
+        - yarn github-changes -o scalameta -r metals-vscode -a --only-pulls -k "$GITHUB_TOKEN"
         - git commit -am "$TRAVIS_TAG"
         # push the changes to package.json
         - git push "https://${GITHUB_TOKEN}@github.com/$TRAVIS_REPO_SLUG" HEAD:master
