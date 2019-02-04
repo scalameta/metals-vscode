@@ -17,9 +17,17 @@ function javaOpts(outputChannel: OutputChannel): string[] {
   const javaOpts = process.env.JAVA_OPTS;
   if (javaOpts) {
     outputChannel.appendLine("Using JAVA options set in JAVA_OPTS");
-    return parse(javaOpts);
+    return parse(javaOpts).filter((entry): entry is string => {
+      if (typeof entry === 'string') {
+        return true;
+      } else {
+        outputChannel.appendLine(`Ignoring unexpected JAVA_OPTS token: ${entry}`);
+        return false;
+      }
+    })
+  } else {
+    return [];
   }
-  return [];
 }
 
 export function getJavaOptions(outputChannel: OutputChannel): string[] {
