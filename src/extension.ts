@@ -86,9 +86,11 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
 
   const config = workspace.getConfiguration("metals");
   const serverVersionConfig: string = config.get<string>("serverVersion")!;
+  const defaultServerVersion = config.inspect<string>("serverVersion")!
+    .defaultValue!;
   const serverVersion = serverVersionConfig
     ? serverVersionConfig
-    : config.inspect("serverVersion")!.defaultValue;
+    : defaultServerVersion;
   const serverProperties: string[] = workspace
     .getConfiguration("metals")
     .get("serverProperties")!
@@ -98,7 +100,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
 
   const javaOptions = getJavaOptions(outputChannel);
 
-  const process = spawn(
+  const fetchProcess = spawn(
     javaPath,
     javaOptions.concat(serverProperties).concat([
       "-jar",
@@ -122,7 +124,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
     { env: { COURSIER_NO_TERM: "true" } }
   );
   const title = `Downloading Metals v${serverVersion}`;
-  trackDownloadProgress(title, outputChannel, process).then(
+  trackDownloadProgress(title, outputChannel, fetchProcess).then(
     classpath => {
       launchMetals(
         outputChannel,
@@ -134,10 +136,26 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
       );
     },
     () => {
-      const msg =
-        `Failed to download Metals, make sure you have an internet connection, ` +
-        `the Metals version '${serverVersion}' is correct and the Java Home '${javaPath}' is valid. ` +
-        `You can configure the Metals version and Java Home under settings.`;
+      const msg = (() => {
+        if (process.env.FLATPAK_SANDBOX_DIR) {
+          return (
+            `Failed to download Metals. It seems you are running Visual Studio Code inside the` +
+            `Flatpak sandbox, which is known to interfere with the download of Metals.` +
+            `Please, try running Visual Studio Code without Flatpak.`
+          );
+        } else if (serverVersion === defaultServerVersion) {
+          return (
+            `Failed to download Metals, make sure you have an internet connection and` +
+            `the Java Home '${javaPath}' is valid. You can configure the Java Home in the settings.`
+          );
+        } else {
+          return (
+            `Failed to download Metals, make sure you have an internet connection, ` +
+            `the Metals version '${serverVersion}' is correct and the Java Home '${javaPath}' is valid. ` +
+            `You can configure the Metals version and Java Home in the settings.`
+          );
+        }
+      })();
       outputChannel.show();
       window.showErrorMessage(msg, openSettingsAction).then(choice => {
         if (choice === openSettingsAction) {
