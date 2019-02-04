@@ -6,7 +6,7 @@ import { OutputChannel, window, ProgressLocation } from "vscode";
  * A progress bar that starts only the first time `startOrContinue` is called.
  */
 export class LazyProgress {
-  private progress;
+  private progress: Thenable<void> | undefined;
   startOrContinue(
     title: string,
     output: OutputChannel,

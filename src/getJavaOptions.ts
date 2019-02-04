@@ -4,11 +4,16 @@ import { workspace, OutputChannel } from "vscode";
 import { parse } from "shell-quote";
 
 function jvmOpts(outputChannel: OutputChannel): string[] {
-  const jvmoptsPath = path.join(workspace.rootPath, ".jvmopts");
-  if (fs.existsSync(jvmoptsPath)) {
-    outputChannel.appendLine("Using JVM options set in " + jvmoptsPath);
-    const raw = fs.readFileSync(jvmoptsPath, "utf8");
-    return raw.match(/[^\r\n]+/g);
+  if (workspace.workspaceFolders) {
+    const jvmoptsPath = path.join(
+      workspace.workspaceFolders[0].uri.fsPath,
+      ".jvmopts"
+    );
+    if (fs.existsSync(jvmoptsPath)) {
+      outputChannel.appendLine("Using JVM options set in " + jvmoptsPath);
+      const raw = fs.readFileSync(jvmoptsPath, "utf8");
+      return raw.match(/[^\r\n]+/g) || [];
+    }
   }
   return [];
 }
@@ -17,14 +22,18 @@ function javaOpts(outputChannel: OutputChannel): string[] {
   const javaOpts = process.env.JAVA_OPTS;
   if (javaOpts) {
     outputChannel.appendLine("Using JAVA options set in JAVA_OPTS");
-    return parse(javaOpts).filter((entry): entry is string => {
-      if (typeof entry === 'string') {
-        return true;
-      } else {
-        outputChannel.appendLine(`Ignoring unexpected JAVA_OPTS token: ${entry}`);
-        return false;
+    return parse(javaOpts).filter(
+      (entry): entry is string => {
+        if (typeof entry === "string") {
+          return true;
+        } else {
+          outputChannel.appendLine(
+            `Ignoring unexpected JAVA_OPTS token: ${entry}`
+          );
+          return false;
+        }
       }
-    })
+    );
   } else {
     return [];
   }

@@ -65,10 +65,17 @@ export async function activate(context: ExtensionContext) {
 }
 
 function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
-  if (fs.existsSync(dottyIdeArtifact())) {
+  if (!workspace.workspaceFolders) {
+    outputChannel.appendLine(
+      `Metals will not start because you've opened a single file and not a project directory.`
+    );
+    return;
+  }
+  const dottyArtifact = dottyIdeArtifact();
+  if (dottyArtifact && fs.existsSync(dottyArtifact)) {
     outputChannel.appendLine(
       `Metals will not start since Dotty is enabled for this workspace. ` +
-        `To enable Metals, remove the file ${dottyIdeArtifact()} and run 'Reload window'`
+        `To enable Metals, remove the file ${dottyArtifact} and run 'Reload window'`
     );
     return;
   }
@@ -78,13 +85,13 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   const coursierPath = path.join(context.extensionPath, "./coursier");
 
   const config = workspace.getConfiguration("metals");
-  const serverVersionConfig: string = config.get("serverVersion");
+  const serverVersionConfig: string = config.get<string>("serverVersion")!;
   const serverVersion = serverVersionConfig
     ? serverVersionConfig
-    : config.inspect("serverVersion").defaultValue;
+    : config.inspect("serverVersion")!.defaultValue;
   const serverProperties: string[] = workspace
     .getConfiguration("metals")
-    .get("serverProperties")
+    .get("serverProperties")!
     .toString()
     .split(" ")
     .filter(e => e.length > 0);
@@ -215,7 +222,7 @@ function launchMetals(
   context.subscriptions.push(client.start());
 
   client.onReady().then(_ => {
-    let doctor: WebviewPanel;
+    let doctor: WebviewPanel | undefined;
     function getDoctorPanel(isReload: boolean): WebviewPanel {
       if (!doctor) {
         doctor = window.createWebviewPanel(
@@ -265,8 +272,8 @@ function launchMetals(
         }
       }
     };
-    Object.keys(clientCommands).forEach(k =>
-      registerCommand(k, clientCommands[k])
+    Object.entries(clientCommands).forEach(([name, command]) =>
+      registerCommand(name, command)
     );
 
     // Handle the metals/executeClientCommand extension notification.
@@ -274,7 +281,7 @@ function launchMetals(
       const isRun = params.command === "metals-doctor-run";
       const isReload = params.command === "metals-doctor-reload";
       if (isRun || (doctor && isReload)) {
-        const html = params.arguments[0];
+        const html = params.arguments && params.arguments[0];
         if (typeof html === "string") {
           const panel = getDoctorPanel(isReload);
           panel.webview.html = html;
@@ -301,7 +308,7 @@ function launchMetals(
       if (params.command) {
         item.command = params.command;
         commands.getCommands().then(values => {
-          if (values.indexOf(params.command) < 0) {
+          if (params.command && values.indexOf(params.command) < 0) {
             registerCommand(params.command, () => {
               client.sendRequest(ExecuteCommandRequest.type, {
                 command: params.command
@@ -315,7 +322,7 @@ function launchMetals(
     });
 
     window.onDidChangeActiveTextEditor(editor => {
-      if (editor.document.languageId == "scala") {
+      if (editor && editor.document.languageId == "scala") {
         client.sendNotification(
           MetalsDidFocus.type,
           editor.document.uri.toString()
@@ -463,8 +470,13 @@ function enableScaladocIndentation() {
   });
 }
 
-function dottyIdeArtifact(): string {
-  return path.join(workspace.rootPath, ".dotty-ide-artifact");
+function dottyIdeArtifact(): string | undefined {
+  if (workspace.workspaceFolders) {
+    return path.join(
+      workspace.workspaceFolders[0].uri.fsPath,
+      ".dotty-ide-artifact"
+    );
+  }
 }
 
 function detectLaunchConfigurationChanges() {
@@ -491,9 +503,9 @@ function detectLaunchConfigurationChanges() {
 
 function checkServerVersion() {
   const config = workspace.getConfiguration("metals");
-  const serverVersion = config.get<string>("serverVersion");
-  const latestServerVersion = config.inspect<string>("serverVersion")
-    .defaultValue;
+  const serverVersion = config.get<string>("serverVersion")!;
+  const latestServerVersion = config.inspect<string>("serverVersion")!
+    .defaultValue!;
   const isOutdated = (() => {
     try {
       return semver.lt(serverVersion, latestServerVersion);
