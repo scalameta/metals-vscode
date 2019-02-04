@@ -2,6 +2,12 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.2.7 (2019/02/04 16:48 +00:00)
+- [b2471ef](https://github.com/scalameta/metals-vscode/commit/b2471ef5afa56349d384a32bdc8bf634636d0edc) Improve error messages for failed download of Metals (@gabro)
+- [894bbdd](https://github.com/scalameta/metals-vscode/commit/894bbdd38cf80c6eec3629ebb0fe1fb7d05ddd00) Enable strict mode in TypeScript. This also fixes #79 (@gabro)
+- [5f80582](https://github.com/scalameta/metals-vscode/commit/5f805822def5cb2290bbfa3840c085a3730ce764) Fix shell quote types (@swiesner-dlr)
+- [2e68c2c](https://github.com/scalameta/metals-vscode/commit/2e68c2c18b8986bcf9b30825d91fa2d6fd7764a5) v1.2.6
+
 ### v1.2.6 (2019/02/02 20:50 +00:00)
 - [89a5b7e](https://github.com/scalameta/metals-vscode/commit/89a5b7e21815b00612305a239c94a2357d093335) Upgrade to Scalameta v0.4.4 (@olafurpg)
 - [544aec7](https://github.com/scalameta/metals-vscode/commit/544aec7f6532aa8b1124e2ccbfa90cadf96c6789) v1.2.5
