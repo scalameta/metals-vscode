@@ -10,7 +10,7 @@ export function getJavaHome(): Promise<string> {
       locateJavaHome({ version: "1.8" }, (err, javaHomes) => {
         if (err) {
           reject(err);
-        } else if (javaHomes.length === 0) {
+        } else if (!javaHomes || javaHomes.length === 0) {
           reject(new Error("No suitable Java version found"));
         } else {
           // Sort by reverse security number so the highest number comes first.
