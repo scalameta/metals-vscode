@@ -100,9 +100,11 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
 
   const javaOptions = getJavaOptions(outputChannel);
 
+  const fetchProperties = serverProperties.filter(p => !p.startsWith("-agentlib"));
+
   const fetchProcess = spawn(
     javaPath,
-    javaOptions.concat(serverProperties).concat([
+    javaOptions.concat(fetchProperties).concat([
       "-jar",
       coursierPath,
       "fetch",
