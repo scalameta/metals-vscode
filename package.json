@@ -46,6 +46,11 @@
     "workspaceContains:project/build.properties"
   ],
   "contributes": {
+    "configurationDefaults": {
+      "[scala]": {
+        "editor.suggestSelection": "first"
+      }
+    },
     "configuration": {
       "title": "Metals",
       "properties": {
