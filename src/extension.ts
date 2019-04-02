@@ -100,7 +100,9 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
 
   const javaOptions = getJavaOptions(outputChannel);
 
-  const fetchProperties = serverProperties.filter(p => !p.startsWith("-agentlib"));
+  const fetchProperties = serverProperties.filter(
+    p => !p.startsWith("-agentlib")
+  );
 
   const fetchProcess = spawn(
     javaPath,
@@ -183,9 +185,7 @@ function launchMetals(
     `-Dmetals.input-box=on`,
     `-Dmetals.client=vscode`,
     `-Xss4m`,
-    `-Xms100m`,
-    `-XX:+UseG1GC`,
-    `-XX:+UseStringDeduplication`
+    `-Xms100m`
   ];
   const mainArgs = ["-classpath", metalsClasspath, "scala.meta.metals.Main"];
   // let user properties override base properties
