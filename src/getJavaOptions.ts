@@ -19,24 +19,28 @@ function jvmOpts(outputChannel: OutputChannel): string[] {
 }
 
 function javaOpts(outputChannel: OutputChannel): string[] {
-  const javaOpts = process.env.JAVA_OPTS;
-  if (javaOpts) {
-    outputChannel.appendLine("Using JAVA options set in JAVA_OPTS");
-    return parse(javaOpts).filter(
-      (entry): entry is string => {
-        if (typeof entry === "string") {
-          return true;
-        } else {
-          outputChannel.appendLine(
-            `Ignoring unexpected JAVA_OPTS token: ${entry}`
-          );
-          return false;
+  function expandVariable(variable: string | undefined): string[] {
+    if (variable) {
+      outputChannel.appendLine("Using JAVA options set in JAVA_OPTS");
+      return parse(variable).filter(
+        (entry): entry is string => {
+          if (typeof entry === "string") {
+            return true;
+          } else {
+            outputChannel.appendLine(
+              `Ignoring unexpected JAVA_OPTS token: ${entry}`
+            );
+            return false;
+          }
         }
-      }
-    );
-  } else {
-    return [];
+      );
+    } else {
+      return [];
+    }
   }
+  const javaOpts = expandVariable(process.env.JAVA_OPTS);
+  const javaFlags = expandVariable(process.env.JAVA_FLAGS);
+  return javaOpts.concat(javaFlags);
 }
 
 export function getJavaOptions(outputChannel: OutputChannel): string[] {
