@@ -141,6 +141,9 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
     },
     () => {
       const msg = (() => {
+        const proxy =
+          `See https://scalameta.org/metals/docs/editors/vscode.html#http-proxy for instructions ` +
+          `if you are using an HTTP proxy.`;
         if (process.env.FLATPAK_SANDBOX_DIR) {
           return (
             `Failed to download Metals. It seems you are running Visual Studio Code inside the` +
@@ -150,13 +153,15 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
         } else if (serverVersion === defaultServerVersion) {
           return (
             `Failed to download Metals, make sure you have an internet connection and` +
-            `the Java Home '${javaPath}' is valid. You can configure the Java Home in the settings.`
+            `the Java Home '${javaPath}' is valid. You can configure the Java Home in the settings.` +
+            proxy
           );
         } else {
           return (
             `Failed to download Metals, make sure you have an internet connection, ` +
             `the Metals version '${serverVersion}' is correct and the Java Home '${javaPath}' is valid. ` +
-            `You can configure the Metals version and Java Home in the settings.`
+            `You can configure the Metals version and Java Home in the settings.` +
+            proxy
           );
         }
       })();
