@@ -143,7 +143,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
       const msg = (() => {
         const proxy =
           `See https://scalameta.org/metals/docs/editors/vscode.html#http-proxy for instructions ` +
-          `if you are using a corporate HTTP proxy.`;
+          `if you are using an HTTP proxy.`;
         if (process.env.FLATPAK_SANDBOX_DIR) {
           return (
             `Failed to download Metals. It seems you are running Visual Studio Code inside the` +
