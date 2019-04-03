@@ -2,6 +2,17 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.2.8 (2019/04/03 13:05 +00:00)
+- [85e8e38](https://github.com/scalameta/metals-vscode/commit/85e8e38808556633333feb834de9e1ecf099dd6c) Update src/extension.ts (@gabro)
+- [a7faf56](https://github.com/scalameta/metals-vscode/commit/a7faf56fddc22d515331bf8fcfe04726040c5808) Update default for "editor.suggestSelection" to "first", fixes #86. (@olafurpg)
+- [893e4a4](https://github.com/scalameta/metals-vscode/commit/893e4a41b633e72406b39d72fc922e9d4c84db65) Treat JAVA_FLAGS the same way as JAVA_OPTS, fixes #83. (@olafurpg)
+- [d382e90](https://github.com/scalameta/metals-vscode/commit/d382e90f4105f42b6a8c1f500eb47763eb2b0d08) Link to HTTP proxy instructions in "failed to download" error. (@olafurpg)
+- [76c2857](https://github.com/scalameta/metals-vscode/commit/76c2857008dfba023e7626d762021f888c4a8551) Upgrade coursier binary from 1.1.0-M9 to 1.1.0-M13-2, fixes #66. (@olafurpg)
+- [27393ae](https://github.com/scalameta/metals-vscode/commit/27393ae6c48b5e4ef9a834c9dbe28cf71bb219e4) Remove default GC options, fixes #85. (@olafurpg)
+- [b1420ec](https://github.com/scalameta/metals-vscode/commit/b1420ec6ed3f365f553e80a3adaa3a8a07dae488) prevent fetch process from being run in debug mode
+- [1c2cd2f](https://github.com/scalameta/metals-vscode/commit/1c2cd2f90ad1edca8ef22f9348a8a992930ba8f8) Experiment with release drafter (@olafurpg)
+- [f8a49ba](https://github.com/scalameta/metals-vscode/commit/f8a49bae54af41a722beab860495879de7431dd2) v1.2.7
+
 ### v1.2.7 (2019/02/04 16:48 +00:00)
 - [b2471ef](https://github.com/scalameta/metals-vscode/commit/b2471ef5afa56349d384a32bdc8bf634636d0edc) Improve error messages for failed download of Metals (@gabro)
 - [894bbdd](https://github.com/scalameta/metals-vscode/commit/894bbdd38cf80c6eec3629ebb0fe1fb7d05ddd00) Enable strict mode in TypeScript. This also fixes #79 (@gabro)
