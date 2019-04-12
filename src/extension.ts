@@ -14,7 +14,8 @@ import {
   WebviewPanel,
   ViewColumn,
   OutputChannel,
-  ConfigurationTarget
+  ConfigurationTarget,
+  WorkspaceConfiguration
 } from "vscode";
 import {
   LanguageClient,
@@ -526,11 +527,40 @@ function detectLaunchConfigurationChanges() {
   });
 }
 
+function serverVersionInfo(
+  config: WorkspaceConfiguration
+): {
+  serverVersion: string;
+  latestServerVersion: string;
+  configurationTarget: ConfigurationTarget;
+} {
+  const computedVersion = config.get<string>("serverVersion")!;
+  const { defaultValue, workspaceFolderValue, workspaceValue } = config.inspect<
+    string
+  >("serverVersion")!;
+  const configurationTarget = (() => {
+    if (workspaceFolderValue && workspaceFolderValue !== defaultValue) {
+      return ConfigurationTarget.WorkspaceFolder;
+    }
+    if (workspaceValue && workspaceValue !== defaultValue) {
+      return ConfigurationTarget.Workspace;
+    }
+    return ConfigurationTarget.Workspace;
+  })();
+  return {
+    serverVersion: computedVersion,
+    latestServerVersion: defaultValue!,
+    configurationTarget
+  };
+}
+
 function checkServerVersion() {
   const config = workspace.getConfiguration("metals");
-  const serverVersion = config.get<string>("serverVersion")!;
-  const latestServerVersion = config.inspect<string>("serverVersion")!
-    .defaultValue!;
+  const {
+    serverVersion,
+    latestServerVersion,
+    configurationTarget
+  } = serverVersionInfo(config);
   const isOutdated = (() => {
     try {
       return semver.lt(serverVersion, latestServerVersion);
@@ -557,7 +587,7 @@ function checkServerVersion() {
             config.update(
               "serverVersion",
               latestServerVersion,
-              ConfigurationTarget.Global
+              configurationTarget
             );
             break;
           case openSettingsAction:
