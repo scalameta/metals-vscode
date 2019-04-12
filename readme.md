@@ -2,37 +2,39 @@
 
 # Metals extension for Visual Studio Code
 
-![Goto Definition](https://user-images.githubusercontent.com/1408093/48776422-1f764f00-ecd0-11e8-96d1-170f2354d50e.gif)
+![Completions](https://user-images.githubusercontent.com/1408093/56036958-725bac00-5d2e-11e9-9cf7-46249125494a.gif)
 
 Metals is still in early development so you may run into rough edges. The
 following table shows the status of various features.
 
-| Feature          | Status | Notes                                                                                                                    |
-| ---------------- | :----: | ------------------------------------------------------------------------------------------------------------------------ |
-| Import build     |   ✅   | Works with sbt and Bloop.                                                                                                |
-| Compile errors   |   ✅   | Triggered on file save.                                                                                                  |
-| Goto definition  |   ✅   | Works for both project sources and Java/Scala library dependencies.                                                      |
-| Document symbols |   ✅   |                                                                                                                          |
-| Formatting       |   ✅   | Uses Scalafmt.                                                                                                           |
-| Find references  |   ✅   |                                                                                                                          |
-| Workspace symbol |   ✅   | Works for both project sources and Java/Scala library dependencies. All-lowercase queries are case-insensitive searches. |
-| Code completions |   ❌   |                                                                                                                          |
-| Rename symbol    |   ❌   |                                                                                                                          |
-| Hover            |   ❌   |                                                                                                                          |
-| Refactoring      |   ❌   |                                                                                                                          |
-| Folding          |   ❌   |                                                                                                                          |
+| Feature               | Status | Notes                                                                                            |
+| --------------------- | :----: | ------------------------------------------------------------------------------------------------ |
+| Import build          |   ✅   | Works with sbt and Bloop.                                                                        |
+| Compile errors        |   ✅   | Syntax errors as you type and type errors on file save.                                          |
+| Completions           |   ✅   |                                                                                                  |
+| Hover (type at point) |   ✅   |                                                                                                  |
+| Goto definition       |   ✅   | Works for project sources and Java/Scala library dependencies.                                   |
+| Document symbols      |   ✅   |                                                                                                  |
+| Formatting            |   ✅   | Uses Scalafmt.                                                                                   |
+| Find references       |   ✅   |                                                                                                  |
+| Workspace symbol      |   ✅   | Searches workspace sources and library dependencies. All-lowercase queries are case-insensitive. |
+| Highlight             |   ✅   |                                                                                                  |
+| Folding               |   ✅   |                                                                                                  |
+| Rename symbol         |   ❌   |                                                                                                  |
+| Code actions          |   ❌   |                                                                                                  |
 
 ## Requirements
 
-**Java 8**. Metals does not work with Java 11 yet so make sure the JAVA_HOME
-environment variable points to Java 8.
+**OpenJDK or Oracle Java 8**. Eclipse OpenJ9 and Java 11 are not supported,
+please make sure the `JAVA_HOME` environment variable points to valid Java 8
+installation.
 
 **macOS, Linux or Windows**. Metals is developed on macOS and every PR is tested
 on Ubuntu+Windows.
 
 **Scala 2.12 and 2.11**. Metals works only with Scala versions 2.12.8, 2.12.7,
 2.12.6, 2.12.5, 2.12.4, 2.11.12, 2.11.11, 2.11.10 and 2.11.9. Note that 2.10.x
-and 2.13.0-M5 are not supported.
+and 2.13.x are not supported.
 
 ## Installation
 
@@ -57,7 +59,7 @@ when a `*.scala` or `*.sbt` file is opened.
 The first time you open Metals in a new workspace it prompts you to import the
 build. Click "Import build" to start the installation step.
 
-![Import build](assets/vscode-import-build.png)
+![Import build](https://i.imgur.com/0VqZWay.png)
 
 - "Not now" disables this prompt for 2 minutes.
 - "Don't show again" disables this prompt forever, use `rm -rf .metals/` to
@@ -82,7 +84,7 @@ Update the "Sbt Script" setting to use a custom `sbt` script instead of the
 default Metals launcher if you need further customizations like reading
 environment variables.
 
-![Sbt Launcher](assets/vscode-sbt-script.png)
+![Sbt Launcher](https://i.imgur.com/NuwEBe4.png)
 
 ### Speeding up import
 
@@ -101,21 +103,21 @@ to learn how to speed up build import.
 When you change `build.sbt` or sources under `project/`, you will be prompted to
 re-import the build.
 
-![Import sbt changes](assets/vscode-import-changes.png)
+![Import sbt changes](https://i.imgur.com/72kdZkL.png)
 
 ### Manually trigger build import
 
 To manually trigger a build import, execute the "Import build" command through
 the command palette (`Cmd + Shift + P`).
 
-![Import build command](assets/vscode-import-build-command.png)
+![Import build command](https://i.imgur.com/QHLKt8u.png)
 
 ## Run doctor
 
 Execute the "Run Doctor" through the command palette to troubleshoot potential
 configuration problems in your workspace.
 
-![Run doctor command](assets/vscode-run-doctor.png)
+![Run doctor command](https://i.imgur.com/K02g0UM.png)
 
 ## Configure Java version
 
@@ -127,7 +129,7 @@ to another version such as Java 11.
 To override the default Java home location, update the "Java Home" variable to
 in the settings menu.
 
-![Java Home setting](assets/vscode-java-home.png)
+![Java Home setting](https://i.imgur.com/sKrPKk2.png)
 
 If this setting is defined, the VS Code plugin uses the custom path instead of
 the `JAVA_HOME` environment variable.
@@ -143,6 +145,20 @@ command to copy the Java 8 home path.
 ```sh
 /usr/libexec/java_home -v 1.8 | pbcopy
 ```
+
+## HTTP proxy
+
+Metals uses [Coursier](https://get-coursier.io/docs/other-proxy) to download
+artifacts from Maven Central. To use Metals behind an HTTP proxy, configure the
+system properties `-Dhttps.proxyHost=… -Dhttps.proxyPort=…` in one of the
+following locations:
+
+- `.jvmopts` file in the workspace directory.
+- `JAVA_OPTS` environment variable, make sure to start `code` from your terminal
+  when using this option since environment variables don't always propagate
+  correctly when opening VS Code as a GUI application outside a terminal.
+- "Server Properties" setting for the Metals VS Code extension, which can be
+  configured per-workspace or per-user.
 
 ## Gitignore `.metals/` and `.bloop/`
 
