@@ -63,6 +63,7 @@ export async function activate(context: ExtensionContext) {
         }
       });
     });
+  commands.executeCommand("setContext", "metals:enabled", true);
 }
 
 function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
@@ -76,7 +77,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   if (dottyArtifact && fs.existsSync(dottyArtifact)) {
     outputChannel.appendLine(
       `Metals will not start since Dotty is enabled for this workspace. ` +
-        `To enable Metals, remove the file ${dottyArtifact} and run 'Reload window'`
+      `To enable Metals, remove the file ${dottyArtifact} and run 'Reload window'`
     );
     return;
   }
