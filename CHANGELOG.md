@@ -2,6 +2,10 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.3.2 (2019/04/27 07:24 +00:00)
+- [9214b3b](https://github.com/scalameta/metals-vscode/commit/9214b3b58d3fb2505ed71d7ea370a4cea2ace715) Upgrade to Metals v0.5.1 (@olafurpg)
+- [650e7c4](https://github.com/scalameta/metals-vscode/commit/650e7c4ffe5e06afe7298589d0bf1bbbe5b761cf) v1.3.1
+
 ### v1.3.1 (2019/04/12 17:03 +00:00)
 - [d9b81e6](https://github.com/scalameta/metals-vscode/commit/d9b81e6b9415a7502bb17acd6005b14e80b9fb41) Bump patch version (@gabro)
 - [b571b3e](https://github.com/scalameta/metals-vscode/commit/b571b3eab10f7771f48676e35f5b7396d66a4ff8) Improve version upgrade logic (@gabro)
