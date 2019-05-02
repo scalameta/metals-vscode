@@ -53,6 +53,7 @@ import { getJavaOptions } from "./getJavaOptions";
 import { startTreeView } from "./treeview";
 import { MetalsFeatures } from "./MetalsFeatures";
 import { MetalsTreeViewReveal, MetalsTreeViews } from "./tree-view-protocol";
+import * as scalaDebugger from "./debugger";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -334,6 +335,11 @@ function launchMetals(
     Object.entries(clientCommands).forEach(([name, command]) =>
       registerCommand(name, command)
     );
+
+    scalaDebugger.initialize().forEach(disposable =>
+        context.subscriptions.push(disposable)
+    );
+    registerCommand(scalaDebugger.startSessionCommand, scalaDebugger.start);
 
     // Handle the metals/executeClientCommand extension notification.
     client.onNotification(ExecuteClientCommand.type, params => {
