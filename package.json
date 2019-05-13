@@ -43,7 +43,8 @@
   "activationEvents": [
     "onLanguage:scala",
     "workspaceContains:build.sbt",
-    "workspaceContains:project/build.properties"
+    "workspaceContains:project/build.properties",
+    "workspaceContains:**/scala/**"
   ],
   "contributes": {
     "configurationDefaults": {
@@ -70,6 +71,10 @@
         "metals.sbtScript": {
           "type": "string",
           "markdownDescription": "Optional absolute path to an `sbt` executable to use for running `sbt bloopInstall`.\n\nBy default, Metals uses `java -jar sbt-launch.jar` with an embedded launcher while respecting `.jvmopts` and `.sbtopts`.\n\nUpdate this setting if your `sbt` script requires more customizations like using environment variables."
+        },
+        "metals.gradleScript": {
+          "type": "string",
+          "markdownDescription": "Optional absolute path to a `gradle` executable to use for running `gradle bloopInstall`.\n\nBy default, Metals uses embedded gradlew script.\n\nUpdate this setting if your `gradle` script requires more customizations like using environment variables."
         },
         "metals.scalafmtConfigPath": {
           "type": "string",
@@ -118,31 +123,31 @@
       "commandPalette": [
         {
           "command": "metals.restartServer",
-          "when": "editorLangId == scala"
+          "when": "metals:enabled"
         },
         {
           "command": "metals.build-import",
-          "when": "editorLangId == scala"
+          "when": "metals:enabled"
         },
         {
           "command": "metals.build-connect",
-          "when": "editorLangId == scala"
+          "when": "metals:enabled"
         },
         {
           "command": "metals.sources-scan",
-          "when": "editorLangId == scala"
+          "when": "metals:enabled"
         },
         {
           "command": "metals.compile-cascade",
-          "when": "editorLangId == scala"
+          "when": "metals:enabled"
         },
         {
           "command": "metals.compile-cancel",
-          "when": "editorLangId == scala"
+          "when": "metals:enabled"
         },
         {
           "command": "metals.doctor-run",
-          "when": "editorLangId == scala"
+          "when": "metals:enabled"
         }
       ]
     }
