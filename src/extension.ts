@@ -148,13 +148,13 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
           `if you are using an HTTP proxy.`;
         if (process.env.FLATPAK_SANDBOX_DIR) {
           return (
-            `Failed to download Metals. It seems you are running Visual Studio Code inside the` +
-            `Flatpak sandbox, which is known to interfere with the download of Metals.` +
+            `Failed to download Metals. It seems you are running Visual Studio Code inside the ` +
+            `Flatpak sandbox, which is known to interfere with the download of Metals. ` +
             `Please, try running Visual Studio Code without Flatpak.`
           );
         } else if (serverVersion === defaultServerVersion) {
           return (
-            `Failed to download Metals, make sure you have an internet connection and` +
+            `Failed to download Metals, make sure you have an internet connection and ` +
             `the Java Home '${javaPath}' is valid. You can configure the Java Home in the settings.` +
             proxy
           );
