@@ -160,6 +160,15 @@ following locations:
 - "Server Properties" setting for the Metals VS Code extension, which can be
   configured per-workspace or per-user.
 
+## Custom artifact repositories (Maven or Ivy resolvers)
+
+Use the 'Custom Repositories' setting for the Metals VS Code extension to tell 
+[Coursier](https://get-coursier.io/docs/other-proxy) to try to download Metals 
+artifacts from your private artifact repository. 
+
+Use `.jvmopts` to set sbt options (https://www.scala-sbt.org/1.0/docs/Proxy-Repositories.html) 
+for `sbt bloopInstall` which resolves library dependencies. 
+
 ## Gitignore `.metals/` and `.bloop/`
 
 The Metals server places logs and other files in the `.metals/` directory. The
