@@ -106,27 +106,41 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
     p => !p.startsWith("-agentlib")
   );
 
+  const customRepositories: string[] = config
+    .get<string>("customRepositories")!
+    .toString()
+    .split(" ")
+    .filter(e => e.length > 0);
+
+  const customRepositoriesCoursierArgumentList = customRepositories.reduce(
+    (acc, elem) => acc.concat(["-r", elem]),
+    []
+  );
+
   const fetchProcess = spawn(
     javaPath,
-    javaOptions.concat(fetchProperties).concat([
-      "-jar",
-      coursierPath,
-      "fetch",
-      "-p",
-      "--ttl",
-      // Use infinite ttl to avoid redunant "Checking..." logs when using SNAPSHOT
-      // versions. Metals SNAPSHOT releases are effectively immutable since we
-      // never publish the same version twice.
-      "Inf",
-      `org.scalameta:metals_2.12:${serverVersion}`,
-      "-r",
-      "bintray:scalacenter/releases",
-      "-r",
-      "sonatype:releases",
-      "-r",
-      "sonatype:snapshots",
-      "-p"
-    ]),
+    javaOptions
+      .concat(fetchProperties)
+      .concat([
+        "-jar",
+        coursierPath,
+        "fetch",
+        "-p",
+        "--ttl",
+        // Use infinite ttl to avoid redunant "Checking..." logs when using SNAPSHOT
+        // versions. Metals SNAPSHOT releases are effectively immutable since we
+        // never publish the same version twice.
+        "Inf",
+        `org.scalameta:metals_2.12:${serverVersion}`,
+        "-r",
+        "bintray:scalacenter/releases",
+        "-r",
+        "sonatype:releases",
+        "-r",
+        "sonatype:snapshots",
+        "-p"
+      ])
+      .concat(customRepositoriesCoursierArgumentList),
     { env: { COURSIER_NO_TERM: "true" } }
   );
   const title = `Downloading Metals v${serverVersion}`;
@@ -508,7 +522,12 @@ function dottyIdeArtifact(): string | undefined {
 
 function detectLaunchConfigurationChanges() {
   workspace.onDidChangeConfiguration(e => {
-    const promptRestartKeys = ["serverVersion", "serverProperties", "javaHome"];
+    const promptRestartKeys = [
+      "serverVersion",
+      "serverProperties",
+      "javaHome",
+      "customRepositories"
+    ];
     const shouldPromptRestart = promptRestartKeys.some(k =>
       e.affectsConfiguration(`metals.${k}`)
     );
