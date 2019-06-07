@@ -82,7 +82,7 @@
         },
         "metals.customRepositories": {
           "type": "string",
-          "markdownDescription": "Optional space separated list of custom resolvers passed to coursier with '-r' when fetching metals artifacts."
+          "markdownDescription": "Optional space separated list of custom resolvers passed to coursier when fetching metals dependencies."
         }
       }
     },

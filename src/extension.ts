@@ -106,16 +106,14 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
     p => !p.startsWith("-agentlib")
   );
 
-  const customRepositories: string[] = config
+  const customRepositories: string = config
     .get<string>("customRepositories")!
     .toString()
     .split(" ")
-    .filter(e => e.length > 0);
+    .filter(e => e.length > 0)
+    .join("|");
 
-  const customRepositoriesCoursierArgumentList = customRepositories.reduce(
-    (acc, elem) => acc.concat(["-r", elem]),
-    []
-  );
+  const customRepositoriesEnv = (customRepositories.length == 0) ? {} : { COURSIER_REPOSITORIES: customRepositories };
 
   const fetchProcess = spawn(
     javaPath,
@@ -139,9 +137,8 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
         "-r",
         "sonatype:snapshots",
         "-p"
-      ])
-      .concat(customRepositoriesCoursierArgumentList),
-    { env: { COURSIER_NO_TERM: "true" } }
+      ]),
+    { env: { COURSIER_NO_TERM: "true", ...customRepositoriesEnv } }
   );
   const title = `Downloading Metals v${serverVersion}`;
   trackDownloadProgress(title, outputChannel, fetchProcess).then(
