@@ -168,6 +168,7 @@ artifacts from your private artifact repository.
 
 Use `.jvmopts` to set sbt options (https://www.scala-sbt.org/1.0/docs/Proxy-Repositories.html) 
 for `sbt bloopInstall` which resolves library dependencies. 
+You can also provide a custom sbt script (see 'Custom sbt launcher' above).
 
 ## Gitignore `.metals/` and `.bloop/`
 
