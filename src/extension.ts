@@ -107,9 +107,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   );
 
   const customRepositories: string = config
-    .get<string>("customRepositories")!
-    .toString()
-    .split(" ")
+    .get<string[]>("customRepositories")!
     .filter(e => e.length > 0)
     .join("|");
 

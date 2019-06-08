@@ -81,8 +81,8 @@
           "markdownDescription": "Optional custom path to the .scalafmt.conf file.\n\nShould be relative to the workspace root directory and use forward slashes `/` for file separators (even on Windows)."
         },
         "metals.customRepositories": {
-          "type": "string",
-          "markdownDescription": "Optional space separated list of custom resolvers passed to coursier when fetching metals dependencies.\n\nFor documentation on accepted values see the [Coursier documentation](https://get-coursier.io/docs/other-repositories).\n\nThe extension will pass these to Coursier in the COURSIER_REPOSITORIES environment variable after joining them with a pipe (|)."
+          "type": "array",
+          "markdownDescription": "Optional list of custom resolvers passed to coursier when fetching metals dependencies.\n\nFor documentation on accepted values see the [Coursier documentation](https://get-coursier.io/docs/other-repositories).\n\nThe extension will pass these to Coursier in the COURSIER_REPOSITORIES environment variable after joining them with a pipe (|)."
         }
       }
     },
