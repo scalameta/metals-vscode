@@ -187,3 +187,18 @@ without opening the sidebar.
 
 As you type, the symbol outline is also visible at the top of the file.
 ![Document Symbols Outline](https://i.imgur.com/L217n4q.png)
+
+## Coming from IntelliJ
+
+Install the
+[IntelliJ IDEA Keybindings](https://marketplace.visualstudio.com/items?itemName=k--kato.intellij-idea-keybindings)
+extension to use default IntelliJ shortcuts with VS Code.
+
+| IntelliJ         | VS Code                   |
+| ---------------- | ------------------------- |
+| Go to class      | Go to symbol in workspace |
+| Parameter info   | Trigger parameter hints   |
+| Basic completion | Trigger suggest           |
+| Type info        | Show hover                |
+| Expand           | Fold                      |
+| Extend Selection | Expand selection          |
