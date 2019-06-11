@@ -77,7 +77,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   if (dottyArtifact && fs.existsSync(dottyArtifact)) {
     outputChannel.appendLine(
       `Metals will not start since Dotty is enabled for this workspace. ` +
-      `To enable Metals, remove the file ${dottyArtifact} and run 'Reload window'`
+        `To enable Metals, remove the file ${dottyArtifact} and run 'Reload window'`
     );
     return;
   }
@@ -95,8 +95,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
     : defaultServerVersion;
   const serverProperties: string[] = workspace
     .getConfiguration("metals")
-    .get("serverProperties")!
-    .toString()
+    .get<string>("serverProperties")!
     .split(" ")
     .filter(e => e.length > 0);
 
@@ -107,35 +106,37 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   );
 
   const customRepositories: string = config
-    .get<string[]>("customRepositories")!
+    .get<string>("customRepositories")!
+    .split(" ")
     .filter(e => e.length > 0)
     .join("|");
 
-  const customRepositoriesEnv = (customRepositories.length == 0) ? {} : { COURSIER_REPOSITORIES: customRepositories };
+  const customRepositoriesEnv =
+    customRepositories.length == 0
+      ? {}
+      : { COURSIER_REPOSITORIES: customRepositories };
 
   const fetchProcess = spawn(
     javaPath,
-    javaOptions
-      .concat(fetchProperties)
-      .concat([
-        "-jar",
-        coursierPath,
-        "fetch",
-        "-p",
-        "--ttl",
-        // Use infinite ttl to avoid redunant "Checking..." logs when using SNAPSHOT
-        // versions. Metals SNAPSHOT releases are effectively immutable since we
-        // never publish the same version twice.
-        "Inf",
-        `org.scalameta:metals_2.12:${serverVersion}`,
-        "-r",
-        "bintray:scalacenter/releases",
-        "-r",
-        "sonatype:releases",
-        "-r",
-        "sonatype:snapshots",
-        "-p"
-      ]),
+    javaOptions.concat(fetchProperties).concat([
+      "-jar",
+      coursierPath,
+      "fetch",
+      "-p",
+      "--ttl",
+      // Use infinite ttl to avoid redunant "Checking..." logs when using SNAPSHOT
+      // versions. Metals SNAPSHOT releases are effectively immutable since we
+      // never publish the same version twice.
+      "Inf",
+      `org.scalameta:metals_2.12:${serverVersion}`,
+      "-r",
+      "bintray:scalacenter/releases",
+      "-r",
+      "sonatype:releases",
+      "-r",
+      "sonatype:snapshots",
+      "-p"
+    ]),
     { env: { COURSIER_NO_TERM: "true", ...customRepositoriesEnv } }
   );
   const title = `Downloading Metals v${serverVersion}`;
