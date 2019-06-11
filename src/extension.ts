@@ -79,7 +79,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   if (dottyArtifact && fs.existsSync(dottyArtifact)) {
     outputChannel.appendLine(
       `Metals will not start since Dotty is enabled for this workspace. ` +
-      `To enable Metals, remove the file ${dottyArtifact} and run 'Reload window'`
+        `To enable Metals, remove the file ${dottyArtifact} and run 'Reload window'`
     );
     return;
   }
@@ -97,8 +97,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
     : defaultServerVersion;
   const serverProperties: string[] = workspace
     .getConfiguration("metals")
-    .get("serverProperties")!
-    .toString()
+    .get<string>("serverProperties")!
     .split(" ")
     .filter(e => e.length > 0);
 
@@ -107,6 +106,17 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   const fetchProperties = serverProperties.filter(
     p => !p.startsWith("-agentlib")
   );
+
+  const customRepositories: string = config
+    .get<string>("customRepositories")!
+    .split(" ")
+    .filter(e => e.length > 0)
+    .join("|");
+
+  const customRepositoriesEnv =
+    customRepositories.length == 0
+      ? {}
+      : { COURSIER_REPOSITORIES: customRepositories };
 
   const fetchProcess = spawn(
     javaPath,
@@ -129,7 +139,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
       "sonatype:snapshots",
       "-p"
     ]),
-    { env: { COURSIER_NO_TERM: "true" } }
+    { env: { COURSIER_NO_TERM: "true", ...customRepositoriesEnv } }
   );
   const title = `Downloading Metals v${serverVersion}`;
   trackDownloadProgress(title, outputChannel, fetchProcess).then(
@@ -514,7 +524,12 @@ function dottyIdeArtifact(): string | undefined {
 
 function detectLaunchConfigurationChanges() {
   workspace.onDidChangeConfiguration(e => {
-    const promptRestartKeys = ["serverVersion", "serverProperties", "javaHome"];
+    const promptRestartKeys = [
+      "serverVersion",
+      "serverProperties",
+      "javaHome",
+      "customRepositories"
+    ];
     const shouldPromptRestart = promptRestartKeys.some(k =>
       e.affectsConfiguration(`metals.${k}`)
     );
