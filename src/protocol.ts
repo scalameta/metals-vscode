@@ -56,3 +56,13 @@ export interface MetalsInputBoxResult {
   value?: string;
   cancelled?: boolean;
 }
+
+export namespace MetalsWindowStateDidChange {
+  export const type = new NotificationType<MetalsWindowStateDidChangeParams, void>(
+    "metals/windowStateDidChange"
+  );
+}
+
+export interface MetalsWindowStateDidChangeParams {
+  focused: boolean;
+}

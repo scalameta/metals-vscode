@@ -34,7 +34,9 @@ import {
   MetalsStatus,
   MetalsDidFocus,
   ExecuteClientCommand,
-  MetalsInputBox
+  MetalsInputBox,
+  MetalsWindowStateDidChange,
+  MetalsWindowStateDidChangeParams
 } from "./protocol";
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
@@ -355,6 +357,10 @@ function launchMetals(
           editor.document.uri.toString()
         );
       }
+    });
+
+    window.onDidChangeWindowState(windowState => {
+      client.sendNotification(MetalsWindowStateDidChange.type, { focused: windowState.focused })
     });
 
     client.onRequest(MetalsInputBox.type, (options, requestToken) => {
