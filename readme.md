@@ -33,12 +33,13 @@ installation.
 on Ubuntu+Windows.
 
 **Scala 2.12 and 2.11**. Metals works only with Scala versions 2.12.8, 2.12.7,
-2.12.6, 2.12.5, 2.12.4, 2.11.12, 2.11.11, 2.11.10 and 2.11.9. Note that 2.10.x
+2.11.12, 2.12.6, 2.12.5, 2.12.4, 2.11.11, 2.11.10 and 2.11.9. Note that 2.10.x
 and 2.13.x are not supported.
 
 ## Installation
 
-Install the Metals extension from the Marketplace, search for "Metals".
+Install the Metals extension from the
+[Marketplace](https://marketplace.visualstudio.com/items?itemName=scalameta.metals).
 
 [![Install Metals extension](https://img.shields.io/badge/metals-vscode-blue.png)](vscode:extension/scalameta.metals)
 
@@ -64,6 +65,7 @@ build. Click "Import build" to start the installation step.
 - "Not now" disables this prompt for 2 minutes.
 - "Don't show again" disables this prompt forever, use `rm -rf .metals/` to
   re-enable the prompt.
+- Use `tail -f .metals/metals.log` to watch the build import progress.
 - Behind the scenes, Metals uses [Bloop](https://scalacenter.github.io/bloop/)
   to import sbt builds, but you don't need Bloop installed on your machine to
   run this step.
@@ -145,6 +147,17 @@ command to copy the Java 8 home path.
 ```sh
 /usr/libexec/java_home -v 1.8 | pbcopy
 ```
+
+## Custom artifact repositories (Maven or Ivy resolvers)
+
+Use the 'Custom Repositories' setting for the Metals VS Code extension to tell
+[Coursier](https://get-coursier.io/docs/other-proxy) to try to download Metals
+artifacts from your private artifact repository.
+
+Use `.jvmopts` to set sbt options
+(https://www.scala-sbt.org/1.0/docs/Proxy-Repositories.html) for
+`sbt bloopInstall` which resolves library dependencies. You can also provide a
+custom sbt script (see 'Custom sbt launcher').
 
 ## HTTP proxy
 
