@@ -2,8 +2,23 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.4.0 (2019/06/11 16:51 +00:00)
+- [30ea415](https://github.com/scalameta/metals-vscode/commit/30ea41514f6b929a4147a95724b4bd3b7fa59f9b) Update metals default version to 0.6.0 (@tgodzik)
+- [632a330](https://github.com/scalameta/metals-vscode/commit/632a3301f263562aca41deb7fb6d01d05fc25c94) Use string instead of array of string for `customRepositories`. (@olafurpg)
+- [be20d30](https://github.com/scalameta/metals-vscode/commit/be20d307f0e8ecd7f80e821c448ac321e1bd8b25) Sync README.md with Metals docs (@gabro)
+- [ff10dfb](https://github.com/scalameta/metals-vscode/commit/ff10dfb23fc130c2e66e984a8a3c50cfc222157f) Use array of string as type of customRepositories configuration key (@pityka)
+- [2c4f5ee](https://github.com/scalameta/metals-vscode/commit/2c4f5eef04fcef56dfe98eb511abe49082101d29) Add note about custom sbt script in readme.md (@pityka)
+- [e0c776b](https://github.com/scalameta/metals-vscode/commit/e0c776b006d21f6dfe865ec638a6b5471f507c54) Clarify documentation of 'Custom Repositories' setting (@pityka)
+- [19544b8](https://github.com/scalameta/metals-vscode/commit/19544b89d7317a9e0421ec41485283bf943bfafd) Use COURSIER_REPOSITORIES (@pityka)
+- [cc15fb5](https://github.com/scalameta/metals-vscode/commit/cc15fb51f13209f1861dc1e217b1090b3d84f12d) Document where to set custom repository URLs (@pityka)
+- [731fbb3](https://github.com/scalameta/metals-vscode/commit/731fbb35a9a6be9a1c30a19b22e593a58e61b0d3) Add customRepositories configuration (@pityka)
+- [da0bef9](https://github.com/scalameta/metals-vscode/commit/da0bef91179f4c4a0a16afc36d058dfbc3c5b178) Adding spaces to error messages (@hmemcpy)
+- [5334440](https://github.com/scalameta/metals-vscode/commit/533444049ca108c51b732adbadd69c56d2b4e3ad) Add gradle setting to visual-code plugin (@tgodzik)
+- [d41a3b0](https://github.com/scalameta/metals-vscode/commit/d41a3b0e82e9aa781052e277ae088863fa3dc9d5) v1.3.3
+
 ### v1.3.3 (2019/05/06 11:11 +00:00)
 - [f80c533](https://github.com/scalameta/metals-vscode/commit/f80c5337fe9f7ae2a64ff213b76b9e7adbc6a250) Upgrade to 0.5.2 (@olafurpg)
+- [1cc6b23](https://github.com/scalameta/metals-vscode/commit/1cc6b239ac7505c35900b65717a0b864cc2fd0aa) Add metals/windowStateDidChange notification (@agajek)
 - [60dfeb1](https://github.com/scalameta/metals-vscode/commit/60dfeb1dcac94a00807beeaa1c73382156604cb6) v1.3.2
 
 ### v1.3.2 (2019/04/27 07:24 +00:00)
@@ -26,7 +41,7 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [d382e90](https://github.com/scalameta/metals-vscode/commit/d382e90f4105f42b6a8c1f500eb47763eb2b0d08) Link to HTTP proxy instructions in "failed to download" error. (@olafurpg)
 - [76c2857](https://github.com/scalameta/metals-vscode/commit/76c2857008dfba023e7626d762021f888c4a8551) Upgrade coursier binary from 1.1.0-M9 to 1.1.0-M13-2, fixes #66. (@olafurpg)
 - [27393ae](https://github.com/scalameta/metals-vscode/commit/27393ae6c48b5e4ef9a834c9dbe28cf71bb219e4) Remove default GC options, fixes #85. (@olafurpg)
-- [b1420ec](https://github.com/scalameta/metals-vscode/commit/b1420ec6ed3f365f553e80a3adaa3a8a07dae488) prevent fetch process from being run in debug mode
+- [b1420ec](https://github.com/scalameta/metals-vscode/commit/b1420ec6ed3f365f553e80a3adaa3a8a07dae488) prevent fetch process from being run in debug mode (@marek1840)
 - [1c2cd2f](https://github.com/scalameta/metals-vscode/commit/1c2cd2f90ad1edca8ef22f9348a8a992930ba8f8) Experiment with release drafter (@olafurpg)
 - [f8a49ba](https://github.com/scalameta/metals-vscode/commit/f8a49bae54af41a722beab860495879de7431dd2) v1.2.7
 
