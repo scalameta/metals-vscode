@@ -72,9 +72,17 @@
           "type": "string",
           "markdownDescription": "Optional absolute path to an `sbt` executable to use for running `sbt bloopInstall`.\n\nBy default, Metals uses `java -jar sbt-launch.jar` with an embedded launcher while respecting `.jvmopts` and `.sbtopts`.\n\nUpdate this setting if your `sbt` script requires more customizations like using environment variables."
         },
+        "metals.millScript": {
+          "type": "string",
+          "markdownDescription": "Optional absolute path to a `mill` executable to use for running `mill mill.contrib.Bloop/install`.\n\nBy default, Metals uses an embedded `millw` script while respecting `.mill-version` file.\n\nUpdate this setting if your `mill` script requires more customizations."
+        },
+        "metals.mavenScript": {
+          "type": "string",
+          "markdownDescription": "Optional absolute path to a `mvn` executable to use for running `mvn ch.epfl.scala:maven-bloop_2.10:<bloop_version>:bloopInstall`.\n\nBy default, Metals uses an embedded `mvnw` script.\n\nUpdate this setting if your `mvn` script requires more customizations."
+        },
         "metals.gradleScript": {
           "type": "string",
-          "markdownDescription": "Optional absolute path to a `gradle` executable to use for running `gradle bloopInstall`.\n\nBy default, Metals uses embedded gradlew script.\n\nUpdate this setting if your `gradle` script requires more customizations like using environment variables."
+          "markdownDescription": "Optional absolute path to a `gradle` executable to use for running `gradle bloopInstall`.\n\nBy default, Metals uses an embedded `gradlew` script.\n\nUpdate this setting if your `gradle` script requires more customizations."
         },
         "metals.scalafmtConfigPath": {
           "type": "string",
