@@ -139,7 +139,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
       "sonatype:snapshots",
       "-p"
     ]),
-    { env: { COURSIER_NO_TERM: "true", ...customRepositoriesEnv } }
+    { env: { COURSIER_NO_TERM: "true", ...customRepositoriesEnv, ...process.env } }
   );
   const title = `Downloading Metals v${serverVersion}`;
   trackDownloadProgress(title, outputChannel, fetchProcess).then(
