@@ -2,6 +2,10 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.4.3 (2019/06/15 22:17 +00:00)
+- [028fa4d](https://github.com/scalameta/metals-vscode/commit/028fa4df501ea13f2c3f89c6b2effa20ced89c25) Passing the rest of parent process.env to the spawned process (@hmemcpy)
+- [c766a44](https://github.com/scalameta/metals-vscode/commit/c766a44b3b58df8cfad4658958aefc38e173bc16) v1.4.2
+
 ### v1.4.2 (2019/06/13 14:22 +00:00)
 - [501caf1](https://github.com/scalameta/metals-vscode/commit/501caf1f2cbb724bdaa9126188d5a0b4146c30c3) v1.4.1
 
