@@ -15,7 +15,10 @@ import {
   ViewColumn,
   OutputChannel,
   ConfigurationTarget,
-  WorkspaceConfiguration
+  WorkspaceConfiguration,
+  Uri,
+  Range,
+  Selection
 } from "vscode";
 import {
   LanguageClient,
@@ -25,7 +28,8 @@ import {
   ExecuteCommandRequest,
   ShutdownRequest,
   ExitNotification,
-  CancellationToken
+  CancellationToken,
+  Location
 } from "vscode-languageclient";
 import { exec } from "child_process";
 import { ClientCommands } from "./client-commands";
@@ -36,17 +40,22 @@ import {
   ExecuteClientCommand,
   MetalsInputBox,
   MetalsWindowStateDidChange,
-  MetalsWindowStateDidChangeParams
+  MetalsTreeViews,
+  MetalsRevealTreeView
 } from "./protocol";
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
 import * as semver from "semver";
 import { getJavaHome } from "./getJavaHome";
 import { getJavaOptions } from "./getJavaOptions";
+import { startTreeView } from "./treeview";
+import ProtocolCompletionItem from "vscode-languageclient/lib/protocolCompletionItem";
+import { MetalsFeatures } from "./MetalsFeatures";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
 const openSettingsCommand = "workbench.action.openSettings";
+var treeViews: MetalsTreeViews | undefined = undefined;
 
 export async function activate(context: ExtensionContext) {
   detectLaunchConfigurationChanges();
@@ -239,6 +248,8 @@ function launchMetals(
     serverOptions,
     clientOptions
   );
+  const features = new MetalsFeatures();
+  client.registerFeature(features);
 
   function registerCommand(command: string, callback: (...args: any[]) => any) {
     context.subscriptions.push(commands.registerCommand(command, callback));
@@ -331,7 +342,39 @@ function launchMetals(
           const panel = getDoctorPanel(isReload);
           panel.webview.html = html;
         }
+      } else {
+        switch (params.command) {
+          case "metals-goto-location":
+            const location =
+              params.arguments && (params.arguments[0] as Location);
+            if (location) {
+              workspace
+                .openTextDocument(Uri.parse(location.uri))
+                .then(textDocument => window.showTextDocument(textDocument))
+                .then(editor => {
+                  const range = new Range(
+                    location.range.start.line,
+                    location.range.start.character,
+                    location.range.end.line,
+                    location.range.end.character
+                  );
+                  // Select an offset position instead of range position to
+                  // avoid triggering noisy document highlight.
+                  editor.selection = new Selection(range.start, range.start);
+                  editor.revealRange(range);
+                });
+            }
+            break;
+          case "metals-reveal-treeview":
+            if (treeViews && params.arguments) {
+              treeViews.reveal(params.arguments[0] as MetalsRevealTreeView);
+            }
+            break;
+          default:
+            outputChannel.appendLine(`unknown command: ${params.command}`);
+        }
       }
+
       // Ignore other commands since they are less important.
     });
 
@@ -364,6 +407,13 @@ function launchMetals(
       } else {
         item.command = undefined;
       }
+    });
+
+    registerCommand("metals.goto", args => {
+      client.sendRequest(ExecuteCommandRequest.type, {
+        command: "goto",
+        arguments: args
+      });
     });
 
     window.onDidChangeActiveTextEditor(editor => {
@@ -436,6 +486,16 @@ function launchMetals(
         );
       });
     });
+    if (features.treeViewProvider) {
+      const packageJson = JSON.parse(
+        fs.readFileSync(
+          path.join(context.extensionPath, "package.json"),
+          "utf8"
+        )
+      );
+      treeViews = startTreeView(client, outputChannel, context, packageJson);
+      context.subscriptions.concat(treeViews.disposables);
+    }
   });
 }
 
