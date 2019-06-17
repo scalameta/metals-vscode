@@ -495,8 +495,13 @@ function enableScaladocIndentation() {
         action: { indentAction: IndentAction.None, appendText: " * " }
       },
       {
-        // e.g.  * ...|
+        // e.g.  * ...| Javadoc style
         beforeText: /^(\t|(\ \ ))*\ \*(\ ([^\*]|\*(?!\/))*)?$/,
+        action: { indentAction: IndentAction.None, appendText: "* " }
+      },
+      {
+        // e.g.  * ...| Scaladoc style
+        beforeText: /^(\t|(\ \ ))*\*(\ ([^\*]|\*(?!\/))*)?$/,
         action: { indentAction: IndentAction.None, appendText: "* " }
       },
       {
