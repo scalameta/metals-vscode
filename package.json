@@ -43,6 +43,7 @@
   "activationEvents": [
     "onLanguage:scala",
     "workspaceContains:build.sbt",
+    "workspaceContains:build.sc",
     "workspaceContains:project/build.properties",
     "workspaceContains:**/scala/**"
   ],
