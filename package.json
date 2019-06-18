@@ -1,11 +1,12 @@
 {
   "name": "metals",
   "displayName": "Scala (Metals)",
-  "description": "Language Server for Scala",
+  "description": "Scala language server with rich IDE features",
   "keywords": [
     "scala",
     "lsp",
     "language server",
+    "ide",
     "scalameta"
   ],
   "version": "1.4.3",
