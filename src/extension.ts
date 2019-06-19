@@ -139,7 +139,13 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
       "sonatype:snapshots",
       "-p"
     ]),
-    { env: { COURSIER_NO_TERM: "true", ...customRepositoriesEnv, ...process.env } }
+    {
+      env: {
+        COURSIER_NO_TERM: "true",
+        ...customRepositoriesEnv,
+        ...process.env
+      }
+    }
   );
   const title = `Downloading Metals v${serverVersion}`;
   trackDownloadProgress(title, outputChannel, fetchProcess).then(
@@ -370,7 +376,9 @@ function launchMetals(
     });
 
     window.onDidChangeWindowState(windowState => {
-      client.sendNotification(MetalsWindowStateDidChange.type, { focused: windowState.focused })
+      client.sendNotification(MetalsWindowStateDidChange.type, {
+        focused: windowState.focused
+      });
     });
 
     client.onRequest(MetalsInputBox.type, (options, requestToken) => {
@@ -488,6 +496,11 @@ function enableScaladocIndentation() {
         beforeText: /^\s*\/\*\*(?!\/)([^\*]|\*(?!\/))*$/,
         afterText: /^\s*\*\/$/,
         action: { indentAction: IndentAction.IndentOutdent, appendText: " * " }
+      },
+      {
+        // e.g. |
+        beforeText: /^(\s*\|.*|.*"""\|)$/,
+        action: { indentAction: IndentAction.Indent, appendText: "|" }
       },
       {
         // e.g. /** ...|
