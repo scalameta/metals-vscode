@@ -1,5 +1,4 @@
 import * as path from "path";
-import * as fs from "fs";
 import { LanguageClient, Disposable } from "vscode-languageclient";
 import {
   TreeDataProvider,
@@ -14,28 +13,26 @@ import {
   ExtensionContext
 } from "vscode";
 import {
-  TreeViewNode,
+  MetalsTreeViewNode,
   MetalsTreeViews,
   MetalsTreeViewChildren,
   MetalsTreeViewDidChange,
   MetalsTreeViewVisibilityDidChange,
   MetalsRevealTreeView,
-  MetalsTreeViewParent
-} from "./protocol";
+  MetalsTreeViewParent,
+  MetalsTreeViewNodeCollapseDidChange
+} from "./tree-view-protocol";
 
 export function startTreeView(
   client: LanguageClient,
   out: OutputChannel,
   context: ExtensionContext,
-  packageJson: any
+  viewIds: string[]
 ): MetalsTreeViews {
-  let allProviders: Map<string, MetalsTreeDataProvider> = new Map();
-  let allViews: Map<string, TreeView<string>> = new Map();
-  let viewIds: string[] = packageJson.contributes.views["metals-explorer"].map(
-    (view: { id: string }) => view.id
-  ) as string[];
+  const allProviders: Map<string, MetalsTreeDataProvider> = new Map();
+  const allViews: Map<string, TreeView<string>> = new Map();
   const disposables = viewIds.map(viewId => {
-    let provider = new MetalsTreeDataProvider(
+    const provider = new MetalsTreeDataProvider(
       client,
       out,
       viewId,
@@ -56,14 +53,33 @@ export function startTreeView(
         visible: e.visible
       });
     });
+    const onDidChangeExpandNode = view.onDidExpandElement(e => {
+      client.sendNotification(MetalsTreeViewNodeCollapseDidChange.type, {
+        viewId: viewId,
+        nodeUri: e.element,
+        collapsed: false
+      });
+    });
+    const onDidChangeCollapseNode = view.onDidCollapseElement(e => {
+      client.sendNotification(MetalsTreeViewNodeCollapseDidChange.type, {
+        viewId: viewId,
+        nodeUri: e.element,
+        collapsed: true
+      });
+    });
 
-    return [view, onDidChangeVisibility];
+    return [
+      view,
+      onDidChangeVisibility,
+      onDidChangeExpandNode,
+      onDidChangeCollapseNode
+    ];
   });
 
   // Update tree nodes on server notificiations
   client.onNotification(MetalsTreeViewDidChange.type, params => {
     params.nodes.forEach(node => {
-      let provider = allProviders.get(node.viewId);
+      const provider = allProviders.get(node.viewId);
       if (!provider) return;
       if (node.nodeUri) {
         provider.items.set(node.nodeUri, node);
@@ -106,7 +122,7 @@ export function startTreeView(
 class MetalsTreeDataProvider implements TreeDataProvider<string> {
   didChange = new EventEmitter<string>();
   onDidChangeTreeData?: Event<string> = this.didChange.event;
-  items: Map<string, TreeViewNode> = new Map();
+  items: Map<string, MetalsTreeViewNode> = new Map();
   constructor(
     readonly client: LanguageClient,
     readonly out: OutputChannel,
@@ -126,12 +142,7 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
         item.nodeUri && item.nodeUri.indexOf(".") > 0
           ? Uri.parse(item.nodeUri)
           : undefined,
-      collapsibleState:
-        item.collapseState == "expanded"
-          ? TreeItemCollapsibleState.Expanded
-          : item.collapseState == "collapsed"
-          ? TreeItemCollapsibleState.Collapsed
-          : TreeItemCollapsibleState.None,
+      collapsibleState: toTreeItemCollapsibleState(item.collapseState),
       command: item.command,
       tooltip: item.tooltip,
       iconPath: item.icon ? this.iconPath(item.icon) : undefined
@@ -176,11 +187,24 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
   }
 
   iconPath(name: string): string {
-    return path.join(this.context.extensionPath, "images", name + ".svg");
+    return path.join(this.context.extensionPath, "icons", name + ".svg");
   }
 }
 
 // NOTE(olafur): Copy-pasted from Stack Overflow, would be nice to move it elsewhere.
 function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
   return value !== null && value !== undefined;
+}
+
+function toTreeItemCollapsibleState(
+  s: MetalsTreeViewNode["collapseState"]
+): TreeItemCollapsibleState {
+  switch (s) {
+    case "expanded":
+      return TreeItemCollapsibleState.Expanded;
+    case "collapsed":
+      return TreeItemCollapsibleState.Collapsed;
+    default:
+      return TreeItemCollapsibleState.None;
+  }
 }

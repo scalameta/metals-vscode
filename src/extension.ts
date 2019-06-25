@@ -39,9 +39,7 @@ import {
   MetalsDidFocus,
   ExecuteClientCommand,
   MetalsInputBox,
-  MetalsWindowStateDidChange,
-  MetalsTreeViews,
-  MetalsRevealTreeView
+  MetalsWindowStateDidChange
 } from "./protocol";
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
@@ -51,11 +49,12 @@ import { getJavaOptions } from "./getJavaOptions";
 import { startTreeView } from "./treeview";
 import ProtocolCompletionItem from "vscode-languageclient/lib/protocolCompletionItem";
 import { MetalsFeatures } from "./MetalsFeatures";
+import { MetalsTreeViews, MetalsRevealTreeView } from "./tree-view-protocol";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
 const openSettingsCommand = "workbench.action.openSettings";
-var treeViews: MetalsTreeViews | undefined = undefined;
+let treeViews: MetalsTreeViews | undefined = undefined;
 
 export async function activate(context: ExtensionContext) {
   detectLaunchConfigurationChanges();
@@ -396,7 +395,7 @@ function launchMetals(
       if (params.command) {
         item.command = params.command;
         commands.getCommands().then(values => {
-          if (params.command && values.indexOf(params.command) < 0) {
+          if (params.command && values.includes(params.command)) {
             registerCommand(params.command, () => {
               client.sendRequest(ExecuteCommandRequest.type, {
                 command: params.command
@@ -487,13 +486,18 @@ function launchMetals(
       });
     });
     if (features.treeViewProvider) {
+      // NOTE(olafur): `require("./package.json")` should work in theory but it
+      // seems to read a stale version of package.json when I try it.
       const packageJson = JSON.parse(
         fs.readFileSync(
           path.join(context.extensionPath, "package.json"),
           "utf8"
         )
       );
-      treeViews = startTreeView(client, outputChannel, context, packageJson);
+      const viewIds = packageJson.contributes.views["metals-explorer"].map(
+        (view: { id: string }) => view.id
+      );
+      treeViews = startTreeView(client, outputChannel, context, viewIds);
       context.subscriptions.concat(treeViews.disposables);
     }
   });
