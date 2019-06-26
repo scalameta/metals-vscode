@@ -72,6 +72,10 @@
         {
           "id": "compile",
           "name": "Compile"
+        },
+        {
+          "id": "help",
+          "name": "Help and feedback"
         }
       ]
     },

@@ -416,6 +416,12 @@ function launchMetals(
       });
     });
 
+    registerCommand("metals-echo-command", (arg: string) => {
+      client.sendRequest(ExecuteCommandRequest.type, {
+        command: arg
+      });
+    });
+
     window.onDidChangeActiveTextEditor(editor => {
       if (editor && editor.document.languageId == "scala") {
         client.sendNotification(
