@@ -18,7 +18,8 @@ import {
   WorkspaceConfiguration,
   Uri,
   Range,
-  Selection
+  Selection,
+  TextEditorRevealType
 } from "vscode";
 import {
   LanguageClient,
@@ -360,7 +361,7 @@ function launchMetals(
                   // Select an offset position instead of range position to
                   // avoid triggering noisy document highlight.
                   editor.selection = new Selection(range.start, range.start);
-                  editor.revealRange(range);
+                  editor.revealRange(range, TextEditorRevealType.InCenter);
                 });
             }
             break;
