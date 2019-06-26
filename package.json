@@ -66,15 +66,15 @@
     "views": {
       "metals-explorer": [
         {
-          "id": "build",
+          "id": "metalsBuild",
           "name": "Build"
         },
         {
-          "id": "compile",
+          "id": "metalsCompile",
           "name": "Compile"
         },
         {
-          "id": "help",
+          "id": "metalsHelp",
           "name": "Help and feedback"
         }
       ]
@@ -123,6 +123,14 @@
     },
     "commands": [
       {
+        "command": "metals.sync-cursor-with-build-explorer",
+        "title": "Focus the build explorer on the current open file",
+        "icon": {
+          "light": "icons/focus-light.svg",
+          "dark": "icons/focus-dark.svg"
+        }
+      },
+      {
         "command": "metals.restartServer",
         "category": "Metals",
         "title": "Restart server"
@@ -159,6 +167,13 @@
       }
     ],
     "menus": {
+      "view/title": [
+        {
+          "command": "metals.sync-cursor-with-build-explorer",
+          "group": "navigation",
+          "when": "view == metalsBuild"
+        }
+      ],
       "commandPalette": [
         {
           "command": "metals.restartServer",

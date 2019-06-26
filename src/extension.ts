@@ -19,7 +19,8 @@ import {
   Uri,
   Range,
   Selection,
-  TextEditorRevealType
+  TextEditorRevealType,
+  TextEditor
 } from "vscode";
 import {
   LanguageClient,
@@ -30,7 +31,9 @@ import {
   ShutdownRequest,
   ExitNotification,
   CancellationToken,
-  Location
+  Location,
+  TextDocumentPositionParams,
+  TextDocument
 } from "vscode-languageclient";
 import { exec } from "child_process";
 import { ClientCommands } from "./client-commands";
@@ -48,14 +51,16 @@ import * as semver from "semver";
 import { getJavaHome } from "./getJavaHome";
 import { getJavaOptions } from "./getJavaOptions";
 import { startTreeView } from "./treeview";
-import ProtocolCompletionItem from "vscode-languageclient/lib/protocolCompletionItem";
 import { MetalsFeatures } from "./MetalsFeatures";
-import { MetalsTreeViews, MetalsRevealTreeView } from "./tree-view-protocol";
+import {
+  MetalsTreeViewSyncCursor,
+  MetalsTreeViews
+} from "./tree-view-protocol";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
 const openSettingsCommand = "workbench.action.openSettings";
-let treeViews: MetalsTreeViews | undefined = undefined;
+let treeViews: MetalsTreeViews | undefined;
 
 export async function activate(context: ExtensionContext) {
   detectLaunchConfigurationChanges();
@@ -365,11 +370,6 @@ function launchMetals(
                 });
             }
             break;
-          case "metals-reveal-treeview":
-            if (treeViews && params.arguments) {
-              treeViews.reveal(params.arguments[0] as MetalsRevealTreeView);
-            }
-            break;
           default:
             outputChannel.appendLine(`unknown command: ${params.command}`);
         }
@@ -416,6 +416,44 @@ function launchMetals(
       });
     });
 
+    registerCommand("metals.sync-cursor-with-build-explorer", () => {
+      if (treeViews) {
+        const editor = window.visibleTextEditors.find(e =>
+          isSupportedLanguage(e.document.languageId)
+        );
+        outputChannel.appendLine(
+          `editor(): ${editor && editor.document.uri.toString()}`
+        );
+        if (editor) {
+          const pos = editor.selection.start;
+          const params: TextDocumentPositionParams = {
+            textDocument: { uri: editor.document.uri.toString() },
+            position: { line: pos.line, character: pos.character }
+          };
+          return window.withProgress(
+            {
+              location: ProgressLocation.Window,
+              title: "Metals: sync build explorer"
+            },
+            progress => {
+              return client
+                .sendRequest(MetalsTreeViewSyncCursor.type, params)
+                .then(result => {
+                  progress.report({ increment: 100 });
+                  if (treeViews) {
+                    treeViews.reveal(result);
+                  }
+                });
+            }
+          );
+        }
+      } else {
+        window.showErrorMessage(
+          "This version of Metals does not support tree views."
+        );
+      }
+    });
+
     registerCommand("metals-echo-command", (arg: string) => {
       client.sendRequest(ExecuteCommandRequest.type, {
         command: arg
@@ -423,7 +461,7 @@ function launchMetals(
     });
 
     window.onDidChangeActiveTextEditor(editor => {
-      if (editor && editor.document.languageId == "scala") {
+      if (editor && isSupportedLanguage(editor.document.languageId)) {
         client.sendNotification(
           MetalsDidFocus.type,
           editor.document.uri.toString()
@@ -706,5 +744,15 @@ function checkServerVersion() {
             break;
         }
       });
+  }
+}
+
+function isSupportedLanguage(languageId: TextDocument["languageId"]): boolean {
+  switch (languageId) {
+    case "scala":
+    case "java":
+      return true;
+    default:
+      return false;
   }
 }

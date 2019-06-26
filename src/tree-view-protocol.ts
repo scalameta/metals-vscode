@@ -1,23 +1,12 @@
 import { RequestType, NotificationType } from "vscode-jsonrpc";
 import { Command, Disposable } from "vscode";
+import { TextDocumentPositionParams } from "vscode-languageclient";
 
 "use strict";
 
 export interface MetalsTreeViews {
   disposables: Disposable[];
-  reveal(params: MetalsRevealTreeView): void;
-}
-
-export interface MetalsRevealTreeView {
-  viewId: string;
-  uri: string;
-  expand?: number;
-  select?: boolean;
-  focus?: boolean;
-}
-
-export interface MetalsTreeViewDidChangeParams {
-  nodes: MetalsTreeViewNode[];
+  reveal(params: MetalsTreeViewNodeRevealResult): void;
 }
 
 export interface MetalsTreeViewNode {
@@ -57,12 +46,6 @@ export interface MetalsTreeViewChildrenResult {
   nodes: MetalsTreeViewNode[];
 }
 
-export namespace MetalsTreeViewDidChange {
-  export const type = new NotificationType<MetalsTreeViewDidChangeParams, void>(
-    "metals/treeViewDidChange"
-  );
-}
-
 export namespace MetalsTreeViewChildren {
   export const type = new RequestType<
     MetalsTreeViewChildrenParams,
@@ -70,6 +53,15 @@ export namespace MetalsTreeViewChildren {
     void,
     void
   >("metals/treeViewChildren");
+}
+
+export interface MetalsTreeViewDidChangeParams {
+  nodes: MetalsTreeViewNode[];
+}
+export namespace MetalsTreeViewDidChange {
+  export const type = new NotificationType<MetalsTreeViewDidChangeParams, void>(
+    "metals/treeViewDidChange"
+  );
 }
 
 export interface MetalsTreeViewParentParams {
@@ -118,4 +110,28 @@ export namespace MetalsTreeViewNodeCollapseDidChange {
     MetalsTreeViewNodeCollapseDidChangeParams,
     void
   >("metals/treeViewNodeCollapseDidChange");
+}
+
+export interface MetalsTreeViewNodeRevealResult {
+  viewId: string;
+  uriChain: string[];
+  expand?: number;
+  select?: boolean;
+  focus?: boolean;
+}
+
+export namespace MetalsTreeViewNodeReveal {
+  export const type = new NotificationType<
+    MetalsTreeViewNodeRevealResult,
+    void
+  >("metals/treeViewNodeReveal");
+}
+
+export namespace MetalsTreeViewSyncCursor {
+  export const type = new RequestType<
+    TextDocumentPositionParams,
+    MetalsTreeViewNodeRevealResult,
+    void,
+    void
+  >("metals/treeViewSyncCursor");
 }

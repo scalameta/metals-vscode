@@ -1,5 +1,9 @@
 import * as path from "path";
-import { LanguageClient, Disposable } from "vscode-languageclient";
+import {
+  LanguageClient,
+  Disposable,
+  DidChangeWorkspaceFoldersParams
+} from "vscode-languageclient";
 import {
   TreeDataProvider,
   TreeItem,
@@ -14,13 +18,14 @@ import {
 } from "vscode";
 import {
   MetalsTreeViewNode,
-  MetalsTreeViews,
   MetalsTreeViewChildren,
   MetalsTreeViewDidChange,
   MetalsTreeViewVisibilityDidChange,
-  MetalsRevealTreeView,
   MetalsTreeViewParent,
-  MetalsTreeViewNodeCollapseDidChange
+  MetalsTreeViewNodeCollapseDidChange,
+  MetalsTreeViewNodeReveal,
+  MetalsTreeViews,
+  MetalsTreeViewNodeRevealResult
 } from "./tree-view-protocol";
 
 export function startTreeView(
@@ -31,6 +36,15 @@ export function startTreeView(
 ): MetalsTreeViews {
   const allProviders: Map<string, MetalsTreeDataProvider> = new Map();
   const allViews: Map<string, TreeView<string>> = new Map();
+  const expandedNodes: Map<string, Set<string>> = new Map();
+  function expandedNode(viewId: string): Set<string> {
+    let isExpanded = expandedNodes.get(viewId);
+    if (!isExpanded) {
+      isExpanded = new Set();
+      expandedNodes.set(viewId, isExpanded);
+    }
+    return isExpanded;
+  }
   const disposables = viewIds.map(viewId => {
     const provider = new MetalsTreeDataProvider(
       client,
@@ -54,6 +68,7 @@ export function startTreeView(
       });
     });
     const onDidChangeExpandNode = view.onDidExpandElement(e => {
+      expandedNode(viewId).add(e.element);
       client.sendNotification(MetalsTreeViewNodeCollapseDidChange.type, {
         viewId: viewId,
         nodeUri: e.element,
@@ -61,6 +76,7 @@ export function startTreeView(
       });
     });
     const onDidChangeCollapseNode = view.onDidCollapseElement(e => {
+      expandedNode(viewId).delete(e.element);
       client.sendNotification(MetalsTreeViewNodeCollapseDidChange.type, {
         viewId: viewId,
         nodeUri: e.element,
@@ -92,17 +108,42 @@ export function startTreeView(
     });
   });
 
+  // Reveal tree view node on request from the server.
+  client.onNotification(MetalsTreeViewNodeReveal.type, params => {});
+
   return {
     disposables: ([] as Disposable[]).concat(...disposables),
-    // Server requested to reveal a tree view node.
-    reveal(params: MetalsRevealTreeView): void {
+    reveal(params: MetalsTreeViewNodeRevealResult): void {
+      function loop(view: TreeView<string>, i: number): Thenable<void> {
+        if (i < params.uriChain.length) {
+          const uri = params.uriChain[i];
+          const isExpanded = expandedNode(params.viewId).has(uri);
+          if (isExpanded) {
+            return Promise.resolve();
+          } else {
+            // Recursively resolves the parent nodes before revealing the final child
+            // node at index 0.
+            return loop(view, i + 1).then(() => {
+              // NOTE(olafur): the reveal options don't allow specifying that the
+              // item should be revealed in the middle of tree view. Looking at
+              // the internal VS Code implementation there seems to be a
+              // `relativeTop: number | undefined` option that could solve this
+              // problem but it's not possible for us to pass it in through the
+              // public API.
+              return view.reveal(uri, {
+                expand: true,
+                select: false,
+                focus: i == 0
+              });
+            });
+          }
+        } else {
+          return Promise.resolve();
+        }
+      }
       const view = allViews.get(params.viewId);
       if (view) {
-        view.reveal(params.uri, {
-          expand: params.expand || 3,
-          select: params.select || false,
-          focus: params.focus || true
-        });
+        loop(view, 0);
       } else {
         out.appendLine(`unknown view: ${params.viewId}`);
       }
