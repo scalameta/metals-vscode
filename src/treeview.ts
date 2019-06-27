@@ -4,6 +4,7 @@ import {
   Disposable,
   DidChangeWorkspaceFoldersParams
 } from "vscode-languageclient";
+import * as fs from "fs";
 import {
   TreeDataProvider,
   TreeItem,
@@ -14,7 +15,8 @@ import {
   OutputChannel,
   Uri,
   TreeView,
-  ExtensionContext
+  ExtensionContext,
+  Command
 } from "vscode";
 import {
   MetalsTreeViewNode,
@@ -27,6 +29,7 @@ import {
   MetalsTreeViews,
   MetalsTreeViewNodeRevealResult
 } from "./tree-view-protocol";
+import { fstat } from "fs";
 
 export function startTreeView(
   client: LanguageClient,
@@ -227,8 +230,33 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
       });
   }
 
-  iconPath(name: string): string {
-    return path.join(this.context.extensionPath, "icons", name + ".svg");
+  icons: Map<string, TreeItem["iconPath"]> = new Map();
+  iconPath(icon: string): TreeItem["iconPath"] {
+    const result = this.icons.get(icon);
+    if (result) return result;
+    else {
+      const noTheme = this.joinIcon(icon);
+      if (noTheme) {
+        this.icons.set(icon, noTheme);
+        return noTheme;
+      } else {
+        const themed = {
+          dark: this.joinIcon(icon + "-dark"),
+          light: this.joinIcon(icon + "-light")
+        };
+        this.out.appendLine(JSON.stringify(themed));
+        if (themed.dark && themed.light) {
+          this.icons.set(icon, themed);
+          return themed;
+        }
+      }
+    }
+  }
+
+  joinIcon(icon: string): string | undefined {
+    const file = path.join(this.context.extensionPath, "icons", icon + ".svg");
+    if (fs.existsSync(file)) return file;
+    else return undefined;
   }
 }
 
