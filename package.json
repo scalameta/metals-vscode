@@ -123,8 +123,9 @@
     },
     "commands": [
       {
-        "command": "metals.sync-cursor-with-build-explorer",
-        "title": "Focus the build explorer on the current open file",
+        "command": "metals.reveal-active-file",
+        "category": "Metals",
+        "title": "Reveal Active File in Side Bar",
         "icon": {
           "light": "icons/focus-light.svg",
           "dark": "icons/focus-dark.svg"
@@ -169,7 +170,7 @@
     "menus": {
       "view/title": [
         {
-          "command": "metals.sync-cursor-with-build-explorer",
+          "command": "metals.reveal-active-file",
           "group": "navigation",
           "when": "view == metalsBuild"
         }

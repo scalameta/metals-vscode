@@ -52,10 +52,7 @@ import { getJavaHome } from "./getJavaHome";
 import { getJavaOptions } from "./getJavaOptions";
 import { startTreeView } from "./treeview";
 import { MetalsFeatures } from "./MetalsFeatures";
-import {
-  MetalsTreeViewSyncCursor,
-  MetalsTreeViews
-} from "./tree-view-protocol";
+import { MetalsTreeViewReveal, MetalsTreeViews } from "./tree-view-protocol";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -416,13 +413,10 @@ function launchMetals(
       });
     });
 
-    registerCommand("metals.sync-cursor-with-build-explorer", () => {
+    registerCommand("metals.reveal-active-file", () => {
       if (treeViews) {
         const editor = window.visibleTextEditors.find(e =>
           isSupportedLanguage(e.document.languageId)
-        );
-        outputChannel.appendLine(
-          `editor(): ${editor && editor.document.uri.toString()}`
         );
         if (editor) {
           const pos = editor.selection.start;
@@ -433,11 +427,11 @@ function launchMetals(
           return window.withProgress(
             {
               location: ProgressLocation.Window,
-              title: "Metals: sync build explorer"
+              title: "Metals: Reveal Active File in Side Bar"
             },
             progress => {
               return client
-                .sendRequest(MetalsTreeViewSyncCursor.type, params)
+                .sendRequest(MetalsTreeViewReveal.type, params)
                 .then(result => {
                   progress.report({ increment: 100 });
                   if (treeViews) {

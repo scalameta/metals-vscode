@@ -6,7 +6,7 @@ import { TextDocumentPositionParams } from "vscode-languageclient";
 
 export interface MetalsTreeViews {
   disposables: Disposable[];
-  reveal(params: MetalsTreeViewNodeRevealResult): void;
+  reveal(params: MetalsTreeRevealResult): void;
 }
 
 export interface MetalsTreeViewNode {
@@ -112,26 +112,23 @@ export namespace MetalsTreeViewNodeCollapseDidChange {
   >("metals/treeViewNodeCollapseDidChange");
 }
 
-export interface MetalsTreeViewNodeRevealResult {
+export interface MetalsTreeRevealResult {
+  /** The ID of the view that this node is associated with. */
   viewId: string;
+  /**
+   * The list of URIs for the node to reveal and all of its ancestor parents.
+   *
+   * The node to reveal is at index 0, it's parent is at index 1 and so forth
+   * up until the root node.
+   */
   uriChain: string[];
-  expand?: number;
-  select?: boolean;
-  focus?: boolean;
 }
 
-export namespace MetalsTreeViewNodeReveal {
-  export const type = new NotificationType<
-    MetalsTreeViewNodeRevealResult,
-    void
-  >("metals/treeViewNodeReveal");
-}
-
-export namespace MetalsTreeViewSyncCursor {
+export namespace MetalsTreeViewReveal {
   export const type = new RequestType<
     TextDocumentPositionParams,
-    MetalsTreeViewNodeRevealResult,
+    MetalsTreeRevealResult,
     void,
     void
-  >("metals/treeViewSyncCursor");
+  >("metals/treeViewReveal");
 }

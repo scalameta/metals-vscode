@@ -16,7 +16,8 @@ import {
   Uri,
   TreeView,
   ExtensionContext,
-  Command
+  Command,
+  commands
 } from "vscode";
 import {
   MetalsTreeViewNode,
@@ -25,9 +26,8 @@ import {
   MetalsTreeViewVisibilityDidChange,
   MetalsTreeViewParent,
   MetalsTreeViewNodeCollapseDidChange,
-  MetalsTreeViewNodeReveal,
   MetalsTreeViews,
-  MetalsTreeViewNodeRevealResult
+  MetalsTreeRevealResult
 } from "./tree-view-protocol";
 import { fstat } from "fs";
 
@@ -111,12 +111,9 @@ export function startTreeView(
     });
   });
 
-  // Reveal tree view node on request from the server.
-  client.onNotification(MetalsTreeViewNodeReveal.type, params => {});
-
   return {
     disposables: ([] as Disposable[]).concat(...disposables),
-    reveal(params: MetalsTreeViewNodeRevealResult): void {
+    reveal(params: MetalsTreeRevealResult): void {
       function loop(view: TreeView<string>, i: number): Thenable<void> {
         if (i < params.uriChain.length) {
           const uri = params.uriChain[i];
@@ -127,16 +124,17 @@ export function startTreeView(
             // Recursively resolves the parent nodes before revealing the final child
             // node at index 0.
             return loop(view, i + 1).then(() => {
-              // NOTE(olafur): the reveal options don't allow specifying that the
-              // item should be revealed in the middle of tree view. Looking at
-              // the internal VS Code implementation there seems to be a
+              // NOTE(olafur) VS Code does not adjust the scrollbar to display
+              // the selected node if it's already visible. Looking at the
+              // internal VS Code implementation there seems to be a
               // `relativeTop: number | undefined` option that could solve this
               // problem but it's not possible for us to pass it in through the
               // public API.
+              const isDestinationNode = i == 0;
               return view.reveal(uri, {
                 expand: true,
-                select: false,
-                focus: i == 0
+                select: isDestinationNode,
+                focus: isDestinationNode
               });
             });
           }
@@ -144,11 +142,13 @@ export function startTreeView(
           return Promise.resolve();
         }
       }
-      const view = allViews.get(params.viewId);
-      if (view) {
-        loop(view, 0);
-      } else {
-        out.appendLine(`unknown view: ${params.viewId}`);
+      if (params && params.viewId) {
+        const view = allViews.get(params.viewId);
+        if (view) {
+          loop(view, 0);
+        } else {
+          out.appendLine(`unknown view: ${params.viewId}`);
+        }
       }
     }
   };
