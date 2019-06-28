@@ -2,6 +2,22 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.5.0 (2019/06/28 14:44 +00:00)
+- [2e95c58](https://github.com/scalameta/metals-vscode/commit/2e95c58f2966c2234b6231ff1f82013659cce3a5) Upgrade to 0.7.0 (@olafurpg)
+- [c324b69](https://github.com/scalameta/metals-vscode/commit/c324b69bb2d9b6a47508a1cdd1a1d7d4aec0147c) Rename "sync cursor" to "reveal active file in sidebar" (@olafurpg)
+- [28cf391](https://github.com/scalameta/metals-vscode/commit/28cf391826e8c4fd216037f81d4947b541975fcf) Add missing icons. (@olafurpg)
+- [8902d41](https://github.com/scalameta/metals-vscode/commit/8902d41901cc9d6b8775a2f0ca0a1f3bf731944d) Implement "reveal tree view node" request. (@olafurpg)
+- [3a250e2](https://github.com/scalameta/metals-vscode/commit/3a250e2c1284896172ae83a3d2629d9a9ae2b9ab) Add help and feedback explorer (@olafurpg)
+- [aae1e5a](https://github.com/scalameta/metals-vscode/commit/aae1e5a190acc72e12a9aa6295b94ab77446f914) Reveal the goto definition destination in the center of the editor view. (@olafurpg)
+- [1a2510d](https://github.com/scalameta/metals-vscode/commit/1a2510d24979f093793e7d9d0cd1cb4a4a0ab315) Address review feedback and minor changes. (@olafurpg)
+- [c988a6b](https://github.com/scalameta/metals-vscode/commit/c988a6b2c7ffa680258b7370abf907c3cd7df18f) Implement Tree View Protocol (TVP). (@olafurpg)
+- [537e2ed](https://github.com/scalameta/metals-vscode/commit/537e2ed514a28e130e328b3c5a29e742641d7e62) Automatically add | when using multiline strings (@tgodzik)
+- [64da889](https://github.com/scalameta/metals-vscode/commit/64da8898f0f6d906ac7adaa4212b0868cf6b1458) Add build.sc to workspace detection (@tgodzik)
+- [46ba7bf](https://github.com/scalameta/metals-vscode/commit/46ba7bfa15b7ffcc8ada94cc5d487135a02a73b1) Address review comments (@gabro)
+- [58c488e](https://github.com/scalameta/metals-vscode/commit/58c488ed0425035a5cdac177fd6e81326af05566) Remove "work in progress" from the description (@gabro)
+- [7bdde98](https://github.com/scalameta/metals-vscode/commit/7bdde98c6ec6d928bc7e25997f444aec93183d81) Fix proper indentation of Scaladocs (@torkelrogstad)
+- [841969a](https://github.com/scalameta/metals-vscode/commit/841969aa8f56c1b4859eaf0c9d02766e5d9fb869) v1.4.3
+
 ### v1.4.3 (2019/06/15 22:17 +00:00)
 - [028fa4d](https://github.com/scalameta/metals-vscode/commit/028fa4df501ea13f2c3f89c6b2effa20ced89c25) Passing the rest of parent process.env to the spawned process (@hmemcpy)
 - [c766a44](https://github.com/scalameta/metals-vscode/commit/c766a44b3b58df8cfad4658958aefc38e173bc16) v1.4.2
@@ -158,8 +174,8 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [37ec5e5](https://github.com/scalameta/metals-vscode/commit/37ec5e524ac8276713b3ee95c532fdd4baa20408) Bump default serverVersion to 0.3.1 (@gabro)
 - [bea5fff](https://github.com/scalameta/metals-vscode/commit/bea5fff1a328f0afab1df9c68872ab6c3b5a01e8) Use markdown for configuration description (@gabro)
 - [54c0e1f](https://github.com/scalameta/metals-vscode/commit/54c0e1ffdf118b3812826a4a9cbae0e515463599) Detect when javaHome and serverVersion change and prompt to reload (@gabro)
-- [6eb23d2](https://github.com/scalameta/metals-vscode/commit/6eb23d29c915ccdbde64225b81c530ad8e397a27) v0.3.2
 - [1d2f396](https://github.com/scalameta/metals-vscode/commit/1d2f3969b4d59614c332c1766a889fbcc79bb6a1) Fix the publishing from the CI (@gabro)
+- [6eb23d2](https://github.com/scalameta/metals-vscode/commit/6eb23d29c915ccdbde64225b81c530ad8e397a27) v0.3.2
 
 ### v0.3.1 (2018/12/07 11:10 +00:00)
 - [b382a95](https://github.com/scalameta/metals-vscode/commit/b382a95b6e968b599f01a1edeb91eb6698686782) Use yarn version instead of vsce publish <version> (@gabro)
