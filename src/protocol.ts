@@ -1,6 +1,12 @@
 import { RequestType, NotificationType } from "vscode-jsonrpc";
 import { ExecuteCommandParams } from "vscode-languageclient";
-import { InputBoxOptions } from "vscode";
+import {
+  InputBoxOptions,
+  Command,
+  Range,
+  TreeItemCollapsibleState,
+  Disposable
+} from "vscode";
 
 "use strict";
 
@@ -58,9 +64,10 @@ export interface MetalsInputBoxResult {
 }
 
 export namespace MetalsWindowStateDidChange {
-  export const type = new NotificationType<MetalsWindowStateDidChangeParams, void>(
-    "metals/windowStateDidChange"
-  );
+  export const type = new NotificationType<
+    MetalsWindowStateDidChangeParams,
+    void
+  >("metals/windowStateDidChange");
 }
 
 export interface MetalsWindowStateDidChangeParams {

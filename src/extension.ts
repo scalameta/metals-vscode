@@ -15,7 +15,12 @@ import {
   ViewColumn,
   OutputChannel,
   ConfigurationTarget,
-  WorkspaceConfiguration
+  WorkspaceConfiguration,
+  Uri,
+  Range,
+  Selection,
+  TextEditorRevealType,
+  TextEditor
 } from "vscode";
 import {
   LanguageClient,
@@ -25,7 +30,10 @@ import {
   ExecuteCommandRequest,
   ShutdownRequest,
   ExitNotification,
-  CancellationToken
+  CancellationToken,
+  Location,
+  TextDocumentPositionParams,
+  TextDocument
 } from "vscode-languageclient";
 import { exec } from "child_process";
 import { ClientCommands } from "./client-commands";
@@ -35,18 +43,21 @@ import {
   MetalsDidFocus,
   ExecuteClientCommand,
   MetalsInputBox,
-  MetalsWindowStateDidChange,
-  MetalsWindowStateDidChangeParams
+  MetalsWindowStateDidChange
 } from "./protocol";
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
 import * as semver from "semver";
 import { getJavaHome } from "./getJavaHome";
 import { getJavaOptions } from "./getJavaOptions";
+import { startTreeView } from "./treeview";
+import { MetalsFeatures } from "./MetalsFeatures";
+import { MetalsTreeViewReveal, MetalsTreeViews } from "./tree-view-protocol";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
 const openSettingsCommand = "workbench.action.openSettings";
+let treeViews: MetalsTreeViews | undefined;
 
 export async function activate(context: ExtensionContext) {
   detectLaunchConfigurationChanges();
@@ -239,6 +250,8 @@ function launchMetals(
     serverOptions,
     clientOptions
   );
+  const features = new MetalsFeatures();
+  client.registerFeature(features);
 
   function registerCommand(command: string, callback: (...args: any[]) => any) {
     context.subscriptions.push(commands.registerCommand(command, callback));
@@ -331,7 +344,34 @@ function launchMetals(
           const panel = getDoctorPanel(isReload);
           panel.webview.html = html;
         }
+      } else {
+        switch (params.command) {
+          case "metals-goto-location":
+            const location =
+              params.arguments && (params.arguments[0] as Location);
+            if (location) {
+              workspace
+                .openTextDocument(Uri.parse(location.uri))
+                .then(textDocument => window.showTextDocument(textDocument))
+                .then(editor => {
+                  const range = new Range(
+                    location.range.start.line,
+                    location.range.start.character,
+                    location.range.end.line,
+                    location.range.end.character
+                  );
+                  // Select an offset position instead of range position to
+                  // avoid triggering noisy document highlight.
+                  editor.selection = new Selection(range.start, range.start);
+                  editor.revealRange(range, TextEditorRevealType.InCenter);
+                });
+            }
+            break;
+          default:
+            outputChannel.appendLine(`unknown command: ${params.command}`);
+        }
       }
+
       // Ignore other commands since they are less important.
     });
 
@@ -353,7 +393,7 @@ function launchMetals(
       if (params.command) {
         item.command = params.command;
         commands.getCommands().then(values => {
-          if (params.command && values.indexOf(params.command) < 0) {
+          if (params.command && values.includes(params.command)) {
             registerCommand(params.command, () => {
               client.sendRequest(ExecuteCommandRequest.type, {
                 command: params.command
@@ -366,8 +406,56 @@ function launchMetals(
       }
     });
 
+    registerCommand("metals.goto", args => {
+      client.sendRequest(ExecuteCommandRequest.type, {
+        command: "goto",
+        arguments: args
+      });
+    });
+
+    registerCommand("metals.reveal-active-file", () => {
+      if (treeViews) {
+        const editor = window.visibleTextEditors.find(e =>
+          isSupportedLanguage(e.document.languageId)
+        );
+        if (editor) {
+          const pos = editor.selection.start;
+          const params: TextDocumentPositionParams = {
+            textDocument: { uri: editor.document.uri.toString() },
+            position: { line: pos.line, character: pos.character }
+          };
+          return window.withProgress(
+            {
+              location: ProgressLocation.Window,
+              title: "Metals: Reveal Active File in Side Bar"
+            },
+            progress => {
+              return client
+                .sendRequest(MetalsTreeViewReveal.type, params)
+                .then(result => {
+                  progress.report({ increment: 100 });
+                  if (treeViews) {
+                    treeViews.reveal(result);
+                  }
+                });
+            }
+          );
+        }
+      } else {
+        window.showErrorMessage(
+          "This version of Metals does not support tree views."
+        );
+      }
+    });
+
+    registerCommand("metals-echo-command", (arg: string) => {
+      client.sendRequest(ExecuteCommandRequest.type, {
+        command: arg
+      });
+    });
+
     window.onDidChangeActiveTextEditor(editor => {
-      if (editor && editor.document.languageId == "scala") {
+      if (editor && isSupportedLanguage(editor.document.languageId)) {
         client.sendNotification(
           MetalsDidFocus.type,
           editor.document.uri.toString()
@@ -436,6 +524,21 @@ function launchMetals(
         );
       });
     });
+    if (features.treeViewProvider) {
+      // NOTE(olafur): `require("./package.json")` should work in theory but it
+      // seems to read a stale version of package.json when I try it.
+      const packageJson = JSON.parse(
+        fs.readFileSync(
+          path.join(context.extensionPath, "package.json"),
+          "utf8"
+        )
+      );
+      const viewIds = packageJson.contributes.views["metals-explorer"].map(
+        (view: { id: string }) => view.id
+      );
+      treeViews = startTreeView(client, outputChannel, context, viewIds);
+      context.subscriptions.concat(treeViews.disposables);
+    }
   });
 }
 
@@ -635,5 +738,15 @@ function checkServerVersion() {
             break;
         }
       });
+  }
+}
+
+function isSupportedLanguage(languageId: TextDocument["languageId"]): boolean {
+  switch (languageId) {
+    case "scala":
+    case "java":
+      return true;
+    default:
+      return false;
   }
 }
