@@ -2,6 +2,10 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.5.1 (2019/06/28 14:57 +00:00)
+- [0e07a86](https://github.com/scalameta/metals-vscode/commit/0e07a86298b6575908fc88f7858e40b65600bf10) Use public resolver instead of releases (@olafurpg)
+- [51977b4](https://github.com/scalameta/metals-vscode/commit/51977b40c6f3781bda18e060e5d35eea0f5d53e4) v1.5.0
+
 ### v1.5.0 (2019/06/28 14:44 +00:00)
 - [2e95c58](https://github.com/scalameta/metals-vscode/commit/2e95c58f2966c2234b6231ff1f82013659cce3a5) Upgrade to 0.7.0 (@olafurpg)
 - [c324b69](https://github.com/scalameta/metals-vscode/commit/c324b69bb2d9b6a47508a1cdd1a1d7d4aec0147c) Rename "sync cursor" to "reveal active file in sidebar" (@olafurpg)
@@ -174,8 +178,8 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [37ec5e5](https://github.com/scalameta/metals-vscode/commit/37ec5e524ac8276713b3ee95c532fdd4baa20408) Bump default serverVersion to 0.3.1 (@gabro)
 - [bea5fff](https://github.com/scalameta/metals-vscode/commit/bea5fff1a328f0afab1df9c68872ab6c3b5a01e8) Use markdown for configuration description (@gabro)
 - [54c0e1f](https://github.com/scalameta/metals-vscode/commit/54c0e1ffdf118b3812826a4a9cbae0e515463599) Detect when javaHome and serverVersion change and prompt to reload (@gabro)
-- [1d2f396](https://github.com/scalameta/metals-vscode/commit/1d2f3969b4d59614c332c1766a889fbcc79bb6a1) Fix the publishing from the CI (@gabro)
 - [6eb23d2](https://github.com/scalameta/metals-vscode/commit/6eb23d29c915ccdbde64225b81c530ad8e397a27) v0.3.2
+- [1d2f396](https://github.com/scalameta/metals-vscode/commit/1d2f3969b4d59614c332c1766a889fbcc79bb6a1) Fix the publishing from the CI (@gabro)
 
 ### v0.3.1 (2018/12/07 11:10 +00:00)
 - [b382a95](https://github.com/scalameta/metals-vscode/commit/b382a95b6e968b599f01a1edeb91eb6698686782) Use yarn version instead of vsce publish <version> (@gabro)
