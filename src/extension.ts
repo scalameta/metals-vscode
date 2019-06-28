@@ -145,7 +145,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
       "-r",
       "bintray:scalacenter/releases",
       "-r",
-      "sonatype:releases",
+      "sonatype:public",
       "-r",
       "sonatype:snapshots",
       "-p"
