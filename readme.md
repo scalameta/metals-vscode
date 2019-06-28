@@ -25,16 +25,16 @@ following table shows the status of various features.
 
 ## Requirements
 
-**OpenJDK or Oracle Java 8**. Eclipse OpenJ9 and Java 11 are not supported,
-please make sure the `JAVA_HOME` environment variable points to valid Java 8
-installation.
+**OpenJDK or Oracle Java 8**. Eclipse OpenJ9 and Java 11 are not
+supported, please make sure the `JAVA_HOME` environment variable
+points to valid Java 8 installation.
 
-**macOS, Linux or Windows**. Metals is developed on macOS and every PR is tested
-on Ubuntu+Windows.
+**macOS, Linux or Windows**. Metals is developed on macOS and every PR is
+tested on Ubuntu+Windows.
 
-**Scala 2.12 and 2.11**. Metals works only with Scala versions 2.12.8, 2.12.7,
-2.11.12, 2.12.6, 2.12.5, 2.12.4, 2.11.11, 2.11.10 and 2.11.9. Note that 2.10.x
-and 2.13.x are not supported.
+**Scala 2.13, 2.12 and 2.11**. Metals supports these Scala versions 2.13.0, 2.12.8, 2.12.7 and 2.11.12.
+Note that 2.11.x support is deprecated and it will be removed in future releases.
+It's recommended to upgrade to Scala 2.12 or Scala 2.13
 
 ## Installation
 
@@ -55,20 +55,20 @@ Install the Metals extension from the
 Next, open a directory containing a `build.sbt` file. The extension activates
 when a `*.scala` or `*.sbt` file is opened.
 
+
 ## Importing a build
 
-The first time you open Metals in a new workspace it prompts you to import the
-build. Click "Import build" to start the installation step.
+The first time you open Metals in a new workspace it prompts you to import the build.
+Click "Import build" to start the installation step.
 
 ![Import build](https://i.imgur.com/0VqZWay.png)
 
 - "Not now" disables this prompt for 2 minutes.
-- "Don't show again" disables this prompt forever, use `rm -rf .metals/` to
-  re-enable the prompt.
+- "Don't show again" disables this prompt forever, use `rm -rf .metals/` to re-enable
+  the prompt.
 - Use `tail -f .metals/metals.log` to watch the build import progress.
-- Behind the scenes, Metals uses [Bloop](https://scalacenter.github.io/bloop/)
-  to import sbt builds, but you don't need Bloop installed on your machine to
-  run this step.
+- Behind the scenes, Metals uses [Bloop](https://scalacenter.github.io/bloop/) to
+  import sbt builds, but you don't need Bloop installed on your machine to run this step.
 
 Once the import step completes, compilation starts for your open `*.scala`
 files.
@@ -78,26 +78,24 @@ goto definition.
 
 ### Custom sbt launcher
 
-By default, Metals runs an embedded `sbt-launch.jar` launcher that respects
-`.sbtopts` and `.jvmopts`. However, the environment variables `SBT_OPTS` and
-`JAVA_OPTS` are not respected.
+By default, Metals runs an embedded `sbt-launch.jar` launcher that respects `.sbtopts` and `.jvmopts`.
+However, the environment variables `SBT_OPTS` and `JAVA_OPTS` are not respected.
 
 Update the "Sbt Script" setting to use a custom `sbt` script instead of the
-default Metals launcher if you need further customizations like reading
-environment variables.
+default Metals launcher if you need further customizations like reading environment
+variables.
 
 ![Sbt Launcher](https://i.imgur.com/NuwEBe4.png)
 
 ### Speeding up import
 
-The "Import build" step can take a long time, especially the first time you run
-it in a new build. The exact time depends on the complexity of the build and if
-library dependencies need to be downloaded. For example, this step can take
+The "Import build" step can take a long time, especially the first time you
+run it in a new build. The exact time depends on the complexity of the build and
+if library dependencies need to be downloaded. For example, this step can take
 everything from 10 seconds in small cached builds up to 10-15 minutes in large
 uncached builds.
 
-Consult the
-[Bloop documentation](https://scalacenter.github.io/bloop/docs/build-tools/sbt#speeding-up-build-export)
+Consult the [Bloop documentation](https://scalacenter.github.io/bloop/docs/build-tools/sbt#speeding-up-build-export)
 to learn how to speed up build import.
 
 ### Importing changes
@@ -106,6 +104,7 @@ When you change `build.sbt` or sources under `project/`, you will be prompted to
 re-import the build.
 
 ![Import sbt changes](https://i.imgur.com/72kdZkL.png)
+
 
 ### Manually trigger build import
 
@@ -173,15 +172,14 @@ following locations:
 - "Server Properties" setting for the Metals VS Code extension, which can be
   configured per-workspace or per-user.
 
-## Custom artifact repositories (Maven or Ivy resolvers)
+## Using latest Metals SNAPSHOT
 
-Use the 'Custom Repositories' setting for the Metals VS Code extension to tell 
-[Coursier](https://get-coursier.io/docs/other-proxy) to try to download Metals 
-artifacts from your private artifact repository. 
+Update the "Server Version" setting to try out the latest pending Metals
+features.
 
-Use `.jvmopts` to set sbt options (https://www.scala-sbt.org/1.0/docs/Proxy-Repositories.html) 
-for `sbt bloopInstall` which resolves library dependencies. 
-You can also provide a custom sbt script (see 'Custom sbt launcher' above).
+See
+https://scalameta.org/metals/docs/editors/vscode.html#using-latest-metals-snapshot
+to find the latest SNAPSHOT version.
 
 ## Gitignore `.metals/` and `.bloop/`
 
@@ -195,6 +193,7 @@ systems like git.
 .metals/
 .bloop/
 ```
+
 
 ## Show document symbols
 
@@ -217,11 +216,12 @@ Install the
 [IntelliJ IDEA Keybindings](https://marketplace.visualstudio.com/items?itemName=k--kato.intellij-idea-keybindings)
 extension to use default IntelliJ shortcuts with VS Code.
 
-| IntelliJ         | VS Code                   |
-| ---------------- | ------------------------- |
+|     IntelliJ     |          VS Code          |
+|------------------|---------------------------|
 | Go to class      | Go to symbol in workspace |
 | Parameter info   | Trigger parameter hints   |
 | Basic completion | Trigger suggest           |
 | Type info        | Show hover                |
 | Expand           | Fold                      |
 | Extend Selection | Expand selection          |
+
