@@ -244,7 +244,6 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
           dark: this.joinIcon(icon + "-dark"),
           light: this.joinIcon(icon + "-light")
         };
-        this.out.appendLine(JSON.stringify(themed));
         if (themed.dark && themed.light) {
           this.icons.set(icon, themed);
           return themed;
