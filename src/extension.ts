@@ -175,11 +175,11 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
         const proxy =
           `See https://scalameta.org/metals/docs/editors/vscode.html#http-proxy for instructions ` +
           `if you are using an HTTP proxy.`;
-        if (process.env.FLATPAK_SANDBOX_DIR) {
+        if (process.env.FLATPAK_SANDBOX_DIR || process.env.SNAP_DATA) {
           return (
             `Failed to download Metals. It seems you are running Visual Studio Code inside the ` +
-            `Flatpak sandbox, which is known to interfere with the download of Metals. ` +
-            `Please, try running Visual Studio Code without Flatpak.`
+            `Flatpak or snap sandbox, which is known to interfere with the download of Metals. ` +
+            `Please, try running Visual Studio Code without Flatpak or snap.`
           );
         } else if (serverVersion === defaultServerVersion) {
           return (
