@@ -2,6 +2,13 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.5.2 (2019/07/22 11:58 +00:00)
+- [db5fcc2](https://github.com/scalameta/metals-vscode/commit/db5fcc269f2a8f2b66376dccd5a9e1fa734ad7a0) Update VS code documentation (@tgodzik)
+- [f40e609](https://github.com/scalameta/metals-vscode/commit/f40e6090a35f9cfa8582d5aad84024370c179023) Revert "Show warning when using snaps" (@tgodzik)
+- [3ea36b2](https://github.com/scalameta/metals-vscode/commit/3ea36b24a0a7f9b3bf5ab81a5e4ab84882992a3f) Add information about snaps (@tgodzik)
+- [2b20551](https://github.com/scalameta/metals-vscode/commit/2b20551f3617089f19cbd6bf122879fee28dcf15) Remove debugging line (@olafurpg)
+- [8b0cc59](https://github.com/scalameta/metals-vscode/commit/8b0cc594123ea5ddb586e3cc89fc9fe97542f334) v1.5.1
+
 ### v1.5.1 (2019/06/28 14:57 +00:00)
 - [0e07a86](https://github.com/scalameta/metals-vscode/commit/0e07a86298b6575908fc88f7858e40b65600bf10) Use public resolver instead of releases (@olafurpg)
 - [51977b4](https://github.com/scalameta/metals-vscode/commit/51977b40c6f3781bda18e060e5d35eea0f5d53e4) v1.5.0
