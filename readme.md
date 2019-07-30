@@ -9,7 +9,7 @@ following table shows the status of various features.
 
 | Feature               | Status | Notes                                                                                            |
 | --------------------- | :----: | ------------------------------------------------------------------------------------------------ |
-| Import build          |   ✅   | Works with sbt and Bloop.                                                                        |
+| Import build          |   ✅   | Works with sbt, Gradle, Maven, Mill and Bloop.                                                   |
 | Compile errors        |   ✅   | Syntax errors as you type and type errors on file save.                                          |
 | Completions           |   ✅   |                                                                                                  |
 | Hover (type at point) |   ✅   |                                                                                                  |
