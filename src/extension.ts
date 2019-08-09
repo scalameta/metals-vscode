@@ -346,8 +346,9 @@ function launchMetals(
         });
       }
     };
-    Object.entries(clientCommands).forEach(([name, command]) =>
-      registerCommand(name, command)
+    Object.entries(clientCommands).forEach(([name, command]) => {
+      registerCommand((ClientCommands as any)[name], command)
+    }
     );
 
     // should be the compilation of a currently opened file
