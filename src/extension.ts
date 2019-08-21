@@ -601,11 +601,6 @@ function enableScaladocIndentation() {
         action: { indentAction: IndentAction.IndentOutdent, appendText: " * " }
       },
       {
-        // e.g. |
-        beforeText: /^(\s*\|.*|.*"""\|)$/,
-        action: { indentAction: IndentAction.Indent, appendText: "|" }
-      },
-      {
         // e.g. /** ...|
         beforeText: /^\s*\/\*\*(?!\/)([^\*]|\*(?!\/))*$/,
         action: { indentAction: IndentAction.None, appendText: " * " }
