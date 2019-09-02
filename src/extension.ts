@@ -312,7 +312,7 @@ function launchMetals(
 
     let channelOpen = false;
     const clientCommands: {
-      [k in keyof typeof ClientCommands]: (...args: unknown[]) => unknown
+      [k in keyof typeof ClientCommands]: (...args: unknown[]) => unknown;
     } = {
       focusDiagnostics: () =>
         commands.executeCommand("workbench.action.problems.focus"),
