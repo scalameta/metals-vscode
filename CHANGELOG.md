@@ -2,6 +2,12 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.5.3 (2019/09/02 14:44 +00:00)
+- [852a65f](https://github.com/scalameta/metals-vscode/commit/852a65f054f2536c8a48a2e49fc2e196f6f99381) Update default Metals version to 0.7.2 (@tgodzik)
+- [d60a634](https://github.com/scalameta/metals-vscode/commit/d60a634f34ac251db3cb8a15e1f23faa6eb8283e) deleting pipe formatting in multiline strings outside of metals/metals (@Karola766)
+- [69e41bf](https://github.com/scalameta/metals-vscode/commit/69e41bfb6db808340d77e8ee467821236abf4203) Fix documentation about build tools (@tgodzik)
+- [474809c](https://github.com/scalameta/metals-vscode/commit/474809c3b70cba3a9d728ba1cc91e8d72ba7f76e) v1.5.2
+
 ### v1.5.2 (2019/07/22 11:58 +00:00)
 - [db5fcc2](https://github.com/scalameta/metals-vscode/commit/db5fcc269f2a8f2b66376dccd5a9e1fa734ad7a0) Update VS code documentation (@tgodzik)
 - [f40e609](https://github.com/scalameta/metals-vscode/commit/f40e6090a35f9cfa8582d5aad84024370c179023) Revert "Show warning when using snaps" (@tgodzik)
