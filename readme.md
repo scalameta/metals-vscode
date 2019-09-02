@@ -33,9 +33,9 @@ or 11 installation.
 on Ubuntu+Windows.
 
 **Scala 2.13, 2.12 and 2.11**. Metals supports these Scala versions 2.13.0,
-2.12.8, 2.12.7 and 2.11.12. Note that 2.11.x support is deprecated and it will
-be removed in future releases. It's recommended to upgrade to Scala 2.12 or
-Scala 2.13
+2.12.9, 2.12.8, 2.12.7 and 2.11.12. Note that 2.11.x support is deprecated and
+it will be removed in future releases. It's recommended to upgrade to Scala 2.12
+or Scala 2.13
 
 ## Installation
 
