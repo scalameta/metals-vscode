@@ -108,9 +108,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
     : defaultServerVersion;
   const serverProperties: string[] = workspace
     .getConfiguration("metals")
-    .get<string>("serverProperties")!
-    .split(" ")
-    .filter(e => e.length > 0);
+    .get<string[]>("serverProperties")!;
 
   const javaOptions = getJavaOptions(outputChannel);
 
@@ -119,9 +117,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   );
 
   const customRepositories: string = config
-    .get<string>("customRepositories")!
-    .split(" ")
-    .filter(e => e.length > 0)
+    .get<string[]>("customRepositories")!
     .join("|");
 
   const customRepositoriesEnv =
