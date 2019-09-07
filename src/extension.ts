@@ -106,6 +106,11 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   const serverVersion = serverVersionConfig
     ? serverVersionConfig
     : defaultServerVersion;
+
+  // migrate old configuration settings from space-separated values to array of strings
+  migrateStringSettingToArray("serverProperties");
+  migrateStringSettingToArray("customRepositories");
+
   const serverProperties: string[] = workspace
     .getConfiguration("metals")
     .get<string[]>("serverProperties")!;
@@ -739,5 +744,31 @@ function isSupportedLanguage(languageId: TextDocument["languageId"]): boolean {
       return true;
     default:
       return false;
+  }
+}
+
+function migrateStringSettingToArray(id: string): void {
+  const setting = workspace
+    .getConfiguration("metals")
+    .inspect<string | string[]>(id)!;
+
+  if (typeof setting.globalValue === "string") {
+    workspace
+      .getConfiguration("metals")
+      .update(
+        id,
+        setting.globalValue.split(" ").filter(e => e.length > 0),
+        ConfigurationTarget.Global
+      );
+  }
+
+  if (typeof setting.workspaceValue === "string") {
+    workspace
+      .getConfiguration("metals")
+      .update(
+        id,
+        setting.workspaceValue.split(" ").filter(e => e.length > 0),
+        ConfigurationTarget.Workspace
+      );
   }
 }
