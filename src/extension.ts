@@ -7,6 +7,9 @@ import {
   ExtensionContext,
   window,
   commands,
+  CodeLens,
+  CodeLensProvider,
+  EventEmitter,
   StatusBarAlignment,
   ProgressLocation,
   IndentAction,
@@ -19,6 +22,7 @@ import {
   Uri,
   Range,
   Selection,
+  TextDocument as VscodeTextDocument,
   TextEditorRevealType,
   TextEditor
 } from "vscode";
@@ -336,10 +340,29 @@ function launchMetals(
       registerCommand(name, command)
     );
 
-    scalaDebugger.initialize().forEach(disposable =>
-        context.subscriptions.push(disposable)
-    );
+    scalaDebugger
+      .initialize()
+      .forEach(disposable => context.subscriptions.push(disposable));
     registerCommand(scalaDebugger.startSessionCommand, scalaDebugger.start);
+
+    // should be the compilation of a currently opened file
+    // but some race conditions may apply
+    let compilationDoneEmitter = new EventEmitter<void>();
+
+    let codeLensRefresher: CodeLensProvider = {
+      onDidChangeCodeLenses: compilationDoneEmitter.event,
+      provideCodeLenses: (
+        document: VscodeTextDocument,
+        token: CancellationToken
+      ) => undefined,
+      resolveCodeLens: (codeLens: CodeLens, token: CancellationToken) =>
+        undefined
+    };
+
+    languages.registerCodeLensProvider(
+      { scheme: "file", language: "scala" },
+      codeLensRefresher
+    );
 
     // Handle the metals/executeClientCommand extension notification.
     client.onNotification(ExecuteClientCommand.type, params => {
@@ -373,6 +396,9 @@ function launchMetals(
                   editor.revealRange(range, TextEditorRevealType.InCenter);
                 });
             }
+            break;
+          case "metals-model-refresh":
+            compilationDoneEmitter.fire();
             break;
           default:
             outputChannel.appendLine(`unknown command: ${params.command}`);
