@@ -33,7 +33,7 @@ or 11 installation.
 on Ubuntu+Windows.
 
 **Scala 2.13, 2.12 and 2.11**. Metals supports these Scala versions 2.13.0,
-2.12.9, 2.12.8, 2.12.7 and 2.11.12. Note that 2.11.x support is deprecated and
+2.12.8, 2.12.9, 2.12.7 and 2.11.12. Note that 2.11.x support is deprecated and
 it will be removed in future releases. It's recommended to upgrade to Scala 2.12
 or Scala 2.13
 
@@ -213,6 +213,18 @@ without opening the sidebar.
 
 As you type, the symbol outline is also visible at the top of the file.
 ![Document Symbols Outline](https://i.imgur.com/L217n4q.png)
+
+## Enable onTypeFormatting for multiline string formatting
+
+![pipes](https://i.imgur.com/iXGYOf0.gif)
+
+To properly support adding `|` in multiline strings we are using the
+`onTypeFormatting` method. To enable the functionality you need to enable
+`onTypeFormatting` inside Visual Studio Code.
+
+This needs to be done in settings by checking `Editor: Format On Type`:
+
+![on-type](https://i.imgur.com/4eVvSP5.gif)
 
 ## Coming from IntelliJ
 
