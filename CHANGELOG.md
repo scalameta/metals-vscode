@@ -2,6 +2,10 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.5.5 (2019/09/23 16:53 +00:00)
+- [23f5831](https://github.com/scalameta/metals-vscode/commit/23f5831358db8f9b84ca9b84f1ff5ef290344f1a) Update default Metals version to 0.7.6 (@tgodzik)
+- [a4ae172](https://github.com/scalameta/metals-vscode/commit/a4ae172b7e87c22cdfa1d27291f7b3e8c9dde4e1) v1.5.4
+
 ### v1.5.4 (2019/09/12 10:57 +00:00)
 - [ded494d](https://github.com/scalameta/metals-vscode/commit/ded494d63d3cb92a2a901cc8c5f39f1239d8bfed) Update Metals version to 0.7.5 (@tgodzik)
 - [69e0f8e](https://github.com/scalameta/metals-vscode/commit/69e0f8e7912236201cf045c4ec5cf89fdf0f395d) Migrate old settings from space-separated values to arrays (@gabro)
