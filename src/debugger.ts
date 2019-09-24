@@ -22,24 +22,22 @@ export function initialize(): Disposable[] {
 
 export async function start(parameters: any): Promise<Boolean> {
   return vscode.commands
-    .executeCommand(startAdapterCommand, parameters)
+    .executeCommand<DebugSession>(startAdapterCommand, parameters)
     .then(response => {
-      if (typeof response === "string") {
-        const debugServer = vscode.Uri.parse(response);
-        const segments = debugServer.authority.split(":");
-        const port = parseInt(segments[segments.length - 1]);
+      if (response === undefined) return false;
 
-        const configuration: vscode.DebugConfiguration = {
-          type: configurationType,
-          name: "Scala",
-          request: "launch",
-          debugServer: port // note: MUST be a number. vscode magic - automatically connects to the server
-        };
+      const debugServer = vscode.Uri.parse(response.uri);
+      const segments = debugServer.authority.split(":");
+      const port = parseInt(segments[segments.length - 1]);
 
-        return vscode.debug.startDebugging(undefined, configuration);
-      } else {
-        return false;
-      }
+      const configuration: vscode.DebugConfiguration = {
+        type: configurationType,
+        name: response.name,
+        request: "launch",
+        debugServer: port // note: MUST be a number. vscode magic - automatically connects to the server
+      };
+
+      return vscode.debug.startDebugging(undefined, configuration);
     });
 }
 
@@ -58,4 +56,9 @@ class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
   ): ProviderResult<DebugConfiguration> {
     return debugConfiguration;
   }
+}
+
+export interface DebugSession {
+  name: string;
+  uri: string;
 }
