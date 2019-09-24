@@ -334,6 +334,13 @@ function launchMetals(
           client.outputChannel.show(true);
           channelOpen = true;
         }
+      },
+      startDebugSession: args => {
+        scalaDebugger.start(args).then(wasStarted => {
+          if (!wasStarted) {
+            window.showErrorMessage("Debug session not started");
+          }
+        });
       }
     };
     Object.entries(clientCommands).forEach(([name, command]) =>
