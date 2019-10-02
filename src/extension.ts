@@ -57,7 +57,7 @@ import { getJavaOptions } from "./getJavaOptions";
 import { startTreeView } from "./treeview";
 import { MetalsFeatures } from "./MetalsFeatures";
 import { MetalsTreeViewReveal, MetalsTreeViews } from "./tree-view-protocol";
-import * as scalaDebugger from "./debugger";
+import * as scalaDebugger from "./scalaDebugger";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
