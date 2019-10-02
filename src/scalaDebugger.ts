@@ -11,7 +11,8 @@ export const startAdapterCommand = "debug-adapter-start";
 export const startSessionCommand = "metals-debug-session-start";
 const configurationType = "scala";
 
-export function initialize(): Disposable[] {
+export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
+  outputChannel.appendLine("Initializing Scala Debugger");
   return [
     vscode.debug.registerDebugConfigurationProvider(
       configurationType,

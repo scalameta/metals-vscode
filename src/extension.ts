@@ -336,6 +336,8 @@ function launchMetals(
         }
       },
       startDebugSession: args => {
+        if (!features.supportsDebugging) return;
+
         scalaDebugger.start(args).then(wasStarted => {
           if (!wasStarted) {
             window.showErrorMessage("Debug session not started");
@@ -346,11 +348,6 @@ function launchMetals(
     Object.entries(clientCommands).forEach(([name, command]) =>
       registerCommand(name, command)
     );
-
-    scalaDebugger
-      .initialize()
-      .forEach(disposable => context.subscriptions.push(disposable));
-    registerCommand(scalaDebugger.startSessionCommand, scalaDebugger.start);
 
     // should be the compilation of a currently opened file
     // but some race conditions may apply
@@ -578,6 +575,14 @@ function launchMetals(
       );
       treeViews = startTreeView(client, outputChannel, context, viewIds);
       context.subscriptions.concat(treeViews.disposables);
+    }
+    if (features.supportsDebugging) {
+      scalaDebugger
+        .initialize(outputChannel)
+        .forEach(disposable => context.subscriptions.push(disposable));
+      registerCommand(scalaDebugger.startSessionCommand, scalaDebugger.start);
+    } else {
+      outputChannel.appendLine("Debugging Scala sources is not supported");
     }
   });
 }

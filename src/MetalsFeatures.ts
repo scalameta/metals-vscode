@@ -8,6 +8,8 @@ export interface TreeViewProvider {}
 
 export class MetalsFeatures implements StaticFeature {
   treeViewProvider?: TreeViewProvider;
+  supportsDebugging?: Boolean;
+
   fillInitializeParams(params: InitializeParams): void {
     if (!params.capabilities.experimental) {
       params.capabilities.experimental = {};
@@ -18,6 +20,7 @@ export class MetalsFeatures implements StaticFeature {
   initialize(capabilities: ServerCapabilities): void {
     if (capabilities.experimental) {
       this.treeViewProvider = capabilities.experimental.treeViewProvider;
+      this.supportsDebugging = capabilities.experimental.supportsDebugging;
     }
   }
 }
