@@ -336,7 +336,7 @@ function launchMetals(
         }
       },
       startDebugSession: args => {
-        if (!features.supportsDebugging) return;
+        if (!features.debuggingProvider) return;
 
         scalaDebugger.start(args).then(wasStarted => {
           if (!wasStarted) {
@@ -576,7 +576,7 @@ function launchMetals(
       treeViews = startTreeView(client, outputChannel, context, viewIds);
       context.subscriptions.concat(treeViews.disposables);
     }
-    if (features.supportsDebugging) {
+    if (features.debuggingProvider) {
       scalaDebugger
         .initialize(outputChannel)
         .forEach(disposable => context.subscriptions.push(disposable));

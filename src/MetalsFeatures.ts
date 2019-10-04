@@ -5,10 +5,11 @@ import {
 } from "vscode-languageclient";
 
 export interface TreeViewProvider {}
+export interface DebuggingProvider {}
 
 export class MetalsFeatures implements StaticFeature {
   treeViewProvider?: TreeViewProvider;
-  supportsDebugging?: Boolean;
+  debuggingProvider?: DebuggingProvider;
 
   fillInitializeParams(params: InitializeParams): void {
     if (!params.capabilities.experimental) {
@@ -20,7 +21,7 @@ export class MetalsFeatures implements StaticFeature {
   initialize(capabilities: ServerCapabilities): void {
     if (capabilities.experimental) {
       this.treeViewProvider = capabilities.experimental.treeViewProvider;
-      this.supportsDebugging = capabilities.experimental.supportsDebugging;
+      this.debuggingProvider = capabilities.experimental.debuggingProvider;
     }
   }
 }
