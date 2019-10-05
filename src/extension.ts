@@ -434,7 +434,7 @@ function launchMetals(
           if (params.command && values.includes(params.command)) {
             registerCommand(params.command, () => {
               client.sendRequest(ExecuteCommandRequest.type, {
-                command: params.command
+                command: params.command!
               });
             });
           }
