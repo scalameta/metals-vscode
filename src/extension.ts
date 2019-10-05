@@ -346,9 +346,11 @@ function launchMetals(
         });
       }
     };
-    Object.entries(clientCommands).forEach(([name, command]) => {
-      registerCommand((ClientCommands as any)[name], command)
-    }
+    Object.entries(clientCommands).forEach(([name, command]) =>
+      registerCommand(
+        ClientCommands[name as keyof typeof ClientCommands],
+        command
+      )
     );
 
     // should be the compilation of a currently opened file
@@ -582,7 +584,6 @@ function launchMetals(
       scalaDebugger
         .initialize(outputChannel)
         .forEach(disposable => context.subscriptions.push(disposable));
-      registerCommand(scalaDebugger.startSessionCommand, scalaDebugger.start);
     } else {
       outputChannel.appendLine("Debugging Scala sources is not supported");
     }
