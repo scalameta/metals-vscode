@@ -359,12 +359,7 @@ function launchMetals(
 
     let codeLensRefresher: CodeLensProvider = {
       onDidChangeCodeLenses: compilationDoneEmitter.event,
-      provideCodeLenses: (
-        document: VscodeTextDocument,
-        token: CancellationToken
-      ) => undefined,
-      resolveCodeLens: (codeLens: CodeLens, token: CancellationToken) =>
-        undefined
+      provideCodeLenses: () => undefined
     };
 
     languages.registerCodeLensProvider(
