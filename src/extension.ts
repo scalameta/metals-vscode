@@ -369,43 +369,45 @@ function launchMetals(
 
     // Handle the metals/executeClientCommand extension notification.
     client.onNotification(ExecuteClientCommand.type, params => {
-      const isRun = params.command === "metals-doctor-run";
-      const isReload = params.command === "metals-doctor-reload";
-      if (isRun || (doctor && isReload)) {
-        const html = params.arguments && params.arguments[0];
-        if (typeof html === "string") {
-          const panel = getDoctorPanel(isReload);
-          panel.webview.html = html;
-        }
-      } else {
-        switch (params.command) {
-          case "metals-goto-location":
-            const location =
-              params.arguments && (params.arguments[0] as Location);
-            if (location) {
-              workspace
-                .openTextDocument(Uri.parse(location.uri))
-                .then(textDocument => window.showTextDocument(textDocument))
-                .then(editor => {
-                  const range = new Range(
-                    location.range.start.line,
-                    location.range.start.character,
-                    location.range.end.line,
-                    location.range.end.character
-                  );
-                  // Select an offset position instead of range position to
-                  // avoid triggering noisy document highlight.
-                  editor.selection = new Selection(range.start, range.start);
-                  editor.revealRange(range, TextEditorRevealType.InCenter);
-                });
+      switch (params.command) {
+        case "metals-goto-location":
+          const location =
+            params.arguments && (params.arguments[0] as Location);
+          if (location) {
+            workspace
+              .openTextDocument(Uri.parse(location.uri))
+              .then(textDocument => window.showTextDocument(textDocument))
+              .then(editor => {
+                const range = new Range(
+                  location.range.start.line,
+                  location.range.start.character,
+                  location.range.end.line,
+                  location.range.end.character
+                );
+                // Select an offset position instead of range position to
+                // avoid triggering noisy document highlight.
+                editor.selection = new Selection(range.start, range.start);
+                editor.revealRange(range, TextEditorRevealType.InCenter);
+              });
+          }
+          break;
+        case "metals-model-refresh":
+          compilationDoneEmitter.fire();
+          break;
+        case "metals-doctor-run":
+        case "metals-doctor-reload":
+          const isRun = params.command === "metals-doctor-run";
+          const isReload = params.command === "metals-doctor-reload";
+          if (isRun || (doctor && isReload)) {
+            const html = params.arguments && params.arguments[0];
+            if (typeof html === "string") {
+              const panel = getDoctorPanel(isReload);
+              panel.webview.html = html;
             }
-            break;
-          case "metals-model-refresh":
-            compilationDoneEmitter.fire();
-            break;
-          default:
-            outputChannel.appendLine(`unknown command: ${params.command}`);
-        }
+          }
+          break;
+        default:
+          outputChannel.appendLine(`unknown command: ${params.command}`);
       }
 
       // Ignore other commands since they are less important.
