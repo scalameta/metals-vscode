@@ -346,7 +346,10 @@ function launchMetals(
       }
     };
     Object.entries(clientCommands).forEach(([name, command]) =>
-      registerCommand(name, command)
+      registerCommand(
+        ClientCommands[name as keyof typeof ClientCommands],
+        command
+      )
     );
 
     // should be the compilation of a currently opened file
@@ -355,12 +358,7 @@ function launchMetals(
 
     let codeLensRefresher: CodeLensProvider = {
       onDidChangeCodeLenses: compilationDoneEmitter.event,
-      provideCodeLenses: (
-        document: VscodeTextDocument,
-        token: CancellationToken
-      ) => undefined,
-      resolveCodeLens: (codeLens: CodeLens, token: CancellationToken) =>
-        undefined
+      provideCodeLenses: () => undefined
     };
 
     languages.registerCodeLensProvider(
@@ -370,43 +368,45 @@ function launchMetals(
 
     // Handle the metals/executeClientCommand extension notification.
     client.onNotification(ExecuteClientCommand.type, params => {
-      const isRun = params.command === "metals-doctor-run";
-      const isReload = params.command === "metals-doctor-reload";
-      if (isRun || (doctor && isReload)) {
-        const html = params.arguments && params.arguments[0];
-        if (typeof html === "string") {
-          const panel = getDoctorPanel(isReload);
-          panel.webview.html = html;
-        }
-      } else {
-        switch (params.command) {
-          case "metals-goto-location":
-            const location =
-              params.arguments && (params.arguments[0] as Location);
-            if (location) {
-              workspace
-                .openTextDocument(Uri.parse(location.uri))
-                .then(textDocument => window.showTextDocument(textDocument))
-                .then(editor => {
-                  const range = new Range(
-                    location.range.start.line,
-                    location.range.start.character,
-                    location.range.end.line,
-                    location.range.end.character
-                  );
-                  // Select an offset position instead of range position to
-                  // avoid triggering noisy document highlight.
-                  editor.selection = new Selection(range.start, range.start);
-                  editor.revealRange(range, TextEditorRevealType.InCenter);
-                });
+      switch (params.command) {
+        case "metals-goto-location":
+          const location =
+            params.arguments && (params.arguments[0] as Location);
+          if (location) {
+            workspace
+              .openTextDocument(Uri.parse(location.uri))
+              .then(textDocument => window.showTextDocument(textDocument))
+              .then(editor => {
+                const range = new Range(
+                  location.range.start.line,
+                  location.range.start.character,
+                  location.range.end.line,
+                  location.range.end.character
+                );
+                // Select an offset position instead of range position to
+                // avoid triggering noisy document highlight.
+                editor.selection = new Selection(range.start, range.start);
+                editor.revealRange(range, TextEditorRevealType.InCenter);
+              });
+          }
+          break;
+        case "metals-model-refresh":
+          compilationDoneEmitter.fire();
+          break;
+        case "metals-doctor-run":
+        case "metals-doctor-reload":
+          const isRun = params.command === "metals-doctor-run";
+          const isReload = params.command === "metals-doctor-reload";
+          if (isRun || (doctor && isReload)) {
+            const html = params.arguments && params.arguments[0];
+            if (typeof html === "string") {
+              const panel = getDoctorPanel(isReload);
+              panel.webview.html = html;
             }
-            break;
-          case "metals-model-refresh":
-            compilationDoneEmitter.fire();
-            break;
-          default:
-            outputChannel.appendLine(`unknown command: ${params.command}`);
-        }
+          }
+          break;
+        default:
+          outputChannel.appendLine(`unknown command: ${params.command}`);
       }
 
       // Ignore other commands since they are less important.
@@ -433,7 +433,7 @@ function launchMetals(
           if (params.command && values.includes(params.command)) {
             registerCommand(params.command, () => {
               client.sendRequest(ExecuteCommandRequest.type, {
-                command: params.command
+                command: params.command!
               });
             });
           }
@@ -580,7 +580,6 @@ function launchMetals(
       scalaDebugger
         .initialize(outputChannel)
         .forEach(disposable => context.subscriptions.push(disposable));
-      registerCommand(scalaDebugger.startSessionCommand, scalaDebugger.start);
     } else {
       outputChannel.appendLine("Debugging Scala sources is not supported");
     }

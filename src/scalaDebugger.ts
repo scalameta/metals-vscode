@@ -8,7 +8,6 @@ import {
 } from "vscode";
 
 export const startAdapterCommand = "debug-adapter-start";
-export const startSessionCommand = "metals-debug-session-start";
 const configurationType = "scala";
 
 export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
