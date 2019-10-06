@@ -35,7 +35,7 @@
   },
   "homepage": "http://metals.rocks",
   "engines": {
-    "vscode": "^1.38.0"
+    "vscode": "^1.34.0"
   },
   "icon": "images/logo.png",
   "categories": [
@@ -227,24 +227,27 @@
     "vscode:prepublish": "yarn compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "test": "yarn compile",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "yarn compile && node ./node_modules/vscode/bin/test",
     "build": "vsce package --yarn",
     "vscode:publish": "vsce publish --yarn"
   },
   "devDependencies": {
+    "@types/mocha": "^2.2.42",
     "@types/node": "^8.10.25",
-    "@types/semver": "^6.0.2",
+    "@types/semver": "^5.5.0",
     "@types/shell-quote": "^1.6.1",
-    "@types/vscode": "^1.38.0",
-    "typescript": "^3.6.3",
-    "vsce": "^1.67.1"
+    "github-changes": "^1.1.2",
+    "typescript": "^3.2.2",
+    "vsce": "^1.54.0"
   },
   "dependencies": {
     "locate-java-home": "^1.1.2",
-    "promisify-child-process": "3.1.1",
-    "semver": "^6.3.0",
-    "shell-quote": "^1.7.2",
-    "vscode-languageclient": "^5.2.1"
+    "promisify-child-process": "3.1.0",
+    "semver": "^5.6.0",
+    "shell-quote": "^1.6.1",
+    "vscode": "^1.1.34",
+    "vscode-languageclient": "^5.1.0"
   },
   "extensionDependencies": [
     "scala-lang.scala"
