@@ -2,12 +2,28 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.5.6 (2019/10/06 17:11 +00:00)
+- [8c17915](https://github.com/scalameta/metals-vscode/commit/8c179158bae501f40ebd4a6a089e1e661f724e9c) Add debugging provider to client capabilities. (@olafurpg)
+- [6a4c4ec](https://github.com/scalameta/metals-vscode/commit/6a4c4ecfac62e36de1b4ecda8e73d9e01a170098) Avoid spurious 'Unknown command' warning (@gabro)
+- [2546972](https://github.com/scalameta/metals-vscode/commit/2546972b9b44629de94ee3b7786bd1257ea857f3) Remove unused methods and properties from CodeLensProvider (@gabro)
+- [2431bac](https://github.com/scalameta/metals-vscode/commit/2431bacef54e71c9a3c13cdec8e766c1fbf7d21d) Fix ClientCommands registration (@gabro)
+- [cebd70f](https://github.com/scalameta/metals-vscode/commit/cebd70f910148b15ee42b16458c62a7607a3a86f) Bump dependencies and remove test scaffolds (@gabro)
+- [60a3612](https://github.com/scalameta/metals-vscode/commit/60a3612aece97e0b225bfd84a622282c69c73416) Client command registration fix
+- [02a3924](https://github.com/scalameta/metals-vscode/commit/02a39248f0db5b67254d9bc5db994e7b8718882f) use debugging provider instead of "supportsDebugging" (@marek1840)
+- [487854e](https://github.com/scalameta/metals-vscode/commit/487854e931c1f0471f27ee566ae73c5d7acf8990) setup scala debugger only when the server supports it (@marek1840)
+- [d6e87aa](https://github.com/scalameta/metals-vscode/commit/d6e87aae02e897470c231ad905051109a16a0367) rename debugger -> scalaDebugger (@marek1840)
+- [b332fde](https://github.com/scalameta/metals-vscode/commit/b332fde29efdf31524d698cc95efb55113d54193) fetch session name from metals (@marek1840)
+- [be06698](https://github.com/scalameta/metals-vscode/commit/be066984629950afe13a1e49ae69e714ef051332) move startDebugSession command to client-commands (@marek1840)
+- [7a80af4](https://github.com/scalameta/metals-vscode/commit/7a80af4af34c361ca20424ee6b5d950980121d52) v1.5.5
+
 ### v1.5.5 (2019/09/23 16:53 +00:00)
 - [23f5831](https://github.com/scalameta/metals-vscode/commit/23f5831358db8f9b84ca9b84f1ff5ef290344f1a) Update default Metals version to 0.7.6 (@tgodzik)
 - [a4ae172](https://github.com/scalameta/metals-vscode/commit/a4ae172b7e87c22cdfa1d27291f7b3e8c9dde4e1) v1.5.4
 
 ### v1.5.4 (2019/09/12 10:57 +00:00)
 - [ded494d](https://github.com/scalameta/metals-vscode/commit/ded494d63d3cb92a2a901cc8c5f39f1239d8bfed) Update Metals version to 0.7.5 (@tgodzik)
+- [68596eb](https://github.com/scalameta/metals-vscode/commit/68596eb301909ce5fd9c2f9b3f8c2d47357e4992) refresh code lenses on event from server (@marek1840)
+- [4404a44](https://github.com/scalameta/metals-vscode/commit/4404a44528dfac37d6772aeb36364573969ac56c) connect to the debug protocol adapter (@marek1840)
 - [69e0f8e](https://github.com/scalameta/metals-vscode/commit/69e0f8e7912236201cf045c4ec5cf89fdf0f395d) Migrate old settings from space-separated values to arrays (@gabro)
 - [243a27f](https://github.com/scalameta/metals-vscode/commit/243a27fba436f246473cb6421b01fa5ffd23e5e5) Use type array for serverProperties and customProperties settings (@gabro)
 - [6aeb235](https://github.com/scalameta/metals-vscode/commit/6aeb235966782c9a65c1f632355aff53a6d9d06e) v1.5.3
@@ -64,8 +80,8 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [2c4f5ee](https://github.com/scalameta/metals-vscode/commit/2c4f5eef04fcef56dfe98eb511abe49082101d29) Add note about custom sbt script in readme.md (@pityka)
 - [e0c776b](https://github.com/scalameta/metals-vscode/commit/e0c776b006d21f6dfe865ec638a6b5471f507c54) Clarify documentation of 'Custom Repositories' setting (@pityka)
 - [19544b8](https://github.com/scalameta/metals-vscode/commit/19544b89d7317a9e0421ec41485283bf943bfafd) Use COURSIER_REPOSITORIES (@pityka)
-- [731fbb3](https://github.com/scalameta/metals-vscode/commit/731fbb35a9a6be9a1c30a19b22e593a58e61b0d3) Add customRepositories configuration (@pityka)
 - [cc15fb5](https://github.com/scalameta/metals-vscode/commit/cc15fb51f13209f1861dc1e217b1090b3d84f12d) Document where to set custom repository URLs (@pityka)
+- [731fbb3](https://github.com/scalameta/metals-vscode/commit/731fbb35a9a6be9a1c30a19b22e593a58e61b0d3) Add customRepositories configuration (@pityka)
 - [da0bef9](https://github.com/scalameta/metals-vscode/commit/da0bef91179f4c4a0a16afc36d058dfbc3c5b178) Adding spaces to error messages (@hmemcpy)
 - [5334440](https://github.com/scalameta/metals-vscode/commit/533444049ca108c51b732adbadd69c56d2b4e3ad) Add gradle setting to visual-code plugin (@tgodzik)
 - [d41a3b0](https://github.com/scalameta/metals-vscode/commit/d41a3b0e82e9aa781052e277ae088863fa3dc9d5) v1.3.3
@@ -201,8 +217,8 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [37ec5e5](https://github.com/scalameta/metals-vscode/commit/37ec5e524ac8276713b3ee95c532fdd4baa20408) Bump default serverVersion to 0.3.1 (@gabro)
 - [bea5fff](https://github.com/scalameta/metals-vscode/commit/bea5fff1a328f0afab1df9c68872ab6c3b5a01e8) Use markdown for configuration description (@gabro)
 - [54c0e1f](https://github.com/scalameta/metals-vscode/commit/54c0e1ffdf118b3812826a4a9cbae0e515463599) Detect when javaHome and serverVersion change and prompt to reload (@gabro)
-- [1d2f396](https://github.com/scalameta/metals-vscode/commit/1d2f3969b4d59614c332c1766a889fbcc79bb6a1) Fix the publishing from the CI (@gabro)
 - [6eb23d2](https://github.com/scalameta/metals-vscode/commit/6eb23d29c915ccdbde64225b81c530ad8e397a27) v0.3.2
+- [1d2f396](https://github.com/scalameta/metals-vscode/commit/1d2f3969b4d59614c332c1766a889fbcc79bb6a1) Fix the publishing from the CI (@gabro)
 
 ### v0.3.1 (2018/12/07 11:10 +00:00)
 - [b382a95](https://github.com/scalameta/metals-vscode/commit/b382a95b6e968b599f01a1edeb91eb6698686782) Use yarn version instead of vsce publish <version> (@gabro)
