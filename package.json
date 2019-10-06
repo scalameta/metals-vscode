@@ -211,16 +211,7 @@
           "when": "metals:enabled"
         }
       ]
-    },
-    "debuggers": [
-      {
-        "type": "scala",
-        "label": "Scala Debugger",
-        "languages": [
-          "scala"
-        ]
-      }
-    ]
+    }
   },
   "main": "./out/extension",
   "scripts": {
