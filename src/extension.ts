@@ -7,6 +7,9 @@ import {
   ExtensionContext,
   window,
   commands,
+  CodeLens,
+  CodeLensProvider,
+  EventEmitter,
   StatusBarAlignment,
   ProgressLocation,
   IndentAction,
@@ -19,6 +22,7 @@ import {
   Uri,
   Range,
   Selection,
+  TextDocument as VscodeTextDocument,
   TextEditorRevealType,
   TextEditor
 } from "vscode";
@@ -53,6 +57,7 @@ import { getJavaOptions } from "./getJavaOptions";
 import { startTreeView } from "./treeview";
 import { MetalsFeatures } from "./MetalsFeatures";
 import { MetalsTreeViewReveal, MetalsTreeViews } from "./tree-view-protocol";
+import * as scalaDebugger from "./scalaDebugger";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -329,10 +334,38 @@ function launchMetals(
           client.outputChannel.show(true);
           channelOpen = true;
         }
+      },
+      startDebugSession: args => {
+        if (!features.debuggingProvider) return;
+
+        scalaDebugger.start(args).then(wasStarted => {
+          if (!wasStarted) {
+            window.showErrorMessage("Debug session not started");
+          }
+        });
       }
     };
     Object.entries(clientCommands).forEach(([name, command]) =>
       registerCommand(name, command)
+    );
+
+    // should be the compilation of a currently opened file
+    // but some race conditions may apply
+    let compilationDoneEmitter = new EventEmitter<void>();
+
+    let codeLensRefresher: CodeLensProvider = {
+      onDidChangeCodeLenses: compilationDoneEmitter.event,
+      provideCodeLenses: (
+        document: VscodeTextDocument,
+        token: CancellationToken
+      ) => undefined,
+      resolveCodeLens: (codeLens: CodeLens, token: CancellationToken) =>
+        undefined
+    };
+
+    languages.registerCodeLensProvider(
+      { scheme: "file", language: "scala" },
+      codeLensRefresher
     );
 
     // Handle the metals/executeClientCommand extension notification.
@@ -367,6 +400,9 @@ function launchMetals(
                   editor.revealRange(range, TextEditorRevealType.InCenter);
                 });
             }
+            break;
+          case "metals-model-refresh":
+            compilationDoneEmitter.fire();
             break;
           default:
             outputChannel.appendLine(`unknown command: ${params.command}`);
@@ -539,6 +575,14 @@ function launchMetals(
       );
       treeViews = startTreeView(client, outputChannel, context, viewIds);
       context.subscriptions.concat(treeViews.disposables);
+    }
+    if (features.debuggingProvider) {
+      scalaDebugger
+        .initialize(outputChannel)
+        .forEach(disposable => context.subscriptions.push(disposable));
+      registerCommand(scalaDebugger.startSessionCommand, scalaDebugger.start);
+    } else {
+      outputChannel.appendLine("Debugging Scala sources is not supported");
     }
   });
 }
