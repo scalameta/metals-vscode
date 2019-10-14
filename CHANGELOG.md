@@ -2,6 +2,12 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.6.0 (2019/10/14 10:07 +00:00)
+- [a51aa54](https://github.com/scalameta/metals-vscode/commit/a51aa5464df14a8c5a92a51bb6b469f9afe0ce36) Revert "Revert "Merge pull request #106 from marek1840/run-code-via-debug-adapter"" (@olafurpg)
+- [cb5d2b4](https://github.com/scalameta/metals-vscode/commit/cb5d2b462a94f1b4fc7bf28a4d9f00d69ac7d492) Add icons for Discord (@olafurpg)
+- [c72e56d](https://github.com/scalameta/metals-vscode/commit/c72e56d60452526c10b4114345229bfc614a44e6) Upgrade coursier binary (@olafurpg)
+- [f2ab0aa](https://github.com/scalameta/metals-vscode/commit/f2ab0aaa3a25aaf49d169856995d1398b6cc44dc) v1.5.7
+
 ### v1.5.7 (2019/10/06 21:53 +00:00)
 - [1e5bca8](https://github.com/scalameta/metals-vscode/commit/1e5bca8015ef7702bfeb4ce78c24d2168d122102) Revert "Merge pull request #106 from marek1840/run-code-via-debug-adapter" (@tgodzik)
 - [be8d6bb](https://github.com/scalameta/metals-vscode/commit/be8d6bbf0907ff9e83d77294bb7faff66d72487f) Revert "Merge pull request #147 from gabro/grooming" (@tgodzik)
@@ -12,8 +18,8 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [6a4c4ec](https://github.com/scalameta/metals-vscode/commit/6a4c4ecfac62e36de1b4ecda8e73d9e01a170098) Avoid spurious 'Unknown command' warning (@gabro)
 - [2546972](https://github.com/scalameta/metals-vscode/commit/2546972b9b44629de94ee3b7786bd1257ea857f3) Remove unused methods and properties from CodeLensProvider (@gabro)
 - [2431bac](https://github.com/scalameta/metals-vscode/commit/2431bacef54e71c9a3c13cdec8e766c1fbf7d21d) Fix ClientCommands registration (@gabro)
-- [60a3612](https://github.com/scalameta/metals-vscode/commit/60a3612aece97e0b225bfd84a622282c69c73416) Client command registration fix
 - [cebd70f](https://github.com/scalameta/metals-vscode/commit/cebd70f910148b15ee42b16458c62a7607a3a86f) Bump dependencies and remove test scaffolds (@gabro)
+- [60a3612](https://github.com/scalameta/metals-vscode/commit/60a3612aece97e0b225bfd84a622282c69c73416) Client command registration fix
 - [02a3924](https://github.com/scalameta/metals-vscode/commit/02a39248f0db5b67254d9bc5db994e7b8718882f) use debugging provider instead of "supportsDebugging" (@marek1840)
 - [487854e](https://github.com/scalameta/metals-vscode/commit/487854e931c1f0471f27ee566ae73c5d7acf8990) setup scala debugger only when the server supports it (@marek1840)
 - [d6e87aa](https://github.com/scalameta/metals-vscode/commit/d6e87aae02e897470c231ad905051109a16a0367) rename debugger -> scalaDebugger (@marek1840)
@@ -352,8 +358,8 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [a2ac24f](https://github.com/scalameta/metals-vscode/commit/a2ac24fcfcdf27a5a0a84946bda85ff36bc6852c) Fix jump to definition for some trickier cases (@olafurpg)
 - [7fec4db](https://github.com/scalameta/metals-vscode/commit/7fec4db0df972bf7796b5f40e4e036511ed644e3) Fetch scalafmt jars with coursier. (@olafurpg)
 - [67eb694](https://github.com/scalameta/metals-vscode/commit/67eb694012d6479c67ed48106a2a3d2ed1939858) Get FormattingProvider working for scalafmt. (@olafurpg)
-- [7c6636c](https://github.com/scalameta/metals-vscode/commit/7c6636c87f427a8ae94c0726977b1f44b2e17c23) Ship coursier with the vscode extension (@gabro)
 - [47ae833](https://github.com/scalameta/metals-vscode/commit/47ae83316e6f6839ed2257e2204f856b57b33b03) Add support for packaging the vscode extension (@gabro)
+- [7c6636c](https://github.com/scalameta/metals-vscode/commit/7c6636c87f427a8ae94c0726977b1f44b2e17c23) Ship coursier with the vscode extension (@gabro)
 - [ae881d3](https://github.com/scalameta/metals-vscode/commit/ae881d38cabc0585ea8fda1cdddaa9642528c5ff) Ship coursier with the vscode extension (@gabro)
 - [379323e](https://github.com/scalameta/metals-vscode/commit/379323e39d2ee89230d43982ad998344a2ca58be) Add support for packaging the vscode extension (@gabro)
 - [c133b41](https://github.com/scalameta/metals-vscode/commit/c133b417213270db80bab14bbc421678c3829b2f) Add .vscode tasks (@gabro)
