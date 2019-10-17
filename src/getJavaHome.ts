@@ -1,8 +1,8 @@
 import locateJavaHome from "locate-java-home";
-import { workspace, OutputChannel } from "vscode";
+import { workspace } from "vscode";
 import * as semver from "semver";
 
-export function getJavaHome(out: OutputChannel): Promise<string> {
+export function getJavaHome(): Promise<string> {
   const userJavaHome = workspace.getConfiguration("metals").get("javaHome");
   if (typeof userJavaHome === "string" && userJavaHome.trim() !== "") {
     return Promise.resolve(userJavaHome);

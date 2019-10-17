@@ -68,7 +68,7 @@ export async function activate(context: ExtensionContext) {
   detectLaunchConfigurationChanges();
   checkServerVersion();
 
-  getJavaHome(outputChannel)
+  getJavaHome()
     .then(javaHome => fetchAndLaunchMetals(context, javaHome))
     .catch(err => {
       const message =
