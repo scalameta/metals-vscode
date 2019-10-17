@@ -237,7 +237,7 @@
     "@types/semver": "^6.0.2",
     "@types/shell-quote": "^1.6.1",
     "typescript": "^3.6.4",
-    "vsce": "^1.54.0",
+    "vsce": "^1.68.0",
     "vscode": "^1.1.36"
   },
   "dependencies": {

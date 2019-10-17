@@ -968,7 +968,7 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-vsce@^1.54.0:
+vsce@^1.68.0:
   version "1.68.0"
   resolved "https://registry.yarnpkg.com/vsce/-/vsce-1.68.0.tgz#4eb74b71555d3b547323078c5aa051e75c158628"
   integrity sha512-yFbRYu4x4GbdQzZdEQQeRJBxgPdummgcUOFHUtnclW8XQl3MTuKgXL3TtI09gb5oq7jE6kdyvBmpBcmDGsmhcQ==

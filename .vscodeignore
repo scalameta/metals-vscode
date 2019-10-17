@@ -6,3 +6,4 @@ src/**
 .gitignore
 tsconfig.json
 vsc-extension-quickstart.md
+node_modules
