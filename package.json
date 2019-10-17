@@ -214,6 +214,14 @@
         }
       ]
     },
+    "breakpoints": [
+      {
+        "language": "scala"
+      },
+      {
+        "language": "java"
+      }
+    ],
     "debuggers": [
       {
         "type": "scala",
