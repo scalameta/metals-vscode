@@ -68,11 +68,12 @@ export async function activate(context: ExtensionContext) {
   detectLaunchConfigurationChanges();
   checkServerVersion();
 
-  getJavaHome()
+  getJavaHome(outputChannel)
     .then(javaHome => fetchAndLaunchMetals(context, javaHome))
     .catch(err => {
       const message =
-        "Unable to find Java 8 home. To fix this problem, update the 'Java Home' setting to point to a Java 8 home directory";
+        "Unable to find a Java 8 or Java 11 installation on this computer. " +
+        "To fix this problem, update the 'Java Home' setting to point to a Java 8 or Java 11 home directory";
       outputChannel.appendLine(message);
       outputChannel.appendLine(err);
       window.showErrorMessage(message, openSettingsAction).then(choice => {
