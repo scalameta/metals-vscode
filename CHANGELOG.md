@@ -2,6 +2,15 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### 1.6.2 (2019/10/31 17:23 +00:00)
+- [b532d77](https://github.com/scalameta/metals-vscode/commit/b532d775f1ea9be0aaf90ae6d00e6c3ddf3d356f) Remove test scaffolds (@gabro)
+- [b97ba9a](https://github.com/scalameta/metals-vscode/commit/b97ba9a961017b90df35ec2ca20673c0bf436414) Remove github-changes dependency (@gabro)
+- [44cbec6](https://github.com/scalameta/metals-vscode/commit/44cbec6ab8489bb7d285e61d2274261e3a9eae2c) Avoid spurious 'Unknown command' warning (@gabro)
+- [be69da2](https://github.com/scalameta/metals-vscode/commit/be69da214b1a890850137106017e820c53cbe629) Remove unused methods and properties from CodeLensProvider (@gabro)
+- [596e322](https://github.com/scalameta/metals-vscode/commit/596e3226cc355e4ea572635bba83d559a1c3afd2) Fix ClientCommands registration (@gabro)
+- [ef25525](https://github.com/scalameta/metals-vscode/commit/ef2552539cff89c69b9f3ad4f1a392a7f72364ec) Client command registration fix
+- [c66760d](https://github.com/scalameta/metals-vscode/commit/c66760dc3855ce9d687eb8103c9d6c31b41c85b3) v1.6.1
+
 ### v1.6.1 (2019/10/17 10:21 +00:00)
 - [2dd7d70](https://github.com/scalameta/metals-vscode/commit/2dd7d706a117717469a5dcf47caea3a871f84bf1) Bump lodash from 4.17.11 to 4.17.15 (@dependabot[bot])
 - [c2334ed](https://github.com/scalameta/metals-vscode/commit/c2334ede7a230653b445a9c82bf52855f7e5711f) Remove unused OutputChannel (@olafurpg)
