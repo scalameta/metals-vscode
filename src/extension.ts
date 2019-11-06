@@ -607,18 +607,8 @@ function launchMetals(
         decorationType = window.createTextEditorDecorationType(options);
       });
       client.onNotification(DecorationsRangesDidChange.type, params => {
-        outputChannel.appendLine(JSON.stringify(params));
-        const uris = window.visibleTextEditors.map(e => e.document.uri);
-        outputChannel.appendLine(JSON.stringify(uris));
         const editor = window.activeTextEditor;
-        if (editor) {
-          outputChannel.appendLine(
-            JSON.stringify(editor.document.uri.toString())
-          );
-        }
-        if (editor && params.uri == editor.document.uri.toString()) {
-          outputChannel.appendLine("adding decorations");
-          outputChannel.appendLine(JSON.stringify(params.options));
+        if (editor && params.uri === editor.document.uri.toString()) {
           const options = params.options.map<DecorationOptions>(o => {
             return {
               range: new Range(
@@ -631,7 +621,9 @@ function launchMetals(
           });
           editor.setDecorations(decorationType, options);
         } else {
-          outputChannel.appendLine("no editor");
+          outputChannel.appendLine(
+            `Ignoring decorations for non-active document '${params.uri}'.`
+          );
         }
       });
     }
