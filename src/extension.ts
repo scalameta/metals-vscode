@@ -550,7 +550,7 @@ function launchMetals(
             }
 
             // Update total running time every second.
-            let seconds = 0;
+            let seconds = params.secondsElapsed || 0;
             const interval = setInterval(() => {
               seconds += 1;
               progress.report({ message: readableSeconds(seconds) });
