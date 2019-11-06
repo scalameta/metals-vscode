@@ -39,7 +39,6 @@ import {
   ExecuteCommandRequest,
   ShutdownRequest,
   ExitNotification,
-  CancellationToken,
   Location,
   TextDocumentPositionParams,
   TextDocument
@@ -66,6 +65,7 @@ import {
   DecorationTypeDidChange,
   DecorationsRangesDidChange
 } from "./decoration-protocol";
+import { JdkInstaller } from "./jdkInstaller";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -78,6 +78,16 @@ let decorationType: TextEditorDecorationType = window.createTextEditorDecoration
   }
 );
 
+const jdk8Jabba = "adopt@1.8";
+const jdk8Action = "JDK8";
+
+const jdk11Jabba = "adopt@1.11";
+const jdk11Action = "JDK11";
+
+const defaultJabbaVer = "0.11.2";
+
+const config = workspace.getConfiguration("metals");
+
 export async function activate(context: ExtensionContext) {
   detectLaunchConfigurationChanges();
   checkServerVersion();
@@ -87,16 +97,53 @@ export async function activate(context: ExtensionContext) {
     .catch(err => {
       const message =
         "Unable to find a Java 8 or Java 11 installation on this computer. " +
-        "To fix this problem, update the 'Java Home' setting to point to a Java 8 or Java 11 home directory";
+        "To fix this problem, update the 'Java Home' setting to point to a Java 8 or Java 11 home directory " +
+        "or select a version to install automatically (window will need to be reloaded afterwards)";
+
       outputChannel.appendLine(message);
       outputChannel.appendLine(err);
-      window.showErrorMessage(message, openSettingsAction).then(choice => {
-        if (choice === openSettingsAction) {
-          commands.executeCommand("workbench.action.openSettings");
-        }
-      });
+
+      const jabba_ver = defaultJabbaVer;
+      showJabbaMessage(message, jabba_ver);
     });
   commands.executeCommand("setContext", "metals:enabled", true);
+}
+
+function showJabbaMessage(
+  message: string,
+  jabba_ver: string = defaultJabbaVer
+) {
+  return window
+    .showErrorMessage(message, openSettingsAction, jdk8Action, jdk11Action)
+    .then(choice => {
+      const jdkinstaller = new JdkInstaller(outputChannel);
+      switch (choice) {
+        case openSettingsAction: {
+          commands.executeCommand("workbench.action.openSettings");
+          break;
+        }
+        case jdk8Action: {
+          window.withProgress({
+            location: ProgressLocation.Notification,
+            title: `Installing JDK 8, please wait...`,
+            cancellable: true
+          }, (progress, _) => {
+            return jdkinstaller.installJava(jdk8Jabba, jabba_ver).then(updateJavaConfig);
+          })
+          break;
+        }
+        case jdk11Action: {
+          window.withProgress({
+            location: ProgressLocation.Notification,
+            title: `Installing JDK 11, please wait...`,
+            cancellable: true
+          }, (progress, _) => {
+            return jdkinstaller.installJava(jdk11Jabba, jabba_ver).then(updateJavaConfig);
+          })
+          break;
+        }
+      }
+    });
 }
 
 function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
@@ -110,7 +157,15 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   if (dottyArtifact && fs.existsSync(dottyArtifact)) {
     outputChannel.appendLine(
       `Metals will not start since Dotty is enabled for this workspace. ` +
-        `To enable Metals, remove the file ${dottyArtifact} and run 'Reload window'`
+      `To enable Metals, remove the file ${dottyArtifact} and run 'Reload window'`
+    );
+    return;
+  }
+
+  if (!javaHome || javaHome.trim().length == 0 || !fs.existsSync(javaHome)) {
+    showJabbaMessage(
+      "Incorrect 'Java Home' setting. To fix this problem, update the 'Java Home' setting to point to a Java 8 or Java 11 home directory " +
+      "or select a version to install automatically (window will need to be reloaded afterwards)."
     );
     return;
   }
@@ -119,7 +174,6 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   const javaPath = path.join(javaHome, "bin", "java");
   const coursierPath = path.join(context.extensionPath, "./coursier");
 
-  const config = workspace.getConfiguration("metals");
   const serverVersionConfig: string = config.get<string>("serverVersion")!;
   const defaultServerVersion = config.inspect<string>("serverVersion")!
     .defaultValue!;
@@ -226,6 +280,10 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
       });
     }
   );
+}
+
+function updateJavaConfig(javaHome: string, global: boolean = true) {
+  config.update("javaHome", javaHome, global);
 }
 
 function launchMetals(
