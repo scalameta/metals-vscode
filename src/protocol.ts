@@ -20,6 +20,8 @@ export namespace MetalsSlowTask {
 }
 export interface MetalsSlowTaskParams {
   message: string;
+  quietLogs?: boolean;
+  secondsElapsed?: number;
 }
 export interface MetalsSlowTaskResult {
   cancel: boolean;

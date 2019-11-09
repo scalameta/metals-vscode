@@ -24,7 +24,12 @@ import {
   Selection,
   TextDocument as VscodeTextDocument,
   TextEditorRevealType,
-  TextEditor
+  TextEditor,
+  DecorationRangeBehavior,
+  DecorationOptions,
+  Position,
+  TextEditorDecorationType,
+  WorkspaceEdit
 } from "vscode";
 import {
   LanguageClient,
@@ -58,11 +63,21 @@ import { startTreeView } from "./treeview";
 import { MetalsFeatures } from "./MetalsFeatures";
 import { MetalsTreeViewReveal, MetalsTreeViews } from "./tree-view-protocol";
 import * as scalaDebugger from "./scalaDebugger";
+import {
+  DecorationTypeDidChange,
+  DecorationsRangesDidChange
+} from "./decoration-protocol";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
 const openSettingsCommand = "workbench.action.openSettings";
 let treeViews: MetalsTreeViews | undefined;
+let decorationType: TextEditorDecorationType = window.createTextEditorDecorationType(
+  {
+    isWholeLine: true,
+    rangeBehavior: DecorationRangeBehavior.OpenClosed
+  }
+);
 
 export async function activate(context: ExtensionContext) {
   detectLaunchConfigurationChanges();
@@ -528,11 +543,14 @@ function launchMetals(
             cancellable: true
           },
           (progress, progressToken) => {
-            // Open logs so user can keep track of progress.
-            client.outputChannel.show(true);
+            const showLogs = !params.quietLogs;
+            if (showLogs) {
+              // Open logs so user can keep track of progress.
+              client.outputChannel.show(true);
+            }
 
             // Update total running time every second.
-            let seconds = 0;
+            let seconds = params.secondsElapsed || 0;
             const interval = setInterval(() => {
               seconds += 1;
               progress.report({ message: readableSeconds(seconds) });
@@ -583,6 +601,31 @@ function launchMetals(
         .forEach(disposable => context.subscriptions.push(disposable));
     } else {
       outputChannel.appendLine("Debugging Scala sources is not supported");
+    }
+    if (features.decorationProvider) {
+      client.onNotification(DecorationTypeDidChange.type, options => {
+        decorationType = window.createTextEditorDecorationType(options);
+      });
+      client.onNotification(DecorationsRangesDidChange.type, params => {
+        const editor = window.activeTextEditor;
+        if (editor && params.uri === editor.document.uri.toString()) {
+          const options = params.options.map<DecorationOptions>(o => {
+            return {
+              range: new Range(
+                new Position(o.range.start.line, o.range.start.character),
+                new Position(o.range.end.line, o.range.end.character)
+              ),
+              hoverMessage: o.hoverMessage,
+              renderOptions: o.renderOptions
+            };
+          });
+          editor.setDecorations(decorationType, options);
+        } else {
+          outputChannel.appendLine(
+            `Ignoring decorations for non-active document '${params.uri}'.`
+          );
+        }
+      });
     }
   });
 }
@@ -784,6 +827,7 @@ function checkServerVersion() {
 function isSupportedLanguage(languageId: TextDocument["languageId"]): boolean {
   switch (languageId) {
     case "scala":
+    case "sc":
     case "java":
       return true;
     default:
