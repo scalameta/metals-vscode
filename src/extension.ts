@@ -543,7 +543,7 @@ function launchMetals(
             cancellable: true
           },
           (progress, progressToken) => {
-            const showLogs = !params.noLogs;
+            const showLogs = !params.quietLogs;
             if (showLogs) {
               // Open logs so user can keep track of progress.
               client.outputChannel.show(true);
