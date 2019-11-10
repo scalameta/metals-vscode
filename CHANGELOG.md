@@ -2,6 +2,13 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.6.2 (2019/11/09 17:50 +00:00)
+- [136ef62](https://github.com/scalameta/metals-vscode/commit/136ef625062b690e9ac22a9464c8ac8d281a7d1a) Rename `noLogs` to `quietLogs` (@olafurpg)
+- [cecc571](https://github.com/scalameta/metals-vscode/commit/cecc571d81c17a0cddaff5c4f74778b5afec36d7) Address review feedback (@olafurpg)
+- [e01bfeb](https://github.com/scalameta/metals-vscode/commit/e01bfeb403eb29cb2fef0a120468e9bb74870b09) Add support for `secondsElapsed` field in `metals/slowTask` request. (@olafurpg)
+- [6f9376d](https://github.com/scalameta/metals-vscode/commit/6f9376de70615df5715de9f8f75f202d80d740f2) Add support for a new "Decoration Protocol" (@olafurpg)
+- [7d8c268](https://github.com/scalameta/metals-vscode/commit/7d8c268b2359804bf81f980ac50c2d7226de08c9) 1.6.2
+
 ### 1.6.2 (2019/10/31 17:23 +00:00)
 - [b532d77](https://github.com/scalameta/metals-vscode/commit/b532d775f1ea9be0aaf90ae6d00e6c3ddf3d356f) Remove test scaffolds (@gabro)
 - [b97ba9a](https://github.com/scalameta/metals-vscode/commit/b97ba9a961017b90df35ec2ca20673c0bf436414) Remove github-changes dependency (@gabro)
