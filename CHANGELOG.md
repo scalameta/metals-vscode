@@ -2,6 +2,9 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.6.3 (2019/11/10 17:01 +00:00)
+- [0045194](https://github.com/scalameta/metals-vscode/commit/0045194004904ae0378298bd4da5a465d94ac5d0) v1.6.2
+
 ### v1.6.2 (2019/11/09 17:50 +00:00)
 - [136ef62](https://github.com/scalameta/metals-vscode/commit/136ef625062b690e9ac22a9464c8ac8d281a7d1a) Rename `noLogs` to `quietLogs` (@olafurpg)
 - [cecc571](https://github.com/scalameta/metals-vscode/commit/cecc571d81c17a0cddaff5c4f74778b5afec36d7) Address review feedback (@olafurpg)
