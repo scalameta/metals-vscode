@@ -51,7 +51,9 @@
   "contributes": {
     "configurationDefaults": {
       "[scala]": {
-        "editor.suggestSelection": "first"
+        "editor.suggestSelection": "first",
+        "editor.formatOnPaste": true,
+        "editor.formatOnType": true
       }
     },
     "viewsContainers": {
