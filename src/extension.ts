@@ -189,7 +189,8 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
         javaPath,
         classpath,
         serverProperties,
-        javaOptions
+        javaOptions,
+        customRepositoriesEnv
       );
     },
     () => {
@@ -234,7 +235,8 @@ function launchMetals(
   javaPath: string,
   metalsClasspath: string,
   serverProperties: string[],
-  javaOptions: string[]
+  javaOptions: string[],
+  env: { COURSIER_REPOSITORIES?: string }
 ) {
   // Make editing Scala docstrings slightly nicer.
   enableScaladocIndentation();
@@ -253,8 +255,8 @@ function launchMetals(
     .concat(mainArgs);
 
   const serverOptions: ServerOptions = {
-    run: { command: javaPath, args: launchArgs },
-    debug: { command: javaPath, args: launchArgs }
+    run: { command: javaPath, args: launchArgs, options: { env } },
+    debug: { command: javaPath, args: launchArgs, options: { env } }
   };
 
   const clientOptions: LanguageClientOptions = {
