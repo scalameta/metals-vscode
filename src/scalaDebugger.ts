@@ -20,9 +20,9 @@ export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
   ];
 }
 
-export async function start(parameters: any): Promise<Boolean> {
+export async function start(noDebug: Boolean, ...parameters: any[]): Promise<Boolean> {
   return vscode.commands
-    .executeCommand<DebugSession>(startAdapterCommand, parameters)
+    .executeCommand<DebugSession>(startAdapterCommand, ...parameters)
     .then(response => {
       if (response === undefined) return false;
 
@@ -33,6 +33,7 @@ export async function start(parameters: any): Promise<Boolean> {
       const configuration: vscode.DebugConfiguration = {
         type: configurationType,
         name: response.name,
+        noDebug: noDebug,
         request: "launch",
         debugServer: port // note: MUST be a number. vscode magic - automatically connects to the server
       };
