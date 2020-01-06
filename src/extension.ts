@@ -111,7 +111,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   if (dottyArtifact && fs.existsSync(dottyArtifact)) {
     outputChannel.appendLine(
       `Metals will not start since Dotty is enabled for this workspace. ` +
-        `To enable Metals, remove the file ${dottyArtifact} and run 'Reload window'`
+      `To enable Metals, remove the file ${dottyArtifact} and run 'Reload window'`
     );
     return;
   }
@@ -608,7 +608,7 @@ function launchMetals(
       });
       client.onNotification(DecorationsRangesDidChange.type, params => {
         const editor = window.activeTextEditor;
-        if (editor && params.uri === editor.document.uri.toString()) {
+        if (editor && Uri.parse(params.uri).toString() === editor.document.uri.toString()) {
           const options = params.options.map<DecorationOptions>(o => {
             return {
               range: new Range(
