@@ -353,12 +353,21 @@ function launchMetals(
           channelOpen = true;
         }
       },
-      startDebugSession: args => {
+      startDebugSession: (...args) => {
         if (!features.debuggingProvider) return;
 
-        scalaDebugger.start(args).then(wasStarted => {
+        scalaDebugger.start(true, ...args).then(wasStarted => {
           if (!wasStarted) {
             window.showErrorMessage("Debug session not started");
+          }
+        });
+      },
+      startRunSession: (...args) => {
+        if (!features.debuggingProvider) return;
+
+        scalaDebugger.start(false, ...args).then(wasStarted => {
+          if (!wasStarted) {
+            window.showErrorMessage("Run session not started");
           }
         });
       }

@@ -5,5 +5,6 @@ export const ClientCommands = {
   toggleLogs: "metals-logs-toggle",
   focusDiagnostics: "metals-diagnostics-focus",
   runDoctor: "metals-doctor-run",
-  startDebugSession: "metals-debug-session-start"
+  startDebugSession: "metals-debug-session-start",
+  startRunSession: "metals-run-session-start"
 };
