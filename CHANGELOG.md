@@ -2,6 +2,10 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### 1.7.1 (2020/01/13 17:38 +00:00)
+- [4a5e6e9](https://github.com/scalameta/metals-vscode/commit/4a5e6e9d5156e732ea11fb17283c539ee78e9cbd) Fix inverted meaning of run/debug commands (@marek1840)
+- [f4659b5](https://github.com/scalameta/metals-vscode/commit/f4659b5d84ac7a86e1bb7d4185cab5e1a8fd98b3) v1.7.0
+
 ### v1.7.0 (2020/01/13 16:15 +00:00)
 - [a2ff1cf](https://github.com/scalameta/metals-vscode/commit/a2ff1cf1216c3e841f1b5aae7f43ace25ce0c38b) Update Metals version to 0.8.0 (@tgodzik)
 - [7f4e76f](https://github.com/scalameta/metals-vscode/commit/7f4e76fce370cedb35bd67e8eb1a9894479e5426) Fix worksheets on Windows
