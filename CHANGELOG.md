@@ -2,6 +2,16 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.7.0 (2020/01/13 16:15 +00:00)
+- [a2ff1cf](https://github.com/scalameta/metals-vscode/commit/a2ff1cf1216c3e841f1b5aae7f43ace25ce0c38b) Update Metals version to 0.8.0 (@tgodzik)
+- [7f4e76f](https://github.com/scalameta/metals-vscode/commit/7f4e76fce370cedb35bd67e8eb1a9894479e5426) Fix worksheets on Windows
+- [ce0694d](https://github.com/scalameta/metals-vscode/commit/ce0694d7fd6cb2d0ef462823115611a343d56b19) Support StartRunSession command (@marek1840)
+- [42f3169](https://github.com/scalameta/metals-vscode/commit/42f3169a2cd2996320da7116a3b2be90023da5ab) Enable breakpoints in java and scala sources (@marek1840)
+- [af4b53c](https://github.com/scalameta/metals-vscode/commit/af4b53cce81f4ff60bdfae480d983d22f61ff906) passing custom repositories to Metals (@sswistun-vl)
+- [b7201d1](https://github.com/scalameta/metals-vscode/commit/b7201d19d5d7bd65df3b20fe05621c052e8fc29b) coursier upgrade - now bootstrap supports mirrors (@sswistun-vl)
+- [ed00892](https://github.com/scalameta/metals-vscode/commit/ed008927144792227c14393ae5478aabb810e726) Add formatOnPaste and formatOnType defaults for Scala files (@gabro)
+- [ea9c4fe](https://github.com/scalameta/metals-vscode/commit/ea9c4fe8a5d89d812735dc011daf26657c33070f) v1.6.3
+
 ### v1.6.3 (2019/11/10 17:01 +00:00)
 - [0045194](https://github.com/scalameta/metals-vscode/commit/0045194004904ae0378298bd4da5a465d94ac5d0) v1.6.2
 
