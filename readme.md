@@ -33,7 +33,7 @@ or 11 installation.
 on Ubuntu+Windows.
 
 **Scala 2.13, 2.12 and 2.11**. Metals supports these Scala versions 2.13.0,
-2.13.1, 2.12.8, 2.12.9, 2.12.10, 2.12.7 and 2.11.12. Note that 2.11.x support is
+2.13.1, 2.12.10, 2.12.8, 2.12.9 and 2.11.12. Note that 2.11.x support is
 deprecated and it will be removed in future releases. It's recommended to
 upgrade to Scala 2.12 or Scala 2.13
 
@@ -126,11 +126,8 @@ configuration problems in your workspace.
 
 The VS Code plugin uses by default the `JAVA_HOME` environment variable (via
 [`find-java-home`](https://www.npmjs.com/package/find-java-home)) to locate the
-`java` executable. Metals only works with Java 8 so this executable cannot point
-to another version such as Java 11.
-
-To override the default Java home location, update the "Java Home" variable to
-in the settings menu.
+`java` executable. To override the default Java home location, update the "Java
+Home" variable in the settings menu.
 
 ![Java Home setting](https://i.imgur.com/sKrPKk2.png)
 
@@ -186,17 +183,19 @@ to find the latest SNAPSHOT version.
 Run the "Reload Window" command after updating the setting for the new version
 to take effect.
 
-## Gitignore `.metals/` and `.bloop/`
+## Gitignore `project/metals.sbt` `.metals/` and `.bloop/`
 
 The Metals server places logs and other files in the `.metals/` directory. The
 Bloop compile server places logs and compilation artifacts in the `.bloop`
-directory. It's recommended to ignore these directories from version control
-systems like git.
+directory. Bloop plugin that generates Bloop configuration is added in the
+`project/metals.sbt` file. It's recommended to ignore these directories and file
+from version control systems like git.
 
 ```sh
 # ~/.gitignore
 .metals/
 .bloop/
+project/metals.sbt
 ```
 
 ## Show document symbols
