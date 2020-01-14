@@ -4,8 +4,7 @@
 
 ![Completions](https://user-images.githubusercontent.com/1408093/56036958-725bac00-5d2e-11e9-9cf7-46249125494a.gif)
 
-Metals is still in early development so you may run into rough edges. The
-following table shows the status of various features.
+The following table shows the status of various features.
 
 | Feature               | Status | Notes                                                                                            |
 | --------------------- | :----: | ------------------------------------------------------------------------------------------------ |
@@ -17,11 +16,12 @@ following table shows the status of various features.
 | Document symbols      |   ✅   |                                                                                                  |
 | Formatting            |   ✅   | Uses Scalafmt.                                                                                   |
 | Find references       |   ✅   |                                                                                                  |
+| Find implementations  |   ✅   |                                                                                                  |
 | Workspace symbol      |   ✅   | Searches workspace sources and library dependencies. All-lowercase queries are case-insensitive. |
 | Highlight             |   ✅   |                                                                                                  |
 | Folding               |   ✅   |                                                                                                  |
-| Rename symbol         |   ❌   |                                                                                                  |
-| Code actions          |   ❌   |                                                                                                  |
+| Rename symbol         |   ✅   |                                                                                                  |
+| Run/Debug             |   ✅   |                                                                                                  |
 
 ## Requirements
 
@@ -103,7 +103,7 @@ to learn how to speed up build import.
 
 ### Importing changes
 
-When you change `build.sbt` or sources under `project/`, you will be prompted to
+When you change your `build.sbt` or sources under `project/`, you will be prompted to
 re-import the build.
 
 ![Import sbt changes](https://i.imgur.com/72kdZkL.png)
