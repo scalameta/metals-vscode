@@ -236,7 +236,7 @@ function launchMetals(
   metalsClasspath: string,
   serverProperties: string[],
   javaOptions: string[],
-  env: { COURSIER_REPOSITORIES?: string }
+  extraEnv: { COURSIER_REPOSITORIES?: string }
 ) {
   // Make editing Scala docstrings slightly nicer.
   enableScaladocIndentation();
@@ -253,6 +253,8 @@ function launchMetals(
     .concat(javaOptions)
     .concat(serverProperties)
     .concat(mainArgs);
+
+  const env = { ...process.env, ...extraEnv }
 
   const serverOptions: ServerOptions = {
     run: { command: javaPath, args: launchArgs, options: { env } },
