@@ -2,6 +2,13 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### upcoming (2020/01/15 11:12 +00:00)
+- [4f1676b](https://github.com/scalameta/metals-vscode/commit/4f1676b91f3955375f1c2a1701c0022326fb2e4c) Pass user's environment to metals server process (@jodersky)
+
+### 1.7.2 (2020/01/14 09:11 +00:00)
+- [02fcb1c](https://github.com/scalameta/metals-vscode/commit/02fcb1c19149e1a332320b2c3b1b0907ba91b626) update table in readme (@ckipp01)
+- [d931cca](https://github.com/scalameta/metals-vscode/commit/d931cca8a457aef6a696378bce9ce692d2f7a5e4) 1.7.1
+
 ### 1.7.1 (2020/01/13 17:38 +00:00)
 - [4a5e6e9](https://github.com/scalameta/metals-vscode/commit/4a5e6e9d5156e732ea11fb17283c539ee78e9cbd) Fix inverted meaning of run/debug commands (@marek1840)
 - [f4659b5](https://github.com/scalameta/metals-vscode/commit/f4659b5d84ac7a86e1bb7d4185cab5e1a8fd98b3) v1.7.0
