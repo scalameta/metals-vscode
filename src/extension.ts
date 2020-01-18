@@ -57,7 +57,7 @@ import {
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
 import * as semver from "semver";
-import { getJavaHome } from "./getJavaHome";
+import { getJavaHome } from "metals-languageclient";
 import { getJavaOptions } from "./getJavaOptions";
 import { startTreeView } from "./treeview";
 import { MetalsFeatures } from "./MetalsFeatures";
@@ -83,7 +83,7 @@ export async function activate(context: ExtensionContext) {
   detectLaunchConfigurationChanges();
   checkServerVersion();
 
-  getJavaHome()
+  getJavaHome(workspace.getConfiguration("metals").get("javaHome"))
     .then(javaHome => fetchAndLaunchMetals(context, javaHome))
     .catch(err => {
       const message =
