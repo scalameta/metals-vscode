@@ -57,8 +57,7 @@ import {
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
 import * as semver from "semver";
-import { getJavaHome } from "metals-languageclient";
-import { getJavaOptions } from "./getJavaOptions";
+import { getJavaHome, getJavaOptions } from "metals-languageclient";
 import { startTreeView } from "./treeview";
 import { MetalsFeatures } from "./MetalsFeatures";
 import { MetalsTreeViewReveal, MetalsTreeViews } from "./tree-view-protocol";
@@ -136,7 +135,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
     .getConfiguration("metals")
     .get<string[]>("serverProperties")!;
 
-  const javaOptions = getJavaOptions(outputChannel);
+  const javaOptions = getJavaOptions(workspace.workspaceFolders![0].uri.fsPath);
 
   const fetchProperties = serverProperties.filter(
     p => !p.startsWith("-agentlib")
