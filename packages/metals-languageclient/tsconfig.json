@@ -3,8 +3,6 @@
     "target": "es2015",
     "module": "commonjs",
     "lib": ["ES2020"],
-    "declaration": true,
-    "declarationMap": true,
     "rootDir": "src",
     "strict": true,
     "noUnusedLocals": true,

@@ -11,16 +11,18 @@
   "author": "Gabriele Petronella <gabriele@buildo.io>",
   "license": "Apache-2.0",
   "scripts": {
-    "prepublish": "tsc"
+    "prepublish": "rm -rf lib && tsc"
   },
   "devDependencies": {
     "@types/node": "^13.1.8",
     "@types/semver": "^6.2.0",
+    "@types/shell-quote": "^1.6.1",
     "typescript": "^3.7.5"
   },
   "dependencies": {
     "fp-ts": "^2.4.1",
     "locate-java-home": "^1.1.2",
-    "semver": "^7.1.1"
+    "semver": "^7.1.1",
+    "shell-quote": "^1.7.2"
   }
 }
