@@ -110,7 +110,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   if (dottyArtifact && fs.existsSync(dottyArtifact)) {
     outputChannel.appendLine(
       `Metals will not start since Dotty is enabled for this workspace. ` +
-      `To enable Metals, remove the file ${dottyArtifact} and run 'Reload window'`
+        `To enable Metals, remove the file ${dottyArtifact} and run 'Reload window'`
     );
     return;
   }
@@ -253,7 +253,7 @@ function launchMetals(
     .concat(serverProperties)
     .concat(mainArgs);
 
-  const env = { ...process.env, ...extraEnv }
+  const env = { ...process.env, ...extraEnv };
 
   const serverOptions: ServerOptions = {
     run: { command: javaPath, args: launchArgs, options: { env } },
@@ -620,7 +620,10 @@ function launchMetals(
       });
       client.onNotification(DecorationsRangesDidChange.type, params => {
         const editor = window.activeTextEditor;
-        if (editor && Uri.parse(params.uri).toString() === editor.document.uri.toString()) {
+        if (
+          editor &&
+          Uri.parse(params.uri).toString() === editor.document.uri.toString()
+        ) {
           const options = params.options.map<DecorationOptions>(o => {
             return {
               range: new Range(
@@ -853,22 +856,18 @@ function migrateStringSettingToArray(id: string): void {
     .inspect<string | string[]>(id)!;
 
   if (typeof setting.globalValue === "string") {
-    workspace
-      .getConfiguration("metals")
-      .update(
-        id,
-        setting.globalValue.split(" ").filter(e => e.length > 0),
-        ConfigurationTarget.Global
-      );
+    workspace.getConfiguration("metals").update(
+      id,
+      setting.globalValue.split(" ").filter(e => e.length > 0),
+      ConfigurationTarget.Global
+    );
   }
 
   if (typeof setting.workspaceValue === "string") {
-    workspace
-      .getConfiguration("metals")
-      .update(
-        id,
-        setting.workspaceValue.split(" ").filter(e => e.length > 0),
-        ConfigurationTarget.Workspace
-      );
+    workspace.getConfiguration("metals").update(
+      id,
+      setting.workspaceValue.split(" ").filter(e => e.length > 0),
+      ConfigurationTarget.Workspace
+    );
   }
 }
