@@ -1,0 +1,26 @@
+{
+  "name": "metals-languageclient",
+  "version": "0.1.1",
+  "description": "Language Client library for Node.js Metals clients",
+  "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "types": "lib/index.d.ts",
+  "repository": "https://github.com/scalameta/metals-languageclient",
+  "author": "Gabriele Petronella <gabriele@buildo.io>",
+  "license": "Apache-2.0",
+  "scripts": {
+    "prepublish": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^13.1.8",
+    "@types/semver": "^6.2.0",
+    "typescript": "^3.7.5"
+  },
+  "dependencies": {
+    "fp-ts": "^2.4.1",
+    "locate-java-home": "^1.1.2",
+    "semver": "^7.1.1"
+  }
+}
