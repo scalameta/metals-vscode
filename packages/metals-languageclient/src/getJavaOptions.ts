@@ -2,7 +2,15 @@ import * as fs from "fs";
 import * as path from "path";
 import { parse } from "shell-quote";
 
-export function getJavaOptions(workspaceRoot: string): string[] {
+/**
+ * Compute all the relevant Java options by combining:
+ * - the .jvmopts file in the workspace root
+ * - the JAVA_OPTS environment variable
+ * - the JAVA_FLAGSenvironment variable
+ *
+ * @param workspaceRoot the workspace root path, if any
+ */
+export function getJavaOptions(workspaceRoot: string | undefined): string[] {
   const allOptions = [...fromEnv(), ...fromJvmoptsFile(workspaceRoot)];
   return allOptions.filter(isValidOption);
 }
@@ -19,12 +27,14 @@ function isValidOption(option: string): boolean {
   );
 }
 
-function fromJvmoptsFile(workspaceRoot: string): string[] {
-  const jvmoptsPath = path.join(workspaceRoot, ".jvmopts");
-  if (fs.existsSync(jvmoptsPath)) {
-    console.debug("Using JVM options set in " + jvmoptsPath);
-    const raw = fs.readFileSync(jvmoptsPath, "utf8");
-    return raw.match(/[^\r\n]+/g) || [];
+function fromJvmoptsFile(workspaceRoot: string | undefined): string[] {
+  if (workspaceRoot) {
+    const jvmoptsPath = path.join(workspaceRoot, ".jvmopts");
+    if (fs.existsSync(jvmoptsPath)) {
+      console.debug("Using JVM options set in " + jvmoptsPath);
+      const raw = fs.readFileSync(jvmoptsPath, "utf8");
+      return raw.match(/[^\r\n]+/g) || [];
+    }
   }
   return [];
 }
