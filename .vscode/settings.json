@@ -6,5 +6,6 @@
     "search.exclude": {
         "out": true // set this to false to include "out" folder in search results
     },
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "typescript.tsdk": "node_modules/typescript/lib"
 }
