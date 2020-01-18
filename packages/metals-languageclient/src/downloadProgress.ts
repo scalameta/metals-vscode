@@ -7,6 +7,9 @@ interface DownlodProgressParams {
   onError: (stdout: Buffer[]) => void;
 }
 
+/**
+ * Utility to track the progress of a running download
+ */
 export function downloadProgress({
   download,
   onProgress,

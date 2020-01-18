@@ -1,3 +1,8 @@
+/**
+ * Whether the language of a file is supported by the client
+ *
+ * @param languageId
+ */
 export function isSupportedLanguage(languageId: string): boolean {
   switch (languageId) {
     case "scala":
