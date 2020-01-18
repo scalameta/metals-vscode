@@ -2,17 +2,22 @@ import * as path from "path";
 import { existsSync } from "fs";
 
 /**
- * Whether Dotty IDE is enabled on this project
+ * Check whether Dotty IDE is enabled on this project
  *
  * @param workspaceRoot the workspace root, if defined
  */
-export function isDottyIdeEnabled(workspaceRoot: string | undefined): boolean {
+export function checkDottyIde(
+  workspaceRoot: string | undefined
+): { enabled: true; path: string } | { enabled: false } {
   if (workspaceRoot) {
     const dottyIdeArtifactPath = path.join(
       workspaceRoot,
       ".dotty-ide-artifact"
     );
-    return existsSync(dottyIdeArtifactPath);
+    return {
+      enabled: existsSync(dottyIdeArtifactPath),
+      path: dottyIdeArtifactPath
+    };
   }
-  return false;
+  return { enabled: false };
 }

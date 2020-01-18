@@ -4,9 +4,9 @@ import { parse } from "shell-quote";
 
 /**
  * Compute all the relevant Java options by combining:
- * - the .jvmopts file in the workspace root
- * - the JAVA_OPTS environment variable
- * - the JAVA_FLAGSenvironment variable
+ * - the `.jvmopts` file in the workspace root
+ * - the `JAVA_OPTS` environment variable
+ * - the `JAVA_FLAGS` environment variable
  *
  * @param workspaceRoot the workspace root path, if any
  */
