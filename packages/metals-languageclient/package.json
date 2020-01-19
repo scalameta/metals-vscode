@@ -11,12 +11,16 @@
   "author": "Gabriele Petronella <gabriele@buildo.io>",
   "license": "Apache-2.0",
   "scripts": {
-    "prepublish": "rm -rf lib && tsc"
+    "prepublish": "rm -rf lib && tsc",
+    "test": "jest"
   },
   "devDependencies": {
+    "@types/jest": "^24.9.0",
     "@types/node": "^13.1.8",
     "@types/semver": "^6.2.0",
     "@types/shell-quote": "^1.6.1",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.3.0",
     "typescript": "^3.7.5"
   },
   "dependencies": {
