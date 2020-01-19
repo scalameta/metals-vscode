@@ -4,6 +4,9 @@ import * as os from "os";
 import { getJavaOptions } from "../getJavaOptions";
 
 describe("getJavaOptions", () => {
+  // Silence noisy debug logs during tests
+  console.debug = () => {};
+
   const originalEnv = process.env;
 
   afterEach(() => {
