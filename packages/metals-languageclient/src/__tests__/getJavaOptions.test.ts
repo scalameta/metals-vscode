@@ -25,7 +25,6 @@ describe("getJavaOptions", () => {
   });
 
   it("reads from JAVA_OPTS", () => {
-    jest.resetModules();
     process.env = { ...originalEnv, JAVA_OPTS: proxyOptions.join(" ") };
     const workspaceRoot = createWorskpace([]);
     const options = getJavaOptions(workspaceRoot);
@@ -33,7 +32,6 @@ describe("getJavaOptions", () => {
   });
 
   it("reads from JAVA_FLAGS", () => {
-    jest.resetModules();
     process.env = { ...originalEnv, JAVA_FLAGS: proxyOptions.join(" ") };
     const workspaceRoot = createWorskpace([]);
     const options = getJavaOptions(workspaceRoot);
@@ -41,7 +39,6 @@ describe("getJavaOptions", () => {
   });
 
   it("reads from multiple sources", () => {
-    jest.resetModules();
     const javaOpts = ["-Dsome.opt=1"];
     const javaFlags = ["-Jsome.flag=1", "-Jother.flag=2"];
     process.env = {
