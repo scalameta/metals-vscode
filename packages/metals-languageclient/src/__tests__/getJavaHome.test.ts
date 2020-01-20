@@ -4,6 +4,10 @@ import { IJavaHomeInfo } from "locate-java-home/js/es5/lib/interfaces";
 describe("getJavaHome", () => {
   const originalEnv = process.env;
 
+  beforeEach(() => {
+    delete process.env.JAVA_HOME;
+  });
+
   afterEach(() => {
     process.env = originalEnv;
   });
