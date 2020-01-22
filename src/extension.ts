@@ -508,6 +508,35 @@ function launchMetals(
       });
     });
 
+    registerCommand("metals.new-scala-worksheet", (dirArg: Uri) => {
+      const dir = (() => {
+        if (dirArg !== undefined) {
+          return dirArg.toString();
+        } else if (window.activeTextEditor) {
+          const currentPath = window.activeTextEditor.document.uri.fsPath;
+          return Uri.file(path.dirname(currentPath)).toString();
+        }
+        // NOTE(aleksei): I would return workspace folder here, but not sure if there's API for that.
+        // Moving this funcitonality to server.
+        return undefined;
+      })();
+
+      return window.showInputBox().then(name => {
+        if (name !== undefined) {
+          client.sendRequest(ExecuteCommandRequest.type, {
+            command: "new-scala-worksheet",
+            arguments: [dir, name]
+          }).then(result => {
+            //TODO: failure case
+            console.log("new scala worksheet, result: " + result)
+            workspace
+              .openTextDocument(Uri.parse(result))
+              .then(textDocument => window.showTextDocument(textDocument));
+          });
+        }
+      });
+    });
+
     window.onDidChangeActiveTextEditor(editor => {
       if (editor && isSupportedLanguage(editor.document.languageId)) {
         client.sendNotification(
