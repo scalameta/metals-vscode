@@ -45,10 +45,10 @@ export async function checkServerVersion({
   })();
 
   if (isOutdated) {
-    const message = `You are running an out-of-date version of Metals. Latest version is ${latestServerVersion}, but you have configured a custom server version ${serverVersion}`;
+    const message = `You are running an out-of-date version of Metals. The latest version is ${latestServerVersion}, but you have configured a custom server version ${serverVersion}`;
     const upgradeChoice = `Upgrade to ${latestServerVersion} now`;
     const openSettingsChoice = "Open settings";
-    const dismissChoice = "Ignore for now";
+    const dismissChoice = "Not now";
     const upgrade = () =>
       updateConfig({ configSection, latestServerVersion, configurationTarget });
 

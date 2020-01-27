@@ -17,8 +17,8 @@ export function detectLaunchConfigurationChanges(
       "javaHome",
       "customRepositories"
     ];
-    const shouldPromptRestart = promptRestartKeys.some(k =>
-      e.affectsConfiguration(`metals.${k}`)
+    const shouldPromptRestart = promptRestartKeys.some(key =>
+      e.affectsConfiguration(`metals.${key}`)
     );
     if (shouldPromptRestart) {
       promptRestart({
