@@ -19,8 +19,8 @@
     "@types/node": "^13.1.8",
     "@types/semver": "^6.2.0",
     "@types/shell-quote": "^1.6.1",
-    "jest": "^24.9.0",
-    "ts-jest": "^24.3.0",
+    "jest": "^25.1.0",
+    "ts-jest": "^25.0.0",
     "typescript": "^3.7.5"
   },
   "dependencies": {
