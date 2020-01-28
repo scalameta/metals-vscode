@@ -17,7 +17,7 @@
   "devDependencies": {
     "@types/jest": "^24.9.0",
     "@types/node": "^13.1.8",
-    "@types/semver": "^6.2.0",
+    "@types/semver": "^7.1.0",
     "@types/shell-quote": "^1.6.1",
     "jest": "^25.1.0",
     "ts-jest": "^25.0.0",
