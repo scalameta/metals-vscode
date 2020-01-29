@@ -508,7 +508,7 @@ function launchMetals(
       });
     });
 
-    registerCommand("metals.new-scala-worksheet", (dirArg: Uri) => {
+    registerCommand("metals.new-scala-file", (dirArg: Uri) => {
       const dir = (() => {
         if (dirArg !== undefined) {
           return dirArg.toString();
@@ -521,18 +521,55 @@ function launchMetals(
         return undefined;
       })();
 
-      return window.showInputBox().then(name => {
-        if (name !== undefined) {
-          client.sendRequest(ExecuteCommandRequest.type, {
-            command: "new-scala-worksheet",
-            arguments: [dir, name]
-          }).then(result => {
-            //TODO: failure case
-            console.log("new scala worksheet, result: " + result)
-            workspace
-              .openTextDocument(Uri.parse(result))
-              .then(textDocument => window.showTextDocument(textDocument));
-          });
+      const worksheetPick = { label: 'Worksheet' }
+      const classPick = { label: 'Class', kind: 'class' }
+      const objectPick = { label: 'Object', kind: 'object' }
+      const traitPick = { label: 'Trait', kind: 'trait' }
+
+      function withName(f: (name: string) => any, placeHolder?: string) {
+        return window.showInputBox({ placeHolder: placeHolder }).then(name => {
+          if (name !== undefined)
+            f(name)
+        });
+      }
+
+      return window.showQuickPick(
+        [classPick, worksheetPick],
+        { placeHolder: 'Select the kind of file to create' }
+      ).then(fileKindPick => {
+        switch (fileKindPick) {
+          case worksheetPick:
+            return withName(name => {
+              client.sendRequest(ExecuteCommandRequest.type, {
+                command: "new-scala-worksheet",
+                arguments: [dir, name]
+              }).then(result => {
+                workspace
+                  .openTextDocument(Uri.parse(result))
+                  .then(textDocument => window.showTextDocument(textDocument));
+              });
+            });
+          case classPick:
+            return window.showQuickPick(
+              //TODO: maybe add descriptions?
+              [classPick, objectPick, traitPick]
+            ).then(classKindPick => {
+              switch (classKindPick) {
+                case classPick:
+                case objectPick:
+                case traitPick:
+                  return withName(name => {
+                    client.sendRequest(ExecuteCommandRequest.type, {
+                      command: "new-scala-class",
+                      arguments: [dir, name, classKindPick.kind]
+                    }).then(result => {
+                      workspace
+                        .openTextDocument(Uri.parse(result))
+                        .then(textDocument => window.showTextDocument(textDocument));
+                    });
+                  });
+              }
+            });
         }
       });
     });

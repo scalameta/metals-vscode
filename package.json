@@ -188,9 +188,9 @@
         "title": "Run doctor"
       },
       {
-        "command": "metals.new-scala-worksheet",
+        "command": "metals.new-scala-file",
         "category": "Metals",
-        "title": "New Scala worksheet"
+        "title": "New Scala File..."
       }
     ],
     "menus": {
@@ -237,7 +237,7 @@
       ],
       "explorer/context": [
         {
-          "command": "metals.new-scala-worksheet",
+          "command": "metals.new-scala-file",
           "when": "metals:enabled && explorerResourceIsFolder",
           "group": "navigation@4"
         }
