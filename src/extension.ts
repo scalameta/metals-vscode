@@ -41,7 +41,8 @@ import {
   MetalsDidFocus,
   ExecuteClientCommand,
   MetalsInputBox,
-  MetalsWindowStateDidChange
+  MetalsWindowStateDidChange,
+  MetalsNewScalaFileParams
 } from "./protocol";
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
@@ -509,7 +510,7 @@ function launchMetals(
     });
 
     registerCommand("metals.new-scala-file", (dirArg: Uri) => {
-      const dir = (() => {
+      const directory = (() => {
         if (dirArg !== undefined) {
           return dirArg.toString();
         } else if (window.activeTextEditor) {
@@ -521,56 +522,33 @@ function launchMetals(
         return undefined;
       })();
 
-      const worksheetPick = { label: 'Worksheet' }
+      const worksheetPick = { label: 'Worksheet', kind: 'worksheet' }
       const classPick = { label: 'Class', kind: 'class' }
       const objectPick = { label: 'Object', kind: 'object' }
       const traitPick = { label: 'Trait', kind: 'trait' }
 
-      function withName(f: (name: string) => any, placeHolder?: string) {
-        return window.showInputBox({ placeHolder: placeHolder }).then(name => {
-          if (name !== undefined)
-            f(name)
-        });
-      }
-
       return window.showQuickPick(
-        [classPick, worksheetPick],
+        [classPick, objectPick, traitPick, worksheetPick],
         { placeHolder: 'Select the kind of file to create' }
-      ).then(fileKindPick => {
-        switch (fileKindPick) {
-          case worksheetPick:
-            return withName(name => {
-              client.sendRequest(ExecuteCommandRequest.type, {
-                command: "new-scala-worksheet",
-                arguments: [dir, name]
-              }).then(result => {
-                workspace
-                  .openTextDocument(Uri.parse(result))
-                  .then(textDocument => window.showTextDocument(textDocument));
-              });
+      ).then(kindPick => {
+        if (kindPick !== undefined) return window.showInputBox({ prompt: 'Enter name for the new ' + kindPick.kind }).then(name => {
+          if (name !== undefined) {
+            const arg: MetalsNewScalaFileParams =
+            {
+              'directory': directory,
+              'name': name,
+              'kind': kindPick.kind
+            }
+            client.sendRequest(ExecuteCommandRequest.type, {
+              command: "new-scala-file",
+              arguments: [arg]
+            }).then(result => {
+              workspace
+                .openTextDocument(Uri.parse(result))
+                .then(textDocument => window.showTextDocument(textDocument));
             });
-          case classPick:
-            return window.showQuickPick(
-              //TODO: maybe add descriptions?
-              [classPick, objectPick, traitPick]
-            ).then(classKindPick => {
-              switch (classKindPick) {
-                case classPick:
-                case objectPick:
-                case traitPick:
-                  return withName(name => {
-                    client.sendRequest(ExecuteCommandRequest.type, {
-                      command: "new-scala-class",
-                      arguments: [dir, name, classKindPick.kind]
-                    }).then(result => {
-                      workspace
-                        .openTextDocument(Uri.parse(result))
-                        .then(textDocument => window.showTextDocument(textDocument));
-                    });
-                  });
-              }
-            });
-        }
+          }
+        });
       });
     });
 

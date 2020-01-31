@@ -69,3 +69,9 @@ export namespace MetalsWindowStateDidChange {
 export interface MetalsWindowStateDidChangeParams {
   focused: boolean;
 }
+
+export interface MetalsNewScalaFileParams {
+  directory?: string;
+  name: string;
+  kind: string;
+}
