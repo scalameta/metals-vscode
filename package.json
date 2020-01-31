@@ -244,14 +244,18 @@
   },
   "devDependencies": {
     "@types/node": "^8.10.25",
+    "@types/request": "^2.48.3",
     "@types/semver": "^5.5.0",
     "@types/shell-quote": "^1.6.1",
     "typescript": "^3.2.2",
     "vsce": "^1.54.0"
   },
   "dependencies": {
+    "locate-java-home": "^1.1.2",
     "metals-languageclient": "^0.1.6",
+    "mkdirp": "^1.0.3",
     "promisify-child-process": "3.1.0",
+    "request": "^2.88.0",
     "semver": "^5.6.0",
     "vscode": "^1.1.34",
     "vscode-languageclient": "^5.1.0"

@@ -39,7 +39,6 @@ import {
   ExecuteCommandRequest,
   ShutdownRequest,
   ExitNotification,
-  CancellationToken,
   Location,
   TextDocumentPositionParams,
   TextDocument
@@ -66,6 +65,7 @@ import {
   DecorationTypeDidChange,
   DecorationsRangesDidChange
 } from "./decoration-protocol";
+import { installJava } from "./installJava";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -78,6 +78,8 @@ let decorationType: TextEditorDecorationType = window.createTextEditorDecoration
   }
 );
 
+const config = workspace.getConfiguration("metals");
+
 export async function activate(context: ExtensionContext) {
   detectLaunchConfigurationChanges();
   checkServerVersion();
@@ -87,16 +89,64 @@ export async function activate(context: ExtensionContext) {
     .catch(err => {
       const message =
         "Unable to find a Java 8 or Java 11 installation on this computer. " +
-        "To fix this problem, update the 'Java Home' setting to point to a Java 8 or Java 11 home directory";
+        "To fix this problem, update the 'Java Home' setting to point to a Java 8 or Java 11 home directory " +
+        "or select a version to install automatically";
+
       outputChannel.appendLine(message);
       outputChannel.appendLine(err);
-      window.showErrorMessage(message, openSettingsAction).then(choice => {
-        if (choice === openSettingsAction) {
-          commands.executeCommand("workbench.action.openSettings");
-        }
-      });
+
+      showMissingJavaMessage(message);
     });
   commands.executeCommand("setContext", "metals:enabled", true);
+}
+
+function showMissingJavaMessage(message: string) {
+  const installJava8Action = "Install Java (JDK 8)";
+  const installJava11Action = "Install Java (JDK 11)";
+
+  return window
+    .showErrorMessage(
+      message,
+      openSettingsAction,
+      installJava8Action,
+      installJava11Action
+    )
+    .then(choice => {
+      switch (choice) {
+        case openSettingsAction: {
+          commands.executeCommand(openSettingsCommand);
+          break;
+        }
+        case installJava8Action: {
+          window.withProgress(
+            {
+              location: ProgressLocation.Notification,
+              title: `Installing Java (JDK 8), please wait...`,
+              cancellable: true
+            },
+            () =>
+              installJava({ javaVersion: "adopt@1.8", outputChannel }).then(
+                updateJavaConfig
+              )
+          );
+          break;
+        }
+        case installJava11Action: {
+          window.withProgress(
+            {
+              location: ProgressLocation.Notification,
+              title: `Installing Java (JDK 11), please wait...`,
+              cancellable: true
+            },
+            () =>
+              installJava({ javaVersion: "adopt@1.11", outputChannel }).then(
+                updateJavaConfig
+              )
+          );
+          break;
+        }
+      }
+    });
 }
 
 function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
@@ -119,7 +169,6 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   const javaPath = path.join(javaHome, "bin", "java");
   const coursierPath = path.join(context.extensionPath, "./coursier");
 
-  const config = workspace.getConfiguration("metals");
   const serverVersionConfig: string = config.get<string>("serverVersion")!;
   const defaultServerVersion = config.inspect<string>("serverVersion")!
     .defaultValue!;
@@ -226,6 +275,10 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
       });
     }
   );
+}
+
+function updateJavaConfig(javaHome: string, global: boolean = true) {
+  config.update("javaHome", javaHome, global);
 }
 
 function launchMetals(
