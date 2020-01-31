@@ -7,7 +7,6 @@ import {
   ExtensionContext,
   window,
   commands,
-  CodeLens,
   CodeLensProvider,
   EventEmitter,
   StatusBarAlignment,
@@ -18,18 +17,14 @@ import {
   ViewColumn,
   OutputChannel,
   ConfigurationTarget,
-  WorkspaceConfiguration,
   Uri,
   Range,
   Selection,
-  TextDocument as VscodeTextDocument,
   TextEditorRevealType,
-  TextEditor,
   DecorationRangeBehavior,
   DecorationOptions,
   Position,
-  TextEditorDecorationType,
-  WorkspaceEdit
+  TextEditorDecorationType
 } from "vscode";
 import {
   LanguageClient,
@@ -37,13 +32,10 @@ import {
   ServerOptions,
   RevealOutputChannelOn,
   ExecuteCommandRequest,
-  ShutdownRequest,
-  ExitNotification,
   Location,
   TextDocumentPositionParams,
   TextDocument
 } from "vscode-languageclient";
-import { exec } from "child_process";
 import { ClientCommands } from "./client-commands";
 import {
   MetalsSlowTask,
@@ -55,8 +47,12 @@ import {
 } from "./protocol";
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
-import * as semver from "semver";
-import { getJavaHome, getJavaOptions } from "metals-languageclient";
+import {
+  getJavaHome,
+  getJavaOptions,
+  restartServer
+} from "metals-languageclient";
+import * as metalsLanguageClient from "metals-languageclient";
 import { startTreeView } from "./treeview";
 import { MetalsFeatures } from "./MetalsFeatures";
 import { MetalsTreeViewReveal, MetalsTreeViews } from "./tree-view-protocol";
@@ -335,25 +331,7 @@ function launchMetals(
     context.subscriptions.push(commands.registerCommand(command, callback));
   }
 
-  registerCommand("metals.restartServer", () => {
-    // First try to gracefully shutdown the server with LSP `shutdown` and `exit`.
-    // If Metals doesn't respond within 4 seconds we kill the process.
-    const timeout = (ms: number) =>
-      new Promise((_resolve, reject) => setTimeout(reject, ms));
-    const gracefullyTerminate = client
-      .sendRequest(ShutdownRequest.type)
-      .then(() => {
-        client.sendNotification(ExitNotification.type);
-        window.showInformationMessage("Metals is restarting");
-      });
-    Promise.race([gracefullyTerminate, timeout(4000)]).catch(() => {
-      window.showWarningMessage(
-        "Metals is unresponsive, killing the process and starting a new server."
-      );
-      const serverPid = client["_serverProcess"].pid;
-      exec(`kill ${serverPid}`);
-    });
-  });
+  registerCommand("metals.restartServer", restartServer(client, window));
 
   context.subscriptions.push(client.start());
 
@@ -514,7 +492,7 @@ function launchMetals(
           if (params.command && values.includes(params.command)) {
             registerCommand(params.command, () => {
               client.sendRequest(ExecuteCommandRequest.type, {
-                command: params.command
+                command: params.command!
               });
             });
           }
@@ -795,101 +773,54 @@ function dottyIdeArtifact(): string | undefined {
 }
 
 function detectLaunchConfigurationChanges() {
-  workspace.onDidChangeConfiguration(e => {
-    const promptRestartKeys = [
-      "serverVersion",
-      "serverProperties",
-      "javaHome",
-      "customRepositories"
-    ];
-    const shouldPromptRestart = promptRestartKeys.some(k =>
-      e.affectsConfiguration(`metals.${k}`)
-    );
-    if (shouldPromptRestart) {
+  metalsLanguageClient.detectLaunchConfigurationChanges(
+    workspace,
+    ({ message, reloadWindowChoice, dismissChoice }) =>
       window
-        .showInformationMessage(
-          "Server launch configuration change detected. Reload the window for changes to take effect",
-          "Reload Window",
-          "Not now"
-        )
+        .showInformationMessage(message, reloadWindowChoice, dismissChoice)
         .then(choice => {
-          if (choice === "Reload Window") {
+          if (choice === reloadWindowChoice) {
             commands.executeCommand("workbench.action.reloadWindow");
           }
-        });
-    }
-  });
-}
-
-function serverVersionInfo(
-  config: WorkspaceConfiguration
-): {
-  serverVersion: string;
-  latestServerVersion: string;
-  configurationTarget: ConfigurationTarget;
-} {
-  const computedVersion = config.get<string>("serverVersion")!;
-  const { defaultValue, workspaceFolderValue, workspaceValue } = config.inspect<
-    string
-  >("serverVersion")!;
-  const configurationTarget = (() => {
-    if (workspaceFolderValue && workspaceFolderValue !== defaultValue) {
-      return ConfigurationTarget.WorkspaceFolder;
-    }
-    if (workspaceValue && workspaceValue !== defaultValue) {
-      return ConfigurationTarget.Workspace;
-    }
-    return ConfigurationTarget.Workspace;
-  })();
-  return {
-    serverVersion: computedVersion,
-    latestServerVersion: defaultValue!,
-    configurationTarget
-  };
+        })
+  );
 }
 
 function checkServerVersion() {
   const config = workspace.getConfiguration("metals");
-  const {
-    serverVersion,
-    latestServerVersion,
-    configurationTarget
-  } = serverVersionInfo(config);
-  const isOutdated = (() => {
-    try {
-      return semver.lt(serverVersion, latestServerVersion);
-    } catch (_e) {
-      // serverVersion has an invalid format
-      // ignore the exception here, and let subsequent checks handle this
-      return false;
-    }
-  })();
-
-  if (isOutdated) {
-    const upgradeAction = `Upgrade to ${latestServerVersion} now`;
-
-    window
-      .showWarningMessage(
-        `You are running an out-of-date version of Metals. Latest version is ${latestServerVersion}, but you have configured a custom server version ${serverVersion}`,
-        upgradeAction,
-        openSettingsAction,
-        "Not now"
-      )
-      .then(choice => {
-        switch (choice) {
-          case upgradeAction:
-            config.update(
-              "serverVersion",
-              latestServerVersion,
-              configurationTarget
-            );
-            break;
-          case openSettingsAction:
-            commands.executeCommand(openSettingsCommand);
-            break;
-        }
-      });
-  }
+  metalsLanguageClient.checkServerVersion({
+    config,
+    updateConfig: ({
+      configSection,
+      latestServerVersion,
+      configurationTarget
+    }) =>
+      config.update(configSection, latestServerVersion, configurationTarget),
+    onOutdated: ({
+      message,
+      upgradeChoice,
+      openSettingsChoice,
+      dismissChoice,
+      upgrade
+    }) =>
+      window
+        .showWarningMessage(
+          message,
+          upgradeChoice,
+          openSettingsChoice,
+          dismissChoice
+        )
+        .then(choice => {
+          switch (choice) {
+            case upgradeChoice:
+              upgrade();
+              break;
+            case openSettingsChoice:
+              commands.executeCommand(openSettingsCommand);
+              break;
+          }
+        })
+  });
 }
 
 function isSupportedLanguage(languageId: TextDocument["languageId"]): boolean {
