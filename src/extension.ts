@@ -29,7 +29,6 @@ import {
 import {
   LanguageClient,
   LanguageClientOptions,
-  ServerOptions,
   RevealOutputChannelOn,
   ExecuteCommandRequest,
   Location,
@@ -49,8 +48,12 @@ import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
 import {
   getJavaHome,
-  getJavaOptions,
-  restartServer
+  restartServer,
+  checkDottyIde,
+  getJavaConfig,
+  fetchMetals,
+  JavaConfig,
+  getServerOptions
 } from "metals-languageclient";
 import * as metalsLanguageClient from "metals-languageclient";
 import { startTreeView } from "./treeview";
@@ -152,18 +155,16 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
     );
     return;
   }
-  const dottyArtifact = dottyIdeArtifact();
-  if (dottyArtifact && fs.existsSync(dottyArtifact)) {
+  const dottyIde = checkDottyIde(workspace.workspaceFolders[0]?.uri.fsPath);
+  if (dottyIde.enabled) {
     outputChannel.appendLine(
       `Metals will not start since Dotty is enabled for this workspace. ` +
-        `To enable Metals, remove the file ${dottyArtifact} and run 'Reload window'`
+        `To enable Metals, remove the file ${dottyIde} and run 'Reload window'`
     );
     return;
   }
 
   outputChannel.appendLine(`Java home: ${javaHome}`);
-  const javaPath = path.join(javaHome, "bin", "java");
-  const coursierPath = path.join(context.extensionPath, "./coursier");
 
   const serverVersionConfig: string = config.get<string>("serverVersion")!;
   const defaultServerVersion = config.inspect<string>("serverVersion")!
@@ -176,65 +177,31 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   migrateStringSettingToArray("serverProperties");
   migrateStringSettingToArray("customRepositories");
 
-  const serverProperties: string[] = workspace
-    .getConfiguration("metals")
-    .get<string[]>("serverProperties")!;
+  const serverProperties = config.get<string[]>("serverProperties")!;
+  const customRepositories = config.get<string[]>("customRepositories")!;
 
-  const javaOptions = getJavaOptions(workspace.workspaceFolders![0].uri.fsPath);
+  const javaConfig = getJavaConfig({
+    workspaceRoot: workspace.workspaceFolders[0]?.uri.fsPath,
+    javaHome,
+    customRepositories,
+    extensionPath: context.extensionPath
+  });
 
-  const fetchProperties = serverProperties.filter(
-    p => !p.startsWith("-agentlib")
-  );
+  const fetchProcess = fetchMetals({
+    serverVersion,
+    serverProperties,
+    javaConfig
+  });
 
-  const customRepositories: string = config
-    .get<string[]>("customRepositories")!
-    .join("|");
-
-  const customRepositoriesEnv =
-    customRepositories.length == 0
-      ? {}
-      : { COURSIER_REPOSITORIES: customRepositories };
-
-  const fetchProcess = spawn(
-    javaPath,
-    javaOptions.concat(fetchProperties).concat([
-      "-jar",
-      coursierPath,
-      "fetch",
-      "-p",
-      "--ttl",
-      // Use infinite ttl to avoid redunant "Checking..." logs when using SNAPSHOT
-      // versions. Metals SNAPSHOT releases are effectively immutable since we
-      // never publish the same version twice.
-      "Inf",
-      `org.scalameta:metals_2.12:${serverVersion}`,
-      "-r",
-      "bintray:scalacenter/releases",
-      "-r",
-      "sonatype:public",
-      "-r",
-      "sonatype:snapshots",
-      "-p"
-    ]),
-    {
-      env: {
-        COURSIER_NO_TERM: "true",
-        ...customRepositoriesEnv,
-        ...process.env
-      }
-    }
-  );
   const title = `Downloading Metals v${serverVersion}`;
   trackDownloadProgress(title, outputChannel, fetchProcess).then(
     classpath => {
       launchMetals(
         outputChannel,
         context,
-        javaPath,
         classpath,
         serverProperties,
-        javaOptions,
-        customRepositoriesEnv
+        javaConfig
       );
     },
     () => {
@@ -251,13 +218,13 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
         } else if (serverVersion === defaultServerVersion) {
           return (
             `Failed to download Metals, make sure you have an internet connection and ` +
-            `the Java Home '${javaPath}' is valid. You can configure the Java Home in the settings.` +
+            `the Java Home '${javaHome}' is valid. You can configure the Java Home in the settings.` +
             proxy
           );
         } else {
           return (
             `Failed to download Metals, make sure you have an internet connection, ` +
-            `the Metals version '${serverVersion}' is correct and the Java Home '${javaPath}' is valid. ` +
+            `the Metals version '${serverVersion}' is correct and the Java Home '${javaHome}' is valid. ` +
             `You can configure the Metals version and Java Home in the settings.` +
             proxy
           );
@@ -280,34 +247,20 @@ function updateJavaConfig(javaHome: string, global: boolean = true) {
 function launchMetals(
   outputChannel: OutputChannel,
   context: ExtensionContext,
-  javaPath: string,
   metalsClasspath: string,
   serverProperties: string[],
-  javaOptions: string[],
-  extraEnv: { COURSIER_REPOSITORIES?: string }
+  javaConfig: JavaConfig
 ) {
   // Make editing Scala docstrings slightly nicer.
   enableScaladocIndentation();
 
-  const baseProperties = [
-    `-Dmetals.input-box=on`,
-    `-Dmetals.client=vscode`,
-    `-Xss4m`,
-    `-Xms100m`
-  ];
-  const mainArgs = ["-classpath", metalsClasspath, "scala.meta.metals.Main"];
-  // let user properties override base properties
-  const launchArgs = baseProperties
-    .concat(javaOptions)
-    .concat(serverProperties)
-    .concat(mainArgs);
-
-  const env = { ...process.env, ...extraEnv };
-
-  const serverOptions: ServerOptions = {
-    run: { command: javaPath, args: launchArgs, options: { env } },
-    debug: { command: javaPath, args: launchArgs, options: { env } }
-  };
+  const serverOptions = getServerOptions({
+    metalsClasspath,
+    serverProperties,
+    javaConfig,
+    clientName: "vscode",
+    doctorFormat: "html"
+  });
 
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{ scheme: "file", language: "scala" }],
@@ -761,15 +714,6 @@ function enableScaladocIndentation() {
       }
     ]
   });
-}
-
-function dottyIdeArtifact(): string | undefined {
-  if (workspace.workspaceFolders) {
-    return path.join(
-      workspace.workspaceFolders[0].uri.fsPath,
-      ".dotty-ide-artifact"
-    );
-  }
 }
 
 function detectLaunchConfigurationChanges() {
