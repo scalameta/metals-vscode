@@ -3,7 +3,7 @@ import { JavaConfig } from "./getJavaConfig";
 
 interface GetServerOptions {
   metalsClasspath: string;
-  serverProperties: string[];
+  serverProperties: string[] | undefined;
   clientName: string;
   doctorFormat: "html" | "json";
   javaConfig: JavaConfig;
@@ -11,7 +11,7 @@ interface GetServerOptions {
 
 export function getServerOptions({
   metalsClasspath,
-  serverProperties,
+  serverProperties = [],
   clientName,
   doctorFormat,
   javaConfig: { javaOptions, javaPath, extraEnv }

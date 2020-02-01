@@ -14,14 +14,14 @@ interface GetJavaConfigOptions {
   workspaceRoot: string | undefined;
   javaHome: string;
   extensionPath: string;
-  customRepositories: string[];
+  customRepositories: string[] | undefined;
 }
 
 export function getJavaConfig({
   workspaceRoot,
   javaHome,
   extensionPath,
-  customRepositories
+  customRepositories = []
 }: GetJavaConfigOptions): JavaConfig {
   const javaOptions = getJavaOptions(workspaceRoot);
   const javaPath = path.join(javaHome, "bin", "java");
