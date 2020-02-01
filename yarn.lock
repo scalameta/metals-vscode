@@ -3,11 +3,11 @@
 
 
 "@babel/runtime@^7.1.5":
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.2.0.tgz#b03e42eeddf5898e00646e4c840fa07ba8dcad7f"
-  integrity sha512-oouEibCbHMVdZSDlJBO6bZmID/zA/G/Qx3H1d3rSNPTD+L8UNKvCat7aKWSJ74zYbm5zWGh0GQN0hKj8zYFTCg==
+  version "7.8.4"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.8.4.tgz#d79f5a2040f7caa24d53e563aad49cbc05581308"
+  integrity sha512-neAp3zt80trRVBI1x0azq6c57aNBqYZH8KhMm3TaB7wEI5Q4A2SHfBHE8w9gOhI/lrqxtEbXZgQIrHP+wvSGwQ==
   dependencies:
-    regenerator-runtime "^0.12.0"
+    regenerator-runtime "^0.13.2"
 
 "@types/caseless@*":
   version "0.12.2"
@@ -19,10 +19,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.12.tgz#e15a9d034d9210f00320ef718a50c4a799417c47"
   integrity sha512-Pr+6JRiKkfsFvmU/LK68oBRCQeEg36TyAbPhc2xpez24OOZZCuoIhWGTd39VZy6nGafSbxzGouFPTFD/rR1A0A==
 
-"@types/node@^8.10.25":
-  version "8.10.38"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.38.tgz#e05c201a668492e534b48102aca0294898f449f6"
-  integrity sha512-EibsnbJerd0hBFaDjJStFrVbVBAtOy4dgL8zZFw0uOvPqzBAX59Ci8cgjg3+RgJIWhsB5A4c+pi+D4P9tQQh/A==
+"@types/node@^10":
+  version "10.17.14"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.14.tgz#b6c60ebf2fb5e4229fdd751ff9ddfae0f5f31541"
+  integrity sha512-G0UmX5uKEmW+ZAhmZ6PLTQ5eu/VPaT+d/tdLd5IFsKRPcbe6lPxocBtcYBFSaLaCW8O60AX90e91Nsp8lVHCNw==
 
 "@types/request@^2.48.3":
   version "2.48.4"
@@ -369,9 +369,9 @@ form-data@~2.3.2:
     mime-types "^2.1.12"
 
 fp-ts@^2.4.1:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/fp-ts/-/fp-ts-2.4.1.tgz#d20c785ff8179930922c7477c31f1ca44f763ae9"
-  integrity sha512-dPal5+rPN7k4ciZ2+O0+i75bbp17uTUoRkWWqJpkKed7wVcA5y/2jH4ZhunzUrJPuaG+mN9ZNf0pv5P7u/k7JQ==
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/fp-ts/-/fp-ts-2.4.3.tgz#6a8be95df8be34caf7a4243802d85c31d65ff1ba"
+  integrity sha512-R/QwlxnRlboZIObqKjOUf8rkXz36uSWfJO2M5o2cqf7UiHoHlNMojr/PiUyj8j3l1fOP62dR6nsKvFaRSJBIaQ==
 
 fs.realpath@^1.0.0:
   version "1.0.0"
@@ -563,15 +563,17 @@ mdurl@^1.0.1:
   resolved "https://registry.yarnpkg.com/mdurl/-/mdurl-1.0.1.tgz#fe85b2ec75a59037f2adfec100fd6c601761152e"
   integrity sha1-/oWy7HWlkDfyrf7BAP1sYBdhFS4=
 
-metals-languageclient@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/metals-languageclient/-/metals-languageclient-0.1.6.tgz#1cc7f98527721a63eb1a3c18f229ffcc368032fe"
-  integrity sha512-v2F/EBzEzdJ9WMtGF0zt7lvD9v7cXKCtWJ4+ct7iO7hpObFJRGdixSviKG37eHVtden4yqU0CIPvMtJi6OYagA==
+metals-languageclient@^0.1.13:
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/metals-languageclient/-/metals-languageclient-0.1.13.tgz#38284bd73c999e2b80bb3ad7a0988e6aecb24bd8"
+  integrity sha512-exNceGMyyK/uCYruzQPRCs2ebmsWWvmMGq7nPOC6WZ6+GoPvx0pOfmSsVxUMFU5THnhRj2JgywmeKsJLrzEfOw==
   dependencies:
     fp-ts "^2.4.1"
     locate-java-home "^1.1.2"
+    promisify-child-process "^3.1.3"
     semver "^7.1.1"
     shell-quote "^1.7.2"
+    vscode-languageserver-protocol "^3.15.2"
 
 mime-db@~1.37.0:
   version "1.37.0"
@@ -718,6 +720,13 @@ promisify-child-process@3.1.0:
   dependencies:
     "@babel/runtime" "^7.1.5"
 
+promisify-child-process@^3.1.3:
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/promisify-child-process/-/promisify-child-process-3.1.3.tgz#52a3b66638ae101fa2e68f9a2cbd101846042e33"
+  integrity sha512-qVox3vW2hqbktVw+IN7YZ/kgGA+u426ekmiZxiofNe9O4GSewjROwRQ4MQ6IbvhpeYSLqiLS0kMn+FWCz6ENlg==
+  dependencies:
+    "@babel/runtime" "^7.1.5"
+
 psl@^1.1.24:
   version "1.1.29"
   resolved "https://registry.yarnpkg.com/psl/-/psl-1.1.29.tgz#60f580d360170bb722a797cc704411e6da850c67"
@@ -764,10 +773,10 @@ readable-stream@^3.0.6:
     string_decoder "^1.1.1"
     util-deprecate "^1.0.1"
 
-regenerator-runtime@^0.12.0:
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.12.1.tgz#fa1a71544764c036f8c49b13a08b2594c9f8a0de"
-  integrity sha512-odxIc1/vDlo4iZcfXqRYFj0vpXFNoGdKMAUieAlFYO6m/nl5e9KR/beGf41z4a1FI+aQgtjhuaSlDxQ0hmkrHg==
+regenerator-runtime@^0.13.2:
+  version "0.13.3"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.3.tgz#7cf6a77d8f5c6f60eb73c5fc1955b2ceb01e6bf5"
+  integrity sha512-naKIZz2GQ8JWh///G7L3X6LaQUAMp2lvb1rvwwsURe/VXwD6VMfr+/1NuNw3ag8v2kY1aQ/go5SNn79O9JU7yw==
 
 request@^2.88.0:
   version "2.88.0"
@@ -821,9 +830,9 @@ semver@^5.5.1, semver@^5.6.0:
   integrity sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==
 
 semver@^7.1.1:
-  version "7.1.1"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-7.1.1.tgz#29104598a197d6cbe4733eeecbe968f7b43a9667"
-  integrity sha512-WfuG+fl6eh3eZ2qAf6goB7nhiCd7NPXhmyFxigB/TOkQyeLP8w8GsVehvtGNtnNmyboz4TgeK40B1Kbql/8c5A==
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.1.2.tgz#847bae5bce68c5d08889824f02667199b70e3d87"
+  integrity sha512-BJs9T/H8sEVHbeigqzIEo57Iu/3DG6c4QoqTfbQB3BPA4zgzAomh/Fk9E7QtjWQ8mx2dgA9YCfSF4y9k9bHNpQ==
 
 shell-quote@^1.7.2:
   version "1.7.2"
@@ -917,10 +926,10 @@ typed-rest-client@^0.9.0:
     tunnel "0.0.4"
     underscore "1.8.3"
 
-typescript@^3.2.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.2.2.tgz#fe8101c46aa123f8353523ebdcf5730c2ae493e5"
-  integrity sha512-VCj5UiSyHBjwfYacmDuc/NOk4QQixbE+Wn7MFJuS0nRuPQbof132Pw4u53dm264O8LPc2MVsc7RJNml5szurkg==
+typescript@^3.7.3:
+  version "3.7.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.5.tgz#0692e21f65fd4108b9330238aac11dd2e177a1ae"
+  integrity sha512-/P5lkRXkWHNAbcJIiHPfRoKqyd7bsyCma1hZNUGfn20qm64T6ZBlrzprymeu918H+mB/0rIg2gGK/BXkhhYgBw==
 
 uc.micro@^1.0.1, uc.micro@^1.0.5:
   version "1.0.5"
@@ -999,10 +1008,10 @@ vsce@^1.54.0:
     yauzl "^2.3.1"
     yazl "^2.2.2"
 
-vscode-jsonrpc@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/vscode-jsonrpc/-/vscode-jsonrpc-4.0.0.tgz#a7bf74ef3254d0a0c272fab15c82128e378b3be9"
-  integrity sha512-perEnXQdQOJMTDFNv+UF3h1Y0z4iSiaN9jIlb0OqIYgosPCZGYh/MCUlkFtV2668PL69lRDO32hmvL2yiidUYg==
+vscode-jsonrpc@^4.0.0, vscode-jsonrpc@^5, vscode-jsonrpc@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/vscode-jsonrpc/-/vscode-jsonrpc-5.0.1.tgz#9bab9c330d89f43fc8c1e8702b5c36e058a01794"
+  integrity sha512-JvONPptw3GAQGXlVV2utDcHx0BiY34FupW/kI6mZ5x06ER5DdPG/tXWMVHjTNULF5uKPOUUD0SaXg5QaubJL0A==
 
 vscode-languageclient@^5.1.0:
   version "5.1.1"
@@ -1020,10 +1029,23 @@ vscode-languageserver-protocol@3.13.0:
     vscode-jsonrpc "^4.0.0"
     vscode-languageserver-types "3.13.0"
 
+vscode-languageserver-protocol@^3.15.2:
+  version "3.15.2"
+  resolved "https://registry.yarnpkg.com/vscode-languageserver-protocol/-/vscode-languageserver-protocol-3.15.2.tgz#e52c62923140b2655ad2472f6f29cfb83bacf5b8"
+  integrity sha512-GdL05JKOgZ76RDg3suiGCl9enESM7iQgGw4x93ibTh4sldvZmakHmTeZ4iUApPPGKf6O3OVBtrsksBXnHYaxNg==
+  dependencies:
+    vscode-jsonrpc "^5.0.1"
+    vscode-languageserver-types "3.15.1"
+
 vscode-languageserver-types@3.13.0:
   version "3.13.0"
   resolved "https://registry.yarnpkg.com/vscode-languageserver-types/-/vscode-languageserver-types-3.13.0.tgz#b704b024cef059f7b326611c99b9c8753c0a18b4"
   integrity sha512-BnJIxS+5+8UWiNKCP7W3g9FlE7fErFw0ofP5BXJe7c2tl0VeWh+nNHFbwAS2vmVC4a5kYxHBjRy0UeOtziemVA==
+
+vscode-languageserver-types@3.15.1:
+  version "3.15.1"
+  resolved "https://registry.yarnpkg.com/vscode-languageserver-types/-/vscode-languageserver-types-3.15.1.tgz#17be71d78d2f6236d414f0001ce1ef4d23e6b6de"
+  integrity sha512-+a9MPUQrNGRrGU630OGbYVQ+11iOIovjCkqxajPa9w57Sd5ruK8WQNsslzpa0x/QJqC8kRc2DUxWjIFwoNm4ZQ==
 
 vscode-test@^0.4.1:
   version "0.4.3"
