@@ -1,0 +1,60 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - v*.*.*
+
+jobs:
+  build:
+    runs-on: "ubuntu-18.04"
+
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10
+
+      - name: Install Yarn
+        run: curl --compressed -o- -L https://yarnpkg.com/install.sh | bash
+
+      - name: Setup git env
+        run: |
+          git config --global user.email "bot@scalameta.org"
+          git config --global user.name "Scalameta bot"
+
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Get the tag version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Set new version
+        run:
+          yarn version --no-git-tag-version --new-version ${{
+          steps.get_version.outputs.VERSION }}
+
+      - name: Generate new changelog
+        run:
+          npx github-changes -o scalameta -r metals-languageclient --no-merges
+          -t "metals-languageclient changelog" -k ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit changes
+        run: git commit -am "Release ${{ steps.get_version.outputs.VERSION }}"
+
+      - name: Set npm auth
+        run:
+          echo "//registry.yarnpkg.com/:_authToken=${{ secrets.NPM_TOKEN }}"
+          >>~/.npmrc
+
+      - name: Publish
+        run: yarn publish
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
