@@ -719,14 +719,7 @@ prettier@1.19.1:
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
   integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
 
-promisify-child-process@3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/promisify-child-process/-/promisify-child-process-3.1.0.tgz#dbd9cf5978d24a921cfeed36c9cfd894ce77387b"
-  integrity sha512-qSXQUk7eci66DGQ62Joo5k8Li5x+WsloaM+oPPeKY549suS4ZIvi/qj2POsLlsG8a6RzBSZezvYHw75mcn7WmQ==
-  dependencies:
-    "@babel/runtime" "^7.1.5"
-
-promisify-child-process@^3.1.3:
+promisify-child-process@3.1.3, promisify-child-process@^3.1.3:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/promisify-child-process/-/promisify-child-process-3.1.3.tgz#52a3b66638ae101fa2e68f9a2cbd101846042e33"
   integrity sha512-qVox3vW2hqbktVw+IN7YZ/kgGA+u426ekmiZxiofNe9O4GSewjROwRQ4MQ6IbvhpeYSLqiLS0kMn+FWCz6ENlg==
