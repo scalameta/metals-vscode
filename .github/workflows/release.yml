@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  release:
+    runs-on: "ubuntu-18.04"
+
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+      - name: Setup git env
+        run: |
+          git config --global user.email "bot@scalameta.org"
+          git config --global user.name "Scalameta bot"
+      - uses: actions/checkout@v2
+      - name: Get the tag version
+        id: get_version
+        run: echo ::set-output name=NEW_VERSION::${GITHUB_REF#/refs/tags/v}
+      - run: yarn install
+      - run: yarn version --no-git-tag-version --new-version ${{
+          steps.get_version.outputs.NEW_VERSION }}
+      - name: Generate changelog
+        run: |
+          npx github-changes -o scalameta -r metals-vscode --no-merges -t "VSCode Extension Changelog" -k ${{ secrets.GITHUB_TOKEN }}
+          sed -i '1i Check out the Metals release notes at [https://scalameta.org/metals/blog/](https://scalameta.org/metals/blog/)\n' CHANGELOG.md
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m "v${{ steps.get_version.outputs.NEW_VERSION }}"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish extension
+        run: yarn vscode:publish -p ${{ secrets.VS_MARKETPLACE_TOKEN }}
