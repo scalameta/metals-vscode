@@ -2,7 +2,26 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
-### upcoming (2020/01/15 11:12 +00:00)
+### v1.7.3 (2020/02/04 13:26 +00:00)
+- [730dd82](https://github.com/scalameta/metals-vscode/commit/730dd82f6bd9c86c8d1b0c72eef330fff7151f70) Fix typo (@gabro)
+- [023ec82](https://github.com/scalameta/metals-vscode/commit/023ec82ddc8c08b4267637f9b0a9705dde047346) Revert "Add missing bloop restart command and settings" (@gabro)
+- [d06db92](https://github.com/scalameta/metals-vscode/commit/d06db928f8543efeff988504e834851b1bcf8d6f) Prettier fix (@gabro)
+- [64822f5](https://github.com/scalameta/metals-vscode/commit/64822f50ed95b8bf1b3b212b5c3f446f12327bef) Add publishing of VSIX package to the latest release (@gabro)
+- [3d17631](https://github.com/scalameta/metals-vscode/commit/3d17631ca052730b3d9d58d70fcdc40c2161b419) Remove travis badge (@gabro)
+- [cd1665e](https://github.com/scalameta/metals-vscode/commit/cd1665e046ae33cee7f192e228c19f1e1dc4ba3f) Run prettier (@gabro)
+- [67f701e](https://github.com/scalameta/metals-vscode/commit/67f701ec3456e2501b87bacb8b36ee3fc6772775) Migrate CI to GitHub Actions (@gabro)
+- [6685d82](https://github.com/scalameta/metals-vscode/commit/6685d82d31cee1c687d5a502242c2e90dd1961f0) Add prettier (@gabro)
+- [a912be7](https://github.com/scalameta/metals-vscode/commit/a912be746614db811c14b5403927bac30e2c9219) Run prettier (@gabro)
+- [76b4e35](https://github.com/scalameta/metals-vscode/commit/76b4e35f8a5944d4cb7998fe5327e7b4b0c94a97) Remove migrateStringSettingToArray (@gabro)
+- [e883779](https://github.com/scalameta/metals-vscode/commit/e883779c3b2f0a890e17aff666426f132dff249d) Add missing bloop restart command, `bloopVersion` and `bloopSbtAlreadyInstalled` settings (@tgodzik)
+- [4e4f28c](https://github.com/scalameta/metals-vscode/commit/4e4f28c1dc040566a8e47f1a8fc08f9c15d11a45) Use metals-languageclient 0.1.13 (@gabro)
+- [783b1d1](https://github.com/scalameta/metals-vscode/commit/783b1d193e5f5f85ee29d2ecf485732a0879dc5b) Delegate more utils to metals-languageclient (@gabro)
+- [81b82fd](https://github.com/scalameta/metals-vscode/commit/81b82fd3ebea50b91e937bd59b006a99905f60d6) Refactor (@gabro)
+- [77f2520](https://github.com/scalameta/metals-vscode/commit/77f25207730820c7709e44bf812b61459be44cdd) Add automatic JDK installer based on Jabba (@sswistun-vl)
+- [1e00537](https://github.com/scalameta/metals-vscode/commit/1e005375c6d74e81ae1b5f66ae196e722b4f9ddb) Run prettier (@gabro)
+- [de4a73d](https://github.com/scalameta/metals-vscode/commit/de4a73d541cf80255ab8e13cea58d271cf836e59) Use getJavaOptions from metals-languageclient (@gabro)
+- [fe923d0](https://github.com/scalameta/metals-vscode/commit/fe923d01aa562eea477845edcdf6904b5ad0c502) Use getJavaHome from metals-languageclient (@gabro)
+- [46a9c67](https://github.com/scalameta/metals-vscode/commit/46a9c67a6b31a0b6431450851e8bcaeb622b2b22) v1.7.2 (@gabro)
 - [4f1676b](https://github.com/scalameta/metals-vscode/commit/4f1676b91f3955375f1c2a1701c0022326fb2e4c) Pass user's environment to metals server process (@jodersky)
 
 ### 1.7.2 (2020/01/14 09:11 +00:00)
@@ -70,11 +89,11 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ### v1.5.6 (2019/10/06 17:11 +00:00)
 - [8c17915](https://github.com/scalameta/metals-vscode/commit/8c179158bae501f40ebd4a6a089e1e661f724e9c) Add debugging provider to client capabilities. (@olafurpg)
-- [2546972](https://github.com/scalameta/metals-vscode/commit/2546972b9b44629de94ee3b7786bd1257ea857f3) Remove unused methods and properties from CodeLensProvider (@gabro)
 - [6a4c4ec](https://github.com/scalameta/metals-vscode/commit/6a4c4ecfac62e36de1b4ecda8e73d9e01a170098) Avoid spurious 'Unknown command' warning (@gabro)
+- [2546972](https://github.com/scalameta/metals-vscode/commit/2546972b9b44629de94ee3b7786bd1257ea857f3) Remove unused methods and properties from CodeLensProvider (@gabro)
 - [2431bac](https://github.com/scalameta/metals-vscode/commit/2431bacef54e71c9a3c13cdec8e766c1fbf7d21d) Fix ClientCommands registration (@gabro)
-- [60a3612](https://github.com/scalameta/metals-vscode/commit/60a3612aece97e0b225bfd84a622282c69c73416) Client command registration fix
 - [cebd70f](https://github.com/scalameta/metals-vscode/commit/cebd70f910148b15ee42b16458c62a7607a3a86f) Bump dependencies and remove test scaffolds (@gabro)
+- [60a3612](https://github.com/scalameta/metals-vscode/commit/60a3612aece97e0b225bfd84a622282c69c73416) Client command registration fix
 - [02a3924](https://github.com/scalameta/metals-vscode/commit/02a39248f0db5b67254d9bc5db994e7b8718882f) use debugging provider instead of "supportsDebugging" (@marek1840)
 - [487854e](https://github.com/scalameta/metals-vscode/commit/487854e931c1f0471f27ee566ae73c5d7acf8990) setup scala debugger only when the server supports it (@marek1840)
 - [d6e87aa](https://github.com/scalameta/metals-vscode/commit/d6e87aae02e897470c231ad905051109a16a0367) rename debugger -> scalaDebugger (@marek1840)
