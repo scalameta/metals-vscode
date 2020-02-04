@@ -2,6 +2,12 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.7.6 (2020/02/04 13:37 +00:00)
+- [7179705](https://github.com/scalameta/metals-vscode/commit/717970540a5cdf06c49d399778b52082fc6de46b) Fix VSIX upload (@gabro)
+
+### v1.7.4 (2020/02/04 13:28 +00:00)
+- [a64f43f](https://github.com/scalameta/metals-vscode/commit/a64f43feba425545e38f9f01ca4b7c3a5a1dff85) v1.7.3
+
 ### v1.7.3 (2020/02/04 13:26 +00:00)
 - [730dd82](https://github.com/scalameta/metals-vscode/commit/730dd82f6bd9c86c8d1b0c72eef330fff7151f70) Fix typo (@gabro)
 - [023ec82](https://github.com/scalameta/metals-vscode/commit/023ec82ddc8c08b4267637f9b0a9705dde047346) Revert "Add missing bloop restart command and settings" (@gabro)
@@ -89,8 +95,8 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ### v1.5.6 (2019/10/06 17:11 +00:00)
 - [8c17915](https://github.com/scalameta/metals-vscode/commit/8c179158bae501f40ebd4a6a089e1e661f724e9c) Add debugging provider to client capabilities. (@olafurpg)
-- [6a4c4ec](https://github.com/scalameta/metals-vscode/commit/6a4c4ecfac62e36de1b4ecda8e73d9e01a170098) Avoid spurious 'Unknown command' warning (@gabro)
 - [2546972](https://github.com/scalameta/metals-vscode/commit/2546972b9b44629de94ee3b7786bd1257ea857f3) Remove unused methods and properties from CodeLensProvider (@gabro)
+- [6a4c4ec](https://github.com/scalameta/metals-vscode/commit/6a4c4ecfac62e36de1b4ecda8e73d9e01a170098) Avoid spurious 'Unknown command' warning (@gabro)
 - [2431bac](https://github.com/scalameta/metals-vscode/commit/2431bacef54e71c9a3c13cdec8e766c1fbf7d21d) Fix ClientCommands registration (@gabro)
 - [cebd70f](https://github.com/scalameta/metals-vscode/commit/cebd70f910148b15ee42b16458c62a7607a3a86f) Bump dependencies and remove test scaffolds (@gabro)
 - [60a3612](https://github.com/scalameta/metals-vscode/commit/60a3612aece97e0b225bfd84a622282c69c73416) Client command registration fix
@@ -165,8 +171,8 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [2c4f5ee](https://github.com/scalameta/metals-vscode/commit/2c4f5eef04fcef56dfe98eb511abe49082101d29) Add note about custom sbt script in readme.md (@pityka)
 - [e0c776b](https://github.com/scalameta/metals-vscode/commit/e0c776b006d21f6dfe865ec638a6b5471f507c54) Clarify documentation of 'Custom Repositories' setting (@pityka)
 - [19544b8](https://github.com/scalameta/metals-vscode/commit/19544b89d7317a9e0421ec41485283bf943bfafd) Use COURSIER_REPOSITORIES (@pityka)
-- [731fbb3](https://github.com/scalameta/metals-vscode/commit/731fbb35a9a6be9a1c30a19b22e593a58e61b0d3) Add customRepositories configuration (@pityka)
 - [cc15fb5](https://github.com/scalameta/metals-vscode/commit/cc15fb51f13209f1861dc1e217b1090b3d84f12d) Document where to set custom repository URLs (@pityka)
+- [731fbb3](https://github.com/scalameta/metals-vscode/commit/731fbb35a9a6be9a1c30a19b22e593a58e61b0d3) Add customRepositories configuration (@pityka)
 - [da0bef9](https://github.com/scalameta/metals-vscode/commit/da0bef91179f4c4a0a16afc36d058dfbc3c5b178) Adding spaces to error messages (@hmemcpy)
 - [5334440](https://github.com/scalameta/metals-vscode/commit/533444049ca108c51b732adbadd69c56d2b4e3ad) Add gradle setting to visual-code plugin (@tgodzik)
 - [d41a3b0](https://github.com/scalameta/metals-vscode/commit/d41a3b0e82e9aa781052e277ae088863fa3dc9d5) v1.3.3
