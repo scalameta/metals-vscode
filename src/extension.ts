@@ -522,34 +522,57 @@ function launchMetals(
         return undefined;
       })();
 
-      const worksheetPick = { label: 'Worksheet', kind: 'worksheet' }
-      const classPick = { label: 'Class', kind: 'class' }
-      const objectPick = { label: 'Object', kind: 'object' }
-      const traitPick = { label: 'Trait', kind: 'trait' }
+      const classPick = { label: "Class", kind: "class" };
+      const objectPick = { label: "Object", kind: "object" };
+      const traitPick = { label: "Trait", kind: "trait" };
+      const packageObjectPick = {
+        label: "Package Object",
+        kind: "package-object"
+      };
+      const worksheetPick = { label: "Worksheet", kind: "worksheet" };
 
-      return window.showQuickPick(
-        [classPick, objectPick, traitPick, worksheetPick],
-        { placeHolder: 'Select the kind of file to create' }
-      ).then(kindPick => {
-        if (kindPick !== undefined) return window.showInputBox({ prompt: 'Enter name for the new ' + kindPick.kind }).then(name => {
-          if (name !== undefined) {
-            const arg: MetalsNewScalaFileParams =
-            {
-              'directory': directory,
-              'name': name,
-              'kind': kindPick.kind
+      return window
+        .showQuickPick(
+          [classPick, objectPick, traitPick, packageObjectPick, worksheetPick],
+          { placeHolder: "Select the kind of file to create" }
+        )
+        .then(kindPick => {
+          const name = (async () => {
+            switch (kindPick) {
+              case classPick:
+              case objectPick:
+              case traitPick:
+              case worksheetPick:
+                return window.showInputBox({
+                  prompt: "Enter name for the new " + kindPick.kind
+                });
+              case packageObjectPick:
+                return "";
             }
-            client.sendRequest(ExecuteCommandRequest.type, {
-              command: "new-scala-file",
-              arguments: [arg]
-            }).then(result => {
-              workspace
-                .openTextDocument(Uri.parse(result))
-                .then(textDocument => window.showTextDocument(textDocument));
-            });
-          }
+          })();
+
+          name.then(name => {
+            if (kindPick !== undefined && name !== undefined) {
+              const arg: MetalsNewScalaFileParams = {
+                directory: directory,
+                name: name,
+                kind: kindPick.kind
+              };
+              client
+                .sendRequest(ExecuteCommandRequest.type, {
+                  command: "new-scala-file",
+                  arguments: [arg]
+                })
+                .then(result => {
+                  workspace
+                    .openTextDocument(Uri.parse(result))
+                    .then(textDocument =>
+                      window.showTextDocument(textDocument)
+                    );
+                });
+            }
+          });
         });
-      });
     });
 
     window.onDidChangeActiveTextEditor(editor => {
