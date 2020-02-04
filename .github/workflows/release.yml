@@ -22,9 +22,9 @@ jobs:
         id: get_version
         run: echo ::set-output name=NEW_VERSION::${GITHUB_REF#/refs/tags/v}
       - run: yarn install
-      - run:
-          yarn version --no-git-tag-version --new-version ${{
-          steps.get_version.outputs.NEW_VERSION }}
+      - run: |
+          yarn version --no-git-tag-version --new-version ${{ steps.get_version.outputs.NEW_VERSION
+          }}
       - name: Generate changelog
         run: |
           npx github-changes -o scalameta -r metals-vscode --no-merges -t "VSCode Extension Changelog" -k ${{ secrets.GITHUB_TOKEN }}
@@ -53,5 +53,5 @@ jobs:
         with:
           upload_url: { { steps.get_upload_url.outputs.UPLOAD_URL } }
           asset_path: ./metals-${{ steps.get_version.outputs.NEW_VERSION }}.vsix
-          asset_name:
+          asset_name: |
             scalameta.metals-${{ steps.get_version.outputs.NEW_VERSION }}.vsix
