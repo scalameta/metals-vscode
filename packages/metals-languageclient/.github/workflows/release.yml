@@ -31,8 +31,7 @@ jobs:
         run: yarn install
 
       - name: Set new version
-        run:
-          yarn version --no-git-tag-version --new-version ${{
+        run: yarn version --no-git-tag-version --new-version ${{
           steps.get_version.outputs.VERSION }}
 
       - name: Generate new changelog
@@ -46,8 +45,7 @@ jobs:
           git commit -m "Release ${{ steps.get_version.outputs.VERSION }}"
 
       - name: Set npm auth
-        run:
-          echo "//registry.yarnpkg.com/:_authToken=${{ secrets.NPM_TOKEN }}"
+        run: echo "//registry.yarnpkg.com/:_authToken=${{ secrets.NPM_TOKEN }}"
           >>~/.npmrc
 
       - name: Publish
