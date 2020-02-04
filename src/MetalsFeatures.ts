@@ -17,9 +17,9 @@ export class MetalsFeatures implements StaticFeature {
     if (!params.capabilities.experimental) {
       params.capabilities.experimental = {};
     }
-    params.capabilities.experimental.treeViewProvider = true;
-    params.capabilities.experimental.debuggingProvider = true;
-    params.capabilities.experimental.decorationProvider = true;
+    (params.capabilities.experimental as any).treeViewProvider = true;
+    (params.capabilities.experimental as any).debuggingProvider = true;
+    (params.capabilities.experimental as any).decorationProvider = true;
   }
   fillClientCapabilities(): void {}
   initialize(capabilities: ServerCapabilities): void {

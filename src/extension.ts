@@ -53,7 +53,8 @@ import {
   getJavaConfig,
   fetchMetals,
   JavaConfig,
-  getServerOptions
+  getServerOptions,
+  downloadProgress
 } from "metals-languageclient";
 import * as metalsLanguageClient from "metals-languageclient";
 import { startTreeView } from "./treeview";
@@ -159,7 +160,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   if (dottyIde.enabled) {
     outputChannel.appendLine(
       `Metals will not start since Dotty is enabled for this workspace. ` +
-        `To enable Metals, remove the file ${dottyIde} and run 'Reload window'`
+        `To enable Metals, remove the file ${dottyIde.path} and run 'Reload window'`
     );
     return;
   }
@@ -631,27 +632,15 @@ function trackDownloadProgress(
   download: ChildProcessPromise
 ): Promise<string> {
   const progress = new LazyProgress();
-  let stdout: Buffer[] = [];
-  download.stdout.on("data", (out: Buffer) => {
-    stdout.push(out);
-  });
-  download.stderr.on("data", (err: Buffer) => {
-    const msg = err.toString().trim();
-    if (!msg.startsWith("Downloading")) {
+  return downloadProgress({
+    download,
+    onError: stdout =>
+      stdout.forEach(buffer => output.append(buffer.toString())),
+    onProgress: msg => {
       output.appendLine(msg);
-    }
-    progress.startOrContinue(title, output, download);
-  });
-  download.on("close", (code: number) => {
-    if (code != 0) {
-      // something went wrong, print stdout to the console to help troubleshoot.
-      stdout.forEach(buffer => output.append(buffer.toString()));
-      throw Error(`coursier exit: ${code}`);
+      progress.startOrContinue(title, output, download);
     }
   });
-  return download.then(() =>
-    stdout.map(buffer => buffer.toString().trim()).join("")
-  );
 }
 
 function readableSeconds(totalSeconds: number): string {

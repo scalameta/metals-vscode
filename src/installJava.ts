@@ -44,8 +44,8 @@ export function installJava({
     .then(java => {
       outputChannel.appendLine(`Installing ${java}`);
       const jabbaSpawn = pcp.spawn(`${jabbaPath}`, ["install", java], {});
-      jabbaSpawn.stdout.on("data", outputChannel.append);
-      jabbaSpawn.stderr.on("data", outputChannel.append);
+      jabbaSpawn.stdout?.on("data", outputChannel.append);
+      jabbaSpawn.stderr?.on("data", outputChannel.append);
 
       return jabbaSpawn
         .then(() => outputChannel.appendLine(`${java} installed`))
