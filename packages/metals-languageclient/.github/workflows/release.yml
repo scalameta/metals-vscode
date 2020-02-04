@@ -3,20 +3,17 @@ name: Release
 on:
   push:
     tags:
-      - v*.*.*
+      - "v*.*.*"
 
 jobs:
-  build:
+  release:
     runs-on: "ubuntu-18.04"
 
     steps:
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: 10
-
-      - name: Install Yarn
-        run: curl --compressed -o- -L https://yarnpkg.com/install.sh | bash
+          node-version: "10.x"
 
       - name: Setup git env
         run: |
@@ -30,7 +27,7 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: yarn install
 
       - name: Set new version
@@ -44,7 +41,9 @@ jobs:
           -t "metals-languageclient changelog" -k ${{ secrets.GITHUB_TOKEN }}
 
       - name: Commit changes
-        run: git commit -am "Release ${{ steps.get_version.outputs.VERSION }}"
+        run: |
+          git add .
+          git commit -m "Release ${{ steps.get_version.outputs.VERSION }}"
 
       - name: Set npm auth
         run:
