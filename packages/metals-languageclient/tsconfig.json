@@ -13,6 +13,7 @@
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
     "outDir": "lib"
   },
   "exclude": ["**/__tests__/", "lib"]
