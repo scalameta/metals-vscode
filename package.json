@@ -257,13 +257,16 @@
     "postinstall": "node ./node_modules/vscode/bin/install",
     "test": "yarn compile",
     "build": "vsce package --yarn",
-    "vscode:publish": "vsce publish --yarn"
+    "vscode:publish": "vsce publish --yarn",
+    "format": "prettier --write **/*.{ts,js,json,yml}",
+    "format-check": "prettier --check **/*.{ts,js,json,yml}"
   },
   "devDependencies": {
     "@types/node": "^10",
     "@types/request": "^2.48.3",
     "@types/semver": "^5.5.0",
     "@types/shell-quote": "^1.6.1",
+    "prettier": "1.19.1",
     "typescript": "^3.7.3",
     "vsce": "^1.54.0"
   },
