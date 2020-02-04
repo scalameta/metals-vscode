@@ -120,14 +120,6 @@
           "type": "string",
           "markdownDescription": "Optional custom path to the .scalafmt.conf file.\n\nShould be relative to the workspace root directory and use forward slashes `/` for file separators (even on Windows)."
         },
-        "metals.bloopVersion": {
-          "type": "string",
-          "markdownDescription": "This version will be used for the Bloop build tool plugin, for any supported build tool,while importing in Metals as well as for running the embedded server"
-        },
-        "metals.bloopSbtAlreadyInstalled": {
-          "type": "boolean",
-          "markdownDescription": "If true, Metals will not generate a `project/metals.sbt` file under the assumption that sbt-bloop is already manually installed in the sbt build. Build import will fail with a 'not valid command bloopInstall' error in case Bloop is not manually installed in the build when using this option."
-        },
         "metals.customRepositories": {
           "type": "array",
           "items": {
@@ -151,11 +143,6 @@
         "command": "metals.restartServer",
         "category": "Metals",
         "title": "Restart server"
-      },
-      {
-        "command": "metals.build-restart",
-        "category": "Metals",
-        "title": "Restart Bloop server"
       },
       {
         "command": "metals.build-import",
@@ -203,10 +190,6 @@
         },
         {
           "command": "metals.build-import",
-          "when": "metals:enabled"
-        },
-        {
-          "command": "metals.build-restart",
           "when": "metals:enabled"
         },
         {
