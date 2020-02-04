@@ -20,7 +20,10 @@ export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
   ];
 }
 
-export async function start(noDebug: Boolean, ...parameters: any[]): Promise<Boolean> {
+export async function start(
+  noDebug: Boolean,
+  ...parameters: any[]
+): Promise<Boolean> {
   return vscode.commands
     .executeCommand<DebugSession>(startAdapterCommand, ...parameters)
     .then(response => {
