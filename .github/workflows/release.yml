@@ -44,7 +44,7 @@ jobs:
       - name: Get upload url
         id: get_upload_url
         run: |
-          URL=curl --silent "https://api.github.com/repos/scalameta/metals-vscode/releases/latest" | jq -r '.upload_url' | cut -d'{' -f 1
+          URL=$(curl --silent "https://api.github.com/repos/scalameta/metals-vscode/releases/latest" | jq -r '.upload_url' | cut -d'{' -f 1)
           echo ::set-output name=UPLOAD_URL::$URL
       - name: Upload VSIX package to release
         uses: actions/upload-release-asset@v1.0.1
@@ -55,3 +55,4 @@ jobs:
           asset_path: ./metals-${{ steps.get_version.outputs.NEW_VERSION }}.vsix
           asset_name: |
             scalameta.metals-${{ steps.get_version.outputs.NEW_VERSION }}.vsix
+          asset_content_type: application/octet-stream
