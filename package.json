@@ -245,7 +245,7 @@
     "format-check": "prettier --check **/*.{ts,js,json,yml}"
   },
   "devDependencies": {
-    "@types/node": "^10",
+    "@types/node": "^13",
     "@types/request": "^2.48.3",
     "@types/semver": "^5.5.0",
     "@types/shell-quote": "^1.6.1",
