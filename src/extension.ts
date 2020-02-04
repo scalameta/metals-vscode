@@ -159,7 +159,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   if (dottyIde.enabled) {
     outputChannel.appendLine(
       `Metals will not start since Dotty is enabled for this workspace. ` +
-        `To enable Metals, remove the file ${dottyIde} and run 'Reload window'`
+        `To enable Metals, remove the file ${dottyIde.path} and run 'Reload window'`
     );
     return;
   }
@@ -304,6 +304,7 @@ function launchMetals(
     }
     [
       "build-import",
+      "build-restart",
       "build-connect",
       "sources-scan",
       "doctor-run",
