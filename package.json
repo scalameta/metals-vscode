@@ -247,7 +247,6 @@
   "devDependencies": {
     "@types/node": "^13",
     "@types/request": "^2.48.3",
-    "@types/semver": "^5.5.0",
     "@types/shell-quote": "^1.6.1",
     "prettier": "1.19.1",
     "typescript": "^3.7.3",
@@ -258,7 +257,6 @@
     "mkdirp": "^1.0.3",
     "promisify-child-process": "3.1.0",
     "request": "^2.88.0",
-    "semver": "^5.6.0",
     "vscode": "^1.1.36",
     "vscode-languageclient": "^5.1.0"
   },
