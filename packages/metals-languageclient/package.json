@@ -12,7 +12,9 @@
   "license": "Apache-2.0",
   "scripts": {
     "prepublish": "rm -rf lib && tsc",
-    "test": "jest"
+    "test": "jest",
+    "format": "prettier --write **/*.{ts,js,json,yml}",
+    "format-check": "prettier --check **/*.{ts,js,json,yml}"
   },
   "devDependencies": {
     "@types/jest": "^25.1.0",
@@ -20,6 +22,7 @@
     "@types/semver": "^7.1.0",
     "@types/shell-quote": "^1.6.1",
     "jest": "^25.1.0",
+    "prettier": "1.19.1",
     "ts-jest": "^25.0.0",
     "typescript": "^3.7.5"
   },
