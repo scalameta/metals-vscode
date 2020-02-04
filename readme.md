@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/scalameta/metals-vscode.svg?branch=master)](https://travis-ci.org/scalameta/metals-vscode)
-
 # Metals extension for Visual Studio Code
 
 ![Completions](https://user-images.githubusercontent.com/1408093/56036958-725bac00-5d2e-11e9-9cf7-46249125494a.gif)
@@ -103,8 +101,8 @@ to learn how to speed up build import.
 
 ### Importing changes
 
-When you change your `build.sbt` or sources under `project/`, you will be prompted to
-re-import the build.
+When you change your `build.sbt` or sources under `project/`, you will be
+prompted to re-import the build.
 
 ![Import sbt changes](https://i.imgur.com/72kdZkL.png)
 
