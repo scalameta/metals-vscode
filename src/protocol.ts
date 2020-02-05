@@ -1,12 +1,6 @@
 import { RequestType, NotificationType } from "vscode-jsonrpc";
 import { ExecuteCommandParams } from "vscode-languageclient";
-import {
-  InputBoxOptions,
-  Command,
-  Range,
-  TreeItemCollapsibleState,
-  Disposable
-} from "vscode";
+import { InputBoxOptions } from "vscode";
 
 "use strict";
 
