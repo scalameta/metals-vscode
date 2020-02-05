@@ -1,7 +1,7 @@
 "use strict";
 
 import * as path from "path";
-import { spawn, ChildProcessPromise } from "promisify-child-process";
+import { ChildProcessPromise } from "promisify-child-process";
 import {
   workspace,
   ExtensionContext,
@@ -16,7 +16,6 @@ import {
   WebviewPanel,
   ViewColumn,
   OutputChannel,
-  ConfigurationTarget,
   Uri,
   Range,
   Selection,

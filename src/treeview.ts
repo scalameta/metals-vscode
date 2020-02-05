@@ -1,9 +1,5 @@
 import * as path from "path";
-import {
-  LanguageClient,
-  Disposable,
-  DidChangeWorkspaceFoldersParams
-} from "vscode-languageclient";
+import { LanguageClient, Disposable } from "vscode-languageclient";
 import * as fs from "fs";
 import {
   TreeDataProvider,
@@ -15,9 +11,7 @@ import {
   OutputChannel,
   Uri,
   TreeView,
-  ExtensionContext,
-  Command,
-  commands
+  ExtensionContext
 } from "vscode";
 import {
   MetalsTreeViewNode,
@@ -29,7 +23,6 @@ import {
   MetalsTreeViews,
   MetalsTreeRevealResult
 } from "./tree-view-protocol";
-import { fstat } from "fs";
 
 export function startTreeView(
   client: LanguageClient,

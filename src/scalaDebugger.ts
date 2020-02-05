@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
 import {
-  CancellationToken,
   DebugConfiguration,
   Disposable,
   ProviderResult,
@@ -46,17 +45,13 @@ export async function start(
 }
 
 class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
-  provideDebugConfigurations(
-    folder: WorkspaceFolder | undefined,
-    token?: CancellationToken
-  ): ProviderResult<DebugConfiguration[]> {
+  provideDebugConfigurations(): ProviderResult<DebugConfiguration[]> {
     return [];
   }
 
   resolveDebugConfiguration(
-    folder: WorkspaceFolder | undefined,
-    debugConfiguration: DebugConfiguration,
-    token?: CancellationToken
+    _folder: WorkspaceFolder | undefined,
+    debugConfiguration: DebugConfiguration
   ): ProviderResult<DebugConfiguration> {
     return debugConfiguration;
   }
