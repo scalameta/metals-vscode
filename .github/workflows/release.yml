@@ -34,9 +34,7 @@ jobs:
           git add .
           git commit -m "v${{ steps.get_version.outputs.NEW_VERSION }}"
       - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+        run: git push origin HEAD:master
       - name: Publish extension
         run: yarn vscode:publish -p ${{ secrets.VS_MARKETPLACE_TOKEN }}
       - name: Build VSIX package
