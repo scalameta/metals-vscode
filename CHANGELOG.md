@@ -2,6 +2,19 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.7.8 (2020/02/05 13:31 +00:00)
+- [48574e6](https://github.com/scalameta/metals-vscode/commit/48574e664c502f70876fd911b998881b93d16a71) use checkoutv2 push rather than github-push-action (@ckipp01)
+- [9292082](https://github.com/scalameta/metals-vscode/commit/9292082e9ea1b27f6c8482e72d9d980e17cdb092) Use stricter tsconfig (@gabro)
+- [78b880a](https://github.com/scalameta/metals-vscode/commit/78b880aa310c54e8a6ae97bd1b54137a24d4bbdc) Update vscode-languageclient (@gabro)
+- [c6fef91](https://github.com/scalameta/metals-vscode/commit/c6fef9126ba37a15682b8eb7f25a4c16b9e83380) Fix error due to updated node types (@gabro)
+- [e0689af](https://github.com/scalameta/metals-vscode/commit/e0689afcf2457535be24b62a42c25ea07915d5e3) Remove semver dependency (@gabro)
+- [f65c608](https://github.com/scalameta/metals-vscode/commit/f65c60811ec9bfcbc7f43174e45cfec8668bf44c) Update @types/node (@gabro)
+- [051fe19](https://github.com/scalameta/metals-vscode/commit/051fe19c4e1b8e238d0372cf61b23cf16e3c4e42) Delegate some utils to metals-languageclient (@gabro)
+- [cc90d68](https://github.com/scalameta/metals-vscode/commit/cc90d68a50b38e9249e581f445d09873bc9dacce) Bump promisify-child-process from 3.1.0 to 3.1.3 (@dependabot-preview[bot])
+- [fd1eb19](https://github.com/scalameta/metals-vscode/commit/fd1eb1991e1334fe46087aeee7bc9428dc9ef98c) [Security] Bump https-proxy-agent from 2.2.1 to 2.2.4 (@dependabot-preview[bot])
+- [dc720a1](https://github.com/scalameta/metals-vscode/commit/dc720a103806386777addf510927fc3a6a20d744) Bump vscode from 1.1.34 to 1.1.36 (@dependabot-preview[bot])
+- [524ca91](https://github.com/scalameta/metals-vscode/commit/524ca91b8cef009fd3b8ba77c273329e194c1f1c) v1.7.7
+
 ### v1.7.7 (2020/02/04 13:40 +00:00)
 - [3197856](https://github.com/scalameta/metals-vscode/commit/3197856192c37140d5ed23469eb5bb00014504d4) v1.7.6
 - [0b71cb3](https://github.com/scalameta/metals-vscode/commit/0b71cb3f3497ced26d5b9f11edac8e192dde61d6) v1.7.6
@@ -99,8 +112,8 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ### v1.5.6 (2019/10/06 17:11 +00:00)
 - [8c17915](https://github.com/scalameta/metals-vscode/commit/8c179158bae501f40ebd4a6a089e1e661f724e9c) Add debugging provider to client capabilities. (@olafurpg)
-- [6a4c4ec](https://github.com/scalameta/metals-vscode/commit/6a4c4ecfac62e36de1b4ecda8e73d9e01a170098) Avoid spurious 'Unknown command' warning (@gabro)
 - [2546972](https://github.com/scalameta/metals-vscode/commit/2546972b9b44629de94ee3b7786bd1257ea857f3) Remove unused methods and properties from CodeLensProvider (@gabro)
+- [6a4c4ec](https://github.com/scalameta/metals-vscode/commit/6a4c4ecfac62e36de1b4ecda8e73d9e01a170098) Avoid spurious 'Unknown command' warning (@gabro)
 - [2431bac](https://github.com/scalameta/metals-vscode/commit/2431bacef54e71c9a3c13cdec8e766c1fbf7d21d) Fix ClientCommands registration (@gabro)
 - [cebd70f](https://github.com/scalameta/metals-vscode/commit/cebd70f910148b15ee42b16458c62a7607a3a86f) Bump dependencies and remove test scaffolds (@gabro)
 - [60a3612](https://github.com/scalameta/metals-vscode/commit/60a3612aece97e0b225bfd84a622282c69c73416) Client command registration fix
@@ -175,8 +188,8 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [2c4f5ee](https://github.com/scalameta/metals-vscode/commit/2c4f5eef04fcef56dfe98eb511abe49082101d29) Add note about custom sbt script in readme.md (@pityka)
 - [e0c776b](https://github.com/scalameta/metals-vscode/commit/e0c776b006d21f6dfe865ec638a6b5471f507c54) Clarify documentation of 'Custom Repositories' setting (@pityka)
 - [19544b8](https://github.com/scalameta/metals-vscode/commit/19544b89d7317a9e0421ec41485283bf943bfafd) Use COURSIER_REPOSITORIES (@pityka)
-- [731fbb3](https://github.com/scalameta/metals-vscode/commit/731fbb35a9a6be9a1c30a19b22e593a58e61b0d3) Add customRepositories configuration (@pityka)
 - [cc15fb5](https://github.com/scalameta/metals-vscode/commit/cc15fb51f13209f1861dc1e217b1090b3d84f12d) Document where to set custom repository URLs (@pityka)
+- [731fbb3](https://github.com/scalameta/metals-vscode/commit/731fbb35a9a6be9a1c30a19b22e593a58e61b0d3) Add customRepositories configuration (@pityka)
 - [da0bef9](https://github.com/scalameta/metals-vscode/commit/da0bef91179f4c4a0a16afc36d058dfbc3c5b178) Adding spaces to error messages (@hmemcpy)
 - [5334440](https://github.com/scalameta/metals-vscode/commit/533444049ca108c51b732adbadd69c56d2b4e3ad) Add gradle setting to visual-code plugin (@tgodzik)
 - [d41a3b0](https://github.com/scalameta/metals-vscode/commit/d41a3b0e82e9aa781052e277ae088863fa3dc9d5) v1.3.3
