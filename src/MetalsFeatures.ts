@@ -9,6 +9,7 @@ export interface DebuggingProvider {}
 export interface DecorationProvider {}
 export interface InputBoxProvider {}
 export interface DidFocusProvider {}
+export interface SlowTaskProvider {}
 
 export class MetalsFeatures implements StaticFeature {
   treeViewProvider?: TreeViewProvider;
@@ -16,6 +17,7 @@ export class MetalsFeatures implements StaticFeature {
   decorationProvider?: DecorationProvider;
   inputBoxProvider?: InputBoxProvider;
   didFocusProvider?: DidFocusProvider;
+  slowTaskProvider?: SlowTaskProvider;
 
   fillInitializeParams(params: InitializeParams): void {
     if (!params.capabilities.experimental) {
@@ -26,6 +28,7 @@ export class MetalsFeatures implements StaticFeature {
     (params.capabilities.experimental as any).decorationProvider = true;
     (params.capabilities.experimental as any).inputBoxProvider = true;
     (params.capabilities.experimental as any).didFocusProvider = true;
+    (params.capabilities.experimental as any).slowTaskProvider = true;
   }
   fillClientCapabilities(): void {}
   initialize(capabilities: ServerCapabilities): void {
@@ -35,6 +38,7 @@ export class MetalsFeatures implements StaticFeature {
       this.decorationProvider = capabilities.experimental.decorationProvider;
       this.inputBoxProvider = capabilities.experimental.inputBoxProvider;
       this.didFocusProvider = capabilities.experimental.didFocusProvider;
+      this.slowTaskProvider = capabilities.experimental.slowTaskProvider;
     }
   }
 }
