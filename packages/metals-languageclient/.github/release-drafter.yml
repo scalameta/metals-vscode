@@ -3,6 +3,6 @@ template: |
 
   $CHANGES
 categories:
-  - title: "🔧Dependencies updates"
+  - title: "🔧 Dependency updates"
     labels:
       - "dependencies"
