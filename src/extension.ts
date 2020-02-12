@@ -53,7 +53,8 @@ import {
   fetchMetals,
   JavaConfig,
   getServerOptions,
-  downloadProgress
+  downloadProgress,
+  installJava
 } from "metals-languageclient";
 import * as metalsLanguageClient from "metals-languageclient";
 import { startTreeView } from "./treeview";
@@ -64,7 +65,6 @@ import {
   DecorationTypeDidChange,
   DecorationsRangesDidChange
 } from "./decoration-protocol";
-import { installJava } from "./installJava";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -86,22 +86,22 @@ export async function activate(context: ExtensionContext) {
   getJavaHome(workspace.getConfiguration("metals").get("javaHome"))
     .then(javaHome => fetchAndLaunchMetals(context, javaHome))
     .catch(err => {
-      const message =
-        "Unable to find a Java 8 or Java 11 installation on this computer. " +
-        "To fix this problem, update the 'Java Home' setting to point to a Java 8 or Java 11 home directory " +
-        "or select a version to install automatically";
-
-      outputChannel.appendLine(message);
       outputChannel.appendLine(err);
-
-      showMissingJavaMessage(message);
+      showMissingJavaMessage();
     });
   commands.executeCommand("setContext", "metals:enabled", true);
 }
 
-function showMissingJavaMessage(message: string) {
+function showMissingJavaMessage(): Thenable<void> {
   const installJava8Action = "Install Java (JDK 8)";
   const installJava11Action = "Install Java (JDK 11)";
+
+  const message =
+    "Unable to find a Java 8 or Java 11 installation on this computer. " +
+    "To fix this problem, update the 'Java Home' setting to point to a Java 8 or Java 11 home directory " +
+    "or select a version to install automatically";
+
+  outputChannel.appendLine(message);
 
   return window
     .showErrorMessage(
@@ -280,7 +280,16 @@ function launchMetals(
     context.subscriptions.push(commands.registerCommand(command, callback));
   }
 
-  registerCommand("metals.restartServer", restartServer(client, window));
+  registerCommand(
+    "metals.restartServer",
+    restartServer(
+      // NOTE(gabro): this is due to mismatching versions of vscode-languageserver-protocol
+      // which are not trivial to fix, currently
+      // @ts-ignore
+      client,
+      window
+    )
+  );
 
   context.subscriptions.push(client.start());
 
