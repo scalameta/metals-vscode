@@ -21,7 +21,7 @@ jobs:
           git config --global user.name "Scalameta bot"
 
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Get the tag version
         id: get_version
