@@ -126,6 +126,10 @@
             "type": "string"
           },
           "markdownDescription": "Optional list of custom resolvers passed to Coursier when fetching metals dependencies.\n\nFor documentation on accepted values see the [Coursier documentation](https://get-coursier.io/docs/other-repositories).\n\nThe extension will pass these to Coursier using the COURSIER_REPOSITORIES environment variable after joining the custom repositories with a pipe character (|)."
+        },
+        "metals.pantsTargets": {
+          "type": "string",
+          "markdownDescription": "List of pants targets to pass along to Pants. Only useful for projects using the Pants build system. \n\n Should be space-seperated and relative to the root of the repo."
         }
       }
     },
