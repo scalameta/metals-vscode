@@ -42,7 +42,7 @@ import {
   ExecuteClientCommand,
   MetalsInputBox,
   MetalsWindowStateDidChange,
-  MetalsNewScalaFileParams
+  MetalsPickInput
 } from "./protocol";
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
@@ -509,70 +509,12 @@ function launchMetals(
       });
     });
 
-    registerCommand("metals.new-scala-file", (dirArg: Uri) => {
-      const directory = (() => {
-        if (dirArg !== undefined) {
-          return dirArg.toString();
-        } else if (window.activeTextEditor) {
-          const currentPath = window.activeTextEditor.document.uri.fsPath;
-          return Uri.file(path.dirname(currentPath)).toString();
-        }
-        // NOTE(aleksei): I would return workspace folder here, but not sure if there's API for that.
-        // Moving this funcitonality to server.
-        return undefined;
-      })();
-
-      const classPick = { label: "Class", kind: "class" };
-      const objectPick = { label: "Object", kind: "object" };
-      const traitPick = { label: "Trait", kind: "trait" };
-      const packageObjectPick = {
-        label: "Package Object",
-        kind: "package-object"
-      };
-      const worksheetPick = { label: "Worksheet", kind: "worksheet" };
-
-      return window
-        .showQuickPick(
-          [classPick, objectPick, traitPick, packageObjectPick, worksheetPick],
-          { placeHolder: "Select the kind of file to create" }
-        )
-        .then(kindPick => {
-          const name = (async () => {
-            switch (kindPick) {
-              case classPick:
-              case objectPick:
-              case traitPick:
-              case worksheetPick:
-                return window.showInputBox({
-                  prompt: "Enter name for the new " + kindPick.kind
-                });
-              case packageObjectPick:
-                return "";
-            }
-          })();
-
-          name.then(name => {
-            if (kindPick !== undefined && name !== undefined) {
-              const arg: MetalsNewScalaFileParams = {
-                directory: directory,
-                name: name,
-                kind: kindPick.kind
-              };
-              client
-                .sendRequest(ExecuteCommandRequest.type, {
-                  command: "new-scala-file",
-                  arguments: [arg]
-                })
-                .then(result => {
-                  workspace
-                    .openTextDocument(Uri.parse(result))
-                    .then(textDocument =>
-                      window.showTextDocument(textDocument)
-                    );
-                });
-            }
-          });
-        });
+    registerCommand("metals.new-scala-file", async (directory: Uri) => {
+      return client
+        .sendRequest(ExecuteCommandRequest.type, {
+          command: "new-scala-file",
+          arguments: [directory?.toString()]
+        })
     });
 
     window.onDidChangeActiveTextEditor(editor => {
@@ -596,6 +538,16 @@ function launchMetals(
           return { cancelled: true };
         } else {
           return { value: result };
+        }
+      });
+    });
+
+    client.onRequest(MetalsPickInput.type, (params, requestToken) => {
+      return window.showQuickPick(params.items, params, requestToken).then(result => {
+        if (result === undefined) {
+          return { cancelled: true };
+        } else {
+          return { itemId: result.id }
         }
       });
     });

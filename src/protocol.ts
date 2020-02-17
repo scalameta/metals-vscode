@@ -59,6 +59,36 @@ export interface MetalsInputBoxResult {
   cancelled?: boolean;
 }
 
+export namespace MetalsPickInput {
+  export const type = new RequestType<
+    MetalsPickInputParams,
+    MetalsPickInputResult,
+    void,
+    void
+  >("metals/pickInput")
+}
+
+export interface MetalsPickInputParams {
+  items: MetalsPickItem[];
+  matchOnDescription?: boolean;
+  matchOnDetail?: boolean;
+  placeHolder?: string;
+  ignoreFocusOut?: boolean;
+}
+
+export interface MetalsPickInputResult {
+  itemId?: string;
+  cancelled?: boolean;
+}
+
+export interface MetalsPickItem {
+  id: string;
+  label: string;
+  description?: string;
+  detail?: string;
+  alwaysShow?: boolean;
+}
+
 export namespace MetalsWindowStateDidChange {
   export const type = new NotificationType<
     MetalsWindowStateDidChangeParams,
@@ -68,10 +98,4 @@ export namespace MetalsWindowStateDidChange {
 
 export interface MetalsWindowStateDidChangeParams {
   focused: boolean;
-}
-
-export interface MetalsNewScalaFileParams {
-  directory?: string;
-  name: string;
-  kind: string;
 }
