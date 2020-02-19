@@ -13,12 +13,10 @@ export function getServerOptions({
   metalsClasspath,
   serverProperties = [],
   clientName,
-  doctorFormat,
   javaConfig: { javaOptions, javaPath, extraEnv }
 }: GetServerOptions): ServerOptions {
   const baseProperties = [
     `-Dmetals.client=${clientName}`,
-    `-Dmetals.doctor-format=${doctorFormat}`,
     "-Xss4m",
     "-Xms100m"
   ];
