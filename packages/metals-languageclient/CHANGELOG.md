@@ -1,5 +1,9 @@
 ## metals-languageclient changelog
 
+### v0.1.19 (2020/02/19 13:04 +00:00)
+- [bad9523](https://github.com/scalameta/metals-languageclient/commit/bad95239fca3cc4393392343179b79caf63ecf1e) remove doctorFormat from GetServerOptions Interface (@ckipp01)
+- [9484c4b](https://github.com/scalameta/metals-languageclient/commit/9484c4bf255e94c8335df46765d131e7a626a8e3) Release v0.1.18
+
 ### v0.1.18 (2020/02/19 12:51 +00:00)
 - [e08d671](https://github.com/scalameta/metals-languageclient/commit/e08d67153ce9d6ab6e83f55c0c9797a1535da88b) remove no longer needed server property (@ckipp01)
 - [e119528](https://github.com/scalameta/metals-languageclient/commit/e119528f4a2f0bd8590282002d96ad38e7ab2f67) Bump @types/node from 13.7.1 to 13.7.2 (@dependabot-preview[bot])
