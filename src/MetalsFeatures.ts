@@ -11,6 +11,7 @@ export interface InputBoxProvider {}
 export interface DidFocusProvider {}
 export interface SlowTaskProvider {}
 export interface ExecuteClientCommandProvider {}
+export interface DoctorProvider {}
 
 export class MetalsFeatures implements StaticFeature {
   treeViewProvider?: TreeViewProvider;
@@ -20,6 +21,7 @@ export class MetalsFeatures implements StaticFeature {
   didFocusProvider?: DidFocusProvider;
   slowTaskProvider?: SlowTaskProvider;
   executeClientCommandProvider?: ExecuteClientCommandProvider;
+  doctorProvider?: DoctorProvider;
 
   fillInitializeParams(params: InitializeParams): void {
     if (!params.capabilities.experimental) {
@@ -33,6 +35,7 @@ export class MetalsFeatures implements StaticFeature {
     (params.capabilities.experimental as any).slowTaskProvider = true;
     (params.capabilities
       .experimental as any).executeClientCommandProvider = true;
+    (params.capabilities.experimental as any).doctorProvider = "html";
   }
   fillClientCapabilities(): void {}
   initialize(capabilities: ServerCapabilities): void {
@@ -45,6 +48,7 @@ export class MetalsFeatures implements StaticFeature {
       this.slowTaskProvider = capabilities.experimental.slowTaskProvider;
       this.executeClientCommandProvider =
         capabilities.experimental.executeClientCommandProvider;
+      this.doctorProvider = capabilities.experimental.doctorProvider;
     }
   }
 }
