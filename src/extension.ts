@@ -254,8 +254,7 @@ function launchMetals(
     metalsClasspath,
     serverProperties,
     javaConfig,
-    clientName: "vscode",
-    doctorFormat: "html"
+    clientName: "vscode"
   });
 
   const clientOptions: LanguageClientOptions = {
