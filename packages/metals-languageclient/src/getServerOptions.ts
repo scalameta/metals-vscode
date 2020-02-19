@@ -5,7 +5,6 @@ interface GetServerOptions {
   metalsClasspath: string;
   serverProperties: string[] | undefined;
   clientName: string;
-  doctorFormat: "html" | "json";
   javaConfig: JavaConfig;
 }
 
