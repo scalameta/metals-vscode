@@ -65,7 +65,7 @@ export namespace MetalsPickInput {
     MetalsPickInputResult,
     void,
     void
-  >("metals/pickInput")
+  >("metals/pickInput");
 }
 
 export interface MetalsPickInputParams {

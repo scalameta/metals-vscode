@@ -510,11 +510,10 @@ function launchMetals(
     });
 
     registerCommand("metals.new-scala-file", async (directory: Uri) => {
-      return client
-        .sendRequest(ExecuteCommandRequest.type, {
-          command: "new-scala-file",
-          arguments: [directory?.toString()]
-        })
+      return client.sendRequest(ExecuteCommandRequest.type, {
+        command: "new-scala-file",
+        arguments: [directory?.toString()]
+      });
     });
 
     window.onDidChangeActiveTextEditor(editor => {
@@ -543,13 +542,15 @@ function launchMetals(
     });
 
     client.onRequest(MetalsPickInput.type, (params, requestToken) => {
-      return window.showQuickPick(params.items, params, requestToken).then(result => {
-        if (result === undefined) {
-          return { cancelled: true };
-        } else {
-          return { itemId: result.id }
-        }
-      });
+      return window
+        .showQuickPick(params.items, params, requestToken)
+        .then(result => {
+          if (result === undefined) {
+            return { cancelled: true };
+          } else {
+            return { itemId: result.id };
+          }
+        });
     });
 
     // Long running tasks such as "import project" trigger start a progress
