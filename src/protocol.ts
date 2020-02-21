@@ -59,29 +59,29 @@ export interface MetalsInputBoxResult {
   cancelled?: boolean;
 }
 
-export namespace MetalsPickInput {
+export namespace MetalsQuickPick {
   export const type = new RequestType<
-    MetalsPickInputParams,
-    MetalsPickInputResult,
+    MetalsQuickPickParams,
+    MetalsQuickPickResult,
     void,
     void
-  >("metals/pickInput");
+  >("metals/quickPick");
 }
 
-export interface MetalsPickInputParams {
-  items: MetalsPickItem[];
+export interface MetalsQuickPickParams {
+  items: MetalsQuickPickItem[];
   matchOnDescription?: boolean;
   matchOnDetail?: boolean;
   placeHolder?: string;
   ignoreFocusOut?: boolean;
 }
 
-export interface MetalsPickInputResult {
+export interface MetalsQuickPickResult {
   itemId?: string;
   cancelled?: boolean;
 }
 
-export interface MetalsPickItem {
+export interface MetalsQuickPickItem {
   id: string;
   label: string;
   description?: string;

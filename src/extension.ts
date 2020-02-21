@@ -42,7 +42,7 @@ import {
   ExecuteClientCommand,
   MetalsInputBox,
   MetalsWindowStateDidChange,
-  MetalsPickInput
+  MetalsQuickPick
 } from "./protocol";
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
@@ -541,7 +541,7 @@ function launchMetals(
       });
     });
 
-    client.onRequest(MetalsPickInput.type, (params, requestToken) => {
+    client.onRequest(MetalsQuickPick.type, (params, requestToken) => {
       return window
         .showQuickPick(params.items, params, requestToken)
         .then(result => {
