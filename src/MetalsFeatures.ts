@@ -13,6 +13,7 @@ export interface SlowTaskProvider {}
 export interface ExecuteClientCommandProvider {}
 export interface DoctorProvider {}
 export interface StatusBarProvider {}
+export interface OpenFilesOnRenameProvider {}
 
 export class MetalsFeatures implements StaticFeature {
   treeViewProvider?: TreeViewProvider;
@@ -24,6 +25,7 @@ export class MetalsFeatures implements StaticFeature {
   executeClientCommandProvider?: ExecuteClientCommandProvider;
   doctorProvider?: DoctorProvider;
   statusBarProvider?: StatusBarProvider;
+  openFilesOnRenameProvider?: OpenFilesOnRenameProvider;
 
   fillInitializeParams(params: InitializeParams): void {
     if (!params.capabilities.experimental) {
@@ -37,6 +39,7 @@ export class MetalsFeatures implements StaticFeature {
     (params.capabilities.experimental as any).slowTaskProvider = true;
     (params.capabilities
       .experimental as any).executeClientCommandProvider = true;
+    (params.capabilities.experimental as any).openFilesOnRenameProvider = true;
     (params.capabilities.experimental as any).doctorProvider = "html";
     (params.capabilities.experimental as any).statusBarProvider = "on";
   }
@@ -51,6 +54,8 @@ export class MetalsFeatures implements StaticFeature {
       this.slowTaskProvider = capabilities.experimental.slowTaskProvider;
       this.executeClientCommandProvider =
         capabilities.experimental.executeClientCommandProvider;
+      this.openFilesOnRenameProvider =
+        capabilities.experimental.openFilesOnRenameProvider;
       this.doctorProvider = capabilities.experimental.doctorProvider;
       this.statusBarProvider = capabilities.experimental.statusBarProvider;
     }
