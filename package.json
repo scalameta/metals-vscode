@@ -249,7 +249,7 @@
     "@types/shell-quote": "^1.6.1",
     "prettier": "1.19.1",
     "typescript": "^3.8.2",
-    "vsce": "^1.54.0"
+    "vsce": "^1.73.0"
   },
   "dependencies": {
     "metals-languageclient": "0.1.17",
