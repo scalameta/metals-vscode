@@ -248,7 +248,7 @@
     "@types/node": "^13",
     "@types/shell-quote": "^1.6.1",
     "prettier": "1.19.1",
-    "typescript": "^3.7.3",
+    "typescript": "^3.8.2",
     "vsce": "^1.54.0"
   },
   "dependencies": {
