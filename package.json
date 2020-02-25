@@ -257,7 +257,34 @@
         "label": "Scala Debugger",
         "languages": [
           "scala"
-        ]
+        ],
+        "configurationAttributes": {
+          "launch": {
+            "required": ["mainClass"],
+            "properties": {
+              "mainClass": {
+                "type": "string",
+                "description": "Class to run"
+              },
+              "project": {
+                "type": "string",
+                "description": "Location project of the class to run",
+                "default": "root"
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "scala",
+            "request": "launch",
+            "name": "Run class",
+            "mainClass": "???"
+          }
+        ],
+        "variables": {
+          "startDebugServer": "metals.start-debug-server"
+        }
       }
     ]
   },
