@@ -391,21 +391,7 @@ function launchMetals(
           const location =
             params.arguments && (params.arguments[0] as Location);
           if (location) {
-            workspace
-              .openTextDocument(Uri.parse(location.uri))
-              .then(textDocument => window.showTextDocument(textDocument))
-              .then(editor => {
-                const range = new Range(
-                  location.range.start.line,
-                  location.range.start.character,
-                  location.range.end.line,
-                  location.range.end.character
-                );
-                // Select an offset position instead of range position to
-                // avoid triggering noisy document highlight.
-                editor.selection = new Selection(range.start, range.start);
-                editor.revealRange(range, TextEditorRevealType.InCenter);
-              });
+            gotoLocation(location);
           }
           break;
         case "metals-model-refresh":
@@ -459,6 +445,26 @@ function launchMetals(
       } else {
         item.command = undefined;
       }
+    });
+
+    registerCommand("metals-goto-location", args => {
+      const loc = (args as Location);
+      if (loc) {
+        gotoLocation(loc)
+      } else {
+        console.log("Unable to jump to location " + args);
+        
+      }
+    })
+
+    registerCommand("metals.go-to-super-method", () => {
+      client.sendRequest(ExecuteCommandRequest.type, {
+        command: "go-to-super-method",
+        arguments: [{
+          document: window.activeTextEditor?.document.uri.toString(true),
+          position: window.activeTextEditor?.selection.start
+        }]
+      });
     });
 
     registerCommand("metals.goto", args => {
@@ -652,6 +658,27 @@ function launchMetals(
       });
     }
   });
+}
+
+function gotoLocation(location: Location): void {
+  if (location) {
+    workspace
+      .openTextDocument(Uri.parse(location.uri))
+      .then(textDocument => window.showTextDocument(textDocument))
+      .then(editor => {
+        const range = new Range(
+          location.range.start.line,
+          location.range.start.character,
+          location.range.end.line,
+          location.range.end.character
+        );
+        // Select an offset position instead of range position to
+        // avoid triggering noisy document highlight.
+        editor.selection = new Selection(range.start, range.start);
+        editor.revealRange(range, TextEditorRevealType.InCenter);
+      });
+  }
+
 }
 
 function trackDownloadProgress(
