@@ -1,5 +1,16 @@
 ## metals-languageclient changelog
 
+### v0.1.20 (2020/02/27 07:51 +00:00)
+- [d174629](https://github.com/scalameta/metals-languageclient/commit/d17462976dd7c77650b8d0260787e6accb61f8f8) add in the ability to use addition restart triggers (@ckipp01)
+- [9eeac35](https://github.com/scalameta/metals-languageclient/commit/9eeac3585c21c0c45224089d8854e3defb74315f) Bump @types/node from 13.7.4 to 13.7.6 (@dependabot-preview[bot])
+- [20e3938](https://github.com/scalameta/metals-languageclient/commit/20e3938a5cbfbcc9cc0cb84d241255c095ea26a0) Bump @types/node-fetch from 2.5.4 to 2.5.5 (@dependabot-preview[bot])
+- [2bf240d](https://github.com/scalameta/metals-languageclient/commit/2bf240d87937e966589ee0cb45c0c1b731cbdff9) Bump fp-ts from 2.5.0 to 2.5.1 (@dependabot-preview[bot])
+- [66fbc69](https://github.com/scalameta/metals-languageclient/commit/66fbc6986f0944406ddd80327d20fe8ec378ef3e) Bump typescript from 3.7.5 to 3.8.2 (@dependabot-preview[bot])
+- [2fd5d8e](https://github.com/scalameta/metals-languageclient/commit/2fd5d8e324ac1e4b34ea8f10c003ddeec7c7fb1c) Bump @types/node from 13.7.2 to 13.7.4 (@dependabot-preview[bot])
+- [cfb07f9](https://github.com/scalameta/metals-languageclient/commit/cfb07f93849b2bcb1d53819456d2f671b2cd83e7) Bump ts-jest from 25.2.0 to 25.2.1 (@dependabot-preview[bot])
+- [7e4311d](https://github.com/scalameta/metals-languageclient/commit/7e4311d54f7d6928bccd9f38f669223b2ad562d5) Bump @types/jest from 25.1.2 to 25.1.3 (@dependabot-preview[bot])
+- [58b7b0f](https://github.com/scalameta/metals-languageclient/commit/58b7b0faaca47b10b255345d0f8fa91451460b39) Release v0.1.19
+
 ### v0.1.19 (2020/02/19 13:04 +00:00)
 - [bad9523](https://github.com/scalameta/metals-languageclient/commit/bad95239fca3cc4393392343179b79caf63ecf1e) remove doctorFormat from GetServerOptions Interface (@ckipp01)
 - [9484c4b](https://github.com/scalameta/metals-languageclient/commit/9484c4bf255e94c8335df46765d131e7a626a8e3) Release v0.1.18
