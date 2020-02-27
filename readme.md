@@ -101,8 +101,8 @@ to learn how to speed up build import.
 
 ### Importing changes
 
-When you change your `build.sbt` or sources under `project/`, you will be
-prompted to re-import the build.
+When you change `build.sbt` or sources under `project/`, you will be prompted to
+re-import the build.
 
 ![Import sbt changes](https://i.imgur.com/72kdZkL.png)
 
@@ -231,7 +231,7 @@ formatted by Metals:
 ![format-on-paste](https://i.imgur.com/yJLAIxQ.gif)
 
 To enable this feature you need to enable formatting on paste in Visual Studio
-Code by checking `Editor: Format On PAste`:
+Code by checking `Editor: Format On Paste`:
 
 ![format-on-paste](https://i.imgur.com/OaBxwer.png)
 
