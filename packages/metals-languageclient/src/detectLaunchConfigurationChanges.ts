@@ -8,14 +8,16 @@ interface PromptRestartParams {
 
 export function detectLaunchConfigurationChanges(
   workspace: Workspace,
-  promptRestart: (params: PromptRestartParams) => Thenable<void>
+  promptRestart: (params: PromptRestartParams) => Thenable<void>,
+  additionalRestartKeys: string[] = []
 ): void {
   workspace.onDidChangeConfiguration(e => {
     const promptRestartKeys = [
       "serverVersion",
       "serverProperties",
       "javaHome",
-      "customRepositories"
+      "customRepositories",
+      ...additionalRestartKeys
     ];
     const shouldPromptRestart = promptRestartKeys.some(key =>
       e.affectsConfiguration(`metals.${key}`)
