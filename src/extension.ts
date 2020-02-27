@@ -313,6 +313,7 @@ function launchMetals(
     }
     [
       "build-import",
+      "build-restart",
       "build-connect",
       "sources-scan",
       "doctor-run",
