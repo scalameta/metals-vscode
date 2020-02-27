@@ -14,6 +14,7 @@ export interface ExecuteClientCommandProvider {}
 export interface DoctorProvider {}
 export interface StatusBarProvider {}
 export interface OpenFilesOnRenameProvider {}
+export interface QuickPickProvider {}
 
 export class MetalsFeatures implements StaticFeature {
   treeViewProvider?: TreeViewProvider;
@@ -26,6 +27,7 @@ export class MetalsFeatures implements StaticFeature {
   doctorProvider?: DoctorProvider;
   statusBarProvider?: StatusBarProvider;
   openFilesOnRenameProvider?: OpenFilesOnRenameProvider;
+  quickPickProvider?: QuickPickProvider;
 
   fillInitializeParams(params: InitializeParams): void {
     if (!params.capabilities.experimental) {
@@ -42,6 +44,7 @@ export class MetalsFeatures implements StaticFeature {
     (params.capabilities.experimental as any).openFilesOnRenameProvider = true;
     (params.capabilities.experimental as any).doctorProvider = "html";
     (params.capabilities.experimental as any).statusBarProvider = "on";
+    (params.capabilities.experimental as any).quickPickProvider = true;
   }
   fillClientCapabilities(): void {}
   initialize(capabilities: ServerCapabilities): void {
@@ -58,6 +61,7 @@ export class MetalsFeatures implements StaticFeature {
         capabilities.experimental.openFilesOnRenameProvider;
       this.doctorProvider = capabilities.experimental.doctorProvider;
       this.statusBarProvider = capabilities.experimental.statusBarProvider;
+      this.quickPickProvider = capabilities.experimental.quickPickProvider;
     }
   }
 }

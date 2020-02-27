@@ -186,6 +186,11 @@
         "command": "metals.doctor-run",
         "category": "Metals",
         "title": "Run doctor"
+      },
+      {
+        "command": "metals.new-scala-file",
+        "category": "Metals",
+        "title": "New Scala File..."
       }
     ],
     "menus": {
@@ -228,6 +233,13 @@
         {
           "command": "metals.doctor-run",
           "when": "metals:enabled"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "metals.new-scala-file",
+          "when": "metals:enabled && explorerResourceIsFolder",
+          "group": "navigation@4"
         }
       ]
     },

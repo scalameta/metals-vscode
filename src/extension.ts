@@ -41,7 +41,8 @@ import {
   MetalsDidFocus,
   ExecuteClientCommand,
   MetalsInputBox,
-  MetalsWindowStateDidChange
+  MetalsWindowStateDidChange,
+  MetalsQuickPick
 } from "./protocol";
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
@@ -508,6 +509,13 @@ function launchMetals(
       });
     });
 
+    registerCommand("metals.new-scala-file", async (directory: Uri) => {
+      return client.sendRequest(ExecuteCommandRequest.type, {
+        command: "new-scala-file",
+        arguments: [directory?.toString()]
+      });
+    });
+
     window.onDidChangeActiveTextEditor(editor => {
       if (editor && isSupportedLanguage(editor.document.languageId)) {
         client.sendNotification(
@@ -531,6 +539,18 @@ function launchMetals(
           return { value: result };
         }
       });
+    });
+
+    client.onRequest(MetalsQuickPick.type, (params, requestToken) => {
+      return window
+        .showQuickPick(params.items, params, requestToken)
+        .then(result => {
+          if (result === undefined) {
+            return { cancelled: true };
+          } else {
+            return { itemId: result.id };
+          }
+        });
     });
 
     // Long running tasks such as "import project" trigger start a progress
