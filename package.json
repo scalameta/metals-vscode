@@ -260,7 +260,9 @@
         ],
         "configurationAttributes": {
           "launch": {
-            "required": ["mainClass"],
+            "required": [
+              "mainClass"
+            ],
             "properties": {
               "mainClass": {
                 "type": "string",
@@ -270,6 +272,21 @@
                 "type": "string",
                 "description": "Location project of the class to run",
                 "default": "root"
+              },
+              "args": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Arguments passed to the class to run",
+                "default": []
+              },
+              "jvmOptions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "default": []
               }
             }
           }
@@ -278,13 +295,28 @@
           {
             "type": "scala",
             "request": "launch",
-            "name": "Run class",
-            "mainClass": "???"
+            "name": "Untitled",
+            "mainClass": "???",
+            "project": "root",
+            "args": [],
+            "jvmOptions": []
           }
         ],
-        "variables": {
-          "startDebugServer": "metals.start-debug-server"
-        }
+        "configurationSnippets": [
+          {
+            "label": "Run main class",
+            "description": "A new configuration for running a debug session of a main class",
+            "body": {
+              "type": "scala",
+              "request": "launch",
+              "name": "Untitled",
+              "mainClass": "???",
+              "project": "root",
+              "args": [],
+              "jvmOptions": []
+            }
+          }
+        ]
       }
     ]
   },

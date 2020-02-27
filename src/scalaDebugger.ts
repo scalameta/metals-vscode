@@ -8,7 +8,7 @@ import {
 } from "vscode";
 
 export const startAdapterCommand = "debug-adapter-start";
-export const resolveClassCommand = "debug-resolve-class"
+export const resolveClassCommand = "debug-resolve-class";
 const configurationType = "scala";
 
 export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
@@ -61,25 +61,33 @@ class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
   }
 }
 
-//TODO: check mainclass arguments
 class ScalaDebugServerFactory implements vscode.DebugAdapterDescriptorFactory {
-  createDebugAdapterDescriptor(session: vscode.DebugSession): ProviderResult<DebugAdapterDescriptor> {
+  createDebugAdapterDescriptor(
+    session: vscode.DebugSession
+  ): ProviderResult<DebugAdapterDescriptor> {
     if (session.configuration.mainClass === undefined) return null;
-    const classParams: DebugClassParams = session.configuration
-    return vscode.commands.executeCommand<any[]>(resolveClassCommand, classParams).then(debugParameters => {
-      if(debugParameters === undefined) return null;
-      return vscode.commands.executeCommand<DebugSession>(startAdapterCommand, debugParameters).then(debugSession => {
-        if(debugSession === undefined) return null;
-        return debugServerFromUri(debugSession.uri);
+    const classParams: DebugClassParams = session.configuration;
+    return vscode.commands
+      .executeCommand<any[]>(resolveClassCommand, classParams)
+      .then(debugParameters => {
+        if (debugParameters === undefined) return null;
+        return vscode.commands
+          .executeCommand<DebugSession>(startAdapterCommand, debugParameters)
+          .then(debugSession => {
+            if (debugSession === undefined) return null;
+            return debugServerFromUri(debugSession.uri);
+          });
       });
-    });
   }
 }
 
 export function debugServerFromUri(uri: string): vscode.DebugAdapterServer {
   const debugServer = vscode.Uri.parse(uri);
   const segments = debugServer.authority.split(":");
-  return new vscode.DebugAdapterServer(parseInt(segments[segments.length - 1]), segments[0])
+  return new vscode.DebugAdapterServer(
+    parseInt(segments[segments.length - 1]),
+    segments[0]
+  );
 }
 
 export interface DebugSession {
@@ -90,4 +98,6 @@ export interface DebugSession {
 export interface DebugClassParams {
   mainClass: string;
   project?: string;
+  args?: string[];
+  jvmOptions?: string[];
 }
