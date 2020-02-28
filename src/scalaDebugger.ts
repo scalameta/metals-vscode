@@ -65,19 +65,21 @@ class ScalaDebugServerFactory implements vscode.DebugAdapterDescriptorFactory {
   createDebugAdapterDescriptor(
     session: vscode.DebugSession
   ): ProviderResult<DebugAdapterDescriptor> {
-    if (session.configuration.mainClass === undefined) return null;
-    const classParams: DebugClassParams = session.configuration;
-    return vscode.commands
-      .executeCommand<any[]>(resolveClassCommand, classParams)
-      .then(debugParameters => {
-        if (debugParameters === undefined) return null;
-        return vscode.commands
-          .executeCommand<DebugSession>(startAdapterCommand, debugParameters)
-          .then(debugSession => {
-            if (debugSession === undefined) return null;
-            return debugServerFromUri(debugSession.uri);
-          });
-      });
+    if (
+      session.configuration.mainClass !== undefined ||
+      session.configuration.testClass !== undefined
+    ) {
+      return vscode.commands
+        .executeCommand<DebugSession>(
+          startAdapterCommand,
+          session.configuration
+        )
+        .then(debugSession => {
+          if (debugSession === undefined) return null;
+          return debugServerFromUri(debugSession.uri);
+        });
+    }
+    return null;
   }
 }
 
@@ -95,9 +97,14 @@ export interface DebugSession {
   uri: string;
 }
 
-export interface DebugClassParams {
+export interface DebugMainClassParams {
   mainClass: string;
   project?: string;
   args?: string[];
   jvmOptions?: string[];
+}
+
+export interface DebugTestClassParams {
+  testClass: string;
+  project?: string;
 }

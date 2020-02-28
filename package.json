@@ -260,18 +260,18 @@
         ],
         "configurationAttributes": {
           "launch": {
-            "required": [
-              "mainClass"
-            ],
             "properties": {
               "mainClass": {
                 "type": "string",
-                "description": "Class to run"
+                "description": "Name of the main class to run"
               },
-              "project": {
+              "testClass": {
                 "type": "string",
-                "description": "Location project of the class to run",
-                "default": "root"
+                "description": "Name of the test class to run"
+              },
+              "buildTarget": {
+                "type": "string",
+                "description": "Name of the build target of the class to run"
               },
               "args": {
                 "type": "array",
@@ -291,29 +291,27 @@
             }
           }
         },
-        "initialConfigurations": [
-          {
-            "type": "scala",
-            "request": "launch",
-            "name": "Untitled",
-            "mainClass": "???",
-            "project": "root",
-            "args": [],
-            "jvmOptions": []
-          }
-        ],
         "configurationSnippets": [
           {
-            "label": "Run main class",
+            "label": "Scala: Run main class",
             "description": "A new configuration for running a debug session of a main class",
             "body": {
               "type": "scala",
               "request": "launch",
               "name": "Untitled",
               "mainClass": "???",
-              "project": "root",
               "args": [],
               "jvmOptions": []
+            }
+          },
+          {
+            "label": "Scala: Run test class",
+            "description": "A new configuration for running a debug session of a test class",
+            "body": {
+              "type": "scala",
+              "request": "launch",
+              "name": "Untitled",
+              "testClass": "???"
             }
           }
         ]
