@@ -524,10 +524,10 @@ mdurl@^1.0.1:
   resolved "https://registry.yarnpkg.com/mdurl/-/mdurl-1.0.1.tgz#fe85b2ec75a59037f2adfec100fd6c601761152e"
   integrity sha1-/oWy7HWlkDfyrf7BAP1sYBdhFS4=
 
-metals-languageclient@0.1.19:
-  version "0.1.19"
-  resolved "https://registry.yarnpkg.com/metals-languageclient/-/metals-languageclient-0.1.19.tgz#6eaae47103c438aec86d24e16e585c434e2d6829"
-  integrity sha512-1dWW9OLwUUSfVSHjDpsMUkuNp6dQuaBgRPJGV90Bq+6TGmZOHYK07RdCQFXCQh0Wk3HBWlTdc5wPl/Q9O3kZPw==
+metals-languageclient@0.1.20:
+  version "0.1.20"
+  resolved "https://registry.yarnpkg.com/metals-languageclient/-/metals-languageclient-0.1.20.tgz#a199888b44d16ddea9083c7a002d9a9753b2736b"
+  integrity sha512-Ok3/i1ckdd7b3K+PM9dsK21kRwXrAlfpZrXV5tgAo8I+QWSQTPa0E5uciNT/wOCKgCaRuC7Zu0vmYgLA4hbOiQ==
   dependencies:
     fp-ts "^2.4.1"
     locate-java-home "^1.1.2"
