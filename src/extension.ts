@@ -160,7 +160,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   if (dottyIde.enabled) {
     outputChannel.appendLine(
       `Metals will not start since Dotty is enabled for this workspace. ` +
-        `To enable Metals, remove the file ${dottyIde.path} and run 'Reload window'`
+      `To enable Metals, remove the file ${dottyIde.path} and run 'Reload window'`
     );
     return;
   }
@@ -176,6 +176,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
 
   const serverProperties = config.get<string[]>("serverProperties")!;
   const customRepositories = config.get<string[]>("customRepositories")!;
+  const superMethodLenses = config.get<boolean>("superMethodLenses")!;
 
   const javaConfig = getJavaConfig({
     workspaceRoot: workspace.workspaceFolders[0]?.uri.fsPath,
@@ -453,19 +454,32 @@ function launchMetals(
         gotoLocation(loc)
       } else {
         console.log("Unable to jump to location " + args);
-        
+
       }
     })
 
     registerCommand("metals.go-to-super-method", () => {
       client.sendRequest(ExecuteCommandRequest.type, {
-        command: "go-to-super-method",
+        command: "goto-super-method",
         arguments: [{
           document: window.activeTextEditor?.document.uri.toString(true),
           position: window.activeTextEditor?.selection.start
         }]
       });
     });
+
+    registerCommand("metals.super-method-hierarchy", () => {
+      const res = client.sendRequest(ExecuteCommandRequest.type, {
+        command: "super-method-hierarchy",
+        arguments: [{
+          document: window.activeTextEditor?.document.uri.toString(true),
+          position: window.activeTextEditor?.selection.start
+        }]
+
+      });
+
+      res.then
+    })
 
     registerCommand("metals.goto", args => {
       client.sendRequest(ExecuteCommandRequest.type, {
