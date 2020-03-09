@@ -138,7 +138,7 @@
         "metals.superMethodLenses": {
           "type": "boolean",
           "default": true,
-          "markdownDescription": "Should super method lenses be displayed"
+          "markdownDescription": "Enable/disable goto super method code lens"
         }
       }
     },

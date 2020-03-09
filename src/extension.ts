@@ -23,7 +23,9 @@ import {
   DecorationRangeBehavior,
   DecorationOptions,
   Position,
-  TextEditorDecorationType
+  TextEditorDecorationType,
+  TextEditor,
+  TextEditorEdit
 } from "vscode";
 import {
   LanguageClient,
@@ -160,7 +162,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   if (dottyIde.enabled) {
     outputChannel.appendLine(
       `Metals will not start since Dotty is enabled for this workspace. ` +
-      `To enable Metals, remove the file ${dottyIde.path} and run 'Reload window'`
+        `To enable Metals, remove the file ${dottyIde.path} and run 'Reload window'`
     );
     return;
   }
@@ -176,7 +178,6 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
 
   const serverProperties = config.get<string[]>("serverProperties")!;
   const customRepositories = config.get<string[]>("customRepositories")!;
-  const superMethodLenses = config.get<boolean>("superMethodLenses")!;
 
   const javaConfig = getJavaConfig({
     workspaceRoot: workspace.workspaceFolders[0]?.uri.fsPath,
@@ -279,6 +280,19 @@ function launchMetals(
 
   function registerCommand(command: string, callback: (...args: any[]) => any) {
     context.subscriptions.push(commands.registerCommand(command, callback));
+  }
+
+  function registerTextEditorCommand(
+    command: string,
+    callback: (
+      textEditor: TextEditor,
+      edit: TextEditorEdit,
+      ...args: any[]
+    ) => any
+  ) {
+    context.subscriptions.push(
+      commands.registerTextEditorCommand(command, callback)
+    );
   }
 
   registerCommand(
@@ -449,37 +463,43 @@ function launchMetals(
     });
 
     registerCommand("metals-goto-location", args => {
-      const loc = (args as Location);
+      const loc = args as Location;
       if (loc) {
-        gotoLocation(loc)
+        gotoLocation(loc);
       } else {
         console.log("Unable to jump to location " + args);
-
       }
-    })
-
-    registerCommand("metals.go-to-super-method", () => {
-      client.sendRequest(ExecuteCommandRequest.type, {
-        command: "goto-super-method",
-        arguments: [{
-          document: window.activeTextEditor?.document.uri.toString(true),
-          position: window.activeTextEditor?.selection.start
-        }]
-      });
     });
 
-    registerCommand("metals.super-method-hierarchy", () => {
-      const res = client.sendRequest(ExecuteCommandRequest.type, {
-        command: "super-method-hierarchy",
-        arguments: [{
-          document: window.activeTextEditor?.document.uri.toString(true),
-          position: window.activeTextEditor?.selection.start
-        }]
+    registerTextEditorCommand(
+      "metals.go-to-super-method",
+      (editor, _edit, _args) => {
+        client.sendRequest(ExecuteCommandRequest.type, {
+          command: "goto-super-method",
+          arguments: [
+            {
+              document: editor.document.uri.toString(true),
+              position: editor.selection.start
+            }
+          ]
+        });
+      }
+    );
 
-      });
-
-      res.then
-    })
+    registerTextEditorCommand(
+      "metals.super-method-hierarchy",
+      (editor, _edit, _args) => {
+        client.sendRequest(ExecuteCommandRequest.type, {
+          command: "super-method-hierarchy",
+          arguments: [
+            {
+              document: editor.document.uri.toString(true),
+              position: editor.selection.start
+            }
+          ]
+        });
+      }
+    );
 
     registerCommand("metals.goto", args => {
       client.sendRequest(ExecuteCommandRequest.type, {
@@ -692,7 +712,6 @@ function gotoLocation(location: Location): void {
         editor.revealRange(range, TextEditorRevealType.InCenter);
       });
   }
-
 }
 
 function trackDownloadProgress(
