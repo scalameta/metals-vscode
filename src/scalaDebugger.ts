@@ -8,7 +8,6 @@ import {
 } from "vscode";
 
 export const startAdapterCommand = "debug-adapter-start";
-export const resolveClassCommand = "debug-resolve-class";
 const configurationType = "scala";
 
 export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
@@ -95,16 +94,4 @@ export function debugServerFromUri(uri: string): vscode.DebugAdapterServer {
 export interface DebugSession {
   name: string;
   uri: string;
-}
-
-export interface DebugMainClassParams {
-  mainClass: string;
-  project?: string;
-  args?: string[];
-  jvmOptions?: string[];
-}
-
-export interface DebugTestClassParams {
-  testClass: string;
-  project?: string;
 }
