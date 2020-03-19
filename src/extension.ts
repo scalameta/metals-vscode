@@ -19,7 +19,6 @@ import {
   Uri,
   Range,
   Selection,
-  TextEditorRevealType,
   DecorationRangeBehavior,
   DecorationOptions,
   Position,
@@ -162,7 +161,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   if (dottyIde.enabled) {
     outputChannel.appendLine(
       `Metals will not start since Dotty is enabled for this workspace. ` +
-        `To enable Metals, remove the file ${dottyIde.path} and run 'Reload window'`
+      `To enable Metals, remove the file ${dottyIde.path} and run 'Reload window'`
     );
     return;
   }
@@ -696,21 +695,17 @@ function launchMetals(
 
 function gotoLocation(location: Location): void {
   if (location) {
+    const range = new Range(
+      location.range.start.line,
+      location.range.start.character,
+      location.range.end.line,
+      location.range.end.character
+    );
+    const selection = new Selection(range.start, range.start)
+
     workspace
       .openTextDocument(Uri.parse(location.uri))
-      .then(textDocument => window.showTextDocument(textDocument))
-      .then(editor => {
-        const range = new Range(
-          location.range.start.line,
-          location.range.start.character,
-          location.range.end.line,
-          location.range.end.character
-        );
-        // Select an offset position instead of range position to
-        // avoid triggering noisy document highlight.
-        editor.selection = new Selection(range.start, range.start);
-        editor.revealRange(range, TextEditorRevealType.InCenter);
-      });
+      .then(textDocument => window.showTextDocument(textDocument, { "selection": selection }))
   }
 }
 
