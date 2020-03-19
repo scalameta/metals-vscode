@@ -282,7 +282,7 @@
   },
   "dependencies": {
     "metals-languageclient": "0.1.20",
-    "promisify-child-process": "3.1.3",
+    "promisify-child-process": "3.1.4",
     "vscode": "^1.1.36",
     "vscode-languageclient": "^6.1.1"
   },
