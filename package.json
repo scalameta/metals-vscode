@@ -284,7 +284,7 @@
     "metals-languageclient": "0.1.20",
     "promisify-child-process": "3.1.4",
     "vscode": "^1.1.36",
-    "vscode-languageclient": "^6.1.2"
+    "vscode-languageclient": "^6.1.1"
   },
   "resolutions": {
     "vscode-jsonrpc": "^5"
