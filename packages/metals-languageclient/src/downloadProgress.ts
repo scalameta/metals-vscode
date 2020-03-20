@@ -17,19 +17,21 @@ export function downloadProgress({
   onError
 }: DownlodProgressParams): Promise<string> {
   let stdout: Buffer[] = [];
+  let stderr: Buffer[] = [];
   download.stdout?.on("data", (out: Buffer) => {
     onProgress(out.toString());
     stdout.push(out);
   });
   download.stderr?.on("data", (err: Buffer) => {
     const msg = err.toString().trim();
+    stderr.push(err);
     if (msg.startsWith("Downloaded") || msg.startsWith("Downloading")) {
       onProgress(msg);
     }
   });
   download.on("close", (code: number) => {
     if (code != 0) {
-      onError(stdout);
+      onError(stderr);
       throw new Error(`Coursier exit: ${code}`);
     }
   });
