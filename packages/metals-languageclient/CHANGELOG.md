@@ -1,5 +1,18 @@
 ## metals-languageclient changelog
 
+### v0.1.21 (2020/03/20 11:17 +00:00)
+- [970fcdc](https://github.com/scalameta/metals-languageclient/commit/970fcdced292031df4787ee6fdef82de24ca9687) Print stderr instead of stdout on non zero exit code (@tgodzik)
+- [1ddf5db](https://github.com/scalameta/metals-languageclient/commit/1ddf5db0863e79ea56522967e2cc15f54cfd4a3f) Bump promisify-child-process from 3.1.3 to 3.1.4 (@dependabot-preview[bot])
+- [ddb45fe](https://github.com/scalameta/metals-languageclient/commit/ddb45feaf02c216a4fc728f497ce9280559d347a) Bump @types/node from 13.9.1 to 13.9.2 (@dependabot-preview[bot])
+- [d44affe](https://github.com/scalameta/metals-languageclient/commit/d44affe63c7a1662474789ac9138c87f95a12cce) [Security] Bump acorn from 6.4.0 to 6.4.1 (@dependabot-preview[bot])
+- [03b2a9a](https://github.com/scalameta/metals-languageclient/commit/03b2a9ac897009fd52bc2cae0f36fef822a89b66) Bump @types/node from 13.9.0 to 13.9.1 (@dependabot-preview[bot])
+- [c151c58](https://github.com/scalameta/metals-languageclient/commit/c151c588d4e0d8047b7df5378fba7f406ee2bf9a) Bump @types/node from 13.7.7 to 13.9.0 (@dependabot-preview[bot])
+- [ac0f271](https://github.com/scalameta/metals-languageclient/commit/ac0f2710396cbd82e3d0ee73d1ff8d8293b447d9) Bump @types/jest from 25.1.3 to 25.1.4 (@dependabot-preview[bot])
+- [f6c1b7d](https://github.com/scalameta/metals-languageclient/commit/f6c1b7d47bfa31bb5f61c6d3d946521a03941fcf) Bump @types/node from 13.7.6 to 13.7.7 (@dependabot-preview[bot])
+- [6c7531a](https://github.com/scalameta/metals-languageclient/commit/6c7531a52c85e6b4367fb1b32770e05523a1e06f) Bump typescript from 3.8.2 to 3.8.3 (@dependabot-preview[bot])
+- [657659a](https://github.com/scalameta/metals-languageclient/commit/657659a2f14c019c8101bdd6b689fe559b0110e4) Bump fp-ts from 2.5.1 to 2.5.3 (@dependabot-preview[bot])
+- [be38320](https://github.com/scalameta/metals-languageclient/commit/be38320aa6da8449af2b61357fcc3aede01f139e) Release v0.1.20
+
 ### v0.1.20 (2020/02/27 07:51 +00:00)
 - [d174629](https://github.com/scalameta/metals-languageclient/commit/d17462976dd7c77650b8d0260787e6accb61f8f8) add in the ability to use addition restart triggers (@ckipp01)
 - [9eeac35](https://github.com/scalameta/metals-languageclient/commit/9eeac3585c21c0c45224089d8854e3defb74315f) Bump @types/node from 13.7.4 to 13.7.6 (@dependabot-preview[bot])
