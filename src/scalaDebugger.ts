@@ -3,7 +3,7 @@ import {
   DebugConfiguration,
   Disposable,
   ProviderResult,
-  WorkspaceFolder
+  WorkspaceFolder,
 } from "vscode";
 
 export const startAdapterCommand = "debug-adapter-start";
@@ -15,7 +15,7 @@ export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
     vscode.debug.registerDebugConfigurationProvider(
       configurationType,
       new ScalaConfigProvider()
-    )
+    ),
   ];
 }
 
@@ -25,7 +25,7 @@ export async function start(
 ): Promise<Boolean> {
   return vscode.commands
     .executeCommand<DebugSession>(startAdapterCommand, ...parameters)
-    .then(response => {
+    .then((response) => {
       if (response === undefined) return false;
 
       const debugServer = vscode.Uri.parse(response.uri);
@@ -37,7 +37,7 @@ export async function start(
         name: response.name,
         noDebug: noDebug,
         request: "launch",
-        debugServer: port // note: MUST be a number. vscode magic - automatically connects to the server
+        debugServer: port, // note: MUST be a number. vscode magic - automatically connects to the server
       };
 
       return vscode.debug.startDebugging(undefined, configuration);

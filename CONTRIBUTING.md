@@ -38,6 +38,16 @@ application.
 When you make further changes to the extension, quit the "Extension Development
 Host" and run `F5` (or `Run > Start debugging`) again.
 
+## Publishing and testing locally
+
+To ensure that everything is working as expected after changes it's best to
+publish a vsix artifact locally. You can do this by `yarn build` which will result in
+the metals-<version>.vsix being built and placed in the root of your directory.
+You can then simply `code <path-to-vsix-file>` which will install the extension.
+You can install the extension by going to the extension menu in Visual Studio
+Code and under "More Actions..." choose to "Install from VSIX...". Then open a
+`*.scala` file to ensure that Metals starts and works correctly.
+
 ## Testing
 
 The extension currently has no tests. When you are happy with the functionality
