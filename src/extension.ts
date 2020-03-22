@@ -293,7 +293,7 @@ function launchMetals(
 
   context.subscriptions.push(client.start());
 
-  client.onReady().then(_ => {
+  client.onReady().then(() => {
     let doctor: WebviewPanel | undefined;
     function getDoctorPanel(isReload: boolean): WebviewPanel {
       if (!doctor) {
