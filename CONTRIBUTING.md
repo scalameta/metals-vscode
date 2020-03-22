@@ -24,7 +24,7 @@ code .
 ```
 
 Next, open the file `extension.ts` and make changes to the code. To try out your
-change, start the plugin in debugging mode via `Debug > Start debugging` or by
+change, start the plugin in debugging mode via `Run > Start debugging` or by
 pressing `F5`. This starts a new "Extension Development Host" application with
 the local Metals extension installed. Open a directory with an sbt build and
 edit a `*.scala` source file to start the Metals server.
@@ -36,7 +36,7 @@ extension from Marketplace remains installed in your regular VS Code
 application.
 
 When you make further changes to the extension, quit the "Extension Development
-Host" and run `F5` (or `Debug > Start debugging`) again.
+Host" and run `F5` (or `Run > Start debugging`) again.
 
 ## Testing
 
