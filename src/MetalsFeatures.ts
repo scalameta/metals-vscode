@@ -1,7 +1,7 @@
 import {
   StaticFeature,
   InitializeParams,
-  ServerCapabilities
+  ServerCapabilities,
 } from "vscode-languageclient";
 
 export interface TreeViewProvider {}

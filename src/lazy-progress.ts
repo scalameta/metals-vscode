@@ -15,8 +15,8 @@ export class LazyProgress {
     if (!this.progress) {
       this.progress = window.withProgress(
         { location: ProgressLocation.Notification, title: title },
-        p =>
-          new Promise(resolve => {
+        (p) =>
+          new Promise((resolve) => {
             output.show();
             function complete() {
               p.report({ increment: 100 });
