@@ -69,35 +69,35 @@ const java8Jdk = {
   path: "/path/to/java8jdk",
   version: "1.8.0",
   security: 1,
-  isJDK: true
+  isJDK: true,
 };
 
 const java8Jre = {
   path: "/path/to/java8jdk",
   version: "1.8.0",
   security: 1,
-  isJDK: false
+  isJDK: false,
 };
 
 const java11Jdk = {
   path: "/path/to/java11jdk",
   version: "1.11.0",
   security: 1,
-  isJDK: true
+  isJDK: true,
 };
 
 const java11Jre = {
   path: "/path/to/java11jdk",
   version: "1.11.0",
   security: 1,
-  isJDK: false
+  isJDK: false,
 };
 
 const java11JdkNewPatch = {
   path: "/path/to/java11jdk/high/security",
   version: "1.11.0",
   security: 192,
-  isJDK: true
+  isJDK: true,
 };
 
 function mockLocateJavaHome(
@@ -109,14 +109,14 @@ function mockLocateJavaHome(
     .mockImplementation((_options: unknown, cb: unknown) => {
       (cb as (err: Error | null, found?: IJavaHomeInfo[]) => void)(
         null,
-        javas.map(j => ({
+        javas.map((j) => ({
           ...j,
           is64Bit: true,
           executables: {
             java: j.path + "/bin/java",
             javac: j.path + "/bin/javac",
-            javap: j.path + "/bin/javap"
-          }
+            javap: j.path + "/bin/javap",
+          },
         }))
       );
     });

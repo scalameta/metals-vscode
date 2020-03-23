@@ -6,7 +6,7 @@ import _locateJavaHome from "locate-java-home";
 import * as semver from "semver";
 import {
   ILocateJavaHomeOptions,
-  IJavaHomeInfo
+  IJavaHomeInfo,
 } from "locate-java-home/js/es5/lib/interfaces";
 import { toPromise } from "./util";
 
@@ -49,7 +49,7 @@ function fromEnv(): TaskEither<unknown, string> {
 function locate(): TaskEither<Error, string> {
   return pipe(
     locateJavaHome({ version: ">=1.8 <=11" }),
-    chain(javaHomes => {
+    chain((javaHomes) => {
       if (!javaHomes || javaHomes.length === 0) {
         return TE.left(new Error("No suitable Java version found"));
       } else {
@@ -58,7 +58,7 @@ function locate(): TaskEither<Error, string> {
           if (byVersion === 0) return b.security - a.security;
           else return byVersion;
         });
-        const jdkHome = javaHomes.find(j => j.isJDK);
+        const jdkHome = javaHomes.find((j) => j.isJDK);
         if (jdkHome) {
           return TE.right(jdkHome.path);
         } else {
@@ -73,7 +73,7 @@ function locateJavaHome(
   opts: ILocateJavaHomeOptions
 ): TaskEither<Error, IJavaHomeInfo[] | undefined> {
   return () =>
-    new Promise(resolve =>
+    new Promise((resolve) =>
       _locateJavaHome(opts, (err, res) =>
         err != null ? resolve(E.left(err)) : resolve(E.right(res))
       )

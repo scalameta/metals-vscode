@@ -16,7 +16,7 @@ export function checkDottyIde(
     );
     return {
       enabled: existsSync(dottyIdeArtifactPath),
-      path: dottyIdeArtifactPath
+      path: dottyIdeArtifactPath,
     };
   }
   return { enabled: false };
