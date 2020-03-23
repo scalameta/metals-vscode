@@ -10,10 +10,10 @@ interface FetchMetalsOptions {
 export function fetchMetals({
   serverVersion,
   serverProperties,
-  javaConfig: { javaPath, javaOptions, extraEnv, coursierPath }
+  javaConfig: { javaPath, javaOptions, extraEnv, coursierPath },
 }: FetchMetalsOptions): ChildProcessPromise {
   const fetchProperties = serverProperties.filter(
-    p => !p.startsWith("-agentlib")
+    (p) => !p.startsWith("-agentlib")
   );
 
   return spawn(
@@ -37,14 +37,14 @@ export function fetchMetals({
       "sonatype:public",
       "-r",
       "sonatype:snapshots",
-      "-p"
+      "-p",
     ],
     {
       env: {
         COURSIER_NO_TERM: "true",
         ...extraEnv,
-        ...process.env
-      }
+        ...process.env,
+      },
     }
   );
 }

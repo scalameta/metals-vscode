@@ -11,15 +11,15 @@ export function detectLaunchConfigurationChanges(
   promptRestart: (params: PromptRestartParams) => Thenable<void>,
   additionalRestartKeys: string[] = []
 ): void {
-  workspace.onDidChangeConfiguration(e => {
+  workspace.onDidChangeConfiguration((e) => {
     const promptRestartKeys = [
       "serverVersion",
       "serverProperties",
       "javaHome",
       "customRepositories",
-      ...additionalRestartKeys
+      ...additionalRestartKeys,
     ];
-    const shouldPromptRestart = promptRestartKeys.some(key =>
+    const shouldPromptRestart = promptRestartKeys.some((key) =>
       e.affectsConfiguration(`metals.${key}`)
     );
     if (shouldPromptRestart) {
@@ -27,7 +27,7 @@ export function detectLaunchConfigurationChanges(
         message:
           "Server launch configuration change detected. Reload the window for changes to take effect",
         reloadWindowChoice: "Reload Window",
-        dismissChoice: "Not now"
+        dismissChoice: "Not now",
       });
     }
   });

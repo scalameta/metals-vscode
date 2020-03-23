@@ -21,19 +21,19 @@ export function getJavaConfig({
   workspaceRoot,
   javaHome,
   extensionPath,
-  customRepositories = []
+  customRepositories = [],
 }: GetJavaConfigOptions): JavaConfig {
   const javaOptions = getJavaOptions(workspaceRoot);
   const javaPath = path.join(javaHome, "bin", "java");
   const coursierPath = path.join(extensionPath, "./coursier");
   const extraEnv = {
-    COURSIER_REPOSITORIES: customRepositories.join("|")
+    COURSIER_REPOSITORIES: customRepositories.join("|"),
   };
 
   return {
     javaOptions,
     javaPath,
     coursierPath,
-    extraEnv
+    extraEnv,
   };
 }

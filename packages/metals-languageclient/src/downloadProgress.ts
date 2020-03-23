@@ -14,7 +14,7 @@ export function downloadProgress({
   download,
   onProgress,
   onComplete,
-  onError
+  onError,
 }: DownlodProgressParams): Promise<string> {
   let stdout: Buffer[] = [];
   let stderr: Buffer[] = [];
@@ -37,6 +37,6 @@ export function downloadProgress({
   });
   return download.then(() => {
     onComplete && onComplete();
-    return stdout.map(buffer => buffer.toString().trim()).join("");
+    return stdout.map((buffer) => buffer.toString().trim()).join("");
   });
 }

@@ -15,7 +15,7 @@ describe("getJavaOptions", () => {
 
   const proxyOptions = [
     "-Dhttp.proxyHost=proxy.example.com",
-    "-Dhttp.proxyPort=1234"
+    "-Dhttp.proxyPort=1234",
   ];
 
   it("reads from .jvmopts", () => {
@@ -44,7 +44,7 @@ describe("getJavaOptions", () => {
     process.env = {
       ...originalEnv,
       JAVA_OPTS: javaOpts.join(" "),
-      JAVA_FLAGS: javaFlags.join(" ")
+      JAVA_FLAGS: javaFlags.join(" "),
     };
     const workspaceRoot = createWorskpace(proxyOptions);
     const options = getJavaOptions(workspaceRoot);

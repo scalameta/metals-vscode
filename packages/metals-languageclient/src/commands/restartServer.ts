@@ -1,6 +1,6 @@
 import {
   ShutdownRequest,
-  ExitNotification
+  ExitNotification,
 } from "vscode-languageserver-protocol";
 import { LanguageClient } from "../interfaces/LanguageClient";
 import { exec, ChildProcess } from "child_process";

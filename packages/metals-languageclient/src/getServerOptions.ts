@@ -12,12 +12,12 @@ export function getServerOptions({
   metalsClasspath,
   serverProperties = [],
   clientName,
-  javaConfig: { javaOptions, javaPath, extraEnv }
+  javaConfig: { javaOptions, javaPath, extraEnv },
 }: GetServerOptions): ServerOptions {
   const baseProperties = [
     `-Dmetals.client=${clientName}`,
     "-Xss4m",
-    "-Xms100m"
+    "-Xms100m",
   ];
   const mainArgs = ["-classpath", metalsClasspath, "scala.meta.metals.Main"];
 
@@ -26,13 +26,13 @@ export function getServerOptions({
     ...baseProperties,
     ...javaOptions,
     ...serverProperties,
-    ...mainArgs
+    ...mainArgs,
   ];
 
   const env = { ...process.env, ...extraEnv };
 
   return {
     run: { command: javaPath, args: launchArgs, options: { env } },
-    debug: { command: javaPath, args: launchArgs, options: { env } }
+    debug: { command: javaPath, args: launchArgs, options: { env } },
   };
 }

@@ -21,7 +21,7 @@ interface InstallJavaOptions {
 export function installJava({
   javaVersion,
   jabbaVersion = defaultJabbaVersion,
-  outputChannel
+  outputChannel,
 }: InstallJavaOptions): Promise<string> {
   const bin = path.join(os.homedir(), "bin");
 
@@ -37,13 +37,13 @@ export function installJava({
       download({ url: jabbaUrl, outputPath: jabbaPath, makeExecutable: true })
     )
     .then(() => pcp.exec(`${jabbaPath} ls-remote`))
-    .then(out =>
+    .then((out) =>
       outputToString(out.stdout)
         .split("\n")
-        .filter(str => str.includes(javaVersion))[0]
+        .filter((str) => str.includes(javaVersion))[0]
         .trim()
     )
-    .then(java => {
+    .then((java) => {
       outputChannel.appendLine(`Installing ${java}`);
       const jabbaSpawn = pcp.spawn(`${jabbaPath}`, ["install", java], {});
       jabbaSpawn.stdout?.on("data", outputChannel.append);
@@ -81,14 +81,14 @@ function jabbaBinaryName(): string {
 function download({
   url,
   outputPath: outputFile,
-  makeExecutable: exec
+  makeExecutable: exec,
 }: {
   url: string;
   outputPath: string;
   makeExecutable?: boolean;
 }): Promise<string> {
   return fetch(url)
-    .then(response => {
+    .then((response) => {
       if (!response.ok) {
         throw new Error(`Error while downloading Java from ${url}`);
       }
