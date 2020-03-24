@@ -12,7 +12,11 @@ import { parse } from "shell-quote";
  */
 export function getJavaOptions(workspaceRoot: string | undefined): string[] {
   const allOptions = [...fromEnv(), ...fromJvmoptsFile(workspaceRoot)];
-  return allOptions.filter(isValidOption);
+  return allOptions.filter(isValidOption).map(sanitizeOption);
+}
+
+function sanitizeOption(option: string): string {
+  return option.trim();
 }
 
 function isValidOption(option: string): boolean {

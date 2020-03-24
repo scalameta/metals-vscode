@@ -24,6 +24,14 @@ describe("getJavaOptions", () => {
     expect(options).toEqual(proxyOptions);
   });
 
+  it("sanitizes options from .jvmopts", () => {
+    const malformedOptions = ["-XX:+UseNUMA   ", "-XX:+UseZGC  "];
+    const expectedOptions = ["-XX:+UseNUMA", "-XX:+UseZGC"];
+    const workspaceRoot = createWorskpace(malformedOptions);
+    const options = getJavaOptions(workspaceRoot);
+    expect(options).toEqual(expectedOptions);
+  });
+
   it("reads from JAVA_OPTS", () => {
     process.env = { ...originalEnv, JAVA_OPTS: proxyOptions.join(" ") };
     const workspaceRoot = createWorskpace([]);
