@@ -691,12 +691,10 @@ function gotoLocation(location: Location): void {
     location.range.end.line,
     location.range.end.character
   );
-  const selection = new Selection(range.start, range.start);
-
   workspace
     .openTextDocument(Uri.parse(location.uri))
     .then((textDocument) =>
-      window.showTextDocument(textDocument, { selection: selection })
+      window.showTextDocument(textDocument, { selection: range })
     );
 }
 
