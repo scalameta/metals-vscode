@@ -1,5 +1,14 @@
 ## metals-languageclient changelog
 
+### v0.1.22 (2020/03/26 07:32 +00:00)
+- [e7380df](https://github.com/scalameta/metals-languageclient/commit/e7380dfdce6e265514edc77cdfca398f38b000e6) Bump jest from 25.1.0 to 25.2.0 (@dependabot-preview[bot])
+- [eb4595a](https://github.com/scalameta/metals-languageclient/commit/eb4595a1defdede8245647f261a8011531766b87) Bump @types/node from 13.9.3 to 13.9.4 (@dependabot-preview[bot])
+- [e62e551](https://github.com/scalameta/metals-languageclient/commit/e62e5519fae5bdda579a009e76213ead7d77ac5e) Make sure we ignore whitespace in java options (@tgodzik)
+- [44e97c4](https://github.com/scalameta/metals-languageclient/commit/44e97c44a823f6d0c1f6c9ed30f5056b2a1db95d) Bump prettier from 2.0.1 to 2.0.2 (@dependabot-preview[bot])
+- [645b320](https://github.com/scalameta/metals-languageclient/commit/645b320608416a1470fadea378745ea34cfa061b) update prettier and run formatting (@ckipp01)
+- [62be981](https://github.com/scalameta/metals-languageclient/commit/62be9817391aa15d88d22842aa7abb07700170b9) Bump @types/node from 13.9.2 to 13.9.3 (@dependabot-preview[bot])
+- [ccdf9be](https://github.com/scalameta/metals-languageclient/commit/ccdf9be456ad95377e7343dbf31094c3c3e1c306) Release v0.1.21
+
 ### v0.1.21 (2020/03/20 11:17 +00:00)
 - [970fcdc](https://github.com/scalameta/metals-languageclient/commit/970fcdced292031df4787ee6fdef82de24ca9687) Print stderr instead of stdout on non zero exit code (@tgodzik)
 - [1ddf5db](https://github.com/scalameta/metals-languageclient/commit/1ddf5db0863e79ea56522967e2cc15f54cfd4a3f) Bump promisify-child-process from 3.1.3 to 3.1.4 (@dependabot-preview[bot])
