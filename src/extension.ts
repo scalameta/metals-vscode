@@ -33,6 +33,7 @@ import {
   Location,
   TextDocumentPositionParams,
   TextDocument,
+  Disposable,
 } from "vscode-languageclient";
 import { ClientCommands } from "./client-commands";
 import {
@@ -43,6 +44,7 @@ import {
   MetalsInputBox,
   MetalsWindowStateDidChange,
   MetalsQuickPick,
+  MetalsOpenWindowParams,
 } from "./protocol";
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
@@ -80,17 +82,55 @@ let decorationType: TextEditorDecorationType = window.createTextEditorDecoration
 
 const config = workspace.getConfiguration("metals");
 
+interface Activation {
+  shouldCreateNewProject: boolean;
+  status: Disposable;
+}
+
 export async function activate(context: ExtensionContext) {
   detectLaunchConfigurationChanges();
   checkServerVersion();
+  let activation: Activation = {
+    shouldCreateNewProject: false,
+    status: window.setStatusBarMessage("$(gear~spin) Activating Metals"),
+  };
+
+  context.subscriptions.push(
+    commands.registerCommand("metals.new-scala-project-activate", () => {
+      activation.shouldCreateNewProject = true;
+    })
+  );
 
   getJavaHome(workspace.getConfiguration("metals").get("javaHome"))
-    .then((javaHome) => fetchAndLaunchMetals(context, javaHome))
+    .then((javaHome) => fetchAndLaunchMetals(context, javaHome, activation))
     .catch((err) => {
       outputChannel.appendLine(err);
       showMissingJavaMessage();
+      activation.status.dispose();
     });
   commands.executeCommand("setContext", "metals:enabled", true);
+  setHasBuildTool();
+}
+
+function setHasBuildTool(): void {
+  let allPromises = [
+    "build.sbt",
+    "build.sc",
+    "project/build.properties",
+    "**/scala/**",
+  ].map(async (glob) => {
+    const files = await workspace.findFiles(glob);
+    return files.length == 0;
+  });
+  Promise.all(allPromises).then((all) => {
+    if (
+      all.every((a) => {
+        return a;
+      })
+    ) {
+      commands.executeCommand("setContext", "metals:no-build-tool", true);
+    }
+  });
 }
 
 function showMissingJavaMessage(): Thenable<void> {
@@ -149,11 +189,16 @@ function showMissingJavaMessage(): Thenable<void> {
     });
 }
 
-function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
+function fetchAndLaunchMetals(
+  context: ExtensionContext,
+  javaHome: string,
+  activation: Activation
+) {
   if (!workspace.workspaceFolders) {
     outputChannel.appendLine(
       `Metals will not start because you've opened a single file and not a project directory.`
     );
+    activation.status.dispose();
     return;
   }
   const dottyIde = checkDottyIde(workspace.workspaceFolders[0]?.uri.fsPath);
@@ -162,6 +207,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
       `Metals will not start since Dotty is enabled for this workspace. ` +
         `To enable Metals, remove the file ${dottyIde.path} and run 'Reload window'`
     );
+    activation.status.dispose();
     return;
   }
 
@@ -198,7 +244,8 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
         context,
         classpath,
         serverProperties,
-        javaConfig
+        javaConfig,
+        activation
       );
     },
     () => {
@@ -227,6 +274,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
           );
         }
       })();
+      activation.status.dispose();
       outputChannel.show();
       window.showErrorMessage(msg, openSettingsAction).then((choice) => {
         if (choice === openSettingsAction) {
@@ -246,7 +294,8 @@ function launchMetals(
   context: ExtensionContext,
   metalsClasspath: string,
   serverProperties: string[],
-  javaConfig: JavaConfig
+  javaConfig: JavaConfig,
+  activation: Activation
 ) {
   // Make editing Scala docstrings slightly nicer.
   enableScaladocIndentation();
@@ -277,6 +326,7 @@ function launchMetals(
       slowTaskProvider: true,
       statusBarProvider: "on",
       treeViewProvider: true,
+      openNewWindowProvider: true,
     },
   };
 
@@ -318,6 +368,11 @@ function launchMetals(
   context.subscriptions.push(client.start());
 
   client.onReady().then(() => {
+    activation.status.dispose();
+    if (activation.shouldCreateNewProject)
+      client.sendRequest(ExecuteCommandRequest.type, {
+        command: "new-scala-project",
+      });
     let doctor: WebviewPanel | undefined;
     function getDoctorPanel(isReload: boolean): WebviewPanel {
       if (!doctor) {
@@ -417,6 +472,17 @@ function launchMetals(
           break;
         case "metals-model-refresh":
           compilationDoneEmitter.fire();
+          break;
+        case "metals-open-window":
+          const openWindowParams =
+            params.arguments && (params.arguments[0] as MetalsOpenWindowParams);
+          if (openWindowParams != null) {
+            commands.executeCommand(
+              "vscode.openFolder",
+              Uri.parse(openWindowParams.uri),
+              openWindowParams.openNewWindow
+            );
+          }
           break;
         case "metals-doctor-run":
         case "metals-doctor-reload":
@@ -553,6 +619,12 @@ function launchMetals(
       return client.sendRequest(ExecuteCommandRequest.type, {
         command: "new-scala-file",
         arguments: [directory?.toString()],
+      });
+    });
+
+    registerCommand("metals.new-scala-project", async () => {
+      return client.sendRequest(ExecuteCommandRequest.type, {
+        command: "new-scala-project",
       });
     });
 

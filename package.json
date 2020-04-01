@@ -42,6 +42,7 @@
     "Programming Languages"
   ],
   "activationEvents": [
+    "onCommand:metals.new-scala-project-activate",
     "onLanguage:scala",
     "workspaceContains:build.sbt",
     "workspaceContains:build.sc",
@@ -65,6 +66,18 @@
         }
       ]
     },
+    "viewsWelcome": [
+      {
+        "view": "metalsPackages",
+        "contents": "No Scala project found.\n[New Scala project](command:metals.new-scala-project-activate)",
+        "when": "!metals:enabled"
+      },
+      {
+        "view": "metalsPackages",
+        "contents": "No Scala project found.\n[New Scala project](command:metals.new-scala-project)",
+        "when": "metals:enabled && metals:no-build-tool"
+      }
+    ],
     "views": {
       "metals-explorer": [
         {
@@ -202,6 +215,11 @@
         "title": "Run doctor"
       },
       {
+        "command": "metals.new-scala-project",
+        "category": "Metals",
+        "title": "New Scala Project"
+      },
+      {
         "command": "metals.new-scala-file",
         "category": "Metals",
         "title": "New Scala File..."
@@ -268,6 +286,10 @@
         },
         {
           "command": "metals.new-scala-file",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.new-scala-project",
           "when": "metals:enabled"
         },
         {
