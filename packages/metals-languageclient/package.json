@@ -13,8 +13,8 @@
   "scripts": {
     "prepublish": "rm -rf lib && tsc",
     "test": "jest",
-    "format": "prettier --write **/*.{ts,js,json,yml}",
-    "format-check": "prettier --check **/*.{ts,js,json,yml}"
+    "format": "prettier --write '**/*.{ts,js,json,yml}'",
+    "format-check": "prettier --check '**/*.{ts,js,json,yml}'"
   },
   "devDependencies": {
     "@types/jest": "^25.1.0",
