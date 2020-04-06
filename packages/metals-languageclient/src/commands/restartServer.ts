@@ -41,9 +41,10 @@ export function restartServer(
 
       // NOTE(gabro): we know LanguageClient contains the _serverProcess private property,
       // so we use a cast to access it
-      const serverPid = ((client as unknown) as {
-        _serverProcess: ChildProcess;
-      })._serverProcess.pid;
+      const serverPid = (
+        (client as unknown) as
+        { _serverProcess: ChildProcess }
+      )._serverProcess.pid;
 
       exec(`kill ${serverPid}`);
     });
