@@ -23,7 +23,7 @@ import {
   DecorationRangeBehavior,
   DecorationOptions,
   Position,
-  TextEditorDecorationType
+  TextEditorDecorationType,
 } from "vscode";
 import {
   LanguageClient,
@@ -32,7 +32,7 @@ import {
   ExecuteCommandRequest,
   Location,
   TextDocumentPositionParams,
-  TextDocument
+  TextDocument,
 } from "vscode-languageclient";
 import { ClientCommands } from "./client-commands";
 import {
@@ -42,7 +42,7 @@ import {
   ExecuteClientCommand,
   MetalsInputBox,
   MetalsWindowStateDidChange,
-  MetalsQuickPick
+  MetalsQuickPick,
 } from "./protocol";
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
@@ -55,7 +55,7 @@ import {
   JavaConfig,
   getServerOptions,
   downloadProgress,
-  installJava
+  installJava,
 } from "metals-languageclient";
 import * as metalsLanguageClient from "metals-languageclient";
 import { startTreeView } from "./treeview";
@@ -64,7 +64,7 @@ import { MetalsTreeViewReveal, MetalsTreeViews } from "./tree-view-protocol";
 import * as scalaDebugger from "./scalaDebugger";
 import {
   DecorationTypeDidChange,
-  DecorationsRangesDidChange
+  DecorationsRangesDidChange,
 } from "./decoration-protocol";
 
 const outputChannel = window.createOutputChannel("Metals");
@@ -74,7 +74,7 @@ let treeViews: MetalsTreeViews | undefined;
 let decorationType: TextEditorDecorationType = window.createTextEditorDecorationType(
   {
     isWholeLine: true,
-    rangeBehavior: DecorationRangeBehavior.OpenClosed
+    rangeBehavior: DecorationRangeBehavior.OpenClosed,
   }
 );
 
@@ -85,8 +85,8 @@ export async function activate(context: ExtensionContext) {
   checkServerVersion();
 
   getJavaHome(workspace.getConfiguration("metals").get("javaHome"))
-    .then(javaHome => fetchAndLaunchMetals(context, javaHome))
-    .catch(err => {
+    .then((javaHome) => fetchAndLaunchMetals(context, javaHome))
+    .catch((err) => {
       outputChannel.appendLine(err);
       showMissingJavaMessage();
     });
@@ -111,7 +111,7 @@ function showMissingJavaMessage(): Thenable<void> {
       installJava8Action,
       installJava11Action
     )
-    .then(choice => {
+    .then((choice) => {
       switch (choice) {
         case openSettingsAction: {
           commands.executeCommand(openSettingsCommand);
@@ -122,7 +122,7 @@ function showMissingJavaMessage(): Thenable<void> {
             {
               location: ProgressLocation.Notification,
               title: `Installing Java (JDK 8), please wait...`,
-              cancellable: true
+              cancellable: true,
             },
             () =>
               installJava({ javaVersion: "adopt@1.8", outputChannel }).then(
@@ -136,7 +136,7 @@ function showMissingJavaMessage(): Thenable<void> {
             {
               location: ProgressLocation.Notification,
               title: `Installing Java (JDK 11), please wait...`,
-              cancellable: true
+              cancellable: true,
             },
             () =>
               installJava({ javaVersion: "adopt@1.11", outputChannel }).then(
@@ -181,18 +181,18 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
     workspaceRoot: workspace.workspaceFolders[0]?.uri.fsPath,
     javaHome,
     customRepositories,
-    extensionPath: context.extensionPath
+    extensionPath: context.extensionPath,
   });
 
   const fetchProcess = fetchMetals({
     serverVersion,
     serverProperties,
-    javaConfig
+    javaConfig,
   });
 
   const title = `Downloading Metals v${serverVersion}`;
   trackDownloadProgress(title, outputChannel, fetchProcess).then(
-    classpath => {
+    (classpath) => {
       launchMetals(
         outputChannel,
         context,
@@ -228,7 +228,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
         }
       })();
       outputChannel.show();
-      window.showErrorMessage(msg, openSettingsAction).then(choice => {
+      window.showErrorMessage(msg, openSettingsAction).then((choice) => {
         if (choice === openSettingsAction) {
           commands.executeCommand(openSettingsCommand);
         }
@@ -255,16 +255,16 @@ function launchMetals(
     metalsClasspath,
     serverProperties,
     javaConfig,
-    clientName: "vscode"
+    clientName: "vscode",
   });
 
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{ scheme: "file", language: "scala" }],
     synchronize: {
-      configurationSection: "metals"
+      configurationSection: "metals",
     },
     revealOutputChannelOn: RevealOutputChannelOn.Never,
-    outputChannel: outputChannel
+    outputChannel: outputChannel,
   };
 
   const client = new LanguageClient(
@@ -318,8 +318,8 @@ function launchMetals(
       "sources-scan",
       "doctor-run",
       "compile-cascade",
-      "compile-cancel"
-    ].forEach(command => {
+      "compile-cancel",
+    ].forEach((command) => {
       registerCommand("metals." + command, async () =>
         client.sendRequest(ExecuteCommandRequest.type, { command: command })
       );
@@ -347,7 +347,7 @@ function launchMetals(
       startDebugSession: (...args) => {
         if (!features.debuggingProvider) return;
 
-        scalaDebugger.start(false, ...args).then(wasStarted => {
+        scalaDebugger.start(false, ...args).then((wasStarted) => {
           if (!wasStarted) {
             window.showErrorMessage("Debug session not started");
           }
@@ -356,12 +356,12 @@ function launchMetals(
       startRunSession: (...args) => {
         if (!features.debuggingProvider) return;
 
-        scalaDebugger.start(true, ...args).then(wasStarted => {
+        scalaDebugger.start(true, ...args).then((wasStarted) => {
           if (!wasStarted) {
             window.showErrorMessage("Run session not started");
           }
         });
-      }
+      },
     };
     Object.entries(clientCommands).forEach(([name, command]) =>
       registerCommand(
@@ -376,7 +376,7 @@ function launchMetals(
 
     let codeLensRefresher: CodeLensProvider = {
       onDidChangeCodeLenses: compilationDoneEmitter.event,
-      provideCodeLenses: () => undefined
+      provideCodeLenses: () => undefined,
     };
 
     languages.registerCodeLensProvider(
@@ -385,7 +385,7 @@ function launchMetals(
     );
 
     // Handle the metals/executeClientCommand extension notification.
-    client.onNotification(ExecuteClientCommand.type, params => {
+    client.onNotification(ExecuteClientCommand.type, (params) => {
       switch (params.command) {
         case "metals-goto-location":
           const location =
@@ -393,8 +393,8 @@ function launchMetals(
           if (location) {
             workspace
               .openTextDocument(Uri.parse(location.uri))
-              .then(textDocument => window.showTextDocument(textDocument))
-              .then(editor => {
+              .then((textDocument) => window.showTextDocument(textDocument))
+              .then((editor) => {
                 const range = new Range(
                   location.range.start.line,
                   location.range.start.character,
@@ -435,7 +435,7 @@ function launchMetals(
     const item = window.createStatusBarItem(StatusBarAlignment.Right, 100);
     item.command = ClientCommands.toggleLogs;
     item.hide();
-    client.onNotification(MetalsStatus.type, params => {
+    client.onNotification(MetalsStatus.type, (params) => {
       item.text = params.text;
       if (params.show) {
         item.show();
@@ -447,11 +447,11 @@ function launchMetals(
       }
       if (params.command) {
         item.command = params.command;
-        commands.getCommands().then(values => {
+        commands.getCommands().then((values) => {
           if (params.command && values.includes(params.command)) {
             registerCommand(params.command, () => {
               client.sendRequest(ExecuteCommandRequest.type, {
-                command: params.command!
+                command: params.command!,
               });
             });
           }
@@ -461,33 +461,33 @@ function launchMetals(
       }
     });
 
-    registerCommand("metals.goto", args => {
+    registerCommand("metals.goto", (args) => {
       client.sendRequest(ExecuteCommandRequest.type, {
         command: "goto",
-        arguments: args
+        arguments: args,
       });
     });
 
     registerCommand("metals.reveal-active-file", () => {
       if (treeViews) {
-        const editor = window.visibleTextEditors.find(e =>
+        const editor = window.visibleTextEditors.find((e) =>
           isSupportedLanguage(e.document.languageId)
         );
         if (editor) {
           const pos = editor.selection.start;
           const params: TextDocumentPositionParams = {
             textDocument: { uri: editor.document.uri.toString() },
-            position: { line: pos.line, character: pos.character }
+            position: { line: pos.line, character: pos.character },
           };
           return window.withProgress(
             {
               location: ProgressLocation.Window,
-              title: "Metals: Reveal Active File in Side Bar"
+              title: "Metals: Reveal Active File in Side Bar",
             },
-            progress => {
+            (progress) => {
               return client
                 .sendRequest(MetalsTreeViewReveal.type, params)
-                .then(result => {
+                .then((result) => {
                   progress.report({ increment: 100 });
                   if (treeViews) {
                     treeViews.reveal(result);
@@ -505,18 +505,18 @@ function launchMetals(
 
     registerCommand("metals-echo-command", (arg: string) => {
       client.sendRequest(ExecuteCommandRequest.type, {
-        command: arg
+        command: arg,
       });
     });
 
     registerCommand("metals.new-scala-file", async (directory: Uri) => {
       return client.sendRequest(ExecuteCommandRequest.type, {
         command: "new-scala-file",
-        arguments: [directory?.toString()]
+        arguments: [directory?.toString()],
       });
     });
 
-    window.onDidChangeActiveTextEditor(editor => {
+    window.onDidChangeActiveTextEditor((editor) => {
       if (editor && isSupportedLanguage(editor.document.languageId)) {
         client.sendNotification(
           MetalsDidFocus.type,
@@ -525,14 +525,14 @@ function launchMetals(
       }
     });
 
-    window.onDidChangeWindowState(windowState => {
+    window.onDidChangeWindowState((windowState) => {
       client.sendNotification(MetalsWindowStateDidChange.type, {
-        focused: windowState.focused
+        focused: windowState.focused,
       });
     });
 
     client.onRequest(MetalsInputBox.type, (options, requestToken) => {
-      return window.showInputBox(options, requestToken).then(result => {
+      return window.showInputBox(options, requestToken).then((result) => {
         if (result === undefined) {
           return { cancelled: true };
         } else {
@@ -544,7 +544,7 @@ function launchMetals(
     client.onRequest(MetalsQuickPick.type, (params, requestToken) => {
       return window
         .showQuickPick(params.items, params, requestToken)
-        .then(result => {
+        .then((result) => {
           if (result === undefined) {
             return { cancelled: true };
           } else {
@@ -556,12 +556,12 @@ function launchMetals(
     // Long running tasks such as "import project" trigger start a progress
     // bar with a "cancel" button.
     client.onRequest(MetalsSlowTask.type, (params, requestToken) => {
-      return new Promise(requestResolve => {
+      return new Promise((requestResolve) => {
         window.withProgress(
           {
             location: ProgressLocation.Notification,
             title: params.message,
-            cancellable: true
+            cancellable: true,
           },
           (progress, progressToken) => {
             const showLogs = !params.quietLogs;
@@ -589,7 +589,7 @@ function launchMetals(
               requestResolve({ cancel: true });
             });
 
-            return new Promise(progressResolve => {
+            return new Promise((progressResolve) => {
               // Server completed long running task.
               requestToken.onCancellationRequested(() => {
                 onComplete();
@@ -619,28 +619,28 @@ function launchMetals(
     if (features.debuggingProvider) {
       scalaDebugger
         .initialize(outputChannel)
-        .forEach(disposable => context.subscriptions.push(disposable));
+        .forEach((disposable) => context.subscriptions.push(disposable));
     } else {
       outputChannel.appendLine("Debugging Scala sources is not supported");
     }
     if (features.decorationProvider) {
-      client.onNotification(DecorationTypeDidChange.type, options => {
+      client.onNotification(DecorationTypeDidChange.type, (options) => {
         decorationType = window.createTextEditorDecorationType(options);
       });
-      client.onNotification(DecorationsRangesDidChange.type, params => {
+      client.onNotification(DecorationsRangesDidChange.type, (params) => {
         const editor = window.activeTextEditor;
         if (
           editor &&
           Uri.parse(params.uri).toString() === editor.document.uri.toString()
         ) {
-          const options = params.options.map<DecorationOptions>(o => {
+          const options = params.options.map<DecorationOptions>((o) => {
             return {
               range: new Range(
                 new Position(o.range.start.line, o.range.start.character),
                 new Position(o.range.end.line, o.range.end.character)
               ),
               hoverMessage: o.hoverMessage,
-              renderOptions: o.renderOptions
+              renderOptions: o.renderOptions,
             };
           });
           editor.setDecorations(decorationType, options);
@@ -662,12 +662,12 @@ function trackDownloadProgress(
   const progress = new LazyProgress();
   return downloadProgress({
     download,
-    onError: stdout =>
-      stdout.forEach(buffer => output.append(buffer.toString())),
-    onProgress: msg => {
+    onError: (stdout) =>
+      stdout.forEach((buffer) => output.append(buffer.toString())),
+    onProgress: (msg) => {
       output.appendLine(msg);
       progress.startOrContinue(title, output, download);
-    }
+    },
   });
 }
 
@@ -690,7 +690,7 @@ function enableScaladocIndentation() {
       // ^(.*\*/)?\s*\}.*$
       decreaseIndentPattern: /^(.*\*\/)?\s*\}.*$/,
       // ^.*\{[^}"']*$
-      increaseIndentPattern: /^.*\{[^}"']*$/
+      increaseIndentPattern: /^.*\{[^}"']*$/,
     },
     wordPattern: /(-?\d*\.\d\w*)|([^\`\~\!\@\#\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\?\s]+)/g,
     onEnterRules: [
@@ -698,34 +698,34 @@ function enableScaladocIndentation() {
         // e.g. /** | */
         beforeText: /^\s*\/\*\*(?!\/)([^\*]|\*(?!\/))*$/,
         afterText: /^\s*\*\/$/,
-        action: { indentAction: IndentAction.IndentOutdent, appendText: " * " }
+        action: { indentAction: IndentAction.IndentOutdent, appendText: " * " },
       },
       {
         // e.g. /** ...|
         beforeText: /^\s*\/\*\*(?!\/)([^\*]|\*(?!\/))*$/,
-        action: { indentAction: IndentAction.None, appendText: " * " }
+        action: { indentAction: IndentAction.None, appendText: " * " },
       },
       {
         // e.g.  * ...| Javadoc style
         beforeText: /^(\t|(\ \ ))*\ \*(\ ([^\*]|\*(?!\/))*)?$/,
-        action: { indentAction: IndentAction.None, appendText: "* " }
+        action: { indentAction: IndentAction.None, appendText: "* " },
       },
       {
         // e.g.  * ...| Scaladoc style
         beforeText: /^(\t|(\ \ ))*\*(\ ([^\*]|\*(?!\/))*)?$/,
-        action: { indentAction: IndentAction.None, appendText: "* " }
+        action: { indentAction: IndentAction.None, appendText: "* " },
       },
       {
         // e.g.  */|
         beforeText: /^(\t|(\ \ ))*\ \*\/\s*$/,
-        action: { indentAction: IndentAction.None, removeText: 1 }
+        action: { indentAction: IndentAction.None, removeText: 1 },
       },
       {
         // e.g.  *-----*/|
         beforeText: /^(\t|(\ \ ))*\ \*[^/]*\*\/\s*$/,
-        action: { indentAction: IndentAction.None, removeText: 1 }
-      }
-    ]
+        action: { indentAction: IndentAction.None, removeText: 1 },
+      },
+    ],
   });
 }
 
@@ -735,7 +735,7 @@ function detectLaunchConfigurationChanges() {
     ({ message, reloadWindowChoice, dismissChoice }) =>
       window
         .showInformationMessage(message, reloadWindowChoice, dismissChoice)
-        .then(choice => {
+        .then((choice) => {
           if (choice === reloadWindowChoice) {
             commands.executeCommand("workbench.action.reloadWindow");
           }
@@ -750,7 +750,7 @@ function checkServerVersion() {
     updateConfig: ({
       configSection,
       latestServerVersion,
-      configurationTarget
+      configurationTarget,
     }) =>
       config.update(configSection, latestServerVersion, configurationTarget),
     onOutdated: ({
@@ -758,7 +758,7 @@ function checkServerVersion() {
       upgradeChoice,
       openSettingsChoice,
       dismissChoice,
-      upgrade
+      upgrade,
     }) =>
       window
         .showWarningMessage(
@@ -767,7 +767,7 @@ function checkServerVersion() {
           openSettingsChoice,
           dismissChoice
         )
-        .then(choice => {
+        .then((choice) => {
           switch (choice) {
             case upgradeChoice:
               upgrade();
@@ -776,7 +776,7 @@ function checkServerVersion() {
               commands.executeCommand(openSettingsCommand);
               break;
           }
-        })
+        }),
   });
 }
 
