@@ -59,15 +59,15 @@ class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
       })
       .then((result) => {
         if (result === mainClassPick) {
-          return this.provideDebugMainClassConfiguration().then((config) => {
-            if (config === undefined) return [];
-            return [config];
-          });
+          return this.provideDebugMainClassConfiguration().then(
+            (config) => [config],
+            (_) => []
+          );
         } else if (result === testClassPick) {
-          return this.provideDebugTestClassConfiguration().then((config) => {
-            if (config === undefined) return [];
-            return [config];
-          });
+          return this.provideDebugTestClassConfiguration().then(
+            (config) => [config],
+            (_) => []
+          );
         }
         return [];
       });
@@ -81,17 +81,11 @@ class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
     return debugConfiguration;
   }
 
-  private provideDebugMainClassConfiguration(): Thenable<
-    DebugConfiguration | undefined
-  > {
-    return this.askForBuildTarget().then((buildTarget) => {
-      if (buildTarget === undefined) return undefined;
-      return this.askForClassName().then((className) => {
-        if (className === undefined) return undefined;
-        return this.askForArguments().then((args) => {
-          if (args === undefined) return undefined;
-          return this.askForConfigurationName(className).then((name) => {
-            if (name === undefined) return undefined;
+  private provideDebugMainClassConfiguration(): Thenable<DebugConfiguration> {
+    return this.askForBuildTarget().then((buildTarget) =>
+      this.askForClassName().then((className) =>
+        this.askForArguments().then((args) =>
+          this.askForConfigurationName(className).then((name) => {
             const result: DebugConfiguration = {
               type: configurationType,
               name: name,
@@ -101,21 +95,16 @@ class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
               args: args,
             };
             return result;
-          });
-        });
-      });
-    });
+          })
+        )
+      )
+    );
   }
 
-  private provideDebugTestClassConfiguration(): Thenable<
-    DebugConfiguration | undefined
-  > {
-    return this.askForBuildTarget().then((buildTarget) => {
-      if (buildTarget === undefined) return undefined;
-      return this.askForClassName().then((className) => {
-        if (className === undefined) return undefined;
-        return this.askForConfigurationName(className).then((name) => {
-          if (name === undefined) return undefined;
+  private provideDebugTestClassConfiguration(): Thenable<DebugConfiguration> {
+    return this.askForBuildTarget().then((buildTarget) =>
+      this.askForClassName().then((className) =>
+        this.askForConfigurationName(className).then((name) => {
           const result: DebugConfiguration = {
             type: configurationType,
             name: name,
@@ -124,12 +113,12 @@ class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
             buildTarget: buildTarget,
           };
           return result;
-        });
-      });
-    });
+        })
+      )
+    );
   }
 
-  private askForBuildTarget(): Thenable<string | null | undefined> {
+  private askForBuildTarget(): Thenable<string | undefined> {
     return vscode.window
       .showInputBox({
         prompt: "Enter name of the build target",
@@ -137,48 +126,52 @@ class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
       })
       .then((buildTarget) => {
         if (buildTarget === undefined) {
-          return undefined;
+          return Promise.reject();
         } else if (buildTarget === "") {
-          return null;
+          return undefined;
         } else {
           return buildTarget;
         }
       });
   }
 
-  private askForClassName(): Thenable<string | undefined> {
-    return vscode.window.showInputBox({
-      prompt: "Enter name of the class to debug",
-      placeHolder: "<package>.<Class>",
-    });
+  private askForClassName(): Thenable<string> {
+    return vscode.window
+      .showInputBox({
+        prompt: "Enter the name of the class to debug",
+        placeHolder: "<package>.<Class>",
+      })
+      .then((name) => {
+        if (name === undefined) return Promise.reject();
+        return name;
+      });
   }
 
-  private askForConfigurationName(
-    className: string
-  ): Thenable<string | undefined> {
-    return vscode.window.showInputBox({
-      prompt: "Enter name of the configuration",
-      value: `Debug ${className}`,
-    });
+  private askForConfigurationName(className: string): Thenable<string> {
+    return vscode.window
+      .showInputBox({
+        prompt: "Enter the name of the configuration",
+        value: `Debug ${className}`,
+      })
+      .then((name) => {
+        if (name === undefined) return Promise.reject();
+        return name;
+      });
   }
 
-  private askForArguments(): Thenable<string[] | undefined> {
+  private askForArguments(): Thenable<string[]> {
     return vscode.window
       .showInputBox({ prompt: "Enter argument or leave it empty" })
       .then((argument) => {
         if (argument === undefined) {
-          return undefined;
+          return Promise.reject();
         } else if (argument === "") {
           return [];
         } else {
-          return this.askForArguments().then((rest) => {
-            if (rest === undefined) {
-              return [argument];
-            } else {
-              rest.unshift(argument);
-              return rest;
-            }
-          });
+          return this.askForArguments().then(
+            (rest) => [argument, ...rest],
+            (_) => [argument]
+          );
         }
       });
   }
@@ -209,10 +202,9 @@ class ScalaDebugServerFactory implements vscode.DebugAdapterDescriptorFactory {
 export function debugServerFromUri(uri: string): vscode.DebugAdapterServer {
   const debugServer = vscode.Uri.parse(uri);
   const segments = debugServer.authority.split(":");
-  return new vscode.DebugAdapterServer(
-    parseInt(segments[segments.length - 1]),
-    segments[0]
-  );
+  const host = segments[0];
+  const port = parseInt(segments[segments.length - 1]);
+  return new vscode.DebugAdapterServer(port, host);
 }
 
 export interface DebugSession {
