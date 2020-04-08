@@ -55,22 +55,27 @@ class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
 
     return vscode.window
       .showQuickPick([mainClassPick, testClassPick], {
-        placeHolder: "Pick kind of class to debug",
+        placeHolder:
+          "Pick the kind of the class to debug (Press 'Escape' to create 'launch.json' with no initial configuration)",
       })
       .then((result) => {
-        if (result === mainClassPick) {
-          return this.provideDebugMainClassConfiguration().then(
-            (config) => [config],
-            (_) => []
-          );
-        } else if (result === testClassPick) {
-          return this.provideDebugTestClassConfiguration().then(
-            (config) => [config],
-            (_) => []
-          );
+        switch (result) {
+          case mainClassPick:
+            return this.provideDebugMainClassConfiguration().then((config) => [
+              config,
+            ]);
+          case testClassPick:
+            return this.provideDebugTestClassConfiguration().then((config) => [
+              config,
+            ]);
+          default:
+            return [];
         }
-        return [];
-      });
+      })
+      .then(
+        (result) => result,
+        () => []
+      );
   }
 
   resolveDebugConfiguration(
@@ -84,19 +89,17 @@ class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
   private provideDebugMainClassConfiguration(): Thenable<DebugConfiguration> {
     return this.askForBuildTarget().then((buildTarget) =>
       this.askForClassName().then((className) =>
-        this.askForArguments().then((args) =>
-          this.askForConfigurationName(className).then((name) => {
-            const result: DebugConfiguration = {
-              type: configurationType,
-              name: name,
-              request: launchRequestType,
-              mainClass: className,
-              buildTarget: buildTarget,
-              args: args,
-            };
-            return result;
-          })
-        )
+        this.askForConfigurationName(className).then((name) => {
+          const result: DebugConfiguration = {
+            type: configurationType,
+            name: name,
+            request: launchRequestType,
+            mainClass: className,
+            buildTarget: buildTarget,
+            args: [],
+          };
+          return result;
+        })
       )
     );
   }
@@ -121,7 +124,7 @@ class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
   private askForBuildTarget(): Thenable<string | undefined> {
     return vscode.window
       .showInputBox({
-        prompt: "Enter name of the build target",
+        prompt: "Enter the name of the build target",
         placeHolder: "Optional, you can leave it empty",
       })
       .then((buildTarget) => {
@@ -141,10 +144,7 @@ class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
         prompt: "Enter the name of the class to debug",
         placeHolder: "<package>.<Class>",
       })
-      .then((name) => {
-        if (name === undefined) return Promise.reject();
-        return name;
-      });
+      .then((name) => name ?? Promise.reject());
   }
 
   private askForConfigurationName(className: string): Thenable<string> {
@@ -153,27 +153,7 @@ class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
         prompt: "Enter the name of the configuration",
         value: `Debug ${className}`,
       })
-      .then((name) => {
-        if (name === undefined) return Promise.reject();
-        return name;
-      });
-  }
-
-  private askForArguments(): Thenable<string[]> {
-    return vscode.window
-      .showInputBox({ prompt: "Enter argument or leave it empty" })
-      .then((argument) => {
-        if (argument === undefined) {
-          return Promise.reject();
-        } else if (argument === "") {
-          return [];
-        } else {
-          return this.askForArguments().then(
-            (rest) => [argument, ...rest],
-            (_) => [argument]
-          );
-        }
-      });
+      .then((name) => name ?? Promise.reject());
   }
 }
 
