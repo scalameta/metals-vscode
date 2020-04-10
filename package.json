@@ -262,6 +262,63 @@
         "label": "Scala Debugger",
         "languages": [
           "scala"
+        ],
+        "configurationAttributes": {
+          "launch": {
+            "properties": {
+              "mainClass": {
+                "type": "string",
+                "description": "Name of the main class to run"
+              },
+              "testClass": {
+                "type": "string",
+                "description": "Name of the test class to run"
+              },
+              "buildTarget": {
+                "type": "string",
+                "description": "Name of the build target of the class to run"
+              },
+              "args": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Arguments passed to the class to run",
+                "default": []
+              },
+              "jvmOptions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "default": []
+              }
+            }
+          }
+        },
+        "configurationSnippets": [
+          {
+            "label": "Scala: Run main class",
+            "description": "A new configuration for running a debug session of a main class",
+            "body": {
+              "type": "scala",
+              "request": "launch",
+              "name": "Untitled",
+              "mainClass": "???",
+              "args": [],
+              "jvmOptions": []
+            }
+          },
+          {
+            "label": "Scala: Run test class",
+            "description": "A new configuration for running a debug session of a test class",
+            "body": {
+              "type": "scala",
+              "request": "launch",
+              "name": "Untitled",
+              "testClass": "???"
+            }
+          }
         ]
       }
     ]
