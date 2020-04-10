@@ -35,7 +35,7 @@
   },
   "homepage": "http://metals.rocks",
   "engines": {
-    "vscode": "^1.44.0"
+    "vscode": "^1.43.0"
   },
   "icon": "images/logo.png",
   "categories": [
@@ -337,7 +337,7 @@
   "devDependencies": {
     "@types/node": "13.11.1",
     "@types/shell-quote": "1.6.1",
-    "@types/vscode": "1.44.0",
+    "@types/vscode": "1.43.0",
     "prettier": "2.0.4",
     "typescript": "3.8.3",
     "vsce": "1.75.0"
