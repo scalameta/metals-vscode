@@ -18,12 +18,12 @@ import {
   OutputChannel,
   Uri,
   Range,
-  Selection,
-  TextEditorRevealType,
   DecorationRangeBehavior,
   DecorationOptions,
   Position,
   TextEditorDecorationType,
+  TextEditor,
+  TextEditorEdit,
 } from "vscode";
 import {
   LanguageClient,
@@ -280,6 +280,19 @@ function launchMetals(
     context.subscriptions.push(commands.registerCommand(command, callback));
   }
 
+  function registerTextEditorCommand(
+    command: string,
+    callback: (
+      textEditor: TextEditor,
+      edit: TextEditorEdit,
+      ...args: any[]
+    ) => any
+  ) {
+    context.subscriptions.push(
+      commands.registerTextEditorCommand(command, callback)
+    );
+  }
+
   registerCommand(
     "metals.restartServer",
     restartServer(
@@ -391,21 +404,7 @@ function launchMetals(
           const location =
             params.arguments && (params.arguments[0] as Location);
           if (location) {
-            workspace
-              .openTextDocument(Uri.parse(location.uri))
-              .then((textDocument) => window.showTextDocument(textDocument))
-              .then((editor) => {
-                const range = new Range(
-                  location.range.start.line,
-                  location.range.start.character,
-                  location.range.end.line,
-                  location.range.end.character
-                );
-                // Select an offset position instead of range position to
-                // avoid triggering noisy document highlight.
-                editor.selection = new Selection(range.start, range.start);
-                editor.revealRange(range, TextEditorRevealType.InCenter);
-              });
+            gotoLocation(location);
           }
           break;
         case "metals-model-refresh":
@@ -460,6 +459,36 @@ function launchMetals(
         item.command = undefined;
       }
     });
+
+    registerTextEditorCommand(
+      "metals.go-to-super-method",
+      (editor, _edit, _args) => {
+        client.sendRequest(ExecuteCommandRequest.type, {
+          command: "goto-super-method",
+          arguments: [
+            {
+              document: editor.document.uri.toString(true),
+              position: editor.selection.start,
+            },
+          ],
+        });
+      }
+    );
+
+    registerTextEditorCommand(
+      "metals.super-method-hierarchy",
+      (editor, _edit, _args) => {
+        client.sendRequest(ExecuteCommandRequest.type, {
+          command: "super-method-hierarchy",
+          arguments: [
+            {
+              document: editor.document.uri.toString(true),
+              position: editor.selection.start,
+            },
+          ],
+        });
+      }
+    );
 
     registerCommand("metals.goto", (args) => {
       client.sendRequest(ExecuteCommandRequest.type, {
@@ -652,6 +681,20 @@ function launchMetals(
       });
     }
   });
+}
+
+function gotoLocation(location: Location): void {
+  const range = new Range(
+    location.range.start.line,
+    location.range.start.character,
+    location.range.end.line,
+    location.range.end.character
+  );
+  workspace
+    .openTextDocument(Uri.parse(location.uri))
+    .then((textDocument) =>
+      window.showTextDocument(textDocument, { selection: range })
+    );
 }
 
 function trackDownloadProgress(
