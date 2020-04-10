@@ -238,7 +238,7 @@
       "explorer/context": [
         {
           "command": "metals.new-scala-file",
-          "when": "metals:enabled && explorerResourceIsFolder",
+          "when": "metals:enabled",
           "group": "navigation@4"
         }
       ]
