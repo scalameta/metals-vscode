@@ -171,7 +171,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   const defaultServerVersion = config.inspect<string>("serverVersion")!
     .defaultValue!;
   const serverVersion = serverVersionConfig
-    ? serverVersionConfig
+    ? serverVersionConfig.trim()
     : defaultServerVersion;
 
   const serverProperties = config.get<string[]>("serverProperties")!;
