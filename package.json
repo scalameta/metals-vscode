@@ -196,6 +196,16 @@
         "command": "metals.new-scala-file",
         "category": "Metals",
         "title": "New Scala File..."
+      },
+      {
+        "command": "metals.super-method-hierarchy",
+        "category": "Metals",
+        "title": "Reveal super method hierachy"
+      },
+      {
+        "command": "metals.go-to-super-method",
+        "category": "Metals",
+        "title": "Go to super method"
       }
     ],
     "menus": {
@@ -207,6 +217,10 @@
         }
       ],
       "commandPalette": [
+        {
+          "command": "metals.reveal-active-file",
+          "when": "metals:enabled"
+        },
         {
           "command": "metals.restartServer",
           "when": "metals:enabled"
@@ -237,6 +251,18 @@
         },
         {
           "command": "metals.doctor-run",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.new-scala-file",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.super-method-hierarchy",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.go-to-super-method",
           "when": "metals:enabled"
         }
       ],
