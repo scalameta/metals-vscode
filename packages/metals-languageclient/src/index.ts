@@ -10,3 +10,4 @@ export * from "./getJavaConfig";
 export * from "./installJava";
 
 export * from "./commands/restartServer";
+export * from "./interfaces/TreeViewProtocol";
