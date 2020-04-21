@@ -343,7 +343,7 @@
     "vsce": "1.75.0"
   },
   "dependencies": {
-    "metals-languageclient": "0.1.23",
+    "metals-languageclient": "0.2.1",
     "promisify-child-process": "3.1.4",
     "vscode-languageclient": "6.1.3"
   },
