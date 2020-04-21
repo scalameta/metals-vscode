@@ -1,5 +1,9 @@
 ## metals-languageclient changelog
 
+### v0.2.1 (2020/04/21 06:00 +00:00)
+- [9867a09](https://github.com/scalameta/metals-languageclient/commit/9867a09507e53830fbe4534a0977c581c1e23d60) export the interfaces (@ckipp01)
+- [af329d6](https://github.com/scalameta/metals-languageclient/commit/af329d61d056db082bc679b530734c6785b25f67) Release v0.2.0
+
 ### v0.2.0 (2020/04/20 20:20 +00:00)
 - [ef35faf](https://github.com/scalameta/metals-languageclient/commit/ef35faf022be5753ade45941ad828f4cf39a6450) Bump jest from 25.3.0 to 25.4.0 (@dependabot-preview[bot])
 - [0a2401c](https://github.com/scalameta/metals-languageclient/commit/0a2401cbc2ac15ba69c56a4855cfb96d57dd00ea) Bump @types/node from 13.11.1 to 13.13.0 (@dependabot-preview[bot])
