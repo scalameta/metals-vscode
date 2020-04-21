@@ -14,15 +14,15 @@ import {
   ExtensionContext,
 } from "vscode";
 import {
-  MetalsTreeViewNode,
-  MetalsTreeViewChildren,
-  MetalsTreeViewDidChange,
-  MetalsTreeViewVisibilityDidChange,
-  MetalsTreeViewParent,
-  MetalsTreeViewNodeCollapseDidChange,
   MetalsTreeViews,
+  MetalsTreeViewVisibilityDidChange,
+  MetalsTreeViewNodeCollapseDidChange,
+  MetalsTreeViewDidChange,
   MetalsTreeRevealResult,
-} from "./tree-view-protocol";
+  MetalsTreeViewNode,
+  MetalsTreeViewParent,
+  MetalsTreeViewChildren,
+} from "metals-languageclient";
 
 export function startTreeView(
   client: LanguageClient,

@@ -56,11 +56,12 @@ import {
   getServerOptions,
   downloadProgress,
   installJava,
+  MetalsTreeViews,
+  MetalsTreeViewReveal,
 } from "metals-languageclient";
 import * as metalsLanguageClient from "metals-languageclient";
 import { startTreeView } from "./treeview";
 import { MetalsFeatures } from "./MetalsFeatures";
-import { MetalsTreeViewReveal, MetalsTreeViews } from "./tree-view-protocol";
 import * as scalaDebugger from "./scalaDebugger";
 import {
   DecorationTypeDidChange,
