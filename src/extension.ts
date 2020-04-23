@@ -422,6 +422,9 @@ function launchMetals(
             }
           }
           break;
+        case ClientCommands.focusDiagnostics:
+          commands.executeCommand(ClientCommands.focusDiagnostics);
+          break;
         default:
           outputChannel.appendLine(`unknown command: ${params.command}`);
       }
