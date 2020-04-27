@@ -12,6 +12,7 @@ import {
   Uri,
   TreeView,
   ExtensionContext,
+  ThemeIcon,
 } from "vscode";
 import {
   MetalsTreeViewNode,
@@ -224,7 +225,7 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
   }
 
   icons: Map<string, TreeItem["iconPath"]> = new Map();
-  iconPath(icon: string): TreeItem["iconPath"] {
+  iconPath(icon: string): TreeItem["iconPath"] | ThemeIcon {
     const result = this.icons.get(icon);
     if (result) return result;
     else {
@@ -243,6 +244,7 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
         }
       }
     }
+    return new ThemeIcon(icon);
   }
 
   joinIcon(icon: string): string | undefined {
