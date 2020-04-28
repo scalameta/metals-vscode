@@ -19,7 +19,6 @@ export function downloadProgress({
   let stdout: Buffer[] = [];
   let stderr: Buffer[] = [];
   download.stdout?.on("data", (out: Buffer) => {
-    onProgress(out.toString());
     stdout.push(out);
   });
   download.stderr?.on("data", (err: Buffer) => {
