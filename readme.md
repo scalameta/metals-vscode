@@ -30,10 +30,10 @@ or 11 installation.
 **macOS, Linux or Windows**. Metals is developed on macOS and every PR is tested
 on Ubuntu+Windows.
 
-**Scala 2.13, 2.12 and 2.11**. Metals supports these Scala versions 2.13.1,
-2.12.11, 2.12.10, 2.11.12, 2.12.8, 2.12.9 and 2.13.0. Note that 2.11.x support
-is deprecated and it will be removed in future releases. It's recommended to
-upgrade to Scala 2.12 or Scala 2.13
+**Scala 2.13, 2.12 and 2.11**. Metals supports these Scala versions 2.13.2,
+2.12.11, 2.12.10, 2.13.1, 2.11.12, 2.12.8, 2.12.9, 2.13.0, 0.24.0-RC1 and
+0.23.0. Note that 2.11.x support is deprecated and it will be removed in future
+releases. It's recommended to upgrade to Scala 2.12 or Scala 2.13
 
 ## Installation
 
