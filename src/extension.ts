@@ -61,7 +61,6 @@ import {
 } from "metals-languageclient";
 import * as metalsLanguageClient from "metals-languageclient";
 import { startTreeView } from "./treeview";
-import { MetalsFeatures } from "./MetalsFeatures";
 import * as scalaDebugger from "./scalaDebugger";
 import {
   DecorationTypeDidChange,
@@ -266,6 +265,19 @@ function launchMetals(
     },
     revealOutputChannelOn: RevealOutputChannelOn.Never,
     outputChannel: outputChannel,
+    initializationOptions: {
+      decorationProvider: true,
+      debuggingProvider: true,
+      doctorProvider: "html",
+      didFocusProvider: true,
+      executeClientCommandProvider: true,
+      inputBoxProvider: true,
+      openFilesOnRenameProvider: true,
+      quickPickProvider: true,
+      slowTaskProvider: true,
+      statusBarProvider: "on",
+      treeViewProvider: true,
+    },
   };
 
   const client = new LanguageClient(
@@ -274,8 +286,6 @@ function launchMetals(
     serverOptions,
     clientOptions
   );
-  const features = new MetalsFeatures();
-  client.registerFeature(features);
 
   function registerCommand(command: string, callback: (...args: any[]) => any) {
     context.subscriptions.push(commands.registerCommand(command, callback));
@@ -359,8 +369,6 @@ function launchMetals(
         }
       },
       startDebugSession: (...args) => {
-        if (!features.debuggingProvider) return;
-
         scalaDebugger.start(false, ...args).then((wasStarted) => {
           if (!wasStarted) {
             window.showErrorMessage("Debug session not started");
@@ -368,8 +376,6 @@ function launchMetals(
         });
       },
       startRunSession: (...args) => {
-        if (!features.debuggingProvider) return;
-
         scalaDebugger.start(true, ...args).then((wasStarted) => {
           if (!wasStarted) {
             window.showErrorMessage("Run session not started");
@@ -634,56 +640,45 @@ function launchMetals(
         );
       });
     });
-    if (features.treeViewProvider) {
-      // NOTE(olafur): `require("./package.json")` should work in theory but it
-      // seems to read a stale version of package.json when I try it.
-      const packageJson = JSON.parse(
-        fs.readFileSync(
-          path.join(context.extensionPath, "package.json"),
-          "utf8"
-        )
-      );
-      const viewIds = packageJson.contributes.views["metals-explorer"].map(
-        (view: { id: string }) => view.id
-      );
-      treeViews = startTreeView(client, outputChannel, context, viewIds);
-      context.subscriptions.concat(treeViews.disposables);
-    }
-    if (features.debuggingProvider) {
-      scalaDebugger
-        .initialize(outputChannel)
-        .forEach((disposable) => context.subscriptions.push(disposable));
-    } else {
-      outputChannel.appendLine("Debugging Scala sources is not supported");
-    }
-    if (features.decorationProvider) {
-      client.onNotification(DecorationTypeDidChange.type, (options) => {
-        decorationType = window.createTextEditorDecorationType(options);
-      });
-      client.onNotification(DecorationsRangesDidChange.type, (params) => {
-        const editor = window.activeTextEditor;
-        if (
-          editor &&
-          Uri.parse(params.uri).toString() === editor.document.uri.toString()
-        ) {
-          const options = params.options.map<DecorationOptions>((o) => {
-            return {
-              range: new Range(
-                new Position(o.range.start.line, o.range.start.character),
-                new Position(o.range.end.line, o.range.end.character)
-              ),
-              hoverMessage: o.hoverMessage,
-              renderOptions: o.renderOptions,
-            };
-          });
-          editor.setDecorations(decorationType, options);
-        } else {
-          outputChannel.appendLine(
-            `Ignoring decorations for non-active document '${params.uri}'.`
-          );
-        }
-      });
-    }
+    // NOTE(olafur): `require("./package.json")` should work in theory but it
+    // seems to read a stale version of package.json when I try it.
+    const packageJson = JSON.parse(
+      fs.readFileSync(path.join(context.extensionPath, "package.json"), "utf8")
+    );
+    const viewIds = packageJson.contributes.views["metals-explorer"].map(
+      (view: { id: string }) => view.id
+    );
+    treeViews = startTreeView(client, outputChannel, context, viewIds);
+    context.subscriptions.concat(treeViews.disposables);
+    scalaDebugger
+      .initialize(outputChannel)
+      .forEach((disposable) => context.subscriptions.push(disposable));
+    client.onNotification(DecorationTypeDidChange.type, (options) => {
+      decorationType = window.createTextEditorDecorationType(options);
+    });
+    client.onNotification(DecorationsRangesDidChange.type, (params) => {
+      const editor = window.activeTextEditor;
+      if (
+        editor &&
+        Uri.parse(params.uri).toString() === editor.document.uri.toString()
+      ) {
+        const options = params.options.map<DecorationOptions>((o) => {
+          return {
+            range: new Range(
+              new Position(o.range.start.line, o.range.start.character),
+              new Position(o.range.end.line, o.range.end.character)
+            ),
+            hoverMessage: o.hoverMessage,
+            renderOptions: o.renderOptions,
+          };
+        });
+        editor.setDecorations(decorationType, options);
+      } else {
+        outputChannel.appendLine(
+          `Ignoring decorations for non-active document '${params.uri}'.`
+        );
+      }
+    });
   });
 }
 
