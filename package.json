@@ -68,12 +68,16 @@
     "views": {
       "metals-explorer": [
         {
+          "id": "metalsPackages",
+          "name": "Packages"
+        },
+        {
           "id": "metalsBuild",
-          "name": "Build"
+          "name": "Build commands"
         },
         {
           "id": "metalsCompile",
-          "name": "Compile"
+          "name": "Ongoing compilations"
         },
         {
           "id": "metalsHelp",
@@ -183,6 +187,11 @@
         "title": "Cascade compile"
       },
       {
+        "command": "metals.compile-clean",
+        "category": "Metals",
+        "title": "Recompile workspace"
+      },
+      {
         "command": "metals.compile-cancel",
         "category": "Metals",
         "title": "Cancel compilation"
@@ -213,7 +222,7 @@
         {
           "command": "metals.reveal-active-file",
           "group": "navigation",
-          "when": "view == metalsBuild"
+          "when": "view == metalsPackages"
         }
       ],
       "commandPalette": [
@@ -243,6 +252,10 @@
         },
         {
           "command": "metals.compile-cascade",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.compile-clean",
           "when": "metals:enabled"
         },
         {

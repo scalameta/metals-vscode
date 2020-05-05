@@ -342,6 +342,7 @@ function launchMetals(
       "sources-scan",
       "doctor-run",
       "compile-cascade",
+      "compile-clean",
       "compile-cancel",
     ].forEach((command) => {
       registerCommand("metals." + command, async () =>
