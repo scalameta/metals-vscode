@@ -171,13 +171,6 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.8.0"
 
-"@babel/runtime@^7.1.5":
-  version "7.8.3"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.8.3.tgz#0811944f73a6c926bb2ad35e918dcc1bfab279f1"
-  integrity sha512-fVHx1rzEmwB130VTkLnxR+HmxcTjGzH12LYQcFFoBwakMd3aOMD4OsRN7tGG/UOYE2ektgFrS8uACAoRk1CY0w==
-  dependencies:
-    regenerator-runtime "^0.13.2"
-
 "@babel/template@^7.3.3":
   version "7.8.6"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.8.6.tgz#86b22af15f828dfb086474f964dcc3e39c43ce2b"
@@ -2778,11 +2771,9 @@ pretty-format@^25.5.0:
     react-is "^16.12.0"
 
 promisify-child-process@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/promisify-child-process/-/promisify-child-process-4.0.0.tgz#7e4c97df97c103f203f76924edbbb1d6b1b662b4"
-  integrity sha512-ya0pcLFRnh3+ijxlOJKGAASuQqM7pCshDlKAPzRpxZOXrOB8eNSygt6KQ1niOH3P8osKknLPBfamNi/2iK4/oA==
-  dependencies:
-    "@babel/runtime" "^7.1.5"
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/promisify-child-process/-/promisify-child-process-4.0.1.tgz#3e9ead1b847f2a3425d9a1c47de3381d1fb4f802"
+  integrity sha512-HXSiSD5SPNgUMKnXIehY8HP/eAbwojMnQt8QkHAkRCCYtyJrWNVHn1Y50IEsigiSILbVYWgFTT10UukEOC5kuA==
 
 prompts@^2.0.1:
   version "2.3.0"
@@ -2848,11 +2839,6 @@ realpath-native@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/realpath-native/-/realpath-native-2.0.0.tgz#7377ac429b6e1fd599dc38d08ed942d0d7beb866"
   integrity sha512-v1SEYUOXXdbBZK8ZuNgO4TBjamPsiSgcFr0aP+tEKpQZK8vooEUqV6nm6Cv502mX4NF2EfsnVqtNAHG+/6Ur1Q==
-
-regenerator-runtime@^0.13.2:
-  version "0.13.3"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.3.tgz#7cf6a77d8f5c6f60eb73c5fc1955b2ceb01e6bf5"
-  integrity sha512-naKIZz2GQ8JWh///G7L3X6LaQUAMp2lvb1rvwwsURe/VXwD6VMfr+/1NuNw3ag8v2kY1aQ/go5SNn79O9JU7yw==
 
 regex-not@^1.0.0, regex-not@^1.0.2:
   version "1.0.2"
