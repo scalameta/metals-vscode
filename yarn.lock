@@ -404,7 +404,12 @@ prettier@2.0.5:
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.0.5.tgz#d6d56282455243f2f92cc1716692c08aa31522d4"
   integrity sha512-7PtVymN48hGcO4fGjybyBSIWDsLU4H4XlvOHfq91pz9kkGlonzwTfYkaIEwiRg/dAJF9YlbsduBAgtYLi+8cFg==
 
-promisify-child-process@3.1.4, promisify-child-process@^3.1.3:
+promisify-child-process@4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/promisify-child-process/-/promisify-child-process-4.0.1.tgz#3e9ead1b847f2a3425d9a1c47de3381d1fb4f802"
+  integrity sha512-HXSiSD5SPNgUMKnXIehY8HP/eAbwojMnQt8QkHAkRCCYtyJrWNVHn1Y50IEsigiSILbVYWgFTT10UukEOC5kuA==
+
+promisify-child-process@^3.1.3:
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/promisify-child-process/-/promisify-child-process-3.1.4.tgz#3321827f283c0be30de1354bec1c6c627f02d53c"
   integrity sha512-tLifJs99E4oOXUz/dKQjRgdchfiepmYQzBVrcVX9BtUWi9aGJeGSf2KgXOWBW1JFsSYgLkl1Z9HRm8i0sf4cTg==
