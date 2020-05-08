@@ -2778,9 +2778,9 @@ pretty-format@^25.5.0:
     react-is "^16.12.0"
 
 promisify-child-process@^4.0.0:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/promisify-child-process/-/promisify-child-process-4.0.1.tgz#3e9ead1b847f2a3425d9a1c47de3381d1fb4f802"
-  integrity sha512-HXSiSD5SPNgUMKnXIehY8HP/eAbwojMnQt8QkHAkRCCYtyJrWNVHn1Y50IEsigiSILbVYWgFTT10UukEOC5kuA==
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/promisify-child-process/-/promisify-child-process-4.1.0.tgz#b910c4592880c69254bae0ddd080b89a3d25182c"
+  integrity sha512-oj4hb3nOOYAP4g/n4ruq2ij1mgAHJjqBGYTUfpvUQmAVh+bRcBkk11C9A/do7Ebtm6qtLDOHekVvlxNn1bFPEA==
 
 prompts@^2.0.1:
   version "2.3.0"
