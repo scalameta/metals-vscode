@@ -27,7 +27,9 @@ function isValidOption(option: string): boolean {
     // memory requirements as for example the sbt build.
     !option.startsWith("-Xms") &&
     !option.startsWith("-Xmx") &&
-    !option.startsWith("-Xss")
+    !option.startsWith("-Xss") &&
+    // Do not alter stdout that we capture when using Coursier
+    option !== "-XX:+PrintCommandLineFlags"
   );
 }
 
