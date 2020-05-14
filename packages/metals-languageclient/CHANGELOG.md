@@ -1,5 +1,19 @@
 ## metals-languageclient changelog
 
+### v0.2.4 (2020/05/14 05:28 +00:00)
+- [729eca3](https://github.com/scalameta/metals-languageclient/commit/729eca386c3ff00ec8fea5a77e9f037e198b8592) Update @types/node and specify encoding type (@ckipp01)
+- [096def5](https://github.com/scalameta/metals-languageclient/commit/096def5d475465ffcae311508dc8ffae53132e19) Bump typescript from 3.8.3 to 3.9.2 (@dependabot-preview[bot])
+- [8b4b44c](https://github.com/scalameta/metals-languageclient/commit/8b4b44c2d08456d4b12d0f93012cd20b29cc3904) support "-XX:+PrintCommandLineFlags" in .jvmOpts (@bjaglin)
+- [4b1f862](https://github.com/scalameta/metals-languageclient/commit/4b1f8624f8131b0ea637b7a3f369fa2c8ec23b23) Bump fp-ts from 2.5.4 to 2.6.0 (@dependabot-preview[bot])
+- [7b14e25](https://github.com/scalameta/metals-languageclient/commit/7b14e255f4f9256fdf67abd53d04180ae4bb1dc9) Bump ts-jest from 25.5.0 to 25.5.1 (@dependabot-preview[bot])
+- [3df58bb](https://github.com/scalameta/metals-languageclient/commit/3df58bb5dfd9dfd36bbe7218655a7e1751e02622) Bump promisify-child-process from 4.0.1 to 4.1.0 (@dependabot-preview[bot])
+- [56cd889](https://github.com/scalameta/metals-languageclient/commit/56cd8896aa4b5deaf7208dd69c6746bd8c25c418) Bump @types/node from 13.13.4 to 13.13.5 (@dependabot-preview[bot])
+- [6ea1ef1](https://github.com/scalameta/metals-languageclient/commit/6ea1ef196d56579cfc9e0360bacfc3c59e2ca497) Bump ts-jest from 25.4.0 to 25.5.0 (@dependabot-preview[bot])
+- [1c8f304](https://github.com/scalameta/metals-languageclient/commit/1c8f304c9dd0f4dea60c563b3c7ea9cea3f7493a) Bump promisify-child-process from 4.0.0 to 4.0.1 (@dependabot-preview[bot])
+- [01cbfd1](https://github.com/scalameta/metals-languageclient/commit/01cbfd15c2225da387fded52c268d3f82c30b96a) Bump promisify-child-process from 3.1.4 to 4.0.0 (@dependabot-preview[bot])
+- [b5bc77b](https://github.com/scalameta/metals-languageclient/commit/b5bc77b71c0d96dc06501a0baf7dd4f05bfeba4f) Release v0.2.2
+- [54a539b](https://github.com/scalameta/metals-languageclient/commit/54a539b64a6b3908939850d193747f649b324c26) Bump jest from 25.5.3 to 25.5.4 (@dependabot-preview[bot])
+
 ### v0.2.2 (2020/05/01 10:33 +00:00)
 - [7685f09](https://github.com/scalameta/metals-languageclient/commit/7685f092cda4dd7602a3ff6adc9d5d0e150744af) Bump jest from 25.5.0 to 25.5.3 (@dependabot-preview[bot])
 - [1fafc48](https://github.com/scalameta/metals-languageclient/commit/1fafc48ef23325cf31631e37695f5a9c42e8283b) Bump jest from 25.4.0 to 25.5.0 (@dependabot-preview[bot])
@@ -119,8 +133,8 @@
 ### v0.1.15 (2020/02/04 07:17 +00:00)
 - [04fc84e](https://github.com/scalameta/metals-languageclient/commit/04fc84e55f889990a10083f83ea6f395fc7ee81b) v0.1.15 (@gabro)
 - [9a5fcf5](https://github.com/scalameta/metals-languageclient/commit/9a5fcf5757989832f522a8db585f2e71c64bc081) Use the same version of vscode-languageserver-protocol as coc.nvim (@gabro)
-- [0dffea3](https://github.com/scalameta/metals-languageclient/commit/0dffea3660ce9969d946100c55c05ae9eeb8e0a3) Fix potentially undefined arrays (@gabro)
 - [e7144b4](https://github.com/scalameta/metals-languageclient/commit/e7144b4eeb9e153c5d7e060d04e2bf7c74d99883) v0.1.14 (@gabro)
+- [0dffea3](https://github.com/scalameta/metals-languageclient/commit/0dffea3660ce9969d946100c55c05ae9eeb8e0a3) Fix potentially undefined arrays (@gabro)
 - [5b3aafc](https://github.com/scalameta/metals-languageclient/commit/5b3aafcf25f72a5b4269ef6568d372c2c34775e9) Bump @types/node from 13.5.3 to 13.7.0 (@dependabot-preview[bot])
 
 ### v0.1.13 (2020/02/01 09:20 +00:00)
