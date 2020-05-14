@@ -2,13 +2,6 @@
 # yarn lockfile v1
 
 
-"@babel/runtime@^7.1.5":
-  version "7.8.4"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.8.4.tgz#d79f5a2040f7caa24d53e563aad49cbc05581308"
-  integrity sha512-neAp3zt80trRVBI1x0azq6c57aNBqYZH8KhMm3TaB7wEI5Q4A2SHfBHE8w9gOhI/lrqxtEbXZgQIrHP+wvSGwQ==
-  dependencies:
-    regenerator-runtime "^0.13.2"
-
 "@types/node@*", "@types/node@14.0.1":
   version "14.0.1"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.1.tgz#5d93e0a099cd0acd5ef3d5bde3c086e1f49ff68c"
@@ -297,16 +290,16 @@ mdurl@^1.0.1:
   resolved "https://registry.yarnpkg.com/mdurl/-/mdurl-1.0.1.tgz#fe85b2ec75a59037f2adfec100fd6c601761152e"
   integrity sha1-/oWy7HWlkDfyrf7BAP1sYBdhFS4=
 
-metals-languageclient@0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/metals-languageclient/-/metals-languageclient-0.2.2.tgz#81c7eeb00c8945759987a289aa6e32f8008e0cce"
-  integrity sha512-ib0Wjxa6EOqHuamtrN8GwobTc08Q4MLuT57hDsGyfQBClJOxyvgg4Q1ZwMDNB9DDyZzewQu4OTUpPbG57DXHZw==
+metals-languageclient@0.2.6:
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/metals-languageclient/-/metals-languageclient-0.2.6.tgz#56911bf550d4a3f2a9a814f585155493f7d3f63e"
+  integrity sha512-AmXIBcPX7h4m7rOOLs8FCT+H5p9YcXGaGLyQ4F8GinOvY+71oal46rduMiiI+U964+SGRwXZ5lEWgSMtmMkm+g==
   dependencies:
     fp-ts "^2.4.1"
     locate-java-home "^1.1.2"
     mkdirp "^1.0.3"
     node-fetch "^2.6.0"
-    promisify-child-process "^3.1.3"
+    promisify-child-process "^4.0.0"
     semver "^7.1.1"
     shell-quote "^1.7.2"
     vscode-languageserver-protocol "3.15.3"
@@ -404,17 +397,10 @@ prettier@2.0.5:
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.0.5.tgz#d6d56282455243f2f92cc1716692c08aa31522d4"
   integrity sha512-7PtVymN48hGcO4fGjybyBSIWDsLU4H4XlvOHfq91pz9kkGlonzwTfYkaIEwiRg/dAJF9YlbsduBAgtYLi+8cFg==
 
-promisify-child-process@4.1.0:
+promisify-child-process@4.1.0, promisify-child-process@^4.0.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/promisify-child-process/-/promisify-child-process-4.1.0.tgz#b910c4592880c69254bae0ddd080b89a3d25182c"
   integrity sha512-oj4hb3nOOYAP4g/n4ruq2ij1mgAHJjqBGYTUfpvUQmAVh+bRcBkk11C9A/do7Ebtm6qtLDOHekVvlxNn1bFPEA==
-
-promisify-child-process@^3.1.3:
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/promisify-child-process/-/promisify-child-process-3.1.4.tgz#3321827f283c0be30de1354bec1c6c627f02d53c"
-  integrity sha512-tLifJs99E4oOXUz/dKQjRgdchfiepmYQzBVrcVX9BtUWi9aGJeGSf2KgXOWBW1JFsSYgLkl1Z9HRm8i0sf4cTg==
-  dependencies:
-    "@babel/runtime" "^7.1.5"
 
 read@^1.0.7:
   version "1.0.7"
@@ -431,11 +417,6 @@ readable-stream@^3.0.6:
     inherits "^2.0.3"
     string_decoder "^1.1.1"
     util-deprecate "^1.0.1"
-
-regenerator-runtime@^0.13.2:
-  version "0.13.3"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.3.tgz#7cf6a77d8f5c6f60eb73c5fc1955b2ceb01e6bf5"
-  integrity sha512-naKIZz2GQ8JWh///G7L3X6LaQUAMp2lvb1rvwwsURe/VXwD6VMfr+/1NuNw3ag8v2kY1aQ/go5SNn79O9JU7yw==
 
 safe-buffer@~5.1.0:
   version "5.1.2"
