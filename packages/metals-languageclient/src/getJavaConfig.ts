@@ -28,6 +28,7 @@ export function getJavaConfig({
   const coursierPath = path.join(extensionPath, "./coursier");
   const extraEnv = {
     COURSIER_REPOSITORIES: customRepositories.join("|"),
+    JAVA_HOME: javaHome,
   };
 
   return {
