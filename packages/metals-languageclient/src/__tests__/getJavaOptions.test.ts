@@ -65,6 +65,13 @@ describe("getJavaOptions", () => {
     const options = getJavaOptions(workspaceRoot);
     expect(options).toEqual(proxyOptions);
   });
+
+  it("ignores PrintCommandLineFlags", () => {
+    const jvmOpts = ["-XX:+PrintCommandLineFlags", ...proxyOptions];
+    const workspaceRoot = createWorskpace(jvmOpts);
+    const options = getJavaOptions(workspaceRoot);
+    expect(options).toEqual(proxyOptions);
+  });
 });
 
 function createWorskpace(jvmOpts: string[]): string {
