@@ -7,6 +7,7 @@ import * as os from "os";
 import { promisify } from "util";
 import { pipeline } from "stream";
 import { OutputChannel } from "./interfaces/OutputChannel";
+import { TranscodeEncoding } from "buffer";
 
 const defaultJabbaVersion = "0.11.2";
 
@@ -104,7 +105,7 @@ function download({
 
 function outputToString(
   out: Buffer | string | null | undefined,
-  enc: string = "utf8"
+  enc: TranscodeEncoding = "utf8"
 ): string {
   return out instanceof Buffer ? out.toString(enc) : out ? <string>out : "";
 }
