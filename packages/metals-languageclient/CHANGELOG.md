@@ -1,6 +1,9 @@
 ## metals-languageclient changelog
 
-### v0.2.4 (2020/05/14 05:28 +00:00)
+### v0.2.6 (2020/05/14 05:37 +00:00)
+- [00602f9](https://github.com/scalameta/metals-languageclient/commit/00602f9da4133cf66068abb9f8132c178f3c5ef1) Release v0.2.3
+
+### v0.2.5 (2020/05/14 05:28 +00:00)
 - [729eca3](https://github.com/scalameta/metals-languageclient/commit/729eca386c3ff00ec8fea5a77e9f037e198b8592) Update @types/node and specify encoding type (@ckipp01)
 - [096def5](https://github.com/scalameta/metals-languageclient/commit/096def5d475465ffcae311508dc8ffae53132e19) Bump typescript from 3.8.3 to 3.9.2 (@dependabot-preview[bot])
 - [8b4b44c](https://github.com/scalameta/metals-languageclient/commit/8b4b44c2d08456d4b12d0f93012cd20b29cc3904) support "-XX:+PrintCommandLineFlags" in .jvmOpts (@bjaglin)
