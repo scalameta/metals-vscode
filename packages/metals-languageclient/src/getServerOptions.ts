@@ -29,10 +29,10 @@ export function getServerOptions({
     ...mainArgs,
   ];
 
-  const env = { ...process.env, ...extraEnv };
+  const env = () => ({ ...process.env, ...extraEnv });
 
   return {
-    run: { command: javaPath, args: launchArgs, options: { env } },
-    debug: { command: javaPath, args: launchArgs, options: { env } },
+    run: { command: javaPath, args: launchArgs, options: { env: env() } },
+    debug: { command: javaPath, args: launchArgs, options: { env: env() } },
   };
 }
