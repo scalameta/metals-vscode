@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.1.tgz#5d93e0a099cd0acd5ef3d5bde3c086e1f49ff68c"
   integrity sha512-FAYBGwC+W6F9+huFIDtn43cpy7+SzG+atzRiTfdp3inUKL2hXnd4rG8hylJLIh4+hqrQy1P17kvJByE/z825hA==
 
-"@types/shell-quote@1.6.1":
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/@types/shell-quote/-/shell-quote-1.6.1.tgz#eed0cd93ac3628427d7b44c4550f854f9400e39f"
-  integrity sha512-t0bxRLQ75MMF7EeICa1eYC//o1/6gPaUV7ELke4l4OkwpZ9apOzvv2oR5F2PmQJ3tM83Lo+MNKfAXn5gQRMcnA==
+"@types/shell-quote@1.6.2":
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/@types/shell-quote/-/shell-quote-1.6.2.tgz#9f22cdcf72fd3dfc802938222e115b41071e7117"
+  integrity sha512-M5TzVuMwWzRtBqwa/edfiC5xOzuJHjrWVLrPishrLWCN83tTdDxjgMYWJG+anqP01ofPemijD2iWHzPqgkQ+wA==
 
 "@types/vscode@1.43.0":
   version "1.43.0"
