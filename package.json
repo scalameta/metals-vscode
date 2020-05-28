@@ -143,6 +143,11 @@
           "type": "boolean",
           "default": false,
           "description": "Enable/disable goto super method code lens."
+        },
+        "metals.enableStripMarginOnTypeFormatting": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "When enabled, if you press the return key from the first line of a multiline string containing a pipe, it will automatically add `.stripMargin`."
         }
       }
     },
