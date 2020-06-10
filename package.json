@@ -42,12 +42,15 @@
     "Programming Languages"
   ],
   "activationEvents": [
-    "onCommand:metals.new-scala-project-activate",
+    "onCommand:metals.new-scala-project",
+    "onDebugResolve:scala",
     "onLanguage:scala",
     "workspaceContains:build.sbt",
     "workspaceContains:build.sc",
     "workspaceContains:project/build.properties",
-    "workspaceContains:**/scala/**"
+    "workspaceContains:src/main/scala",
+    "workspaceContains:*/src/main/scala",
+    "workspaceContains:*/*/src/main/scala"
   ],
   "contributes": {
     "configurationDefaults": {
@@ -69,13 +72,7 @@
     "viewsWelcome": [
       {
         "view": "metalsPackages",
-        "contents": "No Scala project found.\n[New Scala project](command:metals.new-scala-project-activate)",
-        "when": "!metals:enabled"
-      },
-      {
-        "view": "metalsPackages",
-        "contents": "No Scala project found.\n[New Scala project](command:metals.new-scala-project)",
-        "when": "metals:enabled && metals:no-build-tool"
+        "contents": "No Scala project found.\n[New Scala project](command:metals.new-scala-project)"
       }
     ],
     "views": {
