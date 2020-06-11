@@ -379,7 +379,7 @@
     "@types/vscode": "1.43.0",
     "prettier": "2.0.5",
     "typescript": "3.9.5",
-    "vsce": "1.76.0"
+    "vsce": "1.76.1"
   },
   "dependencies": {
     "metals-languageclient": "0.2.6",
