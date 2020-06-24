@@ -112,8 +112,14 @@ export function startTreeView(
         if (i < params.uriChain.length) {
           const uri = params.uriChain[i];
           const isExpanded = expandedNode(params.viewId).has(uri);
+          const isDestinationNode = i === 0;
           if (isExpanded) {
-            return Promise.resolve();
+            if (isDestinationNode)
+              return view.reveal(uri, {
+                select: true,
+                focus: true,
+              });
+            else return Promise.resolve();
           } else {
             // Recursively resolves the parent nodes before revealing the final child
             // node at index 0.
@@ -124,7 +130,6 @@ export function startTreeView(
               // `relativeTop: number | undefined` option that could solve this
               // problem but it's not possible for us to pass it in through the
               // public API.
-              const isDestinationNode = i == 0;
               return view.reveal(uri, {
                 expand: true,
                 select: isDestinationNode,
