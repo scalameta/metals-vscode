@@ -597,19 +597,14 @@ function launchMetals(
     // bar with a "cancel" button.
     client.onRequest(MetalsSlowTask.type, (params, requestToken) => {
       return new Promise((requestResolve) => {
+        const showLogs = ` ([show logs](command:${ClientCommands.toggleLogs} "Show Metals logs"))`;
         window.withProgress(
           {
             location: ProgressLocation.Notification,
-            title: params.message,
+            title: params.message + showLogs,
             cancellable: true,
           },
           (progress, progressToken) => {
-            const showLogs = !params.quietLogs;
-            if (showLogs) {
-              // Open logs so user can keep track of progress.
-              client.outputChannel.show(true);
-            }
-
             // Update total running time every second.
             let seconds = params.secondsElapsed || 0;
             const interval = setInterval(() => {
@@ -620,7 +615,6 @@ function launchMetals(
             // Hide logs and clean up resources on completion.
             function onComplete() {
               clearInterval(interval);
-              client.outputChannel.hide();
             }
 
             // Client triggered cancelation from the progress notification.
