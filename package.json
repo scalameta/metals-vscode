@@ -215,6 +215,16 @@
         "command": "metals.go-to-super-method",
         "category": "Metals",
         "title": "Go to super method"
+      },
+      {
+        "command": "metals.ammonite-start",
+        "category": "Metals",
+        "title": "Start Ammonite build server"
+      },
+      {
+        "command": "metals.ammonite-stop",
+        "category": "Metals",
+        "title": "Stop Ammonite build server"
       }
     ],
     "menus": {
@@ -276,6 +286,14 @@
         },
         {
           "command": "metals.go-to-super-method",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.ammonite-start",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.ammonite-stop",
           "when": "metals:enabled"
         }
       ],

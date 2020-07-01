@@ -344,6 +344,8 @@ function launchMetals(
       "compile-cascade",
       "compile-clean",
       "compile-cancel",
+      "ammonite-start",
+      "ammonite-stop",
     ].forEach((command) => {
       registerCommand("metals." + command, async () =>
         client.sendRequest(ExecuteCommandRequest.type, { command: command })
