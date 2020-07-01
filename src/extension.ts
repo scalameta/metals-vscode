@@ -43,6 +43,7 @@ import {
   MetalsInputBox,
   MetalsWindowStateDidChange,
   MetalsQuickPick,
+  MetalsOpenWindowParams,
 } from "./protocol";
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
@@ -84,13 +85,25 @@ export async function activate(context: ExtensionContext) {
   detectLaunchConfigurationChanges();
   checkServerVersion();
 
-  getJavaHome(workspace.getConfiguration("metals").get("javaHome"))
-    .then((javaHome) => fetchAndLaunchMetals(context, javaHome))
-    .catch((err) => {
-      outputChannel.appendLine(err);
-      showMissingJavaMessage();
-    });
-  commands.executeCommand("setContext", "metals:enabled", true);
+  return window.withProgress(
+    {
+      location: ProgressLocation.Window,
+      title: `Starting Metals server...`,
+      cancellable: false,
+    },
+    async () => {
+      commands.executeCommand("setContext", "metals:enabled", true);
+      try {
+        const javaHome = await getJavaHome(
+          workspace.getConfiguration("metals").get("javaHome")
+        );
+        return fetchAndLaunchMetals(context, javaHome);
+      } catch (err) {
+        outputChannel.appendLine(err);
+        showMissingJavaMessage();
+      }
+    }
+  );
 }
 
 function showMissingJavaMessage(): Thenable<void> {
@@ -191,9 +204,9 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   });
 
   const title = `Downloading Metals v${serverVersion}`;
-  trackDownloadProgress(title, outputChannel, fetchProcess).then(
+  return trackDownloadProgress(title, outputChannel, fetchProcess).then(
     (classpath) => {
-      launchMetals(
+      return launchMetals(
         outputChannel,
         context,
         classpath,
@@ -277,6 +290,7 @@ function launchMetals(
       slowTaskProvider: true,
       statusBarProvider: "on",
       treeViewProvider: true,
+      openNewWindowProvider: true,
     },
   };
 
@@ -317,7 +331,7 @@ function launchMetals(
 
   context.subscriptions.push(client.start());
 
-  client.onReady().then(() => {
+  return client.onReady().then(() => {
     let doctor: WebviewPanel | undefined;
     function getDoctorPanel(isReload: boolean): WebviewPanel {
       if (!doctor) {
@@ -419,6 +433,17 @@ function launchMetals(
           break;
         case "metals-model-refresh":
           compilationDoneEmitter.fire();
+          break;
+        case "metals-open-folder":
+          const openWindowParams = params
+            .arguments?.[0] as MetalsOpenWindowParams;
+          if (openWindowParams) {
+            commands.executeCommand(
+              "vscode.openFolder",
+              Uri.parse(openWindowParams.uri),
+              openWindowParams.openNewWindow
+            );
+          }
           break;
         case "metals-doctor-run":
         case "metals-doctor-reload":
@@ -555,6 +580,12 @@ function launchMetals(
       return client.sendRequest(ExecuteCommandRequest.type, {
         command: "new-scala-file",
         arguments: [directory?.toString()],
+      });
+    });
+
+    registerCommand("metals.new-scala-project", async () => {
+      return client.sendRequest(ExecuteCommandRequest.type, {
+        command: "new-scala-project",
       });
     });
 

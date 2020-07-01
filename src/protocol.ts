@@ -99,3 +99,8 @@ export namespace MetalsWindowStateDidChange {
 export interface MetalsWindowStateDidChangeParams {
   focused: boolean;
 }
+
+export interface MetalsOpenWindowParams {
+  uri: string;
+  openNewWindow: boolean;
+}
