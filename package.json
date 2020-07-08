@@ -72,7 +72,8 @@
     "viewsWelcome": [
       {
         "view": "metalsPackages",
-        "contents": "No Scala project found.\n[New Scala project](command:metals.new-scala-project)"
+        "contents": "No Scala project found.\n[New Scala project](command:metals.new-scala-project)",
+        "when": "workbenchState != empty"
       }
     ],
     "views": {
