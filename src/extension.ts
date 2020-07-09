@@ -338,7 +338,8 @@ function launchMetals(
         doctor = window.createWebviewPanel(
           "metals-doctor",
           "Metals Doctor",
-          ViewColumn.Active
+          ViewColumn.Active,
+          { enableCommandUris: true }
         );
         context.subscriptions.push(doctor);
         doctor.onDidDispose(() => {
@@ -527,6 +528,20 @@ function launchMetals(
         });
       }
     );
+
+    registerCommand("metals.reset-choice-interactive", () => {
+      client.sendRequest(ExecuteCommandRequest.type, {
+        command: "reset-choice",
+        arguments: [],
+      });
+    });
+
+    registerCommand("metals.reset-choice", (args) => {
+      client.sendRequest(ExecuteCommandRequest.type, {
+        command: "reset-choice",
+        arguments: args,
+      });
+    });
 
     registerCommand("metals.goto", (args) => {
       client.sendRequest(ExecuteCommandRequest.type, {
