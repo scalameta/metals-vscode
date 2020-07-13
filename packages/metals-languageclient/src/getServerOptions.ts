@@ -4,7 +4,7 @@ import { JavaConfig } from "./getJavaConfig";
 interface GetServerOptions {
   metalsClasspath: string;
   serverProperties: string[] | undefined;
-  clientName: string;
+  clientName?: string;
   javaConfig: JavaConfig;
 }
 
@@ -14,11 +14,12 @@ export function getServerOptions({
   clientName,
   javaConfig: { javaOptions, javaPath, extraEnv },
 }: GetServerOptions): ServerOptions {
-  const baseProperties = [
-    `-Dmetals.client=${clientName}`,
-    "-Xss4m",
-    "-Xms100m",
-  ];
+  const baseProperties = ["-Xss4m", "-Xms100m"];
+
+  if (clientName) {
+    baseProperties.push(`-Dmetals.client=${clientName}`);
+  }
+
   const mainArgs = ["-classpath", metalsClasspath, "scala.meta.metals.Main"];
 
   // let user properties override base properties
