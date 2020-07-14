@@ -59,6 +59,7 @@ import {
   installJava,
   MetalsTreeViews,
   MetalsTreeViewReveal,
+  MetalsInitializationOptions,
 } from "metals-languageclient";
 import * as metalsLanguageClient from "metals-languageclient";
 import { startTreeView } from "./treeview";
@@ -271,6 +272,28 @@ function launchMetals(
     clientName: "vscode",
   });
 
+  const initializationOptions: MetalsInitializationOptions = {
+    compilerOptions: {
+      completionCommand: "editor.action.triggerSuggest",
+      overrideDefFormat: "unicode",
+      parameterHintsCommand: "editor.action.triggerParameterHints",
+    },
+    decorationProvider: true,
+    debuggingProvider: true,
+    doctorProvider: "html",
+    didFocusProvider: true,
+    executeClientCommandProvider: true,
+    globSyntax: "vscode",
+    icons: "vscode",
+    inputBoxProvider: true,
+    openFilesOnRenameProvider: true,
+    openNewWindowProvider: true,
+    quickPickProvider: true,
+    slowTaskProvider: true,
+    statusBarProvider: "on",
+    treeViewProvider: true,
+  };
+
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{ scheme: "file", language: "scala" }],
     synchronize: {
@@ -278,20 +301,7 @@ function launchMetals(
     },
     revealOutputChannelOn: RevealOutputChannelOn.Never,
     outputChannel: outputChannel,
-    initializationOptions: {
-      decorationProvider: true,
-      debuggingProvider: true,
-      doctorProvider: "html",
-      didFocusProvider: true,
-      executeClientCommandProvider: true,
-      inputBoxProvider: true,
-      openFilesOnRenameProvider: true,
-      quickPickProvider: true,
-      slowTaskProvider: true,
-      statusBarProvider: "on",
-      treeViewProvider: true,
-      openNewWindowProvider: true,
-    },
+    initializationOptions,
   };
 
   const client = new LanguageClient(
