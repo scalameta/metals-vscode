@@ -30,10 +30,11 @@ or 11 installation.
 **macOS, Linux or Windows**. Metals is developed on macOS and every PR is tested
 on Ubuntu+Windows.
 
-**Scala 2.13, 2.12 and 2.11**. Metals supports these Scala versions 2.13.2,
-2.12.11, 2.12.10, 2.13.1, 2.11.12, 2.12.8, 2.12.9, 2.13.0, 0.24.0-RC1 and
-0.23.0. Note that 2.11.x support is deprecated and it will be removed in future
-releases. It's recommended to upgrade to Scala 2.12 or Scala 2.13
+**Scala 2.13, 2.12, 2.11 and Scala 3**. Metals supports these Scala versions
+2.13.3, 2.12.12, 2.12.11, 2.12.10, 2.13.1, 2.13.2, 2.11.12, 2.12.8, 2.12.9,
+2.13.0, 0.25.0-RC2, 0.24.0 and 0.24.0-RC1. Note that 2.11.x support is
+deprecated and it will be removed in future releases. It's recommended to
+upgrade to Scala 2.12 or Scala 2.13
 
 ## Installation
 
@@ -181,18 +182,20 @@ to find the latest SNAPSHOT version.
 Run the "Reload Window" command after updating the setting for the new version
 to take effect.
 
-## Gitignore `project/metals.sbt` `.metals/` and `.bloop/`
+## Files and Directories to include in your Gitignore
 
-The Metals server places logs and other files in the `.metals/` directory. The
+The Metals server places logs and other files in the `.metals` directory. The
 Bloop compile server places logs and compilation artifacts in the `.bloop`
 directory. Bloop plugin that generates Bloop configuration is added in the
-`project/metals.sbt` file. It's recommended to ignore these directories and file
-from version control systems like git.
+`project/metals.sbt` file. Working with Ammonite scripts will place compiled
+scripts into the `.ammonite` directory. It's recommended to exclude these
+directories and file from version control systems like git.
 
 ```sh
 # ~/.gitignore
 .metals/
 .bloop/
+.ammonite/
 project/metals.sbt
 ```
 
