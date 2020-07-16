@@ -429,6 +429,7 @@
     "test": "yarn compile",
     "build": "vsce package --yarn",
     "vscode:publish": "vsce publish --yarn",
+    "ovsx:publish": "ovsx publish",
     "format": "prettier --write '**/*.{ts,js,json,yml}'",
     "format-check": "prettier --check '**/*.{ts,js,json,yml}'"
   },
@@ -438,7 +439,8 @@
     "@types/vscode": "1.43.0",
     "prettier": "2.0.5",
     "typescript": "3.9.6",
-    "vsce": "1.77.0"
+    "vsce": "1.77.0",
+    "ovsx": "0.1.0-next.dacd2fd"
   },
   "dependencies": {
     "metals-languageclient": "0.2.8",

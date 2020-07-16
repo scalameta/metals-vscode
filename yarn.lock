@@ -368,6 +368,13 @@ osenv@^0.1.3:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
 
+ovsx@0.1.0-next.dacd2fd:
+  version "0.1.0-next.dacd2fd"
+  resolved "https://registry.yarnpkg.com/ovsx/-/ovsx-0.1.0-next.dacd2fd.tgz#319e3fb12bea82bc126d4e0f18eda2463ec0baf0"
+  integrity sha512-cdATv0t6HsLB7PmGe4Z0z8dMuQZBORiEf9wUq54tqy1Mq2UzWrUqBMvJXhHR8s0N1z7iES4mbCSf4s/uFFLeAA==
+  dependencies:
+    vsce "^1.75.0"
+
 parse-semver@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/parse-semver/-/parse-semver-1.1.1.tgz#9a4afd6df063dc4826f93fba4a99cf223f666cb8"
@@ -507,7 +514,7 @@ util-deprecate@^1.0.1:
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=
 
-vsce@1.77.0:
+vsce@1.77.0, vsce@^1.75.0:
   version "1.77.0"
   resolved "https://registry.yarnpkg.com/vsce/-/vsce-1.77.0.tgz#21364d3e63095b2f54e0f185445e8ff6ab614602"
   integrity sha512-8vOTCI3jGmOm0JJFu/BMAbqxpaSuka4S3hV9E6K5aWBUsDM1SGFExkIxHblnsI8sls43xP61DHorYT+K0F+GFA==
