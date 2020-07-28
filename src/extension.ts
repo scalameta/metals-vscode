@@ -311,6 +311,14 @@ function launchMetals(
     clientOptions
   );
 
+  {
+    const cmd = serverOptions.run.command;
+    const args = serverOptions.run.args;
+    outputChannel.appendLine(
+      `Starting metals using command '${cmd}' with args '${args}'`
+    );
+  }
+
   function registerCommand(command: string, callback: (...args: any[]) => any) {
     context.subscriptions.push(commands.registerCommand(command, callback));
   }
