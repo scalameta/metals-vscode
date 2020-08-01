@@ -6,6 +6,7 @@ import {
   workspace,
   ExtensionContext,
   window,
+  env,
   commands,
   CodeLensProvider,
   EventEmitter,
@@ -195,6 +196,8 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
     ? serverVersionConfig.trim()
     : defaultServerVersion;
 
+  outputChannel.appendLine(`Metals version: ${serverVersion}`);
+
   const serverProperties = config.get<string[]>("serverProperties")!;
   const customRepositories = config.get<string[]>("customRepositories")!;
 
@@ -351,6 +354,8 @@ function launchMetals(
 
   return client.onReady().then(() => {
     let doctor: WebviewPanel | undefined;
+    let stacktrace: WebviewPanel | undefined;
+
     function getDoctorPanel(isReload: boolean): WebviewPanel {
       if (!doctor) {
         doctor = window.createWebviewPanel(
@@ -368,6 +373,23 @@ function launchMetals(
       }
       return doctor;
     }
+    function getStacktracePanel(): WebviewPanel {
+      if (!stacktrace) {
+        stacktrace = window.createWebviewPanel(
+          "metals-stacktrace",
+          "Analyze Stacktrace",
+          ViewColumn.Beside,
+          { enableCommandUris: true }
+        );
+        context.subscriptions.push(stacktrace);
+        stacktrace.onDidDispose(() => {
+          stacktrace = undefined;
+        });
+      }
+      stacktrace.reveal();
+      return stacktrace;
+    }
+
     [
       ServerCommands.BuildImport,
       ServerCommands.BuildRestart,
@@ -441,8 +463,10 @@ function launchMetals(
         case ClientCommands.GotoLocation:
           const location =
             params.arguments && (params.arguments[0] as Location);
+          const otherWindow =
+            (params.arguments && (params.arguments[1] as Boolean)) || false;
           if (location) {
-            gotoLocation(location);
+            gotoLocation(location, otherWindow);
           }
           break;
         case ClientCommands.RefreshModel:
@@ -457,6 +481,13 @@ function launchMetals(
               Uri.parse(openWindowParams.uri),
               openWindowParams.openNewWindow
             );
+          }
+          break;
+        case "metals-show-stacktrace":
+          const html = params.arguments && params.arguments[0];
+          if (typeof html === "string") {
+            const panel = getStacktracePanel();
+            panel.webview.html = html;
           }
           break;
         case ClientCommands.RunDoctor:
@@ -541,6 +572,31 @@ function launchMetals(
         });
       }
     );
+
+    registerCommand(`metals.${ServerCommands.AnalyzeStacktrace}`, () => {
+      env.clipboard.readText().then((clip) => {
+        if (clip.trim().length < 1) {
+          window.showInformationMessage(
+            "Clipboard appears to be empty, copy stacktrace to clipboard and retry this command"
+          );
+        } else {
+          client.sendRequest(ExecuteCommandRequest.type, {
+            command: "analyze-stacktrace",
+            arguments: [clip],
+          });
+        }
+      });
+    });
+
+    registerCommand("metals.goto-path-uri", (...args) => {
+      const uri = args[0] as string;
+      const line = args[1] as number;
+      const otherWindow = args[2] as boolean;
+      const pos = new Position(line, 0);
+      const range = new Range(pos, pos);
+      const location = Location.create(uri, range);
+      gotoLocation(location, otherWindow);
+    });
 
     registerCommand(`metals.${ServerCommands.ResetChoice}`, (args = []) => {
       client.sendRequest(ExecuteCommandRequest.type, {
@@ -730,18 +786,30 @@ function launchMetals(
   });
 }
 
-function gotoLocation(location: Location): void {
+function gotoLocation(location: Location, otherWindow: Boolean): void {
   const range = new Range(
     location.range.start.line,
     location.range.start.character,
     location.range.end.line,
     location.range.end.character
   );
-  workspace
-    .openTextDocument(Uri.parse(location.uri))
-    .then((textDocument) =>
-      window.showTextDocument(textDocument, { selection: range })
-    );
+  var vs = ViewColumn.Active;
+  if (otherWindow) {
+    vs =
+      window.visibleTextEditors
+        .filter(
+          (vte) =>
+            window.activeTextEditor?.document.uri.scheme != "output" &&
+            vte.viewColumn
+        )
+        .pop()?.viewColumn || ViewColumn.Beside;
+  }
+  workspace.openTextDocument(Uri.parse(location.uri)).then((textDocument) =>
+    window.showTextDocument(textDocument, {
+      selection: range,
+      viewColumn: vs,
+    })
+  );
 }
 
 function trackDownloadProgress(
