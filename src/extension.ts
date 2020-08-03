@@ -24,6 +24,7 @@ import {
   TextEditorDecorationType,
   TextEditor,
   TextEditorEdit,
+  ConfigurationTarget,
 } from "vscode";
 import {
   LanguageClient,
@@ -85,6 +86,7 @@ const config = workspace.getConfiguration("metals");
 export async function activate(context: ExtensionContext) {
   detectLaunchConfigurationChanges();
   checkServerVersion();
+  configureGlobalSettingsDefaults();
 
   return window.withProgress(
     {
@@ -884,4 +886,34 @@ function isSupportedLanguage(languageId: TextDocument["languageId"]): boolean {
     default:
       return false;
   }
+}
+
+// NOTE(gabro): we would normally use the `configurationDefaults` contribution point in the
+// extension manifest but that's currently limited to language-scoped settings in VSCode.
+// We use this method to set global configuration settings such as `files.watcherExclude`
+// and `search.exclude`.
+function configureGlobalSettingsDefaults() {
+  function updateFileConfig(
+    configKey: string,
+    propertyKey: string,
+    newValues: Record<string, boolean>
+  ) {
+    const config = workspace.getConfiguration(configKey);
+    const currentValues = (config.get(propertyKey) || {}) as Record<
+      string,
+      boolean
+    >;
+    config.update(
+      propertyKey,
+      { ...currentValues, ...newValues },
+      ConfigurationTarget.Global
+    );
+  }
+  const ignoredMetalsDirs = {
+    "**/.bloop": true,
+    "**/.metals": true,
+    "**/target": true,
+  };
+  updateFileConfig("files", "watcherExclude", ignoredMetalsDirs);
+  updateFileConfig("search", "exclude", ignoredMetalsDirs);
 }
