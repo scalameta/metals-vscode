@@ -86,7 +86,7 @@ const config = workspace.getConfiguration("metals");
 export async function activate(context: ExtensionContext) {
   detectLaunchConfigurationChanges();
   checkServerVersion();
-  configureGlobalSettingsDefaults();
+  configureSettingsDefaults();
 
   return window.withProgress(
     {
@@ -891,28 +891,47 @@ function isSupportedLanguage(languageId: TextDocument["languageId"]): boolean {
 // NOTE(gabro): we would normally use the `configurationDefaults` contribution point in the
 // extension manifest but that's currently limited to language-scoped settings in VSCode.
 // We use this method to set global configuration settings such as `files.watcherExclude`.
-function configureGlobalSettingsDefaults() {
+function configureSettingsDefaults() {
   function updateFileConfig(
     configKey: string,
     propertyKey: string,
-    newValues: Record<string, boolean>
+    newValues: Record<string, boolean>,
+    configurationTarget:
+      | ConfigurationTarget.Global
+      | ConfigurationTarget.Workspace
   ) {
     const config = workspace.getConfiguration(configKey);
-    const currentValues = (config.get(propertyKey) || {}) as Record<
-      string,
-      boolean
-    >;
+    const configProperty = config.inspect<Record<string, boolean>>(propertyKey);
+    const currentValues = ((): Record<string, boolean> => {
+      switch (configurationTarget) {
+        case ConfigurationTarget.Global:
+          return configProperty?.globalValue ?? {};
+        case ConfigurationTarget.Workspace:
+          return configProperty?.workspaceValue ?? {};
+      }
+    })();
     config.update(
       propertyKey,
       { ...currentValues, ...newValues },
-      ConfigurationTarget.Global
+      configurationTarget
     );
   }
-  const ignoredMetalsDirs = {
-    "**/.bloop": true,
-    "**/.metals": true,
-    "**/target": true,
-    "**/.ammonite": true,
-  };
-  updateFileConfig("files", "watcherExclude", ignoredMetalsDirs);
+  updateFileConfig(
+    "files",
+    "watcherExclude",
+    {
+      "**/.bloop": true,
+      "**/.metals": true,
+      "**/.ammonite": true,
+    },
+    ConfigurationTarget.Global
+  );
+  updateFileConfig(
+    "files",
+    "watcherExclude",
+    {
+      "**/target": true,
+    },
+    ConfigurationTarget.Workspace
+  );
 }
