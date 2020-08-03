@@ -890,8 +890,7 @@ function isSupportedLanguage(languageId: TextDocument["languageId"]): boolean {
 
 // NOTE(gabro): we would normally use the `configurationDefaults` contribution point in the
 // extension manifest but that's currently limited to language-scoped settings in VSCode.
-// We use this method to set global configuration settings such as `files.watcherExclude`
-// and `search.exclude`.
+// We use this method to set global configuration settings such as `files.watcherExclude`.
 function configureGlobalSettingsDefaults() {
   function updateFileConfig(
     configKey: string,
@@ -913,6 +912,7 @@ function configureGlobalSettingsDefaults() {
     "**/.bloop": true,
     "**/.metals": true,
     "**/target": true,
+    "**/.ammonite": true,
   };
   updateFileConfig("files", "watcherExclude", ignoredMetalsDirs);
 }
