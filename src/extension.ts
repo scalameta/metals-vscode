@@ -915,5 +915,4 @@ function configureGlobalSettingsDefaults() {
     "**/target": true,
   };
   updateFileConfig("files", "watcherExclude", ignoredMetalsDirs);
-  updateFileConfig("search", "exclude", ignoredMetalsDirs);
 }
