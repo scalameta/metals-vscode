@@ -24,6 +24,7 @@ import {
   TextEditorDecorationType,
   TextEditor,
   TextEditorEdit,
+  ConfigurationTarget,
 } from "vscode";
 import {
   LanguageClient,
@@ -85,6 +86,7 @@ const config = workspace.getConfiguration("metals");
 export async function activate(context: ExtensionContext) {
   detectLaunchConfigurationChanges();
   checkServerVersion();
+  configureSettingsDefaults();
 
   return window.withProgress(
     {
@@ -884,4 +886,52 @@ function isSupportedLanguage(languageId: TextDocument["languageId"]): boolean {
     default:
       return false;
   }
+}
+
+// NOTE(gabro): we would normally use the `configurationDefaults` contribution point in the
+// extension manifest but that's currently limited to language-scoped settings in VSCode.
+// We use this method to set global configuration settings such as `files.watcherExclude`.
+function configureSettingsDefaults() {
+  function updateFileConfig(
+    configKey: string,
+    propertyKey: string,
+    newValues: Record<string, boolean>,
+    configurationTarget:
+      | ConfigurationTarget.Global
+      | ConfigurationTarget.Workspace
+  ) {
+    const config = workspace.getConfiguration(configKey);
+    const configProperty = config.inspect<Record<string, boolean>>(propertyKey);
+    const currentValues = ((): Record<string, boolean> => {
+      switch (configurationTarget) {
+        case ConfigurationTarget.Global:
+          return configProperty?.globalValue ?? {};
+        case ConfigurationTarget.Workspace:
+          return configProperty?.workspaceValue ?? {};
+      }
+    })();
+    config.update(
+      propertyKey,
+      { ...currentValues, ...newValues },
+      configurationTarget
+    );
+  }
+  updateFileConfig(
+    "files",
+    "watcherExclude",
+    {
+      "**/.bloop": true,
+      "**/.metals": true,
+      "**/.ammonite": true,
+    },
+    ConfigurationTarget.Global
+  );
+  updateFileConfig(
+    "files",
+    "watcherExclude",
+    {
+      "**/target": true,
+    },
+    ConfigurationTarget.Workspace
+  );
 }
