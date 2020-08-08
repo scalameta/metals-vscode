@@ -12,3 +12,5 @@ export * from "./installJava";
 export * from "./commands/restartServer";
 export * from "./interfaces/TreeViewProtocol";
 export * from "./interfaces/MetalsInitializationOptions";
+export * from "./interfaces/ClientCommands";
+export * from "./interfaces/ServerCommands";
