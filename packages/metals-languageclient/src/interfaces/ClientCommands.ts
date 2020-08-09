@@ -13,17 +13,13 @@ export enum ClientCommands {
    * on the UI elements.
    */
   EchoCommand = "metals-echo-command",
-  /**
-   * Focus on the window that lists all published diagnostics.
-   */
+  /** Focus on the window that lists all published diagnostics. */
   FocusDiagnostics = "metals-diagnostics-focus",
   /**
    * Move the cursor focus to the provided location.
    */
   GotoLocation = "metals-goto-location",
-  /**
-   * Open a specific folder either in the same or new window
-   */
+  /** Open a specific folder either in the same or new window */
   OpenFolder = "metals-open-folder",
   /**
    * Notifies the client that the model has been updated and it
@@ -35,18 +31,14 @@ export enum ClientCommands {
    * there is no open doctor window.
    */
   ReloadDoctor = "metals-doctor-reload",
-  /**
-   * Focus on a window displaying troubleshooting help from the Metals doctor.
-   */
+  /** Focus on a window displaying troubleshooting help from the Metals doctor. */
   RunDoctor = "metals-doctor-run",
   /**
    * Command to trigger a debug session with Metals. Triggered by a code lens
    * in the editor.
    */
   StartDebugSession = "metals-debug-session-start",
-  /**
-   * Command to run the codev via a code lens in the editor.
-   */
+  /** Command to run the codev via a code lens in the editor. */
   StartRunSession = "metals-run-session-start",
   /**
    * Focus or remove focus on the output logs reported by the server via

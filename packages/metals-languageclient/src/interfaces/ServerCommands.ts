@@ -5,13 +5,9 @@
  *  - https://scalameta.org/metals/docs/editors/new-editor.html#metals-server-commands
  */
 export enum ServerCommands {
-  /**
-   * Start the Ammonite build server.
-   */
+  /** Start the Ammonite build server. */
   AmmoniteStart = "ammonite-start",
-  /**
-   * Stop the Ammonite build server.
-   */
+  /** Stop the Ammonite build server. */
   AmmoniteStop = "ammonite-stop",
   /**
    * Prompt the user to select a new build server to connect to.
@@ -20,22 +16,16 @@ export enum ServerCommands {
    * build servers on the computer.
    */
   BspSwitch = "bsp-switch",
-  /**
-   * Establish a new connection to the build server and reindex the workspace.
-   */
+  /** Establish a new connection to the build server and reindex the workspace. */
   BuildConnect = "build-connect",
-  /**
-   * Import the latest changes from the build.
-   */
+  /** Import the latest changes from the build. */
   BuildImport = "build-import",
   /**
    * Unconditionally stop the current running Bloop server and start a new
    * one using Bloop launcher.
    */
   BuildRestart = "build-restart",
-  /**
-   * Cancel the current ongoing compilation, if any.
-   */
+  /** Cancel the current ongoing compilation, if any. */
   CancelCompilation = "compile-cancel",
   /**
    * Compile the current open files along with all build targets in this
@@ -48,42 +38,26 @@ export enum ServerCommands {
    * then it will also compile the test sources that depend on main.
    */
   CascadeCompile = "compile-cascade",
-  /**
-   * Recompile all build targets in this workspace.
-   */
+  /** Recompile all build targets in this workspace. */
   CleanCompile = "compile-clean",
-  /**
-   * Start debug adapter.
-   */
+  /** Start debug adapter. */
   DebugAdapterStart = "debug-adapter-start",
-  /**
-   * Open the Metals doctor to troubleshoot potential problems with the build.
-   */
+  /** Open the Metals doctor to troubleshoot potential problems with the build. */
   DoctorRun = "doctor-run",
-  /**
-   * Move the cursor to the definition of the argument symbol.
-   */
+  /** Move the cursor to the definition of the argument symbol. */
   Goto = "goto",
-  /**
-   * Jumps to the super method/field definition of a symbol.
-   */
+  /** Jumps to the super method/field definition of a symbol. */
   GotoSuperMethod = "goto-super-method",
   /**
    * Create and open a new Scala class, object, trait, package object, or
    * worksheet.
    */
   NewScalaFile = "new-scala-file",
-  /**
-   * Creaet a new Scala project using one of the available g8 templates.
-   */
+  /** Creaet a new Scala project using one of the available g8 templates. */
   NewScalaProject = "new-scala-project",
-  /**
-   * Reset a decision you made about a specific setting.
-   */
+  /** Reset a decision you made about a specific setting. */
   ResetChoice = "reset-choice",
-  /**
-   * Walk all the files in the workspace and index where symbols are defined.
-   */
+  /** Walk all the files in the workspace and index where symbols are defined. */
   SourcesScan = "sources-scan",
   /**
    * When user executes this command it will calculate inheritance hierarchy of
