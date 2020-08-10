@@ -15,6 +15,16 @@ export namespace MetalsInputBox {
     void,
     void
   >("metals/inputBox");
+
+  export const handleInput = function (
+    result: string | undefined
+  ): MetalsInputBoxResult {
+    if (result === undefined || result.trim() === "") {
+      return { cancelled: true };
+    } else {
+      return { value: result };
+    }
+  };
 }
 
 export interface MetalsInputBoxResult {
