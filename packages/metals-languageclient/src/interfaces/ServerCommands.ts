@@ -4,29 +4,29 @@
  *
  *  - https://scalameta.org/metals/docs/editors/new-editor.html#metals-server-commands
  */
-export enum ServerCommands {
+export const ServerCommands = {
   /** Start the Ammonite build server. */
-  AmmoniteStart = "ammonite-start",
+  AmmoniteStart: "ammonite-start",
   /** Stop the Ammonite build server. */
-  AmmoniteStop = "ammonite-stop",
+  AmmoniteStop: "ammonite-stop",
   /**
    * Prompt the user to select a new build server to connect to.
    *
    * This command does nothing in the case there are less than two installed
    * build servers on the computer.
    */
-  BspSwitch = "bsp-switch",
+  BspSwitch: "bsp-switch",
   /** Establish a new connection to the build server and reindex the workspace. */
-  BuildConnect = "build-connect",
+  BuildConnect: "build-connect",
   /** Import the latest changes from the build. */
-  BuildImport = "build-import",
+  BuildImport: "build-import",
   /**
    * Unconditionally stop the current running Bloop server and start a new
    * one using Bloop launcher.
    */
-  BuildRestart = "build-restart",
+  BuildRestart: "build-restart",
   /** Cancel the current ongoing compilation, if any. */
-  CancelCompilation = "compile-cancel",
+  CancelCompilation: "compile-cancel",
   /**
    * Compile the current open files along with all build targets in this
    * workspace that depend on those files.
@@ -37,28 +37,28 @@ export enum ServerCommands {
    * For example, if you change the API in main sources and run cascade compile
    * then it will also compile the test sources that depend on main.
    */
-  CascadeCompile = "compile-cascade",
+  CascadeCompile: "compile-cascade",
   /** Recompile all build targets in this workspace. */
-  CleanCompile = "compile-clean",
+  CleanCompile: "compile-clean",
   /** Start debug adapter. */
-  DebugAdapterStart = "debug-adapter-start",
+  DebugAdapterStart: "debug-adapter-start",
   /** Open the Metals doctor to troubleshoot potential problems with the build. */
-  DoctorRun = "doctor-run",
+  DoctorRun: "doctor-run",
   /** Move the cursor to the definition of the argument symbol. */
-  Goto = "goto",
+  Goto: "goto",
   /** Jumps to the super method/field definition of a symbol. */
-  GotoSuperMethod = "goto-super-method",
+  GotoSuperMethod: "goto-super-method",
   /**
    * Create and open a new Scala class, object, trait, package object, or
    * worksheet.
    */
-  NewScalaFile = "new-scala-file",
+  NewScalaFile: "new-scala-file",
   /** Creaet a new Scala project using one of the available g8 templates. */
-  NewScalaProject = "new-scala-project",
+  NewScalaProject: "new-scala-project",
   /** Reset a decision you made about a specific setting. */
-  ResetChoice = "reset-choice",
+  ResetChoice: "reset-choice",
   /** Walk all the files in the workspace and index where symbols are defined. */
-  SourcesScan = "sources-scan",
+  SourcesScan: "sources-scan",
   /**
    * When user executes this command it will calculate inheritance hierarchy of
    * a class that contains given method. Then it will filter out classes not
@@ -67,5 +67,7 @@ export enum ServerCommands {
    * effect on other symbols than method definition. QuickPick will show up
    * only if more than one result is found.
    */
-  SuperMethodHierarchy = "super-method-hierarchy",
-}
+  SuperMethodHierarchy: "super-method-hierarchy",
+} as const;
+
+type ServerCommands = typeof ServerCommands;
