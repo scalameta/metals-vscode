@@ -440,7 +440,7 @@
     "prettier": "2.0.5",
     "typescript": "3.9.7",
     "vsce": "1.78.0",
-    "ovsx": "0.1.0-next.dacd2fd"
+    "ovsx": "0.1.0-next.9321255"
   },
   "dependencies": {
     "metals-languageclient": "0.2.8",
