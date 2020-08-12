@@ -73,6 +73,8 @@ const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
 const openSettingsCommand = "workbench.action.openSettings";
 let treeViews: MetalsTreeViews | undefined;
+let currentClient: LanguageClient | undefined;
+
 let decorationType: TextEditorDecorationType = window.createTextEditorDecorationType(
   {
     isWholeLine: true,
@@ -105,6 +107,10 @@ export async function activate(context: ExtensionContext) {
       }
     }
   );
+}
+
+export function deactivate(): Thenable<void> | undefined {
+  return currentClient?.stop();
 }
 
 function showMissingJavaMessage(): Thenable<void> {
@@ -311,6 +317,7 @@ function launchMetals(
     clientOptions
   );
 
+  currentClient = client;
   function registerCommand(command: string, callback: (...args: any[]) => any) {
     context.subscriptions.push(commands.registerCommand(command, callback));
   }
