@@ -436,7 +436,7 @@
   "devDependencies": {
     "@types/node": "14.0.27",
     "@types/shell-quote": "1.7.0",
-    "@types/vscode": "1.43.0",
+    "@types/vscode": "1.48.0",
     "prettier": "2.0.5",
     "typescript": "3.9.7",
     "vsce": "1.78.0",
