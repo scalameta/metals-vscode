@@ -21,6 +21,7 @@ export function fetchMetals({
     [
       ...javaOptions,
       ...fetchProperties,
+      "-Dfile.encoding=UTF-8",
       "-jar",
       coursierPath,
       "fetch",

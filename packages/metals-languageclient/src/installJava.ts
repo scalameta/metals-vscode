@@ -30,14 +30,14 @@ export function installJava({
   const jabbaPath = path.join(bin, jabbaBinaryName());
 
   return mkdirp(bin)
-    .catch((err: Error) => {
-      console.debug(err);
-      outputChannel.appendLine(err.message);
-    })
     .then(() =>
-      download({ url: jabbaUrl, outputPath: jabbaPath, makeExecutable: true })
+      download({
+        url: jabbaUrl,
+        outputPath: jabbaPath,
+        makeExecutable: true,
+      })
     )
-    .then(() => pcp.exec(`${jabbaPath} ls-remote`))
+    .then(() => pcp.exec(`"${jabbaPath}" ls-remote`))
     .then((out) =>
       outputToString(out.stdout)
         .split("\n")
@@ -54,6 +54,11 @@ export function installJava({
         .then(() => outputChannel.appendLine(`${java} installed`))
         .then(() => pcp.exec(`${jabbaPath} which --home ${java}`))
         .then((e: pcp.Output) => outputToString(e.stdout).trim());
+    })
+    .catch((err: Error) => {
+      console.debug(err);
+      outputChannel.appendLine(err.message);
+      throw err;
     });
 }
 
