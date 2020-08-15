@@ -10,5 +10,13 @@ export * from "./getJavaConfig";
 export * from "./installJava";
 
 export * from "./commands/restartServer";
+
 export * from "./interfaces/TreeViewProtocol";
 export * from "./interfaces/MetalsInitializationOptions";
+export * from "./interfaces/ClientCommands";
+export * from "./interfaces/ServerCommands";
+export * from "./interfaces/MetalsSlowTask";
+export * from "./interfaces/Extensions";
+export * from "./interfaces/MetalsInputBox";
+export * from "./interfaces/MetalsQuickPick";
+export * from "./interfaces/MetalsStatus";
