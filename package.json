@@ -240,9 +240,9 @@
         "title": "Reveal super method hierachy"
       },
       {
-        "command": "metals.reset-choice-interactive",
+        "command": "metals.reset-choice",
         "category": "Metals",
-        "title": "Reset Choice Interactive"
+        "title": "Reset Choice"
       },
       {
         "command": "metals.go-to-super-method",
@@ -326,7 +326,7 @@
           "when": "metals:enabled"
         },
         {
-          "command": "metals.reset-choice-interactive",
+          "command": "metals.reset-choice",
           "when": "metals:enabled"
         },
         {

@@ -535,14 +535,7 @@ function launchMetals(
       }
     );
 
-    registerCommand(`metals.${ServerCommands.ResetChoice}-interactive`, () => {
-      client.sendRequest(ExecuteCommandRequest.type, {
-        command: ServerCommands.ResetChoice,
-        arguments: [],
-      });
-    });
-
-    registerCommand(`metals.${ServerCommands.ResetChoice}`, (args) => {
+    registerCommand(`metals.${ServerCommands.ResetChoice}`, (args = []) => {
       client.sendRequest(ExecuteCommandRequest.type, {
         command: ServerCommands.ResetChoice,
         arguments: args,
