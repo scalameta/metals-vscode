@@ -35,17 +35,6 @@ import {
   TextDocumentPositionParams,
   TextDocument,
 } from "vscode-languageclient";
-import { ClientCommands } from "./client-commands";
-import {
-  MetalsSlowTask,
-  MetalsStatus,
-  MetalsDidFocus,
-  ExecuteClientCommand,
-  MetalsInputBox,
-  MetalsWindowStateDidChange,
-  MetalsQuickPick,
-  MetalsOpenWindowParams,
-} from "./protocol";
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
 import {
@@ -58,9 +47,19 @@ import {
   getServerOptions,
   downloadProgress,
   installJava,
+  ClientCommands,
   MetalsTreeViews,
   MetalsTreeViewReveal,
   MetalsInitializationOptions,
+  ServerCommands,
+  MetalsSlowTask,
+  ExecuteClientCommand,
+  MetalsOpenWindowParams,
+  MetalsStatus,
+  MetalsDidFocus,
+  MetalsWindowStateDidChange,
+  MetalsInputBox,
+  MetalsQuickPick,
 } from "metals-languageclient";
 import * as metalsLanguageClient from "metals-languageclient";
 import { startTreeView } from "./treeview";
@@ -370,16 +369,16 @@ function launchMetals(
       return doctor;
     }
     [
-      "build-import",
-      "build-restart",
-      "build-connect",
-      "sources-scan",
-      "doctor-run",
-      "compile-cascade",
-      "compile-clean",
-      "compile-cancel",
-      "ammonite-start",
-      "ammonite-stop",
+      ServerCommands.BuildImport,
+      ServerCommands.BuildRestart,
+      ServerCommands.BuildConnect,
+      ServerCommands.SourcesScan,
+      ServerCommands.DoctorRun,
+      ServerCommands.CascadeCompile,
+      ServerCommands.CleanCompile,
+      ServerCommands.CancelCompilation,
+      ServerCommands.AmmoniteStart,
+      ServerCommands.AmmoniteStop,
     ].forEach((command) => {
       registerCommand("metals." + command, async () =>
         client.sendRequest(ExecuteCommandRequest.type, { command: command })
@@ -387,45 +386,40 @@ function launchMetals(
     });
 
     let channelOpen = false;
-    const clientCommands: {
-      [k in keyof typeof ClientCommands]: (...args: unknown[]) => unknown;
-    } = {
-      focusDiagnostics: () =>
-        commands.executeCommand("workbench.action.problems.focus"),
-      runDoctor: () => commands.executeCommand("metals.doctor-run"),
-      // Open or close the extension output channel. The user may have to trigger
-      // this command twice in case the channel has been focused through another
-      // button. There is no `isFocused` API to check if a channel is focused.
-      toggleLogs: () => {
-        if (channelOpen) {
-          client.outputChannel.hide();
-          channelOpen = false;
-        } else {
-          client.outputChannel.show(true);
-          channelOpen = true;
-        }
-      },
-      startDebugSession: (...args) => {
-        scalaDebugger.start(false, ...args).then((wasStarted) => {
-          if (!wasStarted) {
-            window.showErrorMessage("Debug session not started");
-          }
-        });
-      },
-      startRunSession: (...args) => {
-        scalaDebugger.start(true, ...args).then((wasStarted) => {
-          if (!wasStarted) {
-            window.showErrorMessage("Run session not started");
-          }
-        });
-      },
-    };
-    Object.entries(clientCommands).forEach(([name, command]) =>
-      registerCommand(
-        ClientCommands[name as keyof typeof ClientCommands],
-        command
-      )
+
+    registerCommand(ClientCommands.FocusDiagnostics, () =>
+      commands.executeCommand("workbench.action.problems.focus")
     );
+
+    registerCommand(ClientCommands.RunDoctor, () =>
+      commands.executeCommand(ClientCommands.RunDoctor)
+    );
+
+    registerCommand(ClientCommands.ToggleLogs, () => {
+      if (channelOpen) {
+        client.outputChannel.hide();
+        channelOpen = false;
+      } else {
+        client.outputChannel.show(true);
+        channelOpen = true;
+      }
+    });
+
+    registerCommand(ClientCommands.StartDebugSession, (...args: any[]) => {
+      scalaDebugger.start(false, ...args).then((wasStarted) => {
+        if (!wasStarted) {
+          window.showErrorMessage("Debug session not started");
+        }
+      });
+    });
+
+    registerCommand(ClientCommands.StartRunSession, (...args: any[]) => {
+      scalaDebugger.start(true, ...args).then((wasStarted) => {
+        if (!wasStarted) {
+          window.showErrorMessage("Run session not started");
+        }
+      });
+    });
 
     // should be the compilation of a currently opened file
     // but some race conditions may apply
@@ -444,17 +438,17 @@ function launchMetals(
     // Handle the metals/executeClientCommand extension notification.
     client.onNotification(ExecuteClientCommand.type, (params) => {
       switch (params.command) {
-        case "metals-goto-location":
+        case ClientCommands.GotoLocation:
           const location =
             params.arguments && (params.arguments[0] as Location);
           if (location) {
             gotoLocation(location);
           }
           break;
-        case "metals-model-refresh":
+        case ClientCommands.RefreshModel:
           compilationDoneEmitter.fire();
           break;
-        case "metals-open-folder":
+        case ClientCommands.OpenFolder:
           const openWindowParams = params
             .arguments?.[0] as MetalsOpenWindowParams;
           if (openWindowParams) {
@@ -465,10 +459,10 @@ function launchMetals(
             );
           }
           break;
-        case "metals-doctor-run":
-        case "metals-doctor-reload":
-          const isRun = params.command === "metals-doctor-run";
-          const isReload = params.command === "metals-doctor-reload";
+        case ClientCommands.RunDoctor:
+        case ClientCommands.ReloadDoctor:
+          const isRun = params.command === ClientCommands.RunDoctor;
+          const isReload = params.command === ClientCommands.ReloadDoctor;
           if (isRun || (doctor && isReload)) {
             const html = params.arguments && params.arguments[0];
             if (typeof html === "string") {
@@ -477,8 +471,8 @@ function launchMetals(
             }
           }
           break;
-        case ClientCommands.focusDiagnostics:
-          commands.executeCommand(ClientCommands.focusDiagnostics);
+        case ClientCommands.FocusDiagnostics:
+          commands.executeCommand(ClientCommands.FocusDiagnostics);
           break;
         default:
           outputChannel.appendLine(`unknown command: ${params.command}`);
@@ -490,7 +484,7 @@ function launchMetals(
     // The server updates the client with a brief text message about what
     // it is currently doing, for example "Compiling..".
     const item = window.createStatusBarItem(StatusBarAlignment.Right, 100);
-    item.command = ClientCommands.toggleLogs;
+    item.command = ClientCommands.ToggleLogs;
     item.hide();
     client.onNotification(MetalsStatus.type, (params) => {
       item.text = params.text;
@@ -519,10 +513,10 @@ function launchMetals(
     });
 
     registerTextEditorCommand(
-      "metals.go-to-super-method",
+      `metals.${ServerCommands.GotoSuperMethod}`,
       (editor, _edit, _args) => {
         client.sendRequest(ExecuteCommandRequest.type, {
-          command: "goto-super-method",
+          command: ServerCommands.GotoSuperMethod,
           arguments: [
             {
               document: editor.document.uri.toString(true),
@@ -534,10 +528,10 @@ function launchMetals(
     );
 
     registerTextEditorCommand(
-      "metals.super-method-hierarchy",
+      `metals.${ServerCommands.SuperMethodHierarchy}`,
       (editor, _edit, _args) => {
         client.sendRequest(ExecuteCommandRequest.type, {
-          command: "super-method-hierarchy",
+          command: ServerCommands.SuperMethodHierarchy,
           arguments: [
             {
               document: editor.document.uri.toString(true),
@@ -548,23 +542,16 @@ function launchMetals(
       }
     );
 
-    registerCommand("metals.reset-choice-interactive", () => {
+    registerCommand(`metals.${ServerCommands.ResetChoice}`, (args = []) => {
       client.sendRequest(ExecuteCommandRequest.type, {
-        command: "reset-choice",
-        arguments: [],
-      });
-    });
-
-    registerCommand("metals.reset-choice", (args) => {
-      client.sendRequest(ExecuteCommandRequest.type, {
-        command: "reset-choice",
+        command: ServerCommands.ResetChoice,
         arguments: args,
       });
     });
 
-    registerCommand("metals.goto", (args) => {
+    registerCommand(`metals.${ServerCommands.Goto}`, (args) => {
       client.sendRequest(ExecuteCommandRequest.type, {
-        command: "goto",
+        command: ServerCommands.Goto,
         arguments: args,
       });
     });
@@ -604,22 +591,25 @@ function launchMetals(
       }
     });
 
-    registerCommand("metals-echo-command", (arg: string) => {
+    registerCommand(ClientCommands.EchoCommand, (arg: string) => {
       client.sendRequest(ExecuteCommandRequest.type, {
         command: arg,
       });
     });
 
-    registerCommand("metals.new-scala-file", async (directory: Uri) => {
-      return client.sendRequest(ExecuteCommandRequest.type, {
-        command: "new-scala-file",
-        arguments: [directory?.toString()],
-      });
-    });
+    registerCommand(
+      `metals.${ServerCommands.NewScalaFile}`,
+      async (directory: Uri) => {
+        return client.sendRequest(ExecuteCommandRequest.type, {
+          command: ServerCommands.NewScalaFile,
+          arguments: [directory?.toString()],
+        });
+      }
+    );
 
-    registerCommand("metals.new-scala-project", async () => {
+    registerCommand(`metals.${ServerCommands.NewScalaProject}`, async () => {
       return client.sendRequest(ExecuteCommandRequest.type, {
-        command: "new-scala-project",
+        command: ServerCommands.NewScalaProject,
       });
     });
 
@@ -639,13 +629,9 @@ function launchMetals(
     });
 
     client.onRequest(MetalsInputBox.type, (options, requestToken) => {
-      return window.showInputBox(options, requestToken).then((result) => {
-        if (result === undefined) {
-          return { cancelled: true };
-        } else {
-          return { value: result };
-        }
-      });
+      return window
+        .showInputBox(options, requestToken)
+        .then(MetalsInputBox.handleInput);
     });
 
     client.onRequest(MetalsQuickPick.type, (params, requestToken) => {
@@ -664,7 +650,7 @@ function launchMetals(
     // bar with a "cancel" button.
     client.onRequest(MetalsSlowTask.type, (params, requestToken) => {
       return new Promise((requestResolve) => {
-        const showLogs = ` ([show logs](command:${ClientCommands.toggleLogs} "Show Metals logs"))`;
+        const showLogs = ` ([show logs](command:${ClientCommands.ToggleLogs} "Show Metals logs"))`;
         window.withProgress(
           {
             location: ProgressLocation.Notification,

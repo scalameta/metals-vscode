@@ -6,8 +6,8 @@ import {
   WorkspaceFolder,
   DebugAdapterDescriptor,
 } from "vscode";
+import { ServerCommands } from "metals-languageclient";
 
-export const startAdapterCommand = "debug-adapter-start";
 const configurationType = "scala";
 const launchRequestType = "launch";
 
@@ -30,7 +30,10 @@ export async function start(
   ...parameters: any[]
 ): Promise<Boolean> {
   return vscode.commands
-    .executeCommand<DebugSession>(startAdapterCommand, ...parameters)
+    .executeCommand<DebugSession>(
+      ServerCommands.DebugAdapterStart,
+      ...parameters
+    )
     .then((response) => {
       if (response === undefined) return false;
 
@@ -167,7 +170,7 @@ class ScalaDebugServerFactory implements vscode.DebugAdapterDescriptorFactory {
     ) {
       return vscode.commands
         .executeCommand<DebugSession>(
-          startAdapterCommand,
+          ServerCommands.DebugAdapterStart,
           session.configuration
         )
         .then((debugSession) => {
