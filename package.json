@@ -9,7 +9,7 @@
     "ide",
     "scalameta"
   ],
-  "version": "1.9.2",
+  "version": "1.9.3",
   "publisher": "scalameta",
   "contributors": [
     {
@@ -437,10 +437,10 @@
     "@types/node": "14.6.0",
     "@types/shell-quote": "1.7.0",
     "@types/vscode": "1.43.0",
+    "ovsx": "0.1.0-next.9321255",
     "prettier": "2.0.5",
     "typescript": "3.9.7",
-    "vsce": "1.78.0",
-    "ovsx": "0.1.0-next.9321255"
+    "vsce": "1.78.0"
   },
   "dependencies": {
     "metals-languageclient": "0.3.0",
