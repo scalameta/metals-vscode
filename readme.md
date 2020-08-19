@@ -20,6 +20,7 @@ The following table shows the status of various features.
 | Folding               |   ✅   |                                                                                                  |
 | Rename symbol         |   ✅   |                                                                                                  |
 | Run/Debug             |   ✅   |                                                                                                  |
+| Code actions          |   ✅   |                                                                                                  |
 
 ## Requirements
 
@@ -32,7 +33,7 @@ on Ubuntu+Windows.
 
 **Scala 2.13, 2.12, 2.11 and Scala 3**. Metals supports these Scala versions
 2.13.3, 2.12.12, 2.12.11, 2.12.10, 2.13.1, 2.13.2, 2.11.12, 2.12.8, 2.12.9,
-2.13.0, 0.25.0-RC2, 0.24.0 and 0.24.0-RC1. Note that 2.11.x support is
+2.13.0, 0.26.0-RC1, 0.25.0, 0.24.0 and 0.25.0-RC2. Note that 2.11.x support is
 deprecated and it will be removed in future releases. It's recommended to
 upgrade to Scala 2.12 or Scala 2.13
 
@@ -50,10 +51,14 @@ Install the Metals extension from the
 > if they are installed. The
 > [Dotty Language Server](https://marketplace.visualstudio.com/items?itemName=lampepfl.dotty)
 > does **not** need to be disabled because the Metals and Dotty extensions don't
-> conflict with each other.
+> conflict with each other. However, if you want to work on Scala 3 code in a
+> workspace that was previously opened with `Dotty Language Server` you need to
+> first remove `.dotty-ide-artifact` before opening the workspace with Metals.
 
-Next, open a directory containing a `build.sbt` file. The extension activates
-when a `*.scala` or `*.sbt` file is opened.
+Next, open a directory containing your Scala code. The extension activates when
+the main directory contains `build.sbt` or `build.sc` file, a Scala file is
+opened, which includes `*.sbt`, `*.scala` and `*.sc` file, or a standard Scala
+directory structure `src/main/scala` is detected.
 
 ## Importing a build
 
@@ -186,17 +191,21 @@ to take effect.
 
 The Metals server places logs and other files in the `.metals` directory. The
 Bloop compile server places logs and compilation artifacts in the `.bloop`
-directory. Bloop plugin that generates Bloop configuration is added in the
-`project/metals.sbt` file. Working with Ammonite scripts will place compiled
-scripts into the `.ammonite` directory. It's recommended to exclude these
-directories and file from version control systems like git.
+directory. The Bloop plugin that generates Bloop configuration is added in the
+`metals.sbt` file, which is added at `project/metals.sbt` as well as further
+`project` directories depending on how deep `*.sbt` files need to be supported.
+To support each `*.sbt` file Metals needs to create an additional file at
+`./project/project/metals.sbt` relative to the sbt file. Working with Ammonite
+scripts will place compiled scripts into the `.ammonite` directory. It's
+recommended to exclude these directories and files from version control systems
+like git.
 
 ```sh
 # ~/.gitignore
 .metals/
 .bloop/
 .ammonite/
-project/metals.sbt
+metals.sbt
 ```
 
 ## Show document symbols
@@ -214,29 +223,199 @@ without opening the sidebar.
 As you type, the symbol outline is also visible at the top of the file.
 ![Document Symbols Outline](https://i.imgur.com/L217n4q.png)
 
-## Enable on type formatting for multiline string formatting
+## Go to parent code lenses
 
-![pipes](https://i.imgur.com/iXGYOf0.gif)
+Metals has the ability to display code lenses that, when invoked, will go to the
+parent class that contains the definition of the method or symbol.
+Unfortunately, it might cause some lag in larger code bases, which is why it is
+not enabled currently by default.
+
+To enable the feature you need to modify the setting
+`metals.superMethodLensesEnabled` to `true`.
+
+Even without using the code lenses it's still possible to navigate the method
+hierarchy using two commands:
+
+- `Metals: Go to super method` - immediately goes to the parent of the method
+  the cursor is pointing to
+
+- `Metals: Reveal super method hierachy` - displays the full method hierachy and
+  enables to move to any parent, it is best used with the Metals Quick Pick
+  extension.
+
+You can also bind those commands to a shortcut.
+
+## Create new project from template
+
+It is possible using Metals to easily setup a new project using the exiting
+[giter8](https://github.com/foundweekends/giter8/wiki/giter8-templates)
+templates. This is an equivalent to the `sbt new` command, which uses the same
+mechanism. There is a great number of templates already available and it should
+be easy to find something for yourself. To start the setup you can use the
+Metals: New Scala project command, which works as following:
+
+1. Choose the template and then:
+   1. Use the proposed templates.
+   2. Choose "Discover more" and then choose from the list downloaded from the
+      Giter8 wiki page.
+   3. Input a custom Github repository following the `organization/repo` schema.
+2. Navigate to the parent directory that you want to create your new project in.
+3. Choose the name or accept the default one.
+
+4. Choose whether to open a new window for the created project or use the
+   existing one.
+
+The same command will be invoked when clicking the "New Scala Project" button in
+the Metals view.
+
+If you feel like a template should be included in the default displayed ones do
+not hesitate to create a
+[PR](https://github.com/scalameta/metals/blob/cda5b8c2029e5f201fb8d0636e0365d796407bd9/metals/src/main/scala/scala/meta/internal/builds/NewProjectProvider.scala#L308)
+or file an issue.
+
+## Running and debugging your code
+
+Metals supports running and debugging tests and main methods via the
+[Debug Adapter Protocol](https://microsoft.github.io/debug-adapter-protocol/).
+The protocol is used to communicate between the editor and debugger, which means
+that applications can be run the same as for any other language in the natively
+supported `Run` view. When using Metals the debugger itself is
+[Bloop](https://scalacenter.github.io/bloop/), which is also responsible for
+starting the actual process.
+
+Users can begin the debugging session in two ways:
+
+### via code lenses
+
+![lenses](https://i.imgur.com/5nTnrcS.png)
+
+For each main or test class Metals shows two code lenses `run | debug` or
+`test | test debug`, which show up above the definition as a kind of virtual
+text. Clicking `run` or `test` will start running the main class or test without
+stopping at any breakpoints, while clicking `debug` or `test debug` will pause
+once any of them are hit. It's not possible to add any arguments or java
+properties when running using this method.
+
+### via a `launch.json` configuration
+
+Visual Studio Code uses `.vscode/launch.json` to store user defined
+configurations, which can be run using:
+
+- The `Run -> Start Debugging` menu item or `workbench.action.debug.start`
+  shortcut.
+- The `Run -> Run Without Debugging` menu item or `workbench.action.debug.run`
+  shortcut.
+
+If a user doesn't have anything yet saved, a configuration wizard will pop up to
+guide them. In the end users should end up with something like this:
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    // Main class configuration
+    {
+      "type": "scala",
+      "request": "launch",
+      // configuration name visible for the user
+      "name": "Main class",
+      // full name of the class to run
+      "mainClass": "com.example.Main",
+      // optional arguments for the main class
+      "args": [],
+      // optional jvm properties to use
+      "jvmOptions": [],
+      // optional build target name in case there more than one
+      // class with the same name
+      "buildTarget": "root"
+    },
+    // Test class configuration
+    {
+      "type": "scala",
+      "request": "launch",
+      // configuration name visible for the user
+      "name": "Test class",
+      // full name of the class to run
+      "testClass": "com.example.Test",
+      // optional jvm properties to use
+      "jvmOptions": [],
+      // optional build target name in case there more than one
+      // class with the same name
+      "buildTarget": "root"
+    }
+  ]
+}
+```
+
+Multiple configurations can be stored in that file and can be chosen either
+manually in the `Run` view or can be picked by invoking a shortcut defined under
+`workbench.action.debug.selectandstart`.
+
+## On type formatting for multiline string formatting
+
+![on-type](https://imgur.com/a0O2vCs.gif)
 
 To properly support adding `|` in multiline strings we are using the
-`onTypeFormatting` method. To enable the functionality you need to enable
-`onTypeFormatting` inside Visual Studio Code.
+`onTypeFormatting` method. The functionality is enabled by default, but you can
+disable/enable `onTypeFormatting` inside Visual Studio Code settings by checking
+`Editor: Format On Type`:
 
-This needs to be done in settings by checking `Editor: Format On Type`:
+![on-type-setting](https://i.imgur.com/s6nT9rC.png)
 
-![on-type](https://i.imgur.com/4eVvSP5.gif)
-
-## Enable formatting on paste for multiline strings
+## Formatting on paste for multiline strings
 
 Whenever text is paste into a multiline string with `|` it will be properly
 formatted by Metals:
 
-![format-on-paste](https://i.imgur.com/yJLAIxQ.gif)
+![format-on-paste](https://i.imgur.com/fF0XWYC.gif)
 
-To enable this feature you need to enable formatting on paste in Visual Studio
-Code by checking `Editor: Format On Paste`:
+This feature is enabled by default. If you need to disable/enable formatting on
+paste in Visual Studio Code you can check the `Editor: Format On Paste` setting:
 
-![format-on-paste](https://i.imgur.com/OaBxwer.png)
+![format-on-paste-setting](https://i.imgur.com/rMrk27F.png)
+
+## Worksheets
+
+Worksheets are a great way to explore an api, try out an idea, or code up an
+example and quickly see the evaluated expression or result. Behind the scenes
+worksheets are powered by the great work done in
+[mdoc](https://scalameta.org/mdoc/).
+
+### Getting started with Worksheets
+
+To get started with a worksheet you can either use the `metals.new-scala-file`
+command and select _Worksheet_ or create a file called `*.worksheet.sc`. This
+format is important since this is what tells Metals that it's meant to be
+treated as a worksheet and not just a Scala script. Where you create the script
+also matters. If you'd like to use classes and values from your project, you
+need to make sure the worksheet is created inside of your `src` directory. You
+can still create a worksheet in other places, but you will only have access to
+the standard library and your dependencies.
+
+### Evaluations
+
+After saving you'll see the result of the expression as a decoration at the end
+of the line. You may not see the full result for example if it's too long, so
+you are also able to hover on the decoration to expand the decoration.
+
+Keep in mind that you don't need to wrap your code in an `object`. In worksheets
+everything can be evaluated at the top level.
+
+### Using dependencies in worksheets
+
+You are able to include an external dependency in your worksheet by including it
+in one of the following two ways.
+
+```scala
+// $dep.`organisation`::artifact:version` style
+import $dep.`com.lihaoyi::scalatags:0.7.0`
+
+// $ivy.`organisation::artifact:version` style
+import $ivy.`com.lihaoyi::scalatags:0.7.0`
+```
+
+:: is the same as %% in sbt, which will append the current Scala binary version
+to the artifact name.
 
 ## Coming from IntelliJ
 
