@@ -439,7 +439,7 @@
     "@types/vscode": "1.43.0",
     "ovsx": "0.1.0-next.9321255",
     "prettier": "2.0.5",
-    "typescript": "3.9.7",
+    "typescript": "4.0.2",
     "vsce": "1.78.0"
   },
   "dependencies": {
