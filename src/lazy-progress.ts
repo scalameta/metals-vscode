@@ -1,6 +1,6 @@
 import { OutputChannel, window, ProgressLocation } from "vscode";
 
-"use strict";
+("use strict");
 
 /**
  * A progress bar that starts only the first time `startOrContinue` is called.

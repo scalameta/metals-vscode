@@ -1,7 +1,7 @@
 import { NotificationType } from "vscode-jsonrpc";
 import { DecorationRenderOptions, DecorationOptions } from "vscode";
 
-"use strict";
+("use strict");
 
 /**
  * This protocol is one notable exception that we can't port over to
