@@ -78,7 +78,6 @@ let currentClient: LanguageClient | undefined;
 
 let decorationType: TextEditorDecorationType = window.createTextEditorDecorationType(
   {
-    isWholeLine: true,
     rangeBehavior: DecorationRangeBehavior.OpenClosed,
   }
 );
@@ -289,6 +288,7 @@ function launchMetals(
       parameterHintsCommand: "editor.action.triggerParameterHints",
     },
     decorationProvider: true,
+    inlineDecorationProvider: true,
     debuggingProvider: true,
     doctorProvider: "html",
     didFocusProvider: true,

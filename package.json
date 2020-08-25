@@ -123,6 +123,14 @@
           "default": [],
           "markdownDescription": "List of packages you'd like to be left out of completions, symbol searches, and code actions.\n\nEx. `akka.actor.typed.javadsl` will ensure nothing in the `javadsl` package gets recommended to you.\n\nYou can find the list of default exclusions [here on the Metals website](https://scalameta.org/metals/docs/editors/new-editor.html#excluded-packages).\n\nIf you need to remove one of the defaults, you can simply include it and preface it with `--`."
         },
+        "metals.showInferredType": {
+          "type": "boolean",
+          "markdownDescription": "When this option is enabled, for each method that have inferred types that are not explicitely specified they are displayed as additional decorations."
+        },
+        "metals.showImplicitArguments": {
+          "type": "boolean",
+          "markdownDescription": "When this option is enabled, for each method that has implicit arguments they are displayed as additional decorations."
+        },
         "metals.javaHome": {
           "type": "string",
           "markdownDescription": "Optional path to the Java home directory. Requires reloading the window.\n\nDefaults to the most recent Java version between 8 and 11 (inclusive) computed by the `locate-java-home` npm package."
