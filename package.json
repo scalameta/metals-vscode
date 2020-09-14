@@ -245,7 +245,7 @@
         "title": "Reset Choice"
       },
       {
-        "command": "metals.go-to-super-method",
+        "command": "metals.goto-super-method",
         "category": "Metals",
         "title": "Go to super method"
       },
@@ -322,7 +322,7 @@
           "when": "metals:enabled"
         },
         {
-          "command": "metals.go-to-super-method",
+          "command": "metals.goto-super-method",
           "when": "metals:enabled"
         },
         {
