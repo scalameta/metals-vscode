@@ -1,5 +1,22 @@
 ## metals-languageclient changelog
 
+### v0.3.1 (2020/09/16 04:42 +00:00)
+- [31c4af3](https://github.com/scalameta/metals-languageclient/commit/31c4af3670406297ff9fc1c0564ab2334444060f) Bump @types/node from 14.10.1 to 14.10.2 (@dependabot-preview[bot])
+- [560eeff](https://github.com/scalameta/metals-languageclient/commit/560eeff20d93a696563ecf47d668d080ad24f055) Bump @types/semver from 7.3.3 to 7.3.4 (@dependabot-preview[bot])
+- [4a1f15c](https://github.com/scalameta/metals-languageclient/commit/4a1f15c5e4bcabcdf54970c90812522ee5ffe65a) Bump prettier from 2.1.1 to 2.1.2 (@dependabot-preview[bot])
+- [c165163](https://github.com/scalameta/metals-languageclient/commit/c1651637cde3f326817c6892a4b5ca24e39ef196) Bump @types/node from 14.6.4 to 14.10.1 (@dependabot-preview[bot])
+- [636ddca](https://github.com/scalameta/metals-languageclient/commit/636ddcaae54dbd6eeff943653bba5abf04d7ca87) Bump @types/node from 14.6.2 to 14.6.4 (@dependabot-preview[bot])
+- [eb49662](https://github.com/scalameta/metals-languageclient/commit/eb49662c659397079b57f82fe076016071b6cd90) Bump @types/jest from 26.0.10 to 26.0.13 (@dependabot-preview[bot])
+- [07b8588](https://github.com/scalameta/metals-languageclient/commit/07b8588c76c447d7fc5e2ff4b16f937424a8040b) Bump node-fetch from 2.6.0 to 2.6.1 (@dependabot-preview[bot])
+- [c373080](https://github.com/scalameta/metals-languageclient/commit/c373080191988fcc8335246d32e0443e128b8b1d) Bump @types/node from 14.6.0 to 14.6.2 (@dependabot-preview[bot])
+- [044f445](https://github.com/scalameta/metals-languageclient/commit/044f445cd872e367563d416503d0878a393cfef8) Bump fp-ts from 2.8.1 to 2.8.2 (@dependabot-preview[bot])
+- [6100719](https://github.com/scalameta/metals-languageclient/commit/6100719a70af4e2f95e4f916c4ddf1c04c76a20f) Bump prettier from 2.1.0 to 2.1.1 (@dependabot-preview[bot])
+- [4e13973](https://github.com/scalameta/metals-languageclient/commit/4e13973b364e5e2f9e8974642585d38fb8e1b840) Bump prettier from 2.0.5 to 2.1.0 (@dependabot-preview[bot])
+- [8bd7be2](https://github.com/scalameta/metals-languageclient/commit/8bd7be27ec42f2e6efb510f109e3f782be8a3a0d) Bump @types/node from 14.0.27 to 14.6.0 (@dependabot-preview[bot])
+- [8845195](https://github.com/scalameta/metals-languageclient/commit/8845195a71faa905ed4893565c8118bb63aa65c3) Bump @types/semver from 7.3.2 to 7.3.3 (@dependabot-preview[bot])
+- [d5e9061](https://github.com/scalameta/metals-languageclient/commit/d5e9061a38cc6e897a2399b2d496513f633e810a) Bump @types/jest from 26.0.9 to 26.0.10 (@dependabot-preview[bot])
+- [ac64b31](https://github.com/scalameta/metals-languageclient/commit/ac64b315e82151c458ae2c3dc25dbcc80252141a) Release v0.3.0
+
 ### v0.3.0 (2020/08/15 10:10 +00:00)
 - [ef47dbd](https://github.com/scalameta/metals-languageclient/commit/ef47dbdfb72fab8699273bd6f08481f77d9eaab1) Add utf-8 to the process fetching Metals and fix downloading jabba on workspaces with spaces
 - [2a8e393](https://github.com/scalameta/metals-languageclient/commit/2a8e393e5b703f1dfe7bd8e508a387755439ef85) Bump @types/semver from 7.3.1 to 7.3.2 (@dependabot-preview[bot])
