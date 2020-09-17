@@ -142,6 +142,10 @@
           "type": "string",
           "markdownDescription": "Optional custom path to the .scalafmt.conf file.\n\nShould be relative to the workspace root directory and use forward slashes `/` for file separators (even on Windows)."
         },
+        "metals.scalafixConfigPath": {
+          "type": "string",
+          "markdownDescription": "Optional custom path to the .scalafix.conf file.\n\nShould be relative to the workspace root directory and use forward slashes `/` for file separators (even on Windows)."
+        },
         "metals.bloopVersion": {
           "type": "string",
           "markdownDescription": "This version will be used for the Bloop build tool plugin, for any supported build tool,while importing in Metals as well as for running the embedded server"
