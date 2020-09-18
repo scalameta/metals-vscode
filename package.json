@@ -235,6 +235,11 @@
         "title": "New Scala File..."
       },
       {
+        "command": "metals.new-scala-worksheet",
+        "category": "Metals",
+        "title": "Create Worksheet"
+      },
+      {
         "command": "metals.super-method-hierarchy",
         "category": "Metals",
         "title": "Reveal super method hierachy"

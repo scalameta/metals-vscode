@@ -607,6 +607,34 @@ function launchMetals(
       }
     );
 
+    registerCommand(`metals.new-scala-worksheet`, async () => {
+      const sendRequest = (args: Array<string | undefined>) => {
+        return client.sendRequest(ExecuteCommandRequest.type, {
+          command: ServerCommands.NewScalaFile,
+          arguments: args,
+        });
+      };
+      const currentUri = window.activeTextEditor?.document.uri;
+      if (currentUri != null) {
+        const parentUri = path.dirname(currentUri.toString());
+        const name = path.basename(parentUri);
+        const parentPath = Uri.parse(parentUri).fsPath;
+        const fullPath = path.join(parentPath, `${name}.worksheet.sc`);
+        if (fs.existsSync(fullPath)) {
+          window.showWarningMessage(
+            `A worksheet ${name}.worksheet.sc already exists, opening it instead`
+          );
+          return workspace
+            .openTextDocument(fullPath)
+            .then((textDocument) => window.showTextDocument(textDocument));
+        } else {
+          return sendRequest([parentUri, name, "worksheet"]);
+        }
+      } else {
+        return sendRequest([undefined, undefined, "worksheet"]);
+      }
+    });
+
     registerCommand(`metals.${ServerCommands.NewScalaProject}`, async () => {
       return client.sendRequest(ExecuteCommandRequest.type, {
         command: ServerCommands.NewScalaProject,
