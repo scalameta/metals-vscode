@@ -10,6 +10,17 @@ export const ServerCommands = {
   /** Stop the Ammonite build server. */
   AmmoniteStop: "ammonite-stop",
   /**
+   * Converts provided stacktrace in the parameter to a format that contains
+   * links to locations of places where the exception was raised.
+   *
+   * If the configuration parameter of the client (support-commands-in-html)
+   * is true then client is requested to display html with links already
+   * pointing to proper locations in user codebase. Otherwise the client will
+   * display simple scala file but with code lenses that direct user to proper
+   * location in codebase.
+   */
+  AnalyzeStacktrace: "analyze-stacktrace",
+  /**
    * Prompt the user to select a new build server to connect to.
    *
    * This command does nothing in the case there are less than two installed
