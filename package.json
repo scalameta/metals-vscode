@@ -118,6 +118,11 @@
           },
           "markdownDescription": "Optional list of JVM properties to pass along to the Ammonite server. Each property needs to be a separate item.\n\nExample: `-Xmx1G` or `-Xms100M`"
         },
+        "metals.excludedPackages": {
+          "type": "array",
+          "default": [],
+          "markdownDescription": "List of packages you'd like to be left out of completions, symbol searches, and code actions.\n\nEx. `akka.actor.typed.javadsl` will ensure nothing in the `javadsl` package gets recommended to you.\n\nYou can find the list of default exclusions [here on the Metals website](https://scalameta.org/metals/docs/editors/new-editor.html#excluded-packages).\n\nIf you need to remove one of the defaults, you can simply include it and preface it with `--`."
+        },
         "metals.javaHome": {
           "type": "string",
           "markdownDescription": "Optional path to the Java home directory. Requires reloading the window.\n\nDefaults to the most recent Java version between 8 and 11 (inclusive) computed by the `locate-java-home` npm package."
