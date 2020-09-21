@@ -1,5 +1,11 @@
 ## metals-languageclient changelog
 
+### v0.3.2 (2020/09/19 18:53 +00:00)
+- [50a322c](https://github.com/scalameta/metals-languageclient/commit/50a322c42dc1099795499dd19cb42a22a597e1c5) Add in analyze-stacktrace command (@ckipp01)
+- [7303fd6](https://github.com/scalameta/metals-languageclient/commit/7303fd695b8dba32a70450da529a49ddc0b421f5) Bump @types/node from 14.10.2 to 14.10.3 (@dependabot-preview[bot])
+- [fccdcbb](https://github.com/scalameta/metals-languageclient/commit/fccdcbb649ac9cb215d0cfd7552aad8adc517846) Bump @types/jest from 26.0.13 to 26.0.14 (@dependabot-preview[bot])
+- [535788d](https://github.com/scalameta/metals-languageclient/commit/535788d0cf4404e571865727eb65360d502781e2) Release v0.3.1
+
 ### v0.3.1 (2020/09/16 04:42 +00:00)
 - [31c4af3](https://github.com/scalameta/metals-languageclient/commit/31c4af3670406297ff9fc1c0564ab2334444060f) Bump @types/node from 14.10.1 to 14.10.2 (@dependabot-preview[bot])
 - [560eeff](https://github.com/scalameta/metals-languageclient/commit/560eeff20d93a696563ecf47d668d080ad24f055) Bump @types/semver from 7.3.3 to 7.3.4 (@dependabot-preview[bot])
