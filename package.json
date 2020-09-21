@@ -443,7 +443,7 @@
     "vsce": "1.79.5"
   },
   "dependencies": {
-    "metals-languageclient": "0.3.0",
+    "metals-languageclient": "0.3.2",
     "promisify-child-process": "4.1.1",
     "vscode-languageclient": "6.1.3"
   },
