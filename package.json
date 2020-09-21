@@ -250,6 +250,11 @@
         "title": "Reset Choice"
       },
       {
+        "command": "metals.analyze-stacktrace",
+        "category": "Metals",
+        "title": "Analyze Stacktrace"
+      },
+      {
         "command": "metals.goto-super-method",
         "category": "Metals",
         "title": "Go to super method"
@@ -324,6 +329,10 @@
         },
         {
           "command": "metals.super-method-hierarchy",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.analyze-stacktrace",
           "when": "metals:enabled"
         },
         {
@@ -448,7 +457,7 @@
     "vsce": "1.79.5"
   },
   "dependencies": {
-    "metals-languageclient": "0.3.0",
+    "metals-languageclient": "0.3.2",
     "promisify-child-process": "4.1.1",
     "vscode-languageclient": "6.1.3"
   },
