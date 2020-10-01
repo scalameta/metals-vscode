@@ -14,6 +14,7 @@ export interface MetalsInitializationOptions {
   compilerOptions?: CompilerInitializationOptions;
   debuggingProvider?: boolean;
   decorationProvider?: boolean;
+  inlineDecorationProvider?: boolean;
   didFocusProvider?: boolean;
   doctorProvider?: "json" | "html";
   executeClientCommandProvider?: boolean;
