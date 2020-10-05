@@ -456,7 +456,7 @@
     "@types/node": "14.11.2",
     "@types/shell-quote": "1.7.0",
     "@types/vscode": "1.43.0",
-    "ovsx": "0.1.0-next.bcce4bc",
+    "ovsx": "0.1.0-next.e000fdb",
     "prettier": "2.1.2",
     "typescript": "4.0.3",
     "vsce": "1.81.1"
