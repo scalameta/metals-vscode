@@ -10,6 +10,7 @@ import { ServerCommands } from "metals-languageclient";
 
 const configurationType = "scala";
 const launchRequestType = "launch";
+const attachRequestType = "attach";
 
 export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
   outputChannel.appendLine("Initializing Scala Debugger");
@@ -55,9 +56,10 @@ class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
   provideDebugConfigurations(): ProviderResult<DebugConfiguration[]> {
     const mainClassPick = "Main Class";
     const testClassPick = "Test Suite";
+    const attachPick = "Attach to JVM";
 
     return vscode.window
-      .showQuickPick([mainClassPick, testClassPick], {
+      .showQuickPick([mainClassPick, testClassPick, attachPick], {
         placeHolder:
           "Pick the kind of the class to debug (Press 'Escape' to create 'launch.json' with no initial configuration)",
       })
@@ -69,6 +71,10 @@ class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
             ]);
           case testClassPick:
             return this.provideDebugTestClassConfiguration().then((config) => [
+              config,
+            ]);
+          case attachPick:
+            return this.provideDebugAttachConfiguration().then((config) => [
               config,
             ]);
           default:
@@ -90,7 +96,7 @@ class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
   }
 
   private provideDebugMainClassConfiguration(): Thenable<DebugConfiguration> {
-    return this.askForBuildTarget().then((buildTarget) =>
+    return this.askForOptionalBuildTarget().then((buildTarget) =>
       this.askForClassName().then((className) =>
         this.askForConfigurationName(className).then((name) => {
           const result: DebugConfiguration = {
@@ -108,7 +114,7 @@ class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
   }
 
   private provideDebugTestClassConfiguration(): Thenable<DebugConfiguration> {
-    return this.askForBuildTarget().then((buildTarget) =>
+    return this.askForOptionalBuildTarget().then((buildTarget) =>
       this.askForClassName().then((className) =>
         this.askForConfigurationName(className).then((name) => {
           const result: DebugConfiguration = {
@@ -124,7 +130,25 @@ class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
     );
   }
 
-  private askForBuildTarget(): Thenable<string | undefined> {
+  provideDebugAttachConfiguration(): Thenable<DebugConfiguration> {
+    return this.askForHostName().then((hostName) =>
+      this.askForPort().then((port) =>
+        this.askForBuildTarget().then((buildTarget) => {
+          const result: DebugConfiguration = {
+            type: configurationType,
+            name: `Attach to ${hostName}:${port} - ${buildTarget}`,
+            request: attachRequestType,
+            hostName: hostName,
+            port: port,
+            buildTarget: buildTarget,
+          };
+          return result;
+        })
+      )
+    );
+  }
+
+  private askForOptionalBuildTarget(): Thenable<string | undefined> {
     return vscode.window
       .showInputBox({
         prompt: "Enter the name of the build target",
@@ -139,6 +163,33 @@ class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
           return buildTarget;
         }
       });
+  }
+
+  private askForHostName(): Thenable<string> {
+    return vscode.window
+      .showInputBox({
+        prompt: "Enter host name of the debuggee JVM",
+        placeHolder: "localhost",
+      })
+      .then((hostName) => hostName ?? Promise.reject());
+  }
+
+  private askForPort(): Thenable<number> {
+    return vscode.window
+      .showInputBox({
+        prompt: "Enter port to attach to",
+        placeHolder: "localhost",
+      })
+      .then((port) => port ?? Promise.reject())
+      .then((port) => parseInt(port));
+  }
+
+  private askForBuildTarget(): Thenable<string> {
+    return vscode.window
+      .showInputBox({
+        prompt: "Enter the name of the build target",
+      })
+      .then((buildTarget) => buildTarget ?? Promise.reject());
   }
 
   private askForClassName(): Thenable<string> {
@@ -166,7 +217,8 @@ class ScalaDebugServerFactory implements vscode.DebugAdapterDescriptorFactory {
   ): ProviderResult<DebugAdapterDescriptor> {
     if (
       session.configuration.mainClass !== undefined ||
-      session.configuration.testClass !== undefined
+      session.configuration.testClass !== undefined ||
+      session.configuration.hostName !== undefined
     ) {
       return vscode.commands
         .executeCommand<DebugSession>(
