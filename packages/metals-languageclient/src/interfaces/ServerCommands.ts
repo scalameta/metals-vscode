@@ -29,6 +29,8 @@ export const ServerCommands = {
   BspSwitch: "bsp-switch",
   /** Establish a new connection to the build server and reindex the workspace. */
   BuildConnect: "build-connect",
+  /** Disconnect the build server and without re-connecting. */
+  BuildDisconnect: "build-disconnect",
   /** Import the latest changes from the build. */
   BuildImport: "build-import",
   /**
