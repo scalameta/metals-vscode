@@ -453,7 +453,7 @@
     "format-check": "prettier --check '**/*.{ts,js,json,yml}'"
   },
   "devDependencies": {
-    "@types/node": "14.14.0",
+    "@types/node": "14.14.2",
     "@types/shell-quote": "1.7.0",
     "@types/vscode": "1.43.0",
     "ovsx": "0.1.0-next.e000fdb",
