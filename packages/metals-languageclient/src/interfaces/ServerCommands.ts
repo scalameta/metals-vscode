@@ -57,6 +57,14 @@ export const ServerCommands = {
   DebugAdapterStart: "debug-adapter-start",
   /** Open the Metals doctor to troubleshoot potential problems with the build. */
   DoctorRun: "doctor-run",
+  /**
+   * Detect the build tool for a workspace and generate the bsp config for the
+   * build tool. If there are multiple build tools for a workspace ,the user
+   * will be prompted to choose one.
+   *
+   * Following the creation, Metals will attempt to auto-connect to it.
+   */
+  GenerateBspConfig: "generate-bsp-config",
   /** Move the cursor to the definition of the argument symbol. */
   Goto: "goto",
   /** Jumps to the super method/field definition of a symbol. */
