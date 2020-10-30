@@ -140,11 +140,11 @@
         },
         "metals.scalafmtConfigPath": {
           "type": "string",
-          "markdownDescription": "Optional custom path to the .scalafmt.conf file.\n\nShould be relative to the workspace root directory and use forward slashes `/` for file separators (even on Windows)."
+          "markdownDescription": "Optional custom path to the .scalafmt.conf file.\n\nShould be an absolute path and use forward slashes `/` for file separators (even on Windows)."
         },
         "metals.scalafixConfigPath": {
           "type": "string",
-          "markdownDescription": "Optional custom path to the .scalafix.conf file.\n\nShould be relative to the workspace root directory and use forward slashes `/` for file separators (even on Windows)."
+          "markdownDescription": "Optional custom path to the .scalafix.conf file.\n\nShould be an absolute path and use forward slashes `/` for file separators (even on Windows)."
         },
         "metals.bloopVersion": {
           "type": "string",
