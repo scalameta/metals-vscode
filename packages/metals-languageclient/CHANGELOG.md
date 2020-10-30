@@ -1,5 +1,25 @@
 ## metals-languageclient changelog
 
+### v0.3.3 (2020/10/30 19:14 +00:00)
+- [fd888d8](https://github.com/scalameta/metals-languageclient/commit/fd888d8cec51af5d6cc4fb9b53014ce9c0bf9e52) Bump @types/node from 14.14.5 to 14.14.6 (@dependabot-preview[bot])
+- [d2bb3bb](https://github.com/scalameta/metals-languageclient/commit/d2bb3bb6ff0bde57182e7accf57663400afb93b3) Bump fp-ts from 2.8.4 to 2.8.5 (@dependabot-preview[bot])
+- [b7a1fa0](https://github.com/scalameta/metals-languageclient/commit/b7a1fa09e49241cef23116c8976951be51eada8c) Bump @types/node from 14.14.3 to 14.14.5 (@dependabot-preview[bot])
+- [084080f](https://github.com/scalameta/metals-languageclient/commit/084080ff58dc20505333e42a65ee09559d4bc7ee) Bump @types/node from 14.14.2 to 14.14.3 (@dependabot-preview[bot])
+- [34cc38e](https://github.com/scalameta/metals-languageclient/commit/34cc38eb8a21352bdd3e84ad63801cc2510f2e4a) Add in GenerateBspConfig server command. (@ckipp01)
+- [6873101](https://github.com/scalameta/metals-languageclient/commit/6873101f18e13dd294cb197ceee1323610d2c8f5) Bump @types/node from 14.14.0 to 14.14.2 (@dependabot-preview[bot])
+- [0211476](https://github.com/scalameta/metals-languageclient/commit/02114761d62b9fb5c60f34a85a17e3ce40ba3c8c) Bump @types/node from 14.11.10 to 14.14.0 (@dependabot-preview[bot])
+- [818b0cd](https://github.com/scalameta/metals-languageclient/commit/818b0cda3eccca1a9082ba6e1c4bb487781231df) Bump @types/jest from 26.0.14 to 26.0.15 (@dependabot-preview[bot])
+- [bbcbbf3](https://github.com/scalameta/metals-languageclient/commit/bbcbbf34db126e7110a1c655005f99c848157120) Bump @types/node from 14.11.8 to 14.11.10 (@dependabot-preview[bot])
+- [a8af474](https://github.com/scalameta/metals-languageclient/commit/a8af474bd57da1b07df17fce92959532095da106) Addin the build-disconnect server command (@ckipp01)
+- [ea7b4ab](https://github.com/scalameta/metals-languageclient/commit/ea7b4ab5348ddea08238637c2e4a2063a5fd72af) Bump fp-ts from 2.8.3 to 2.8.4 (@dependabot-preview[bot])
+- [e8e9b26](https://github.com/scalameta/metals-languageclient/commit/e8e9b269d18f63a7e4a7b785842c6eb515b318d5) Bump @types/node from 14.11.5 to 14.11.8 (@dependabot-preview[bot])
+- [a08c7b8](https://github.com/scalameta/metals-languageclient/commit/a08c7b8c711085c39e87a1f10213364faf82f409) Bump @types/node from 14.11.2 to 14.11.5 (@dependabot-preview[bot])
+- [0a8ee29](https://github.com/scalameta/metals-languageclient/commit/0a8ee292f87529f1e7dec3e60eb28a60bf7e69ba) Add additional inlineDecorationProvider for clients that do not support decorations inside the text (@tgodzik)
+- [9b59601](https://github.com/scalameta/metals-languageclient/commit/9b596010cca2234744e7dce1754615ccdcd9613f) Bump fp-ts from 2.8.2 to 2.8.3 (@dependabot-preview[bot])
+- [0c0d148](https://github.com/scalameta/metals-languageclient/commit/0c0d1481fe84f8ef49e638c1b3ba387d8d4f796f) Bump @types/node from 14.11.1 to 14.11.2 (@dependabot-preview[bot])
+- [64b7786](https://github.com/scalameta/metals-languageclient/commit/64b7786c12093d4405c77cb3a9d7cea350b3a205) Bump @types/node from 14.10.3 to 14.11.1 (@dependabot-preview[bot])
+- [2bddc94](https://github.com/scalameta/metals-languageclient/commit/2bddc9416c2838330bb89b05daf83115ce49ba66) Release v0.3.2
+
 ### v0.3.2 (2020/09/19 18:53 +00:00)
 - [50a322c](https://github.com/scalameta/metals-languageclient/commit/50a322c42dc1099795499dd19cb42a22a597e1c5) Add in analyze-stacktrace command (@ckipp01)
 - [7303fd6](https://github.com/scalameta/metals-languageclient/commit/7303fd695b8dba32a70450da529a49ddc0b421f5) Bump @types/node from 14.10.2 to 14.10.3 (@dependabot-preview[bot])
