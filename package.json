@@ -205,6 +205,11 @@
         "title": "Connect to build server"
       },
       {
+        "command": "metals.bsp-switch",
+        "category": "Metals",
+        "title": "Switch build server"
+      },
+      {
         "command": "metals.sources-scan",
         "category": "Metals",
         "title": "Rescan sources"
