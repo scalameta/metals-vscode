@@ -33,7 +33,7 @@
     "type": "git",
     "url": "https://github.com/scalameta/metals-vscode.git"
   },
-  "homepage": "http://metals.rocks",
+  "homepage": "https://scalameta.org/metals/",
   "engines": {
     "vscode": "^1.43.0"
   },
