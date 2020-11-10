@@ -394,6 +394,8 @@ function launchMetals(
       ServerCommands.BuildImport,
       ServerCommands.BuildRestart,
       ServerCommands.BuildConnect,
+      ServerCommands.BuildDisconnect,
+      ServerCommands.GenerateBspConfig,
       ServerCommands.BspSwitch,
       ServerCommands.SourcesScan,
       ServerCommands.DoctorRun,
