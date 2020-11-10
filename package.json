@@ -414,6 +414,11 @@
                   "type": "string"
                 },
                 "default": []
+              },
+              "envFile": {
+                "type": "string",
+                "description": "Name of a .env file with additional environment variables",
+                "default": null
               }
             }
           }
