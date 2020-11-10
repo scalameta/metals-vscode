@@ -429,6 +429,13 @@
                 },
                 "default": []
               },
+              "env": {
+                "type": "object",
+                "items": {
+                  "type": "string"
+                },
+                "default": {}
+              },
               "envFile": {
                 "type": "string",
                 "description": "Name of a .env file with additional environment variables",
@@ -463,7 +470,8 @@
               "name": "Untitled",
               "mainClass": "???",
               "args": [],
-              "jvmOptions": []
+              "jvmOptions": [],
+              "env": {}
             }
           },
           {
