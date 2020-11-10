@@ -192,7 +192,7 @@
       {
         "command": "metals.build-restart",
         "category": "Metals",
-        "title": "Restart Bloop server"
+        "title": "Restart build server"
       },
       {
         "command": "metals.build-import",
