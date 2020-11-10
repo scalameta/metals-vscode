@@ -421,6 +421,22 @@
                 "default": null
               }
             }
+          },
+          "attach": {
+            "properties": {
+              "buildTarget": {
+                "type": "string",
+                "description": "Name of the build target to debug"
+              },
+              "hostName": {
+                "type": "string",
+                "description": "Host name of the debuggee JVM"
+              },
+              "port": {
+                "type": "number",
+                "description": "Port to attach to"
+              }
+            }
           }
         },
         "configurationSnippets": [
@@ -444,6 +460,18 @@
               "request": "launch",
               "name": "Untitled",
               "testClass": "???"
+            }
+          },
+          {
+            "label": "Scala: Attach debugger",
+            "description": "A new configuration for running a debug session of a remote JVM",
+            "body": {
+              "type": "scala",
+              "request": "attach",
+              "name": "Untitled",
+              "buildTarget": "???",
+              "hostName": "localhost",
+              "port": 5005
             }
           }
         ]
