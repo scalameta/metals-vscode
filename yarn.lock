@@ -378,10 +378,10 @@ osenv@^0.1.3:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
 
-ovsx@0.1.0-next.e000fdb:
-  version "0.1.0-next.e000fdb"
-  resolved "https://registry.yarnpkg.com/ovsx/-/ovsx-0.1.0-next.e000fdb.tgz#a183d1725869945ed5c517646abe55ff2cf5dad8"
-  integrity sha512-U+4hWGhir0J9E2LEZCrMN1WVHGEPQqKPb/pKiMvipL95ZZzQ/BMN3NltdlSbGAzaMsindlFd+2ABpIHbbda9/g==
+ovsx@0.1.0-next.980e5cf:
+  version "0.1.0-next.980e5cf"
+  resolved "https://registry.yarnpkg.com/ovsx/-/ovsx-0.1.0-next.980e5cf.tgz#7644ae8be472f6251cce59155c91a198f6088c95"
+  integrity sha512-YTRJC4mpS5TVJzrIBMiPKgcVEzRAdbytQFy+MXEeNlRmRU3hlAKOqaDXUkalC9CAK+8Xpv4/mA46LVH9J5waSw==
   dependencies:
     follow-redirects "^1.13.0"
     vsce "~1.79.5"
