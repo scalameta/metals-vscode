@@ -131,6 +131,10 @@
           "type": "boolean",
           "markdownDescription": "When this option is enabled, for each method that has implicit arguments they are displayed as additional decorations."
         },
+        "metals.showImplicitConversionsAndClasses": {
+          "type": "boolean",
+          "markdownDescription": "When this option is enabled, each implicit method and class is displayed as additional decorations at the usage site."
+        },
         "metals.javaHome": {
           "type": "string",
           "markdownDescription": "Optional path to the Java home directory. Requires reloading the window.\n\nDefaults to the most recent Java version between 8 and 11 (inclusive) computed by the `locate-java-home` npm package."
