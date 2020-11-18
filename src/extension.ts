@@ -656,6 +656,14 @@ function launchMetals(
       });
     });
 
+    registerCommand("metals.toggle-implicit-conversions-and-classes", () => {
+      const setting = "showImplicitConversionsAndClasses";
+      const config = workspace.getConfiguration("metals");
+      const configProperty = config.inspect<boolean>(setting);
+      const currentValues = configProperty?.workspaceValue ?? false;
+      config.update(setting, !currentValues, ConfigurationTarget.Workspace);
+    });
+
     registerCommand(
       `metals.${ServerCommands.NewScalaFile}`,
       async (directory: Uri) => {

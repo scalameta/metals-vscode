@@ -304,6 +304,11 @@
         "command": "metals.ammonite-stop",
         "category": "Metals",
         "title": "Stop Ammonite build server"
+      },
+      {
+        "command": "metals.toggle-implicit-conversions-and-classes",
+        "category": "Metals",
+        "title": "Toggle implicit conversions and classes"
       }
     ],
     "menus": {
@@ -317,6 +322,10 @@
       "commandPalette": [
         {
           "command": "metals.reveal-active-file",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.toggle-implicits",
           "when": "metals:enabled"
         },
         {
