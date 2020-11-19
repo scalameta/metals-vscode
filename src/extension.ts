@@ -657,11 +657,15 @@ function launchMetals(
     });
 
     registerCommand("metals.toggle-implicit-conversions-and-classes", () => {
-      const setting = "showImplicitConversionsAndClasses";
-      const config = workspace.getConfiguration("metals");
-      const configProperty = config.inspect<boolean>(setting);
-      const currentValues = configProperty?.workspaceValue ?? false;
-      config.update(setting, !currentValues, ConfigurationTarget.Workspace);
+      toggleBooleanWorkspaceSetting("showImplicitConversionsAndClasses");
+    });
+
+    registerCommand("metals.toggle-implicit-parameters", () => {
+      toggleBooleanWorkspaceSetting("showImplicitArguments");
+    });
+
+    registerCommand("metals.toggle-show-inferred-type", () => {
+      toggleBooleanWorkspaceSetting("showInferredType");
     });
 
     registerCommand(
@@ -1034,4 +1038,11 @@ function configureSettingsDefaults() {
     },
     ConfigurationTarget.Workspace
   );
+}
+
+function toggleBooleanWorkspaceSetting(setting: string) {
+  const config = workspace.getConfiguration("metals");
+  const configProperty = config.inspect<boolean>(setting);
+  const currentValues = configProperty?.workspaceValue ?? false;
+  config.update(setting, !currentValues, ConfigurationTarget.Workspace);
 }

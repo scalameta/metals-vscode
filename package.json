@@ -308,7 +308,17 @@
       {
         "command": "metals.toggle-implicit-conversions-and-classes",
         "category": "Metals",
-        "title": "Toggle implicit conversions and classes"
+        "title": "Toggle showing implicit conversions and classes"
+      },
+      {
+        "command": "metals.toggle-implicit-parameters",
+        "category": "Metals",
+        "title": "Toggle showing implicit parameters"
+      },
+      {
+        "command": "metals.toggle-show-inferred-type",
+        "category": "Metals",
+        "title": "Toggle showing inferred type"
       }
     ],
     "menus": {
@@ -325,7 +335,15 @@
           "when": "metals:enabled"
         },
         {
-          "command": "metals.toggle-implicits",
+          "command": "metals.toggle-implicit-conversions-and-classes",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.toggle-implicit-parameters",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.toggle-show-inferred-type",
           "when": "metals:enabled"
         },
         {
