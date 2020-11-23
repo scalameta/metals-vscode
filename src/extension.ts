@@ -780,7 +780,7 @@ function launchMetals(
               requestToken.onCancellationRequested(() => {
                 onComplete();
                 progress.report({ increment: 100 });
-                setTimeout(() => progressResolve(), 1000);
+                setTimeout(() => progressResolve(undefined), 1000);
               });
             });
           }
