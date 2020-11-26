@@ -21,6 +21,8 @@ The following table shows the status of various features.
 | Rename symbol         |   ✅   |                                                                                                  |
 | Run/Debug             |   ✅   |                                                                                                  |
 | Code actions          |   ✅   |                                                                                                  |
+| Organize imports      |   ✅   |                                                                                                  |
+| Show implicits        |   ✅   |                                                                                                  |
 
 ## Requirements
 
@@ -33,9 +35,9 @@ on Ubuntu+Windows.
 
 **Scala 2.13, 2.12, 2.11 and Scala 3**. Metals supports these Scala versions
 2.13.4, 2.12.12, 2.12.11, 2.12.10, 2.13.2, 2.13.3, 2.11.12, 2.12.8, 2.12.9,
-2.13.0, 2.13.1, 3.0.0-M1, 0.27.0-RC1 and 0.26.0. Note that 2.11.x support is
-deprecated and it will be removed in future releases. It's recommended to
-upgrade to Scala 2.12 or Scala 2.13
+2.13.0, 2.13.1, 3.0.0-M2, 3.0.0-M1, 0.27.0-RC1 and 0.26.0. Note that 2.11.x
+support is deprecated and it will be removed in future releases. It's
+recommended to upgrade to Scala 2.12 or Scala 2.13
 
 ## Installation
 
@@ -318,32 +320,40 @@ guide them. In the end users should end up with something like this:
       "type": "scala",
       "request": "launch",
       // configuration name visible for the user
-      "name": "Main class",
+      "name": "Launch Main",
       // full name of the class to run
       "mainClass": "com.example.Main",
       // optional arguments for the main class
       "args": [],
       // optional jvm properties to use
-      "jvmOptions": [],
-      // optional build target name in case there more than one
-      // class with the same name
-      "buildTarget": "root"
+      "jvmOptions": []
     },
     // Test class configuration
     {
       "type": "scala",
       "request": "launch",
       // configuration name visible for the user
-      "name": "Test class",
+      "name": "Launch Test",
       // full name of the class to run
-      "testClass": "com.example.Test",
-      // optional build target name in case there more than one
-      // class with the same name
-      "buildTarget": "root"
+      "testClass": "com.example.Test"
     }
   ]
 }
 ```
+
+You can also add an optional build target name, which is needed in case there
+are more than one class with the same name or when launching a class from
+outside the project. Inside `"configurations":` add the key `buildTarget` with
+your target name, e.g. `root`:
+
+```json
+      "buildTarget": "root"
+```
+
+The build target name corresponds to your project name. For example in sbt for
+`lazy val interfaces = project` the name of the build target will be
+`interfaces` for sources and `interfaces-test` for tests. To make sure you have
+the correct target names please run the command `Metals: Run Doctor`.
 
 Multiple configurations can be stored in that file and can be chosen either
 manually in the `Run` view or can be picked by invoking a shortcut defined under
