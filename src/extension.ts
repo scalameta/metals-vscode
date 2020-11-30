@@ -76,6 +76,13 @@ const openSettingsCommand = "workbench.action.openSettings";
 let treeViews: MetalsTreeViews | undefined;
 let currentClient: LanguageClient | undefined;
 
+let worksheetDecorationType: TextEditorDecorationType = window.createTextEditorDecorationType(
+  {
+    isWholeLine: true,
+    rangeBehavior: DecorationRangeBehavior.OpenClosed,
+  }
+);
+
 let decorationType: TextEditorDecorationType = window.createTextEditorDecorationType(
   {
     rangeBehavior: DecorationRangeBehavior.OpenClosed,
@@ -819,7 +826,9 @@ function launchMetals(
             renderOptions: o.renderOptions,
           };
         });
-        editor.setDecorations(decorationType, options);
+        if (params.uri.endsWith(".worksheet.sc"))
+          editor.setDecorations(worksheetDecorationType, options);
+        else editor.setDecorations(decorationType, options);
       } else {
         outputChannel.appendLine(
           `Ignoring decorations for non-active document '${params.uri}'.`
