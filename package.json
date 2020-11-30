@@ -556,7 +556,7 @@
     "@types/shell-quote": "1.7.0",
     "@types/vscode": "1.43.0",
     "ovsx": "0.1.0-next.980e5cf",
-    "prettier": "2.2.0",
+    "prettier": "2.2.1",
     "typescript": "4.1.2",
     "vsce": "1.81.1"
   },
