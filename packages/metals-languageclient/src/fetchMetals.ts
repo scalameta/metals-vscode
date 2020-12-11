@@ -46,6 +46,7 @@ export function fetchMetals({
         ...extraEnv,
         ...process.env,
       },
+      stdio: ["ignore"],
     }
   );
 }
