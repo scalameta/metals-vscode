@@ -46,7 +46,7 @@ export function fetchMetals({
         ...extraEnv,
         ...process.env,
       },
-      stdio: ["ignore"],
+      stdio: ["ignore"], // Due to Issue: #219
     }
   );
 }
