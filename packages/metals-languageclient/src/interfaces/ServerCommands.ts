@@ -53,6 +53,13 @@ export const ServerCommands = {
   CascadeCompile: "compile-cascade",
   /** Recompile all build targets in this workspace. */
   CleanCompile: "compile-clean",
+  /**
+   * Copy the contents of a worksheet to your local buffer.
+   *
+   * Note: This command returns the contents of the worksheet, and the LSP client
+   * is in charge of taking that content and putting it into your local buffer.
+   */
+  CopyWorksheetOutput: "copy-worksheet-output",
   /** Start debug adapter. */
   DebugAdapterStart: "debug-adapter-start",
   /** Open the Metals doctor to troubleshoot potential problems with the build. */
