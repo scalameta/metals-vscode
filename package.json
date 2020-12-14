@@ -319,6 +319,11 @@
         "command": "metals.toggle-show-inferred-type",
         "category": "Metals",
         "title": "Toggle showing inferred type"
+      },
+      {
+        "command": "metals.copy-worksheet-output",
+        "category": "Metals",
+        "title": "Copy worksheet output"
       }
     ],
     "menus": {

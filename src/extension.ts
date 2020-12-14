@@ -598,6 +598,34 @@ function launchMetals(
       });
     });
 
+    // TODO replace with ServerCommand when done
+    registerTextEditorCommand(
+      `metals.copy-worksheet-output`,
+      (editor, _edit, _args) => {
+        const uri = editor.document.uri;
+        if (uri.toString().endsWith("worksheet.sc")) {
+          client
+            .sendRequest(ExecuteCommandRequest.type, {
+              command: "copy-worksheet-output",
+              arguments: [uri.toString()],
+            })
+            .then((result) => {
+              window.showInformationMessage(result);
+              if (result.value) {
+                env.clipboard.writeText(result.value);
+                window.showInformationMessage(
+                  "Copied worksheet evaluation to clipboard."
+                );
+              }
+            });
+        } else {
+          window.showWarningMessage(
+            "You must be in a worksheet to use this feature."
+          );
+        }
+      }
+    );
+
     registerCommand("metals.goto-path-uri", (...args) => {
       const uri = args[0] as string;
       const line = args[1] as number;
