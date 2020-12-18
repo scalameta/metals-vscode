@@ -1,5 +1,10 @@
 ## metals-languageclient changelog
 
+### v0.4.0 (2020/12/16 07:47 +00:00)
+- [e3fc5f0](https://github.com/scalameta/metals-languageclient/commit/e3fc5f0cd615af03ad8e1d68ea9d66c11a2ecb18) Bump @types/node from 14.14.13 to 14.14.14 (@dependabot-preview[bot])
+- [c1901e1](https://github.com/scalameta/metals-languageclient/commit/c1901e16db6d976a6d784320936b376dbda135d0) Add in copy-worksheet-output command (@ckipp01)
+- [c4df26f](https://github.com/scalameta/metals-languageclient/commit/c4df26f652eab96dc10ba228543e6ec500a1d017) Release v0.3.4
+
 ### v0.3.4 (2020/12/14 08:45 +00:00)
 - [7e0e9f3](https://github.com/scalameta/metals-languageclient/commit/7e0e9f325cb688b17a4887b8be372e697e0d985c) Bump @types/node from 14.14.12 to 14.14.13 (@dependabot-preview[bot])
 - [1e69c5c](https://github.com/scalameta/metals-languageclient/commit/1e69c5c641be2984a91a0cf8195403679beba3cb) Update fetchMetals.ts (@siddhant3s)
