@@ -598,7 +598,6 @@ function launchMetals(
       });
     });
 
-    // TODO replace with ServerCommand when done
     registerTextEditorCommand(
       `metals.${ServerCommands.CopyWorksheetOutput}`,
       (editor, _edit, _args) => {
