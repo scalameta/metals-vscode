@@ -600,13 +600,13 @@ function launchMetals(
 
     // TODO replace with ServerCommand when done
     registerTextEditorCommand(
-      `metals.copy-worksheet-output`,
+      `metals.${ServerCommands.CopyWorksheetOutput}`,
       (editor, _edit, _args) => {
         const uri = editor.document.uri;
         if (uri.toString().endsWith("worksheet.sc")) {
           client
             .sendRequest(ExecuteCommandRequest.type, {
-              command: "copy-worksheet-output",
+              command: ServerCommands.CopyWorksheetOutput,
               arguments: [uri.toString()],
             })
             .then((result) => {
