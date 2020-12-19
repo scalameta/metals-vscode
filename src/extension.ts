@@ -849,7 +849,7 @@ function launchMetals(
               new Position(o.range.start.line, o.range.start.character),
               new Position(o.range.end.line, o.range.end.character)
             ),
-            hoverMessage: o.hoverMessage.value,
+            hoverMessage: o.hoverMessage?.value,
             renderOptions: o.renderOptions,
           };
         });
