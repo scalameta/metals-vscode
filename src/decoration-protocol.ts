@@ -1,5 +1,9 @@
 import { NotificationType } from "vscode-jsonrpc";
-import { DecorationRenderOptions, DecorationOptions } from "vscode";
+import {
+  DecorationRenderOptions,
+  DecorationInstanceRenderOptions,
+  Range,
+} from "vscode";
 
 ("use strict");
 
@@ -15,10 +19,20 @@ export namespace DecorationTypeDidChange {
   );
 }
 
+export interface MetalsDecorationOptions {
+  range: Range;
+  hoverMessage: {
+    kind: string;
+    value: string;
+  };
+  renderOptions?: DecorationInstanceRenderOptions;
+}
+
 export interface PublishDecorationsParams {
   uri: string;
-  options: DecorationOptions[];
+  options: MetalsDecorationOptions[];
 }
+
 export namespace DecorationsRangesDidChange {
   export const type = new NotificationType<PublishDecorationsParams, void>(
     "metals/publishDecorations"
