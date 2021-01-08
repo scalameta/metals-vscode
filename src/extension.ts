@@ -838,11 +838,12 @@ function launchMetals(
       decorationType = window.createTextEditorDecorationType(options);
     });
     client.onNotification(DecorationsRangesDidChange.type, (params) => {
-      const editor = window.activeTextEditor;
-      if (
-        editor &&
-        Uri.parse(params.uri).toString() === editor.document.uri.toString()
-      ) {
+      const editors = window.visibleTextEditors;
+      const path = Uri.parse(params.uri).toString();
+      const editor = editors.find(
+        (editor) => editor.document.uri.toString() == path
+      );
+      if (editor) {
         const options = params.options.map<DecorationOptions>((o) => {
           return {
             range: new Range(
