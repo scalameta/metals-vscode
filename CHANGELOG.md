@@ -2,6 +2,10 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.9.13 (2021/01/19 18:01 +00:00)
+- [b49297e](https://github.com/scalameta/metals-vscode/commit/b49297eab6be5034eac86238ec4f1058361ebb9f) Update default Metals server version to 0.9.10 (@tgodzik)
+- [5f1c4e0](https://github.com/scalameta/metals-vscode/commit/5f1c4e0935968c863ced355f18997ec556951491) v1.9.12
+
 ### v1.9.12 (2021/01/17 16:28 +00:00)
 - [00184e5](https://github.com/scalameta/metals-vscode/commit/00184e5321494148adc60d6764762ce214cfc616) Revert to previous Metals server version (@tgodzik)
 - [f930597](https://github.com/scalameta/metals-vscode/commit/f930597283d9e1855136bbe307ef57d6532cd625) v1.9.11
@@ -212,12 +216,12 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [388121f](https://github.com/scalameta/metals-vscode/commit/388121f29def8c0a16ee1cc2c271047ad3401642) PR reworks (@alekseiAlefirov)
 - [e6de85a](https://github.com/scalameta/metals-vscode/commit/e6de85a2713a41aa432952e5035d4285ae80b197) Promise.reject in chaining Thenable's (@alekseiAlefirov)
 - [34b48ca](https://github.com/scalameta/metals-vscode/commit/34b48cacdd7b808ccda401fa10cbe80a12973729) fixed formatter (@alekseiAlefirov)
+- [0a4a3ec](https://github.com/scalameta/metals-vscode/commit/0a4a3ec062a3fbcc8a09618898488fb4ceb215fa) added support for test debug configuration (@alekseiAlefirov)
 - [324ee6b](https://github.com/scalameta/metals-vscode/commit/324ee6b54c91383ec057d8a6e2d0c292795ad79e) Added arguments and jvmOptions (@alekseiAlefirov)
-- [a2ff489](https://github.com/scalameta/metals-vscode/commit/a2ff4893025f32c0caa4e356cb62905feb255389) ScalaDebugServerFactory added to support 'launch.json' (@alekseiAlefirov)
 - [b35fc21](https://github.com/scalameta/metals-vscode/commit/b35fc215c16376f12fec66b6ae2ae1a95b3e2b3a) Added initial debug configuration setup (@alekseiAlefirov)
 - [be2a2e1](https://github.com/scalameta/metals-vscode/commit/be2a2e1658f780d61806fb19591577ba83a88796) fix format (@alekseiAlefirov)
 - [ad294e5](https://github.com/scalameta/metals-vscode/commit/ad294e573e4d48c251374a785fa6ab720d8470ed) polished code (@alekseiAlefirov)
-- [0a4a3ec](https://github.com/scalameta/metals-vscode/commit/0a4a3ec062a3fbcc8a09618898488fb4ceb215fa) added support for test debug configuration (@alekseiAlefirov)
+- [a2ff489](https://github.com/scalameta/metals-vscode/commit/a2ff4893025f32c0caa4e356cb62905feb255389) ScalaDebugServerFactory added to support 'launch.json' (@alekseiAlefirov)
 - [d1a31dc](https://github.com/scalameta/metals-vscode/commit/d1a31dc899edc857ea631d6386034ae1b33753f1) Update prettier and fix globbing in script (@gabro)
 - [d3c41ca](https://github.com/scalameta/metals-vscode/commit/d3c41cacfd880431b195b25199f9bca9d57f6154) Bump @types/node from 13.9.8 to 13.11.0 (@dependabot-preview[bot])
 - [16b696e](https://github.com/scalameta/metals-vscode/commit/16b696e635adf342038a0fd8d4f1e7782a7e87a6) Bump vsce from 1.74.0 to 1.75.0 (@dependabot-preview[bot])
@@ -256,8 +260,8 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [470d0ab](https://github.com/scalameta/metals-vscode/commit/470d0abb07aadcfe22f987acfef9d0bedd0ade0b) Bump promisify-child-process from 3.1.3 to 3.1.4 (@dependabot-preview[bot])
 - [5e31413](https://github.com/scalameta/metals-vscode/commit/5e314134f7155e37caf5dacbf3b97f5edc3a33b7) Bump @types/node from 13.9.0 to 13.9.1 (@dependabot-preview[bot])
 - [dbe8098](https://github.com/scalameta/metals-vscode/commit/dbe8098a36364f0129f50acfe66b06b1cc7d2e67) Super Method hierarchy jump (@kpbochenek)
-- [49fb442](https://github.com/scalameta/metals-vscode/commit/49fb44203d3d9138c53f679ca76ee6efded8053a) Support go to super method/field (@kpbochenek)
 - [847b320](https://github.com/scalameta/metals-vscode/commit/847b320acd7b3fa27def6478b44dfc2089ff56b4) WIP: super method lenses configurable via parameter (@kpbochenek)
+- [49fb442](https://github.com/scalameta/metals-vscode/commit/49fb44203d3d9138c53f679ca76ee6efded8053a) Support go to super method/field (@kpbochenek)
 - [019320b](https://github.com/scalameta/metals-vscode/commit/019320bda56ef07084efa83f7deb4d3d5dc28ce4) Bump @types/node from 13.7.7 to 13.9.0 (@dependabot-preview[bot])
 - [0329045](https://github.com/scalameta/metals-vscode/commit/03290459700bd5fc4a7684decf1dd44fd7b088d6) Bump @types/node from 13.7.6 to 13.7.7 (@dependabot-preview[bot])
 - [a14cceb](https://github.com/scalameta/metals-vscode/commit/a14cceb4a7c7dfd66bc4ee2268af595c575c30b5) Bump typescript from 3.8.2 to 3.8.3 (@dependabot-preview[bot])
@@ -271,10 +275,10 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [657c99d](https://github.com/scalameta/metals-vscode/commit/657c99d5fd859f1a9ef8825c23d8c3a15125793b) Bump typescript from 3.7.5 to 3.8.2 (@dependabot-preview[bot])
 - [29acacf](https://github.com/scalameta/metals-vscode/commit/29acacf39b11a5d6684b1cfd82c018f5e3ec9c1e) Bump @types/node from 13.7.2 to 13.7.4 (@dependabot-preview[bot])
 - [8114392](https://github.com/scalameta/metals-vscode/commit/811439287fb772d74d8354d2a87c6fc5d9ed2a49) add in new metals-languageclient version (@ckipp01)
-- [d001c71](https://github.com/scalameta/metals-vscode/commit/d001c71465e6b9cf493dab12768d50395a005812) add in inputBoxProvider and didFocusProvider (@ckipp01)
 - [1426b88](https://github.com/scalameta/metals-vscode/commit/1426b8832249cdb0cb00e8f1504b2e7424825079) add in slowTaskProvider (@ckipp01)
-- [02e9043](https://github.com/scalameta/metals-vscode/commit/02e9043ac2b15cbaab73d97824db11eca3c1e2bb) add in statusBarProvider as experimental option (@ckipp01)
 - [777d0e3](https://github.com/scalameta/metals-vscode/commit/777d0e34bc3fdb6909cff30a84ec864212b71f1b) add in executeClientCommandProvider (@ckipp01)
+- [d001c71](https://github.com/scalameta/metals-vscode/commit/d001c71465e6b9cf493dab12768d50395a005812) add in inputBoxProvider and didFocusProvider (@ckipp01)
+- [02e9043](https://github.com/scalameta/metals-vscode/commit/02e9043ac2b15cbaab73d97824db11eca3c1e2bb) add in statusBarProvider as experimental option (@ckipp01)
 - [03ad4e6](https://github.com/scalameta/metals-vscode/commit/03ad4e6475fd2d7cc9a005c7aa8099951573b063) add in doctorFormat as experimental capablity (@ckipp01)
 - [7704498](https://github.com/scalameta/metals-vscode/commit/77044982abec759f6384dc94af961efe6566b7b2) Specify exactly how server properties should look like (@tgodzik)
 - [f22ecad](https://github.com/scalameta/metals-vscode/commit/f22ecad7167299296245a72d96c7c73c4750e219) Bump @types/node from 13.7.1 to 13.7.2 (@dependabot-preview[bot])
@@ -397,11 +401,11 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ### v1.5.6 (2019/10/06 17:11 +00:00)
 - [8c17915](https://github.com/scalameta/metals-vscode/commit/8c179158bae501f40ebd4a6a089e1e661f724e9c) Add debugging provider to client capabilities.
-- [2546972](https://github.com/scalameta/metals-vscode/commit/2546972b9b44629de94ee3b7786bd1257ea857f3) Remove unused methods and properties from CodeLensProvider (@gabro)
 - [6a4c4ec](https://github.com/scalameta/metals-vscode/commit/6a4c4ecfac62e36de1b4ecda8e73d9e01a170098) Avoid spurious 'Unknown command' warning (@gabro)
+- [2546972](https://github.com/scalameta/metals-vscode/commit/2546972b9b44629de94ee3b7786bd1257ea857f3) Remove unused methods and properties from CodeLensProvider (@gabro)
 - [2431bac](https://github.com/scalameta/metals-vscode/commit/2431bacef54e71c9a3c13cdec8e766c1fbf7d21d) Fix ClientCommands registration (@gabro)
-- [60a3612](https://github.com/scalameta/metals-vscode/commit/60a3612aece97e0b225bfd84a622282c69c73416) Client command registration fix
 - [cebd70f](https://github.com/scalameta/metals-vscode/commit/cebd70f910148b15ee42b16458c62a7607a3a86f) Bump dependencies and remove test scaffolds (@gabro)
+- [60a3612](https://github.com/scalameta/metals-vscode/commit/60a3612aece97e0b225bfd84a622282c69c73416) Client command registration fix
 - [02a3924](https://github.com/scalameta/metals-vscode/commit/02a39248f0db5b67254d9bc5db994e7b8718882f) use debugging provider instead of "supportsDebugging" (@mzarnowski)
 - [487854e](https://github.com/scalameta/metals-vscode/commit/487854e931c1f0471f27ee566ae73c5d7acf8990) setup scala debugger only when the server supports it (@mzarnowski)
 - [d6e87aa](https://github.com/scalameta/metals-vscode/commit/d6e87aae02e897470c231ad905051109a16a0367) rename debugger -> scalaDebugger (@mzarnowski)
