@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import {
+  commands,
   DebugConfiguration,
   Disposable,
   ProviderResult,
@@ -47,7 +48,7 @@ export async function start(
         request: "launch",
         debugServer: port, // note: MUST be a number. vscode magic - automatically connects to the server
       };
-
+      commands.executeCommand("workbench.panel.repl.view.focus");
       return vscode.debug.startDebugging(undefined, configuration);
     });
 }
