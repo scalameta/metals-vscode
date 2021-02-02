@@ -563,7 +563,7 @@
     "ovsx": "0.1.0-next.980e5cf",
     "prettier": "2.2.1",
     "typescript": "4.1.3",
-    "vsce": "1.84.0"
+    "vsce": "1.85.0"
   },
   "dependencies": {
     "metals-languageclient": "0.4.0",
