@@ -179,7 +179,7 @@ class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
     return vscode.window
       .showInputBox({
         prompt: "Enter port to attach to",
-        placeHolder: "localhost",
+        placeHolder: "5005",
       })
       .then((port) => port ?? Promise.reject())
       .then((port) => parseInt(port));
