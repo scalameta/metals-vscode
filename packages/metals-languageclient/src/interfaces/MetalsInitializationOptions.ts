@@ -30,4 +30,5 @@ export interface MetalsInitializationOptions {
   statusBarProvider?: "on" | "off" | "log-message" | "show-message";
   treeViewProvider?: boolean;
   openNewWindowProvider?: boolean;
+  copyWorksheetOutputProvider?: boolean;
 }
