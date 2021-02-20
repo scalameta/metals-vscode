@@ -294,6 +294,7 @@ function launchMetals(
       overrideDefFormat: "unicode",
       parameterHintsCommand: "editor.action.triggerParameterHints",
     },
+    copyWorksheetOutputProvider: true,
     decorationProvider: true,
     inlineDecorationProvider: true,
     debuggingProvider: true,
