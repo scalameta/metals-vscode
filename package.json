@@ -187,6 +187,29 @@
           "type": "boolean",
           "default": true,
           "markdownDescription": "When enabled, if you press the return key from the first line of a multiline string containing a pipe, it will automatically add `.stripMargin`."
+        },
+        "metals.fallbackScalaVersion": {
+          "type": "string",
+          "default": "automatic",
+          "enum": [
+            "automatic",
+            "2.13.4",
+            "2.13.3",
+            "2.13.2",
+            "2.13.1",
+            "2.13.0",
+            "2.12.13",
+            "2.12.12",
+            "2.12.11",
+            "2.12.10",
+            "2.12.9",
+            "2.12.8",
+            "2.11.12",
+            "3.0.0-M3",
+            "3.0.0-M2",
+            "3.0.0-M1"
+          ],
+          "markdownDescription": "The Scala compiler version that is used as the default or fallback in case a file doesn't belong to any build target or the specified Scala version isn't supported by Metals.\n\nThis applies to standalone Scala files, worksheets, and Ammonite scripts.\n\n The `automatic` value means that the Scala version for these files will be inferred from the highest supported Scala version in your projects build definition"
         }
       }
     },
