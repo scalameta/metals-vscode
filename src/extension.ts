@@ -69,6 +69,7 @@ import {
   DecorationTypeDidChange,
   DecorationsRangesDidChange,
 } from "./decoration-protocol";
+import { clearTimeout } from "timers";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -785,41 +786,53 @@ function launchMetals(
     client.onRequest(MetalsSlowTask.type, (params, requestToken) => {
       return new Promise((requestResolve) => {
         const showLogs = ` ([show logs](command:${ClientCommands.ToggleLogs} "Show Metals logs"))`;
-        window.withProgress(
-          {
-            location: ProgressLocation.Notification,
-            title: params.message + showLogs,
-            cancellable: true,
-          },
-          (progress, progressToken) => {
-            // Update total running time every second.
-            let seconds = params.secondsElapsed || 0;
-            const interval = setInterval(() => {
-              seconds += 1;
+
+        // Wait a bit before showing the progress notification
+        const waitTime = 2;
+        let delay = Math.max(0, waitTime - (params.secondsElapsed || 0));
+        const timeout = setTimeout(() => {
+          window.withProgress(
+            {
+              location: ProgressLocation.Notification,
+              title: params.message + showLogs,
+              cancellable: true,
+            },
+            (progress, progressToken) => {
+              // Update total running time every second.
+              let seconds = params.secondsElapsed || waitTime;
               progress.report({ message: readableSeconds(seconds) });
-            }, 1000);
+              const interval = setInterval(() => {
+                seconds += 1;
+                progress.report({ message: readableSeconds(seconds) });
+              }, 1000);
 
-            // Hide logs and clean up resources on completion.
-            function onComplete() {
-              clearInterval(interval);
-            }
+              // Hide logs and clean up resources on completion.
+              function onComplete() {
+                clearInterval(interval);
+              }
 
-            // Client triggered cancelation from the progress notification.
-            progressToken.onCancellationRequested(() => {
-              onComplete();
-              requestResolve({ cancel: true });
-            });
-
-            return new Promise((progressResolve) => {
-              // Server completed long running task.
-              requestToken.onCancellationRequested(() => {
+              // Client triggered cancelation from the progress notification.
+              progressToken.onCancellationRequested(() => {
                 onComplete();
-                progress.report({ increment: 100 });
-                setTimeout(() => progressResolve(undefined), 1000);
+                requestResolve({ cancel: true });
               });
-            });
-          }
-        );
+
+              return new Promise((progressResolve) => {
+                // Server completed long running task.
+                requestToken.onCancellationRequested(() => {
+                  onComplete();
+                  progress.report({ increment: 100 });
+                  setTimeout(() => progressResolve(undefined), 1000);
+                });
+              });
+            }
+          );
+        }, delay * 1000);
+
+        // do not show the notification at all if the task already completed
+        requestToken.onCancellationRequested(() => {
+          clearTimeout(timeout);
+        });
       });
     });
     // NOTE(olafur): `require("./package.json")` should work in theory but it
