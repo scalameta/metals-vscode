@@ -101,7 +101,7 @@
       "properties": {
         "metals.serverVersion": {
           "type": "string",
-          "default": "0.9.10",
+          "default": "0.10.0",
           "markdownDescription": "The version of the Metals server artifact. Requires reloading the window.\n\n**Change only if you know what you're doing**"
         },
         "metals.serverProperties": {
@@ -193,6 +193,7 @@
           "default": "automatic",
           "enum": [
             "automatic",
+            "2.13.5",
             "2.13.4",
             "2.13.3",
             "2.13.2",
@@ -205,6 +206,7 @@
             "2.12.9",
             "2.12.8",
             "2.11.12",
+            "3.0.0-RC1",
             "3.0.0-M3",
             "3.0.0-M2",
             "3.0.0-M1"
