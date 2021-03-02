@@ -232,7 +232,13 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
         javaConfig
       );
     },
-    () => {
+    (reason) => {
+      if (reason instanceof Error) {
+        outputChannel.appendLine(
+          "Downloading Metals failed with the following:"
+        );
+        outputChannel.appendLine(reason.message);
+      }
       const msg = (() => {
         const proxy =
           `See https://scalameta.org/metals/docs/editors/vscode.html#http-proxy for instructions ` +
@@ -361,523 +367,534 @@ function launchMetals(
 
   context.subscriptions.push(client.start());
 
-  return client.onReady().then(() => {
-    let doctor: WebviewPanel | undefined;
-    let stacktrace: WebviewPanel | undefined;
+  return client.onReady().then(
+    () => {
+      let doctor: WebviewPanel | undefined;
+      let stacktrace: WebviewPanel | undefined;
 
-    function getDoctorPanel(isReload: boolean): WebviewPanel {
-      if (!doctor) {
-        doctor = window.createWebviewPanel(
-          "metals-doctor",
-          "Metals Doctor",
-          ViewColumn.Active,
-          { enableCommandUris: true }
-        );
-        context.subscriptions.push(doctor);
-        doctor.onDidDispose(() => {
-          doctor = undefined;
-        });
-      } else if (!isReload) {
-        doctor.reveal();
-      }
-      return doctor;
-    }
-    function getStacktracePanel(): WebviewPanel {
-      if (!stacktrace) {
-        stacktrace = window.createWebviewPanel(
-          "metals-stacktrace",
-          "Analyze Stacktrace",
-          ViewColumn.Beside,
-          { enableCommandUris: true }
-        );
-        context.subscriptions.push(stacktrace);
-        stacktrace.onDidDispose(() => {
-          stacktrace = undefined;
-        });
-      }
-      stacktrace.reveal();
-      return stacktrace;
-    }
-
-    [
-      ServerCommands.BuildImport,
-      ServerCommands.BuildRestart,
-      ServerCommands.BuildConnect,
-      ServerCommands.BuildDisconnect,
-      ServerCommands.GenerateBspConfig,
-      ServerCommands.BspSwitch,
-      ServerCommands.SourcesScan,
-      ServerCommands.DoctorRun,
-      ServerCommands.CascadeCompile,
-      ServerCommands.CleanCompile,
-      ServerCommands.CancelCompilation,
-      ServerCommands.AmmoniteStart,
-      ServerCommands.AmmoniteStop,
-    ].forEach((command) => {
-      registerCommand("metals." + command, async () =>
-        client.sendRequest(ExecuteCommandRequest.type, { command: command })
-      );
-    });
-
-    let channelOpen = false;
-
-    registerCommand(ClientCommands.FocusDiagnostics, () =>
-      commands.executeCommand("workbench.action.problems.focus")
-    );
-
-    registerCommand(ClientCommands.RunDoctor, () =>
-      commands.executeCommand(ClientCommands.RunDoctor)
-    );
-
-    registerCommand(ClientCommands.ToggleLogs, () => {
-      if (channelOpen) {
-        client.outputChannel.hide();
-        channelOpen = false;
-      } else {
-        client.outputChannel.show(true);
-        channelOpen = true;
-      }
-    });
-
-    registerCommand(ClientCommands.StartDebugSession, (...args: any[]) => {
-      scalaDebugger.start(false, ...args).then((wasStarted) => {
-        if (!wasStarted) {
-          window.showErrorMessage("Debug session not started");
-        }
-      });
-    });
-
-    registerCommand(ClientCommands.StartRunSession, (...args: any[]) => {
-      scalaDebugger.start(true, ...args).then((wasStarted) => {
-        if (!wasStarted) {
-          window.showErrorMessage("Run session not started");
-        }
-      });
-    });
-
-    // should be the compilation of a currently opened file
-    // but some race conditions may apply
-    let compilationDoneEmitter = new EventEmitter<void>();
-
-    let codeLensRefresher: CodeLensProvider = {
-      onDidChangeCodeLenses: compilationDoneEmitter.event,
-      provideCodeLenses: () => undefined,
-    };
-
-    languages.registerCodeLensProvider(
-      { scheme: "file", language: "scala" },
-      codeLensRefresher
-    );
-
-    // Handle the metals/executeClientCommand extension notification.
-    client.onNotification(ExecuteClientCommand.type, (params) => {
-      switch (params.command) {
-        case ClientCommands.GotoLocation:
-          const location =
-            params.arguments && (params.arguments[0] as Location);
-          const otherWindow =
-            (params.arguments && (params.arguments[1] as Boolean)) || false;
-          if (location) {
-            gotoLocation(location, otherWindow);
-          }
-          break;
-        case ClientCommands.RefreshModel:
-          compilationDoneEmitter.fire();
-          break;
-        case ClientCommands.OpenFolder:
-          const openWindowParams = params
-            .arguments?.[0] as MetalsOpenWindowParams;
-          if (openWindowParams) {
-            commands.executeCommand(
-              "vscode.openFolder",
-              Uri.parse(openWindowParams.uri),
-              openWindowParams.openNewWindow
-            );
-          }
-          break;
-        case "metals-show-stacktrace":
-          const html = params.arguments && params.arguments[0];
-          if (typeof html === "string") {
-            const panel = getStacktracePanel();
-            panel.webview.html = html;
-          }
-          break;
-        case ClientCommands.RunDoctor:
-        case ClientCommands.ReloadDoctor:
-          const isRun = params.command === ClientCommands.RunDoctor;
-          const isReload = params.command === ClientCommands.ReloadDoctor;
-          if (isRun || (doctor && isReload)) {
-            const html = params.arguments && params.arguments[0];
-            if (typeof html === "string") {
-              const panel = getDoctorPanel(isReload);
-              panel.webview.html = html;
-            }
-          }
-          break;
-        case ClientCommands.FocusDiagnostics:
-          commands.executeCommand(ClientCommands.FocusDiagnostics);
-          break;
-        default:
-          outputChannel.appendLine(`unknown command: ${params.command}`);
-      }
-
-      // Ignore other commands since they are less important.
-    });
-
-    // The server updates the client with a brief text message about what
-    // it is currently doing, for example "Compiling..".
-    const item = window.createStatusBarItem(StatusBarAlignment.Right, 100);
-    item.command = ClientCommands.ToggleLogs;
-    item.hide();
-    client.onNotification(MetalsStatus.type, (params) => {
-      item.text = params.text;
-      if (params.show) {
-        item.show();
-      } else if (params.hide) {
-        item.hide();
-      }
-      if (params.tooltip) {
-        item.tooltip = params.tooltip;
-      }
-      if (params.command) {
-        item.command = params.command;
-        commands.getCommands().then((values) => {
-          if (params.command && values.includes(params.command)) {
-            registerCommand(params.command, () => {
-              client.sendRequest(ExecuteCommandRequest.type, {
-                command: params.command!,
-              });
-            });
-          }
-        });
-      } else {
-        item.command = undefined;
-      }
-    });
-
-    registerTextEditorCommand(
-      `metals.${ServerCommands.GotoSuperMethod}`,
-      (editor, _edit, _args) => {
-        client.sendRequest(ExecuteCommandRequest.type, {
-          command: ServerCommands.GotoSuperMethod,
-          arguments: [
-            {
-              document: editor.document.uri.toString(true),
-              position: editor.selection.start,
-            },
-          ],
-        });
-      }
-    );
-
-    registerTextEditorCommand(
-      `metals.${ServerCommands.SuperMethodHierarchy}`,
-      (editor, _edit, _args) => {
-        client.sendRequest(ExecuteCommandRequest.type, {
-          command: ServerCommands.SuperMethodHierarchy,
-          arguments: [
-            {
-              document: editor.document.uri.toString(true),
-              position: editor.selection.start,
-            },
-          ],
-        });
-      }
-    );
-
-    registerCommand(`metals.${ServerCommands.AnalyzeStacktrace}`, () => {
-      env.clipboard.readText().then((clip) => {
-        if (clip.trim().length < 1) {
-          window.showInformationMessage(
-            "Clipboard appears to be empty, copy stacktrace to clipboard and retry this command"
+      function getDoctorPanel(isReload: boolean): WebviewPanel {
+        if (!doctor) {
+          doctor = window.createWebviewPanel(
+            "metals-doctor",
+            "Metals Doctor",
+            ViewColumn.Active,
+            { enableCommandUris: true }
           );
-        } else {
-          client.sendRequest(ExecuteCommandRequest.type, {
-            command: "analyze-stacktrace",
-            arguments: [clip],
+          context.subscriptions.push(doctor);
+          doctor.onDidDispose(() => {
+            doctor = undefined;
+          });
+        } else if (!isReload) {
+          doctor.reveal();
+        }
+        return doctor;
+      }
+      function getStacktracePanel(): WebviewPanel {
+        if (!stacktrace) {
+          stacktrace = window.createWebviewPanel(
+            "metals-stacktrace",
+            "Analyze Stacktrace",
+            ViewColumn.Beside,
+            { enableCommandUris: true }
+          );
+          context.subscriptions.push(stacktrace);
+          stacktrace.onDidDispose(() => {
+            stacktrace = undefined;
           });
         }
-      });
-    });
+        stacktrace.reveal();
+        return stacktrace;
+      }
 
-    registerTextEditorCommand(
-      `metals.${ServerCommands.CopyWorksheetOutput}`,
-      (editor, _edit, _args) => {
-        const uri = editor.document.uri;
-        if (uri.toString().endsWith("worksheet.sc")) {
-          client
-            .sendRequest(ExecuteCommandRequest.type, {
-              command: ServerCommands.CopyWorksheetOutput,
-              arguments: [uri.toString()],
-            })
-            .then((result) => {
-              window.showInformationMessage(result);
-              if (result.value) {
-                env.clipboard.writeText(result.value);
-                window.showInformationMessage(
-                  "Copied worksheet evaluation to clipboard."
-                );
-              }
-            });
+      [
+        ServerCommands.BuildImport,
+        ServerCommands.BuildRestart,
+        ServerCommands.BuildConnect,
+        ServerCommands.BuildDisconnect,
+        ServerCommands.GenerateBspConfig,
+        ServerCommands.BspSwitch,
+        ServerCommands.SourcesScan,
+        ServerCommands.DoctorRun,
+        ServerCommands.CascadeCompile,
+        ServerCommands.CleanCompile,
+        ServerCommands.CancelCompilation,
+        ServerCommands.AmmoniteStart,
+        ServerCommands.AmmoniteStop,
+      ].forEach((command) => {
+        registerCommand("metals." + command, async () =>
+          client.sendRequest(ExecuteCommandRequest.type, { command: command })
+        );
+      });
+
+      let channelOpen = false;
+
+      registerCommand(ClientCommands.FocusDiagnostics, () =>
+        commands.executeCommand("workbench.action.problems.focus")
+      );
+
+      registerCommand(ClientCommands.RunDoctor, () =>
+        commands.executeCommand(ClientCommands.RunDoctor)
+      );
+
+      registerCommand(ClientCommands.ToggleLogs, () => {
+        if (channelOpen) {
+          client.outputChannel.hide();
+          channelOpen = false;
         } else {
-          window.showWarningMessage(
-            "You must be in a worksheet to use this feature."
-          );
+          client.outputChannel.show(true);
+          channelOpen = true;
         }
-      }
-    );
-
-    registerCommand("metals.goto-path-uri", (...args) => {
-      const uri = args[0] as string;
-      const line = args[1] as number;
-      const otherWindow = args[2] as boolean;
-      const pos = new Position(line, 0);
-      const range = new Range(pos, pos);
-      const location = Location.create(uri, range);
-      gotoLocation(location, otherWindow);
-    });
-
-    registerCommand(`metals.${ServerCommands.ResetChoice}`, (args = []) => {
-      client.sendRequest(ExecuteCommandRequest.type, {
-        command: ServerCommands.ResetChoice,
-        arguments: args,
       });
-    });
 
-    registerCommand(`metals.${ServerCommands.Goto}`, (args) => {
-      client.sendRequest(ExecuteCommandRequest.type, {
-        command: ServerCommands.Goto,
-        arguments: args,
-      });
-    });
-
-    registerCommand("metals.reveal-active-file", () => {
-      if (treeViews) {
-        const editor = window.visibleTextEditors.find((e) =>
-          isSupportedLanguage(e.document.languageId)
-        );
-        if (editor) {
-          const pos = editor.selection.start;
-          const params: TextDocumentPositionParams = {
-            textDocument: { uri: editor.document.uri.toString() },
-            position: { line: pos.line, character: pos.character },
-          };
-          return window.withProgress(
-            {
-              location: ProgressLocation.Window,
-              title: "Metals: Reveal Active File in Side Bar",
-            },
-            (progress) => {
-              return client
-                .sendRequest(MetalsTreeViewReveal.type, params)
-                .then((result) => {
-                  progress.report({ increment: 100 });
-                  if (treeViews) {
-                    treeViews.reveal(result);
-                  }
-                });
-            }
-          );
-        }
-      } else {
-        window.showErrorMessage(
-          "This version of Metals does not support tree views."
-        );
-      }
-    });
-
-    registerCommand(ClientCommands.EchoCommand, (arg: string) => {
-      client.sendRequest(ExecuteCommandRequest.type, {
-        command: arg,
-      });
-    });
-
-    registerCommand("metals.toggle-implicit-conversions-and-classes", () => {
-      toggleBooleanWorkspaceSetting("showImplicitConversionsAndClasses");
-    });
-
-    registerCommand("metals.toggle-implicit-parameters", () => {
-      toggleBooleanWorkspaceSetting("showImplicitArguments");
-    });
-
-    registerCommand("metals.toggle-show-inferred-type", () => {
-      toggleBooleanWorkspaceSetting("showInferredType");
-    });
-
-    registerCommand(
-      `metals.${ServerCommands.NewScalaFile}`,
-      async (directory: Uri) => {
-        return client.sendRequest(ExecuteCommandRequest.type, {
-          command: ServerCommands.NewScalaFile,
-          arguments: [directory?.toString()],
-        });
-      }
-    );
-
-    registerCommand(`metals.new-scala-worksheet`, async () => {
-      const sendRequest = (args: Array<string | undefined>) => {
-        return client.sendRequest(ExecuteCommandRequest.type, {
-          command: ServerCommands.NewScalaFile,
-          arguments: args,
-        });
-      };
-      const currentUri = window.activeTextEditor?.document.uri;
-      if (currentUri != null) {
-        const parentUri = path.dirname(currentUri.toString());
-        const name = path.basename(parentUri);
-        const parentPath = Uri.parse(parentUri).fsPath;
-        const fullPath = path.join(parentPath, `${name}.worksheet.sc`);
-        if (fs.existsSync(fullPath)) {
-          window.showWarningMessage(
-            `A worksheet ${name}.worksheet.sc already exists, opening it instead`
-          );
-          return workspace
-            .openTextDocument(fullPath)
-            .then((textDocument) => window.showTextDocument(textDocument));
-        } else {
-          return sendRequest([parentUri, name, "worksheet"]);
-        }
-      } else {
-        return sendRequest([undefined, undefined, "worksheet"]);
-      }
-    });
-
-    registerCommand(`metals.${ServerCommands.NewScalaProject}`, async () => {
-      return client.sendRequest(ExecuteCommandRequest.type, {
-        command: ServerCommands.NewScalaProject,
-      });
-    });
-
-    window.onDidChangeActiveTextEditor((editor) => {
-      if (editor && isSupportedLanguage(editor.document.languageId)) {
-        client.sendNotification(
-          MetalsDidFocus.type,
-          editor.document.uri.toString()
-        );
-      }
-    });
-
-    window.onDidChangeWindowState((windowState) => {
-      client.sendNotification(MetalsWindowStateDidChange.type, {
-        focused: windowState.focused,
-      });
-    });
-
-    client.onRequest(MetalsInputBox.type, (options, requestToken) => {
-      return window
-        .showInputBox(options, requestToken)
-        .then(MetalsInputBox.handleInput);
-    });
-
-    client.onRequest(MetalsQuickPick.type, (params, requestToken) => {
-      return window
-        .showQuickPick(params.items, params, requestToken)
-        .then((result) => {
-          if (result === undefined) {
-            return { cancelled: true };
-          } else {
-            return { itemId: result.id };
+      registerCommand(ClientCommands.StartDebugSession, (...args: any[]) => {
+        scalaDebugger.start(false, ...args).then((wasStarted) => {
+          if (!wasStarted) {
+            window.showErrorMessage("Debug session not started");
           }
         });
-    });
+      });
 
-    // Long running tasks such as "import project" trigger start a progress
-    // bar with a "cancel" button.
-    client.onRequest(MetalsSlowTask.type, (params, requestToken) => {
-      return new Promise((requestResolve) => {
-        const showLogs = ` ([show logs](command:${ClientCommands.ToggleLogs} "Show Metals logs"))`;
+      registerCommand(ClientCommands.StartRunSession, (...args: any[]) => {
+        scalaDebugger.start(true, ...args).then((wasStarted) => {
+          if (!wasStarted) {
+            window.showErrorMessage("Run session not started");
+          }
+        });
+      });
 
-        // Wait a bit before showing the progress notification
-        const waitTime = 2;
-        let delay = Math.max(0, waitTime - (params.secondsElapsed || 0));
-        const timeout = setTimeout(() => {
-          window.withProgress(
-            {
-              location: ProgressLocation.Notification,
-              title: params.message + showLogs,
-              cancellable: true,
-            },
-            (progress, progressToken) => {
-              // Update total running time every second.
-              let seconds = params.secondsElapsed || waitTime;
-              progress.report({ message: readableSeconds(seconds) });
-              const interval = setInterval(() => {
-                seconds += 1;
-                progress.report({ message: readableSeconds(seconds) });
-              }, 1000);
+      // should be the compilation of a currently opened file
+      // but some race conditions may apply
+      let compilationDoneEmitter = new EventEmitter<void>();
 
-              // Hide logs and clean up resources on completion.
-              function onComplete() {
-                clearInterval(interval);
+      let codeLensRefresher: CodeLensProvider = {
+        onDidChangeCodeLenses: compilationDoneEmitter.event,
+        provideCodeLenses: () => undefined,
+      };
+
+      languages.registerCodeLensProvider(
+        { scheme: "file", language: "scala" },
+        codeLensRefresher
+      );
+
+      // Handle the metals/executeClientCommand extension notification.
+      client.onNotification(ExecuteClientCommand.type, (params) => {
+        switch (params.command) {
+          case ClientCommands.GotoLocation:
+            const location =
+              params.arguments && (params.arguments[0] as Location);
+            const otherWindow =
+              (params.arguments && (params.arguments[1] as Boolean)) || false;
+            if (location) {
+              gotoLocation(location, otherWindow);
+            }
+            break;
+          case ClientCommands.RefreshModel:
+            compilationDoneEmitter.fire();
+            break;
+          case ClientCommands.OpenFolder:
+            const openWindowParams = params
+              .arguments?.[0] as MetalsOpenWindowParams;
+            if (openWindowParams) {
+              commands.executeCommand(
+                "vscode.openFolder",
+                Uri.parse(openWindowParams.uri),
+                openWindowParams.openNewWindow
+              );
+            }
+            break;
+          case "metals-show-stacktrace":
+            const html = params.arguments && params.arguments[0];
+            if (typeof html === "string") {
+              const panel = getStacktracePanel();
+              panel.webview.html = html;
+            }
+            break;
+          case ClientCommands.RunDoctor:
+          case ClientCommands.ReloadDoctor:
+            const isRun = params.command === ClientCommands.RunDoctor;
+            const isReload = params.command === ClientCommands.ReloadDoctor;
+            if (isRun || (doctor && isReload)) {
+              const html = params.arguments && params.arguments[0];
+              if (typeof html === "string") {
+                const panel = getDoctorPanel(isReload);
+                panel.webview.html = html;
               }
+            }
+            break;
+          case ClientCommands.FocusDiagnostics:
+            commands.executeCommand(ClientCommands.FocusDiagnostics);
+            break;
+          default:
+            outputChannel.appendLine(`unknown command: ${params.command}`);
+        }
 
-              // Client triggered cancelation from the progress notification.
-              progressToken.onCancellationRequested(() => {
-                onComplete();
-                requestResolve({ cancel: true });
-              });
+        // Ignore other commands since they are less important.
+      });
 
-              return new Promise((progressResolve) => {
-                // Server completed long running task.
-                requestToken.onCancellationRequested(() => {
-                  onComplete();
-                  progress.report({ increment: 100 });
-                  setTimeout(() => progressResolve(undefined), 1000);
+      // The server updates the client with a brief text message about what
+      // it is currently doing, for example "Compiling..".
+      const item = window.createStatusBarItem(StatusBarAlignment.Right, 100);
+      item.command = ClientCommands.ToggleLogs;
+      item.hide();
+      client.onNotification(MetalsStatus.type, (params) => {
+        item.text = params.text;
+        if (params.show) {
+          item.show();
+        } else if (params.hide) {
+          item.hide();
+        }
+        if (params.tooltip) {
+          item.tooltip = params.tooltip;
+        }
+        if (params.command) {
+          item.command = params.command;
+          commands.getCommands().then((values) => {
+            if (params.command && values.includes(params.command)) {
+              registerCommand(params.command, () => {
+                client.sendRequest(ExecuteCommandRequest.type, {
+                  command: params.command!,
                 });
               });
             }
-          );
-        }, delay * 1000);
+          });
+        } else {
+          item.command = undefined;
+        }
+      });
 
-        // do not show the notification at all if the task already completed
-        requestToken.onCancellationRequested(() => {
-          clearTimeout(timeout);
+      registerTextEditorCommand(
+        `metals.${ServerCommands.GotoSuperMethod}`,
+        (editor, _edit, _args) => {
+          client.sendRequest(ExecuteCommandRequest.type, {
+            command: ServerCommands.GotoSuperMethod,
+            arguments: [
+              {
+                document: editor.document.uri.toString(true),
+                position: editor.selection.start,
+              },
+            ],
+          });
+        }
+      );
+
+      registerTextEditorCommand(
+        `metals.${ServerCommands.SuperMethodHierarchy}`,
+        (editor, _edit, _args) => {
+          client.sendRequest(ExecuteCommandRequest.type, {
+            command: ServerCommands.SuperMethodHierarchy,
+            arguments: [
+              {
+                document: editor.document.uri.toString(true),
+                position: editor.selection.start,
+              },
+            ],
+          });
+        }
+      );
+
+      registerCommand(`metals.${ServerCommands.AnalyzeStacktrace}`, () => {
+        env.clipboard.readText().then((clip) => {
+          if (clip.trim().length < 1) {
+            window.showInformationMessage(
+              "Clipboard appears to be empty, copy stacktrace to clipboard and retry this command"
+            );
+          } else {
+            client.sendRequest(ExecuteCommandRequest.type, {
+              command: "analyze-stacktrace",
+              arguments: [clip],
+            });
+          }
         });
       });
-    });
-    // NOTE(olafur): `require("./package.json")` should work in theory but it
-    // seems to read a stale version of package.json when I try it.
-    const packageJson = JSON.parse(
-      fs.readFileSync(path.join(context.extensionPath, "package.json"), "utf8")
-    );
-    const viewIds = packageJson.contributes.views["metals-explorer"].map(
-      (view: { id: string }) => view.id
-    );
-    treeViews = startTreeView(client, outputChannel, context, viewIds);
-    context.subscriptions.concat(treeViews.disposables);
-    scalaDebugger
-      .initialize(outputChannel)
-      .forEach((disposable) => context.subscriptions.push(disposable));
-    client.onNotification(DecorationTypeDidChange.type, (options) => {
-      decorationType = window.createTextEditorDecorationType(options);
-    });
-    client.onNotification(DecorationsRangesDidChange.type, (params) => {
-      const editors = window.visibleTextEditors;
-      const path = Uri.parse(params.uri).toString();
-      const editor = editors.find(
-        (editor) => editor.document.uri.toString() == path
+
+      registerTextEditorCommand(
+        `metals.${ServerCommands.CopyWorksheetOutput}`,
+        (editor, _edit, _args) => {
+          const uri = editor.document.uri;
+          if (uri.toString().endsWith("worksheet.sc")) {
+            client
+              .sendRequest(ExecuteCommandRequest.type, {
+                command: ServerCommands.CopyWorksheetOutput,
+                arguments: [uri.toString()],
+              })
+              .then((result) => {
+                window.showInformationMessage(result);
+                if (result.value) {
+                  env.clipboard.writeText(result.value);
+                  window.showInformationMessage(
+                    "Copied worksheet evaluation to clipboard."
+                  );
+                }
+              });
+          } else {
+            window.showWarningMessage(
+              "You must be in a worksheet to use this feature."
+            );
+          }
+        }
       );
-      if (editor) {
-        const options = params.options.map<DecorationOptions>((o) => {
-          return {
-            range: new Range(
-              new Position(o.range.start.line, o.range.start.character),
-              new Position(o.range.end.line, o.range.end.character)
-            ),
-            hoverMessage: o.hoverMessage?.value,
-            renderOptions: o.renderOptions,
-          };
+
+      registerCommand("metals.goto-path-uri", (...args) => {
+        const uri = args[0] as string;
+        const line = args[1] as number;
+        const otherWindow = args[2] as boolean;
+        const pos = new Position(line, 0);
+        const range = new Range(pos, pos);
+        const location = Location.create(uri, range);
+        gotoLocation(location, otherWindow);
+      });
+
+      registerCommand(`metals.${ServerCommands.ResetChoice}`, (args = []) => {
+        client.sendRequest(ExecuteCommandRequest.type, {
+          command: ServerCommands.ResetChoice,
+          arguments: args,
         });
-        if (params.uri.endsWith(".worksheet.sc"))
-          editor.setDecorations(worksheetDecorationType, options);
-        else editor.setDecorations(decorationType, options);
-      } else {
-        outputChannel.appendLine(
-          `Ignoring decorations for non-active document '${params.uri}'.`
+      });
+
+      registerCommand(`metals.${ServerCommands.Goto}`, (args) => {
+        client.sendRequest(ExecuteCommandRequest.type, {
+          command: ServerCommands.Goto,
+          arguments: args,
+        });
+      });
+
+      registerCommand("metals.reveal-active-file", () => {
+        if (treeViews) {
+          const editor = window.visibleTextEditors.find((e) =>
+            isSupportedLanguage(e.document.languageId)
+          );
+          if (editor) {
+            const pos = editor.selection.start;
+            const params: TextDocumentPositionParams = {
+              textDocument: { uri: editor.document.uri.toString() },
+              position: { line: pos.line, character: pos.character },
+            };
+            return window.withProgress(
+              {
+                location: ProgressLocation.Window,
+                title: "Metals: Reveal Active File in Side Bar",
+              },
+              (progress) => {
+                return client
+                  .sendRequest(MetalsTreeViewReveal.type, params)
+                  .then((result) => {
+                    progress.report({ increment: 100 });
+                    if (treeViews) {
+                      treeViews.reveal(result);
+                    }
+                  });
+              }
+            );
+          }
+        } else {
+          window.showErrorMessage(
+            "This version of Metals does not support tree views."
+          );
+        }
+      });
+
+      registerCommand(ClientCommands.EchoCommand, (arg: string) => {
+        client.sendRequest(ExecuteCommandRequest.type, {
+          command: arg,
+        });
+      });
+
+      registerCommand("metals.toggle-implicit-conversions-and-classes", () => {
+        toggleBooleanWorkspaceSetting("showImplicitConversionsAndClasses");
+      });
+
+      registerCommand("metals.toggle-implicit-parameters", () => {
+        toggleBooleanWorkspaceSetting("showImplicitArguments");
+      });
+
+      registerCommand("metals.toggle-show-inferred-type", () => {
+        toggleBooleanWorkspaceSetting("showInferredType");
+      });
+
+      registerCommand(
+        `metals.${ServerCommands.NewScalaFile}`,
+        async (directory: Uri) => {
+          return client.sendRequest(ExecuteCommandRequest.type, {
+            command: ServerCommands.NewScalaFile,
+            arguments: [directory?.toString()],
+          });
+        }
+      );
+
+      registerCommand(`metals.new-scala-worksheet`, async () => {
+        const sendRequest = (args: Array<string | undefined>) => {
+          return client.sendRequest(ExecuteCommandRequest.type, {
+            command: ServerCommands.NewScalaFile,
+            arguments: args,
+          });
+        };
+        const currentUri = window.activeTextEditor?.document.uri;
+        if (currentUri != null) {
+          const parentUri = path.dirname(currentUri.toString());
+          const name = path.basename(parentUri);
+          const parentPath = Uri.parse(parentUri).fsPath;
+          const fullPath = path.join(parentPath, `${name}.worksheet.sc`);
+          if (fs.existsSync(fullPath)) {
+            window.showWarningMessage(
+              `A worksheet ${name}.worksheet.sc already exists, opening it instead`
+            );
+            return workspace
+              .openTextDocument(fullPath)
+              .then((textDocument) => window.showTextDocument(textDocument));
+          } else {
+            return sendRequest([parentUri, name, "worksheet"]);
+          }
+        } else {
+          return sendRequest([undefined, undefined, "worksheet"]);
+        }
+      });
+
+      registerCommand(`metals.${ServerCommands.NewScalaProject}`, async () => {
+        return client.sendRequest(ExecuteCommandRequest.type, {
+          command: ServerCommands.NewScalaProject,
+        });
+      });
+
+      window.onDidChangeActiveTextEditor((editor) => {
+        if (editor && isSupportedLanguage(editor.document.languageId)) {
+          client.sendNotification(
+            MetalsDidFocus.type,
+            editor.document.uri.toString()
+          );
+        }
+      });
+
+      window.onDidChangeWindowState((windowState) => {
+        client.sendNotification(MetalsWindowStateDidChange.type, {
+          focused: windowState.focused,
+        });
+      });
+
+      client.onRequest(MetalsInputBox.type, (options, requestToken) => {
+        return window
+          .showInputBox(options, requestToken)
+          .then(MetalsInputBox.handleInput);
+      });
+
+      client.onRequest(MetalsQuickPick.type, (params, requestToken) => {
+        return window
+          .showQuickPick(params.items, params, requestToken)
+          .then((result) => {
+            if (result === undefined) {
+              return { cancelled: true };
+            } else {
+              return { itemId: result.id };
+            }
+          });
+      });
+
+      // Long running tasks such as "import project" trigger start a progress
+      // bar with a "cancel" button.
+      client.onRequest(MetalsSlowTask.type, (params, requestToken) => {
+        return new Promise((requestResolve) => {
+          const showLogs = ` ([show logs](command:${ClientCommands.ToggleLogs} "Show Metals logs"))`;
+
+          // Wait a bit before showing the progress notification
+          const waitTime = 2;
+          let delay = Math.max(0, waitTime - (params.secondsElapsed || 0));
+          const timeout = setTimeout(() => {
+            window.withProgress(
+              {
+                location: ProgressLocation.Notification,
+                title: params.message + showLogs,
+                cancellable: true,
+              },
+              (progress, progressToken) => {
+                // Update total running time every second.
+                let seconds = params.secondsElapsed || waitTime;
+                progress.report({ message: readableSeconds(seconds) });
+                const interval = setInterval(() => {
+                  seconds += 1;
+                  progress.report({ message: readableSeconds(seconds) });
+                }, 1000);
+
+                // Hide logs and clean up resources on completion.
+                function onComplete() {
+                  clearInterval(interval);
+                }
+
+                // Client triggered cancelation from the progress notification.
+                progressToken.onCancellationRequested(() => {
+                  onComplete();
+                  requestResolve({ cancel: true });
+                });
+
+                return new Promise((progressResolve) => {
+                  // Server completed long running task.
+                  requestToken.onCancellationRequested(() => {
+                    onComplete();
+                    progress.report({ increment: 100 });
+                    setTimeout(() => progressResolve(undefined), 1000);
+                  });
+                });
+              }
+            );
+          }, delay * 1000);
+
+          // do not show the notification at all if the task already completed
+          requestToken.onCancellationRequested(() => {
+            clearTimeout(timeout);
+          });
+        });
+      });
+      // NOTE(olafur): `require("./package.json")` should work in theory but it
+      // seems to read a stale version of package.json when I try it.
+      const packageJson = JSON.parse(
+        fs.readFileSync(
+          path.join(context.extensionPath, "package.json"),
+          "utf8"
+        )
+      );
+      const viewIds = packageJson.contributes.views["metals-explorer"].map(
+        (view: { id: string }) => view.id
+      );
+      treeViews = startTreeView(client, outputChannel, context, viewIds);
+      context.subscriptions.concat(treeViews.disposables);
+      scalaDebugger
+        .initialize(outputChannel)
+        .forEach((disposable) => context.subscriptions.push(disposable));
+      client.onNotification(DecorationTypeDidChange.type, (options) => {
+        decorationType = window.createTextEditorDecorationType(options);
+      });
+      client.onNotification(DecorationsRangesDidChange.type, (params) => {
+        const editors = window.visibleTextEditors;
+        const path = Uri.parse(params.uri).toString();
+        const editor = editors.find(
+          (editor) => editor.document.uri.toString() == path
         );
+        if (editor) {
+          const options = params.options.map<DecorationOptions>((o) => {
+            return {
+              range: new Range(
+                new Position(o.range.start.line, o.range.start.character),
+                new Position(o.range.end.line, o.range.end.character)
+              ),
+              hoverMessage: o.hoverMessage?.value,
+              renderOptions: o.renderOptions,
+            };
+          });
+          if (params.uri.endsWith(".worksheet.sc"))
+            editor.setDecorations(worksheetDecorationType, options);
+          else editor.setDecorations(decorationType, options);
+        } else {
+          outputChannel.appendLine(
+            `Ignoring decorations for non-active document '${params.uri}'.`
+          );
+        }
+      });
+    },
+    (reason) => {
+      if (reason instanceof Error) {
+        outputChannel.appendLine("Could not launch Metals Language Server:");
+        outputChannel.appendLine(reason.message);
       }
-    });
-  });
+    }
+  );
 }
 
 function gotoLocation(location: Location, otherWindow: Boolean): void {
