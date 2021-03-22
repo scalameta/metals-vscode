@@ -31,10 +31,13 @@ export async function start(
   noDebug: Boolean,
   ...parameters: any[]
 ): Promise<Boolean> {
-  return vscode.commands
-    .executeCommand<DebugSession>(
-      ServerCommands.DebugAdapterStart,
-      ...parameters
+  return commands
+    .executeCommand("workbench.action.files.save")
+    .then(() =>
+      vscode.commands.executeCommand<DebugSession>(
+        ServerCommands.DebugAdapterStart,
+        ...parameters
+      )
     )
     .then((response) => {
       if (response === undefined) return false;
