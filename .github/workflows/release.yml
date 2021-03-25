@@ -33,7 +33,7 @@ jobs:
           git add .
           git commit -m "v${{ steps.get_version.outputs.NEW_VERSION }}"
       - name: Push changes
-        run: git push origin HEAD:master
+        run: git push origin HEAD:main
       - name: Publish extension
         run: yarn vscode:publish -p ${{ secrets.VS_MARKETPLACE_TOKEN }}
       - name: Build VSIX package
