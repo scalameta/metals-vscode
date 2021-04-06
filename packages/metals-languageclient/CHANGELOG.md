@@ -1,5 +1,23 @@
 ## metals-languageclient changelog
 
+### v0.4.2 (2021/04/06 18:58 +00:00)
+- [3384f7b](https://github.com/scalameta/metals-languageclient/commit/3384f7b1ef3824cd224c82dec4e9fe060b2fe9b9) Fix github-changes to use the main branch (@tgodzik)
+- [7f04849](https://github.com/scalameta/metals-languageclient/commit/7f0484942ef2a13ce3b34ad6221fdb2381c168e5) Bump @types/node-fetch from 2.5.8 to 2.5.9 (@dependabot-preview[bot])
+- [2ae8ef8](https://github.com/scalameta/metals-languageclient/commit/2ae8ef80d76803fc9b984bd3adecfa9cabf2afe7) Switch default branch to main. (@ckipp01)
+- [133c569](https://github.com/scalameta/metals-languageclient/commit/133c569bc99e1beb37cbe0144c911dfe8139df0a) [Security] Bump y18n from 4.0.0 to 4.0.1 (@dependabot-preview[bot])
+- [60b1d5f](https://github.com/scalameta/metals-languageclient/commit/60b1d5fb75f8f55f42b96b3a51c7448b374020f1) Bump @types/node from 14.14.36 to 14.14.37 (@dependabot-preview[bot])
+- [bdb0482](https://github.com/scalameta/metals-languageclient/commit/bdb0482c43be1a70fa96019068036a0c5c941129) Bump @types/jest from 26.0.21 to 26.0.22 (@dependabot-preview[bot])
+- [663c6c5](https://github.com/scalameta/metals-languageclient/commit/663c6c5df65d321231755dc81b119eec93753c9a) Bump @types/node from 14.14.35 to 14.14.36 (@dependabot-preview[bot])
+- [fe0acf1](https://github.com/scalameta/metals-languageclient/commit/fe0acf1e888290384872cb148f1ea6f89ab9949e) Bump semver from 7.3.4 to 7.3.5 (@dependabot-preview[bot])
+- [04b4e78](https://github.com/scalameta/metals-languageclient/commit/04b4e784734f95eda70d4fdd1526cb7ac388a854) Bump @types/jest from 26.0.20 to 26.0.21 (@dependabot-preview[bot])
+- [29592fd](https://github.com/scalameta/metals-languageclient/commit/29592fd5a08620baea93cbb4e41f159c300be8e1) Bump @types/node from 14.14.34 to 14.14.35 (@dependabot-preview[bot])
+- [0e996c3](https://github.com/scalameta/metals-languageclient/commit/0e996c33c6455f8ddb24799953f03097ea63649f) Bump @types/node from 14.14.33 to 14.14.34 (@dependabot-preview[bot])
+- [6a77d44](https://github.com/scalameta/metals-languageclient/commit/6a77d4446594749583b0dc2098f08e8399af0d6d) Add in debug discovery params (@ckipp01)
+- [d229000](https://github.com/scalameta/metals-languageclient/commit/d2290004a583ae939fcf1cd963787d96b0100c0b) Bump @types/node from 14.14.32 to 14.14.33 (@dependabot-preview[bot])
+- [1d8a113](https://github.com/scalameta/metals-languageclient/commit/1d8a11324bab206be60e269eee5294f227ca8c94) Bump @types/node from 14.14.31 to 14.14.32 (@dependabot-preview[bot])
+- [2a8209a](https://github.com/scalameta/metals-languageclient/commit/2a8209ab5e942139755b31b2cfe0d8474e705b88) Bump @types/node from 14.14.30 to 14.14.31 (@dependabot-preview[bot])
+- [95413f9](https://github.com/scalameta/metals-languageclient/commit/95413f9fa790bf2d201b6708554de343744007dc) Release v0.4.1
+
 ### v0.4.1 (2021/02/19 07:01 +00:00)
 - [ecb5193](https://github.com/scalameta/metals-languageclient/commit/ecb51939aa2e23632669fd60a2ab3caaf0ccd686) Bump @types/node from 14.14.28 to 14.14.30 (@dependabot-preview[bot])
 - [703ffc4](https://github.com/scalameta/metals-languageclient/commit/703ffc4f74c35e4f36e008497d5d09d0cc6e0c1f) Bump @types/node from 14.14.26 to 14.14.28 (@dependabot-preview[bot])
@@ -294,8 +312,8 @@
 ### v0.1.15 (2020/02/04 07:17 +00:00)
 - [04fc84e](https://github.com/scalameta/metals-languageclient/commit/04fc84e55f889990a10083f83ea6f395fc7ee81b) v0.1.15 (@gabro)
 - [9a5fcf5](https://github.com/scalameta/metals-languageclient/commit/9a5fcf5757989832f522a8db585f2e71c64bc081) Use the same version of vscode-languageserver-protocol as coc.nvim (@gabro)
-- [e7144b4](https://github.com/scalameta/metals-languageclient/commit/e7144b4eeb9e153c5d7e060d04e2bf7c74d99883) v0.1.14 (@gabro)
 - [0dffea3](https://github.com/scalameta/metals-languageclient/commit/0dffea3660ce9969d946100c55c05ae9eeb8e0a3) Fix potentially undefined arrays (@gabro)
+- [e7144b4](https://github.com/scalameta/metals-languageclient/commit/e7144b4eeb9e153c5d7e060d04e2bf7c74d99883) v0.1.14 (@gabro)
 - [5b3aafc](https://github.com/scalameta/metals-languageclient/commit/5b3aafcf25f72a5b4269ef6568d372c2c34775e9) Bump @types/node from 13.5.3 to 13.7.0 (@dependabot-preview[bot])
 
 ### v0.1.13 (2020/02/01 09:20 +00:00)
