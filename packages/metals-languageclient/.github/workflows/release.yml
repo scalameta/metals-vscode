@@ -36,7 +36,7 @@ jobs:
 
       - name: Generate new changelog
         run:
-          npx github-changes -o scalameta -r metals-languageclient --no-merges
+          npx github-changes -b main -o scalameta -r metals-languageclient --no-merges
           -t "metals-languageclient changelog" -k ${{ secrets.GITHUB_TOKEN }}
 
       - name: Commit changes
