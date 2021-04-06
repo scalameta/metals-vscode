@@ -26,7 +26,7 @@ jobs:
           }}
       - name: Generate changelog
         run: |
-          npx github-changes -o scalameta -r metals-vscode --no-merges -t "VSCode Extension Changelog" -k ${{ secrets.GITHUB_TOKEN }}
+          npx github-changes -b main -o scalameta -r metals-vscode --no-merges -t "VSCode Extension Changelog" -k ${{ secrets.GITHUB_TOKEN }}
           sed -i '1i Check out the Metals release notes at [https://scalameta.org/metals/blog/](https://scalameta.org/metals/blog/)\n' CHANGELOG.md
       - name: Commit changes
         run: |
