@@ -34,10 +34,10 @@ or 11 installation.
 on Ubuntu+Windows.
 
 **Scala 2.13, 2.12, 2.11 and Scala 3**. Metals supports these Scala versions
-2.13.5, 2.13.4, 2.12.13, 2.12.12, 2.12.11, 2.12.10, 2.13.2, 2.13.3, 2.11.12,
-2.12.8, 2.12.9, 2.13.0, 2.13.1, 3.0.0-RC1, 3.0.0-M3, 3.0.0-M2 and 3.0.0-M1. Note
-that 2.11.x support is deprecated and it will be removed in future releases.
-It's recommended to upgrade to Scala 2.12 or Scala 2.13
+2.13.5, 2.12.13, 2.12.12, 2.12.11, 2.12.10, 2.13.3, 2.13.4, 2.11.12, 2.12.8,
+2.12.9, 2.13.0, 2.13.1, 2.13.2, 3.0.0-RC2, 3.0.0-RC1, 3.0.0-M3, 3.0.0-M2 and
+3.0.0-M1. Note that 2.11.x support is deprecated and it will be removed in
+future releases. It's recommended to upgrade to Scala 2.12 or Scala 2.13
 
 ## Installation
 
@@ -422,8 +422,14 @@ import $dep.`com.lihaoyi::scalatags:0.7.0`
 import $ivy.`com.lihaoyi::scalatags:0.7.0`
 ```
 
-:: is the same as %% in sbt, which will append the current Scala binary version
-to the artifact name.
+`::` is the same as `%%` in sbt, which will append the current Scala binary
+version to the artifact name.
+
+You can also import `scalac` options in a special `$scalac` import like below:
+
+```scala
+import $scalac.`-Ywarn-unused`
+```
 
 ## Coming from IntelliJ
 
