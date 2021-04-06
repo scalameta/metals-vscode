@@ -349,6 +349,21 @@
         "command": "metals.copy-worksheet-output",
         "category": "Metals",
         "title": "Copy worksheet output"
+      },
+      {
+        "command": "metals.run-current-file",
+        "category": "Metals",
+        "title": "Run main class in the current file"
+      },
+      {
+        "command": "metals.test-current-file",
+        "category": "Metals",
+        "title": "Run test class in the current file"
+      },
+      {
+        "command": "metals.test-current-target",
+        "category": "Metals",
+        "title": "Run all test in the current project"
       }
     ],
     "menus": {
@@ -591,7 +606,7 @@
     "vsce": "1.87.1"
   },
   "dependencies": {
-    "metals-languageclient": "0.4.1",
+    "metals-languageclient": "0.4.2",
     "promisify-child-process": "4.1.1",
     "vscode-languageclient": "6.1.3"
   },

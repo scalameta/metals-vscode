@@ -61,6 +61,8 @@ import {
   MetalsWindowStateDidChange,
   MetalsInputBox,
   MetalsQuickPick,
+  DebugDiscoveryParms,
+  RunType,
 } from "metals-languageclient";
 import * as metalsLanguageClient from "metals-languageclient";
 import { startTreeView } from "./treeview";
@@ -561,6 +563,51 @@ function launchMetals(
           item.command = undefined;
         }
       });
+
+      registerTextEditorCommand(
+        `metals.run-current-file`,
+        (editor, _edit, _args) => {
+          const args: DebugDiscoveryParms = {
+            path: editor.document.uri.toString(true),
+            runType: RunType.Run,
+          };
+          scalaDebugger.start(true, args).then((wasStarted) => {
+            if (!wasStarted) {
+              window.showErrorMessage("Debug session not started");
+            }
+          });
+        }
+      );
+
+      registerTextEditorCommand(
+        `metals.test-current-file`,
+        (editor, _edit, _args) => {
+          const args: DebugDiscoveryParms = {
+            path: editor.document.uri.toString(true),
+            runType: RunType.TestFile,
+          };
+          scalaDebugger.start(true, args).then((wasStarted) => {
+            if (!wasStarted) {
+              window.showErrorMessage("Debug session not started");
+            }
+          });
+        }
+      );
+
+      registerTextEditorCommand(
+        `metals.test-current-target`,
+        (editor, _edit, _args) => {
+          const args: DebugDiscoveryParms = {
+            path: editor.document.uri.toString(true),
+            runType: RunType.TestTarget,
+          };
+          scalaDebugger.start(true, args).then((wasStarted) => {
+            if (!wasStarted) {
+              window.showErrorMessage("Debug session not started");
+            }
+          });
+        }
+      );
 
       registerTextEditorCommand(
         `metals.${ServerCommands.GotoSuperMethod}`,
