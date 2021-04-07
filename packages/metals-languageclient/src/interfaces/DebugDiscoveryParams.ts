@@ -1,4 +1,4 @@
-export interface DebugDiscoveryParms {
+export interface DebugDiscoveryParams {
   path: string;
   runType: RunType;
 }
