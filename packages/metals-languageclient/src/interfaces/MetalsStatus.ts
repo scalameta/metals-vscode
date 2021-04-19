@@ -10,9 +10,7 @@ import { NotificationType } from "vscode-languageserver-protocol";
  * that they should not demand too much attention from the user.
  */
 export namespace MetalsStatus {
-  export const type = new NotificationType<MetalsStatusParams, void>(
-    "metals/status"
-  );
+  export const type = new NotificationType<MetalsStatusParams>("metals/status");
 }
 
 export interface MetalsStatusParams {

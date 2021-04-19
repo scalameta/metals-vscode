@@ -12,7 +12,6 @@ export namespace MetalsQuickPick {
   export const type = new RequestType<
     MetalsQuickPickParams,
     MetalsQuickPickResult,
-    void,
     void
   >("metals/quickPick");
 }

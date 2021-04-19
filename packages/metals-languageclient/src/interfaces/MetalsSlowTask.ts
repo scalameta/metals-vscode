@@ -12,7 +12,6 @@ export namespace MetalsSlowTask {
   export const type = new RequestType<
     MetalsSlowTaskParams,
     MetalsSlowTaskResult,
-    void,
     void
   >("metals/slowTask");
 }

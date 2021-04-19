@@ -16,7 +16,7 @@ import {
  * All client commands can be found in the ClientCommands enum.
  */
 export namespace ExecuteClientCommand {
-  export const type = new NotificationType<ExecuteCommandParams, void>(
+  export const type = new NotificationType<ExecuteCommandParams>(
     "metals/executeClientCommand"
   );
 }
@@ -27,7 +27,7 @@ export namespace ExecuteClientCommand {
  * - https://scalameta.org/metals/docs/editors/new-editor.html#metalsdidfocustextdocument
  */
 export namespace MetalsDidFocus {
-  export const type = new NotificationType<string, void>(
+  export const type = new NotificationType<string>(
     "metals/didFocusTextDocument"
   );
 }
@@ -41,10 +41,9 @@ export namespace MetalsDidFocus {
  * - https://scalameta.org/metals/docs/editors/new-editor.html#metalswindowstatedidchange
  */
 export namespace MetalsWindowStateDidChange {
-  export const type = new NotificationType<
-    MetalsWindowStateDidChangeParams,
-    void
-  >("metals/windowStateDidChange");
+  export const type = new NotificationType<MetalsWindowStateDidChangeParams>(
+    "metals/windowStateDidChange"
+  );
 }
 
 export interface MetalsWindowStateDidChangeParams {

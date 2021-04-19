@@ -12,7 +12,6 @@ export namespace MetalsInputBox {
   export const type = new RequestType<
     InputBoxOptions,
     MetalsInputBoxResult,
-    void,
     void
   >("metals/inputBox");
 
