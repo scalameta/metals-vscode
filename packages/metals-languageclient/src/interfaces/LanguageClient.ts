@@ -7,12 +7,12 @@ import {
 } from "vscode-languageserver-protocol";
 
 export interface LanguageClient {
-  sendRequest<R, E, RO>(
-    type: RequestType0<R, E, RO>,
+  sendRequest<R, E>(
+    type: RequestType0<R, E>,
     token?: CancellationToken
   ): Thenable<R>;
   sendRequest<P, R, E, RO>(
-    type: RequestType<P, R, E, RO>,
+    type: RequestType<P, R, E>,
     params: P,
     token?: CancellationToken
   ): Thenable<R>;
@@ -22,8 +22,8 @@ export interface LanguageClient {
     param: any,
     token?: CancellationToken
   ): Thenable<R>;
-  sendNotification<RO>(type: NotificationType0<RO>): void;
-  sendNotification<P, RO>(type: NotificationType<P, RO>, params?: P): void;
+  sendNotification(type: NotificationType0): void;
+  sendNotification<P>(type: NotificationType<P>, params?: P): void;
   sendNotification(method: string): void;
   sendNotification(method: string, params: any): void;
 }
