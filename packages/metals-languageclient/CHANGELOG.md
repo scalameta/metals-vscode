@@ -1,5 +1,13 @@
 ## metals-languageclient changelog
 
+### v0.5.0 (2021/04/19 11:17 +00:00)
+- [5980c67](https://github.com/scalameta/metals-languageclient/commit/5980c679cda22aa7417a1bf1da5d59617110b7b4) Upgrade to `vscode-languageserver-protocol` 3.16.0 (@Giggiux)
+- [4515d04](https://github.com/scalameta/metals-languageclient/commit/4515d044cf2a19561e9b9498766b4fd5739d9822) Bump fp-ts from 2.9.5 to 2.10.0 (@dependabot-preview[bot])
+- [d1d4141](https://github.com/scalameta/metals-languageclient/commit/d1d41417427fbb9527c3a3e7fa138513d423b2dd) Bump @types/node from 14.14.37 to 14.14.39 (@dependabot-preview[bot])
+- [f210003](https://github.com/scalameta/metals-languageclient/commit/f21000340cb5abd1a4e1c8c9fb9330ad0cba3e11) Bump @types/node-fetch from 2.5.9 to 2.5.10 (@dependabot-preview[bot])
+- [4e9c9d2](https://github.com/scalameta/metals-languageclient/commit/4e9c9d278e841ad9a81e4d5c1eecf33d354cc4cb) Fix typ in DebugDiscoveryParams (@tgodzik)
+- [f301d6d](https://github.com/scalameta/metals-languageclient/commit/f301d6d6a735c2cd230d6013ee8620bda6e390bc) Release v0.4.2
+
 ### v0.4.2 (2021/04/06 18:58 +00:00)
 - [3384f7b](https://github.com/scalameta/metals-languageclient/commit/3384f7b1ef3824cd224c82dec4e9fe060b2fe9b9) Fix github-changes to use the main branch (@tgodzik)
 - [7f04849](https://github.com/scalameta/metals-languageclient/commit/7f0484942ef2a13ce3b34ad6221fdb2381c168e5) Bump @types/node-fetch from 2.5.8 to 2.5.9 (@dependabot-preview[bot])
@@ -312,8 +320,8 @@
 ### v0.1.15 (2020/02/04 07:17 +00:00)
 - [04fc84e](https://github.com/scalameta/metals-languageclient/commit/04fc84e55f889990a10083f83ea6f395fc7ee81b) v0.1.15 (@gabro)
 - [9a5fcf5](https://github.com/scalameta/metals-languageclient/commit/9a5fcf5757989832f522a8db585f2e71c64bc081) Use the same version of vscode-languageserver-protocol as coc.nvim (@gabro)
-- [0dffea3](https://github.com/scalameta/metals-languageclient/commit/0dffea3660ce9969d946100c55c05ae9eeb8e0a3) Fix potentially undefined arrays (@gabro)
 - [e7144b4](https://github.com/scalameta/metals-languageclient/commit/e7144b4eeb9e153c5d7e060d04e2bf7c74d99883) v0.1.14 (@gabro)
+- [0dffea3](https://github.com/scalameta/metals-languageclient/commit/0dffea3660ce9969d946100c55c05ae9eeb8e0a3) Fix potentially undefined arrays (@gabro)
 - [5b3aafc](https://github.com/scalameta/metals-languageclient/commit/5b3aafcf25f72a5b4269ef6568d372c2c34775e9) Bump @types/node from 13.5.3 to 13.7.0 (@dependabot-preview[bot])
 
 ### v0.1.13 (2020/02/01 09:20 +00:00)
