@@ -1,5 +1,5 @@
 import * as path from "path";
-import { LanguageClient, Disposable } from "vscode-languageclient";
+import { LanguageClient, Disposable } from "vscode-languageclient/node";
 import * as fs from "fs";
 import {
   TreeDataProvider,
