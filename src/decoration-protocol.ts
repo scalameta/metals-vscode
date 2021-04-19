@@ -14,7 +14,7 @@ import {
  * code over with it from the VS Code code base which isn't a good idea.
  */
 export namespace DecorationTypeDidChange {
-  export const type = new NotificationType<DecorationRenderOptions, void>(
+  export const type = new NotificationType<DecorationRenderOptions>(
     "metals/decorationTypeDidChange"
   );
 }
@@ -34,7 +34,7 @@ export interface PublishDecorationsParams {
 }
 
 export namespace DecorationsRangesDidChange {
-  export const type = new NotificationType<PublishDecorationsParams, void>(
+  export const type = new NotificationType<PublishDecorationsParams>(
     "metals/publishDecorations"
   );
 }
