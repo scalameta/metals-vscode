@@ -35,8 +35,7 @@ import {
   Location,
   TextDocumentPositionParams,
   TextDocument,
-  ExecuteCommandParams,
-} from "vscode-languageclient/node";
+} from "vscode-languageclient";
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
 import {
@@ -62,9 +61,8 @@ import {
   MetalsWindowStateDidChange,
   MetalsInputBox,
   MetalsQuickPick,
-  DebugDiscoveryParams,
+  DebugDiscoveryParms,
   RunType,
-  MetalsStatusParams,
 } from "metals-languageclient";
 import * as metalsLanguageClient from "metals-languageclient";
 import { startTreeView } from "./treeview";
@@ -193,7 +191,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   if (dottyIde.enabled) {
     outputChannel.appendLine(
       `Metals will not start since Dotty is enabled for this workspace. ` +
-      `To enable Metals, remove the file ${dottyIde.path} and run 'Reload window'`
+        `To enable Metals, remove the file ${dottyIde.path} and run 'Reload window'`
     );
     return;
   }
@@ -481,69 +479,66 @@ function launchMetals(
       );
 
       // Handle the metals/executeClientCommand extension notification.
-      client.onNotification(
-        ExecuteClientCommand.type,
-        (params: ExecuteCommandParams) => {
-          switch (params.command) {
-            case ClientCommands.GotoLocation:
-              const location =
-                params.arguments && (params.arguments[0] as Location);
-              const otherWindow =
-                (params.arguments && (params.arguments[1] as Boolean)) || false;
-              if (location) {
-                gotoLocation(location, otherWindow);
-              }
-              break;
-            case ClientCommands.RefreshModel:
-              compilationDoneEmitter.fire();
-              break;
-            case ClientCommands.OpenFolder:
-              const openWindowParams = params
-                .arguments?.[0] as MetalsOpenWindowParams;
-              if (openWindowParams) {
-                commands.executeCommand(
-                  "vscode.openFolder",
-                  Uri.parse(openWindowParams.uri),
-                  openWindowParams.openNewWindow
-                );
-              }
-              break;
-            case "metals-show-stacktrace":
+      client.onNotification(ExecuteClientCommand.type, (params) => {
+        switch (params.command) {
+          case ClientCommands.GotoLocation:
+            const location =
+              params.arguments && (params.arguments[0] as Location);
+            const otherWindow =
+              (params.arguments && (params.arguments[1] as Boolean)) || false;
+            if (location) {
+              gotoLocation(location, otherWindow);
+            }
+            break;
+          case ClientCommands.RefreshModel:
+            compilationDoneEmitter.fire();
+            break;
+          case ClientCommands.OpenFolder:
+            const openWindowParams = params
+              .arguments?.[0] as MetalsOpenWindowParams;
+            if (openWindowParams) {
+              commands.executeCommand(
+                "vscode.openFolder",
+                Uri.parse(openWindowParams.uri),
+                openWindowParams.openNewWindow
+              );
+            }
+            break;
+          case "metals-show-stacktrace":
+            const html = params.arguments && params.arguments[0];
+            if (typeof html === "string") {
+              const panel = getStacktracePanel();
+              panel.webview.html = html;
+            }
+            break;
+          case ClientCommands.RunDoctor:
+          case ClientCommands.ReloadDoctor:
+            const isRun = params.command === ClientCommands.RunDoctor;
+            const isReload = params.command === ClientCommands.ReloadDoctor;
+            if (isRun || (doctor && isReload)) {
               const html = params.arguments && params.arguments[0];
               if (typeof html === "string") {
-                const panel = getStacktracePanel();
+                const panel = getDoctorPanel(isReload);
                 panel.webview.html = html;
               }
-              break;
-            case ClientCommands.RunDoctor:
-            case ClientCommands.ReloadDoctor:
-              const isRun = params.command === ClientCommands.RunDoctor;
-              const isReload = params.command === ClientCommands.ReloadDoctor;
-              if (isRun || (doctor && isReload)) {
-                const html = params.arguments && params.arguments[0];
-                if (typeof html === "string") {
-                  const panel = getDoctorPanel(isReload);
-                  panel.webview.html = html;
-                }
-              }
-              break;
-            case ClientCommands.FocusDiagnostics:
-              commands.executeCommand(ClientCommands.FocusDiagnostics);
-              break;
-            default:
-              outputChannel.appendLine(`unknown command: ${params.command}`);
-          }
-
-          // Ignore other commands since they are less important.
+            }
+            break;
+          case ClientCommands.FocusDiagnostics:
+            commands.executeCommand(ClientCommands.FocusDiagnostics);
+            break;
+          default:
+            outputChannel.appendLine(`unknown command: ${params.command}`);
         }
-      );
+
+        // Ignore other commands since they are less important.
+      });
 
       // The server updates the client with a brief text message about what
       // it is currently doing, for example "Compiling..".
       const item = window.createStatusBarItem(StatusBarAlignment.Right, 100);
       item.command = ClientCommands.ToggleLogs;
       item.hide();
-      client.onNotification(MetalsStatus.type, (params: MetalsStatusParams) => {
+      client.onNotification(MetalsStatus.type, (params) => {
         item.text = params.text;
         if (params.show) {
           item.show();
@@ -572,7 +567,7 @@ function launchMetals(
       registerTextEditorCommand(
         `metals.run-current-file`,
         (editor, _edit, _args) => {
-          const args: DebugDiscoveryParams = {
+          const args: DebugDiscoveryParms = {
             path: editor.document.uri.toString(true),
             runType: RunType.Run,
           };
@@ -587,7 +582,7 @@ function launchMetals(
       registerTextEditorCommand(
         `metals.test-current-file`,
         (editor, _edit, _args) => {
-          const args: DebugDiscoveryParams = {
+          const args: DebugDiscoveryParms = {
             path: editor.document.uri.toString(true),
             runType: RunType.TestFile,
           };
@@ -602,7 +597,7 @@ function launchMetals(
       registerTextEditorCommand(
         `metals.test-current-target`,
         (editor, _edit, _args) => {
-          const args: DebugDiscoveryParams = {
+          const args: DebugDiscoveryParms = {
             path: editor.document.uri.toString(true),
             runType: RunType.TestTarget,
           };
