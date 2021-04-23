@@ -35,7 +35,7 @@ import {
   Location,
   TextDocumentPositionParams,
   TextDocument,
-} from "vscode-languageclient";
+} from "vscode-languageclient/node";
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
 import {
@@ -61,7 +61,7 @@ import {
   MetalsWindowStateDidChange,
   MetalsInputBox,
   MetalsQuickPick,
-  DebugDiscoveryParms,
+  DebugDiscoveryParams,
   RunType,
 } from "metals-languageclient";
 import * as metalsLanguageClient from "metals-languageclient";
@@ -567,7 +567,7 @@ function launchMetals(
       registerTextEditorCommand(
         `metals.run-current-file`,
         (editor, _edit, _args) => {
-          const args: DebugDiscoveryParms = {
+          const args: DebugDiscoveryParams = {
             path: editor.document.uri.toString(true),
             runType: RunType.Run,
           };
@@ -582,7 +582,7 @@ function launchMetals(
       registerTextEditorCommand(
         `metals.test-current-file`,
         (editor, _edit, _args) => {
-          const args: DebugDiscoveryParms = {
+          const args: DebugDiscoveryParams = {
             path: editor.document.uri.toString(true),
             runType: RunType.TestFile,
           };
@@ -597,7 +597,7 @@ function launchMetals(
       registerTextEditorCommand(
         `metals.test-current-target`,
         (editor, _edit, _args) => {
-          const args: DebugDiscoveryParms = {
+          const args: DebugDiscoveryParams = {
             path: editor.document.uri.toString(true),
             runType: RunType.TestTarget,
           };
