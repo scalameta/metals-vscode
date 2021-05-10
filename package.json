@@ -603,7 +603,7 @@
     "@types/shell-quote": "1.7.0",
     "@types/vscode": "1.43.0",
     "ovsx": "0.1.0",
-    "prettier": "2.2.1",
+    "prettier": "2.3.0",
     "typescript": "4.2.4",
     "vsce": "1.88.0"
   },

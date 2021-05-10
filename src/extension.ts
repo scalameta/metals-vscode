@@ -79,18 +79,16 @@ const openSettingsCommand = "workbench.action.openSettings";
 let treeViews: MetalsTreeViews | undefined;
 let currentClient: LanguageClient | undefined;
 
-let worksheetDecorationType: TextEditorDecorationType = window.createTextEditorDecorationType(
-  {
+let worksheetDecorationType: TextEditorDecorationType =
+  window.createTextEditorDecorationType({
     isWholeLine: true,
     rangeBehavior: DecorationRangeBehavior.OpenClosed,
-  }
-);
+  });
 
-let decorationType: TextEditorDecorationType = window.createTextEditorDecorationType(
-  {
+let decorationType: TextEditorDecorationType =
+  window.createTextEditorDecorationType({
     rangeBehavior: DecorationRangeBehavior.OpenClosed,
-  }
-);
+  });
 
 const config = workspace.getConfiguration("metals");
 
@@ -199,8 +197,8 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   outputChannel.appendLine(`Java home: ${javaHome}`);
 
   const serverVersionConfig: string = config.get<string>("serverVersion")!;
-  const defaultServerVersion = config.inspect<string>("serverVersion")!
-    .defaultValue!;
+  const defaultServerVersion =
+    config.inspect<string>("serverVersion")!.defaultValue!;
   const serverVersion = serverVersionConfig
     ? serverVersionConfig.trim()
     : defaultServerVersion;
@@ -1008,7 +1006,8 @@ function enableScaladocIndentation() {
       // ^.*\{[^}"']*$
       increaseIndentPattern: /^.*\{[^}"']*$/,
     },
-    wordPattern: /(-?\d*\.\d\w*)|([^\`\~\!\@\#\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\?\s]+)/g,
+    wordPattern:
+      /(-?\d*\.\d\w*)|([^\`\~\!\@\#\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\?\s]+)/g,
     onEnterRules: [
       {
         // e.g. /** | */
