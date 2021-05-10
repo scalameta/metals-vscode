@@ -20,9 +20,8 @@ export function restartServer(
   showMessage: ShowMessage
 ): () => Promise<void> {
   return () => {
-    const { showInformationMessage, showWarningMessage } = normalize(
-      showMessage
-    );
+    const { showInformationMessage, showWarningMessage } =
+      normalize(showMessage);
     const timeout = (ms: number) =>
       new Promise<void>((_resolve, reject) => setTimeout(reject, ms));
 
@@ -41,9 +40,11 @@ export function restartServer(
 
       // NOTE(gabro): we know LanguageClient contains the _serverProcess private property,
       // so we use a cast to access it
-      const serverPid = ((client as unknown) as {
-        _serverProcess: ChildProcess;
-      })._serverProcess.pid;
+      const serverPid = (
+        client as unknown as {
+          _serverProcess: ChildProcess;
+        }
+      )._serverProcess.pid;
 
       exec(`kill ${serverPid}`);
     });

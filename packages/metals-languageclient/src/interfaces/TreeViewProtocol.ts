@@ -92,9 +92,10 @@ export interface MetalsTreeViewVisibilityDidChangeParams {
 }
 
 export namespace MetalsTreeViewVisibilityDidChange {
-  export const type = new NotificationType<MetalsTreeViewVisibilityDidChangeParams>(
-    "metals/treeViewVisibilityDidChange"
-  );
+  export const type =
+    new NotificationType<MetalsTreeViewVisibilityDidChangeParams>(
+      "metals/treeViewVisibilityDidChange"
+    );
 }
 
 export interface MetalsTreeViewNodeCollapseDidChangeParams {
@@ -107,9 +108,10 @@ export interface MetalsTreeViewNodeCollapseDidChangeParams {
 }
 
 export namespace MetalsTreeViewNodeCollapseDidChange {
-  export const type = new NotificationType<MetalsTreeViewNodeCollapseDidChangeParams>(
-    "metals/treeViewNodeCollapseDidChange"
-  );
+  export const type =
+    new NotificationType<MetalsTreeViewNodeCollapseDidChangeParams>(
+      "metals/treeViewNodeCollapseDidChange"
+    );
 }
 
 export interface MetalsTreeRevealResult {
