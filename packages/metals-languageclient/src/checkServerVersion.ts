@@ -29,11 +29,8 @@ export async function checkServerVersion({
   updateConfig,
   onOutdated,
 }: CheckServerVersionParams) {
-  const {
-    serverVersion,
-    latestServerVersion,
-    configurationTarget,
-  } = serverVersionInfo(config);
+  const { serverVersion, latestServerVersion, configurationTarget } =
+    serverVersionInfo(config);
   const isOutdated = (() => {
     try {
       return semver.lt(serverVersion, latestServerVersion);
@@ -62,17 +59,14 @@ export async function checkServerVersion({
   }
 }
 
-function serverVersionInfo(
-  config: WorkspaceConfiguration
-): {
+function serverVersionInfo(config: WorkspaceConfiguration): {
   serverVersion: string;
   latestServerVersion: string;
   configurationTarget: ConfigurationTarget;
 } {
   const computedVersion = config.get<string>(configSection)!;
-  const { defaultValue, globalValue, workspaceValue } = config.inspect<string>(
-    configSection
-  )!;
+  const { defaultValue, globalValue, workspaceValue } =
+    config.inspect<string>(configSection)!;
   const configurationTarget = (() => {
     if (globalValue && globalValue !== defaultValue) {
       return ConfigurationTarget.Global;
