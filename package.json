@@ -210,10 +210,7 @@
             "3.0.0",
             "3.0.0-RC3",
             "3.0.0-RC2",
-            "3.0.0-RC1",
-            "3.0.0-M3",
-            "3.0.0-M2",
-            "3.0.0-M1"
+            "3.0.0-RC1"
           ],
           "markdownDescription": "The Scala compiler version that is used as the default or fallback in case a file doesn't belong to any build target or the specified Scala version isn't supported by Metals.\n\nThis applies to standalone Scala files, worksheets, and Ammonite scripts.\n\n The `automatic` value means that the Scala version for these files will be inferred from the highest supported Scala version in your projects build definition"
         }
