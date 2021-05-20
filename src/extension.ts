@@ -1002,9 +1002,10 @@ function enableScaladocIndentation() {
   languages.setLanguageConfiguration("scala", {
     indentationRules: {
       // ^(.*\*/)?\s*\}.*$
-      decreaseIndentPattern: /^(.*\*\/)?\s*\}.*$/,
+      decreaseIndentPattern: /(^\s*end\b\s*)\b(if|while|for|match|try|\w+)$/,
       // ^.*\{[^}"']*$
-      increaseIndentPattern: /^.*\{[^}"']*$/,
+      increaseIndentPattern:
+        /(((<!\bend\b\s*?)\b(if|while|for|match|try))|(\bif\s+(?!.*?\bthen\b.*?$)[^\s]*?)|(\b(then|else|do|catch|finally|yield|case))|=|=>|<-|=>>|:)\s*?$/,
     },
     wordPattern:
       /(-?\d*\.\d\w*)|([^\`\~\!\@\#\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\?\s]+)/g,
