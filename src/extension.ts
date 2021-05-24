@@ -72,6 +72,7 @@ import {
   DecorationsRangesDidChange,
 } from "./decoration-protocol";
 import { clearTimeout } from "timers";
+import { decreaseIndentPattern, increaseIndentPattern } from "./indentPattern";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -1002,10 +1003,9 @@ function enableScaladocIndentation() {
   languages.setLanguageConfiguration("scala", {
     indentationRules: {
       // ^(.*\*/)?\s*\}.*$
-      decreaseIndentPattern: /(^\s*end\b\s*)\b(if|while|for|match|try|\w+)$/,
+      decreaseIndentPattern: decreaseIndentPattern(),
       // ^.*\{[^}"']*$
-      increaseIndentPattern:
-        /(((<!\bend\b\s*?)\b(if|while|for|match|try))|(\bif\s+(?!.*?\bthen\b.*?$)[^\s]*?)|(\b(then|else|do|catch|finally|yield|case))|=|=>|<-|=>>|:)\s*?$/,
+      increaseIndentPattern: increaseIndentPattern(),
     },
     wordPattern:
       /(-?\d*\.\d\w*)|([^\`\~\!\@\#\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\?\s]+)/g,

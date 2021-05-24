@@ -591,7 +591,7 @@
     "vscode:prepublish": "yarn compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "test": "yarn compile",
+    "test": "jest",
     "build": "vsce package --yarn",
     "vscode:publish": "vsce publish --yarn",
     "ovsx:publish": "ovsx publish",
@@ -599,12 +599,15 @@
     "format-check": "prettier --check '**/*.{ts,js,json,yml}'"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.23",
     "@types/node": "15.12.2",
     "@types/shell-quote": "1.7.0",
     "@types/vscode": "1.43.0",
+    "jest": "^27.0.4",
     "ovsx": "0.1.0",
     "prettier": "2.3.1",
-    "typescript": "4.3.3",
+    "ts-jest": "^27.0.3",
+    "typescript": "4.3.2",
     "vsce": "1.93.0"
   },
   "dependencies": {
