@@ -605,7 +605,7 @@
     "ovsx": "0.1.0",
     "prettier": "2.3.1",
     "typescript": "4.3.2",
-    "vsce": "1.91.0"
+    "vsce": "1.92.0"
   },
   "dependencies": {
     "metals-languageclient": "0.5.0",
