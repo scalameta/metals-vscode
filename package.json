@@ -600,7 +600,7 @@
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
-    "@types/node": "15.12.2",
+    "@types/node": "15.12.4",
     "@types/shell-quote": "1.7.0",
     "@types/vscode": "1.43.0",
     "jest": "^27.0.4",
