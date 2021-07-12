@@ -16,6 +16,10 @@ export function fetchMetals({
     (p) => !p.startsWith("-agentlib")
   );
 
+  const serverDependency = serverVersion.includes(":")
+    ? serverVersion
+    : `org.scalameta:metals_2.12:${serverVersion}`;
+
   return spawn(
     javaPath,
     [
@@ -31,7 +35,7 @@ export function fetchMetals({
       // versions. Metals SNAPSHOT releases are effectively immutable since we
       // never publish the same version twice.
       "Inf",
-      `org.scalameta:metals_2.12:${serverVersion}`,
+      serverDependency,
       "-r",
       "bintray:scalacenter/releases",
       "-r",
