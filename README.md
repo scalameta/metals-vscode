@@ -252,7 +252,7 @@ hierarchy using two commands:
 - `Metals: Go to super method` - immediately goes to the parent of the method
   the cursor is pointing to
 
-- `Metals: Reveal super method hierachy` - displays the full method hierachy and
+- `Metals: Reveal super method hierarchy` - displays the full method hierarchy and
   enables to move to any parent, it is best used with the Metals Quick Pick
   extension.
 
@@ -260,7 +260,7 @@ You can also bind those commands to a shortcut.
 
 ## Create new project from template
 
-It is possible using Metals to easily setup a new project using the exiting
+It is possible using Metals to easily setup a new project using the existing
 [giter8](https://github.com/foundweekends/giter8/wiki/giter8-templates)
 templates. This is an equivalent to the `sbt new` command, which uses the same
 mechanism. There is a great number of templates already available and it should
