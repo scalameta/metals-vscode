@@ -45,7 +45,7 @@ tested on Ubuntu+Windows.
    2.11.12
 
  - **Scala 3**:
-   3.0.0, 3.0.0-RC3, 3.0.0-RC2, 3.0.0-RC1
+   3.0.2-RC1, 3.0.1, 3.0.0
 
 Note that 2.11.x support is deprecated and it will be removed in future releases.
 It's recommended to upgrade to Scala 2.12 or Scala 2.13
