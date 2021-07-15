@@ -95,6 +95,10 @@ export const ServerCommands = {
   NewScalaProject: "new-scala-project",
   /** Reset a decision you made about a specific setting. */
   ResetChoice: "reset-choice",
+  /** Start the Scala CLI server. */
+  ScalaCliStart: "scala-cli-start",
+  /** Stop the Scala CLI server. */
+  ScalaCliStop: "scala-cli-stop",
   /** Walk all the files in the workspace and index where symbols are defined. */
   SourcesScan: "sources-scan",
   /**
