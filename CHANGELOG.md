@@ -2,6 +2,13 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.10.8 (2021/07/20 15:53 +00:00)
+- [3c4e460](https://github.com/scalameta/metals-vscode/commit/3c4e460ef20ff6504e1d8a4e3cbcae8e20a0abcc) Offer to install Java in case of issues (@tgodzik)
+- [e34a068](https://github.com/scalameta/metals-vscode/commit/e34a0681425f69c28ed05d5604a3849219e61692) Bump @types/node from 16.3.2 to 16.3.3 (@dependabot[bot])
+- [e99cdaa](https://github.com/scalameta/metals-vscode/commit/e99cdaa99c65ebc9a66bf7ab160ea9f218563a39) Bump metals-languageclient from 0.5.0 to 0.5.1 (@dependabot[bot])
+- [87dcb81](https://github.com/scalameta/metals-vscode/commit/87dcb81356acb4c377e4a0806d134126189eaeca) Fix typos in README.md (@lucas0707)
+- [05b279c](https://github.com/scalameta/metals-vscode/commit/05b279c31d41eb09fa5df41eb0247114f991b236) v1.10.7
+
 ### v1.10.7 (2021/07/14 08:48 +00:00)
 - [8ee8cdc](https://github.com/scalameta/metals-vscode/commit/8ee8cdc3c799c034fd2f13898b9c4a242513eaba) Bump @types/node from 16.3.1 to 16.3.2 (@dependabot[bot])
 - [5656e64](https://github.com/scalameta/metals-vscode/commit/5656e64289fd5345ac4d6ef9b22e70609304ffe8) Bump @types/node from 16.3.0 to 16.3.1 (@dependabot[bot])
