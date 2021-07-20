@@ -76,7 +76,10 @@ import { decreaseIndentPattern, increaseIndentPattern } from "./indentPattern";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
+const downloadJava = "Download Java";
 const openSettingsCommand = "workbench.action.openSettings";
+const installJava8Action = "Install Java (JDK 8)";
+const installJava11Action = "Install Java (JDK 11)";
 let treeViews: MetalsTreeViews | undefined;
 let currentClient: LanguageClient | undefined;
 
@@ -124,9 +127,6 @@ export function deactivate(): Thenable<void> | undefined {
 }
 
 function showMissingJavaMessage(): Thenable<void> {
-  const installJava8Action = "Install Java (JDK 8)";
-  const installJava11Action = "Install Java (JDK 11)";
-
   const message =
     "Unable to find a Java 8 or Java 11 installation on this computer. " +
     "To fix this problem, update the 'Java Home' setting to point to a Java 8 or Java 11 home directory " +
@@ -141,42 +141,61 @@ function showMissingJavaMessage(): Thenable<void> {
       installJava8Action,
       installJava11Action
     )
-    .then((choice) => {
-      switch (choice) {
-        case openSettingsAction: {
-          commands.executeCommand(openSettingsCommand);
-          break;
-        }
-        case installJava8Action: {
-          window.withProgress(
-            {
-              location: ProgressLocation.Notification,
-              title: `Installing Java (JDK 8), please wait...`,
-              cancellable: true,
-            },
-            () =>
-              installJava({ javaVersion: "adopt@1.8", outputChannel }).then(
-                updateJavaConfig
-              )
-          );
-          break;
-        }
-        case installJava11Action: {
-          window.withProgress(
-            {
-              location: ProgressLocation.Notification,
-              title: `Installing Java (JDK 11), please wait...`,
-              cancellable: true,
-            },
-            () =>
-              installJava({ javaVersion: "adopt@1.11", outputChannel }).then(
-                updateJavaConfig
-              )
-          );
-          break;
-        }
-      }
-    });
+    .then(chooseJavaToInstall);
+}
+
+function showInstallJavaMessage(): Thenable<void> {
+  const message =
+    "Which version would you like to install?" +
+    "Currently supported are JDK 8 and JDK 11: ";
+
+  outputChannel.appendLine(message);
+
+  return window
+    .showInformationMessage(
+      message,
+      openSettingsAction,
+      installJava8Action,
+      installJava11Action
+    )
+    .then(chooseJavaToInstall);
+}
+
+function chooseJavaToInstall(choice: string | undefined) {
+  switch (choice) {
+    case openSettingsAction: {
+      commands.executeCommand(openSettingsCommand);
+      break;
+    }
+    case installJava8Action: {
+      window.withProgress(
+        {
+          location: ProgressLocation.Notification,
+          title: `Installing Java (JDK 8), please wait...`,
+          cancellable: true,
+        },
+        () =>
+          installJava({ javaVersion: "adopt@1.8", outputChannel }).then(
+            updateJavaConfig
+          )
+      );
+      break;
+    }
+    case installJava11Action: {
+      window.withProgress(
+        {
+          location: ProgressLocation.Notification,
+          title: `Installing Java (JDK 11), please wait...`,
+          cancellable: true,
+        },
+        () =>
+          installJava({ javaVersion: "adopt@1.11", outputChannel }).then(
+            updateJavaConfig
+          )
+      );
+      break;
+    }
+  }
 }
 
 function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
@@ -266,17 +285,25 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
         }
       })();
       outputChannel.show();
-      window.showErrorMessage(msg, openSettingsAction).then((choice) => {
-        if (choice === openSettingsAction) {
-          commands.executeCommand(openSettingsCommand);
-        }
-      });
+      window
+        .showErrorMessage(msg, openSettingsAction, downloadJava)
+        .then((choice) => {
+          if (choice === openSettingsAction) {
+            commands.executeCommand(openSettingsCommand);
+          } else if (choice === downloadJava) {
+            showInstallJavaMessage();
+          }
+        });
     }
   );
 }
 
-function updateJavaConfig(javaHome: string, global: boolean = true) {
-  config.update("javaHome", javaHome, global);
+function updateJavaConfig(javaHome: string) {
+  const config = workspace.getConfiguration("metals");
+  const configProperty = config.inspect<Record<string, string>>("javaHome");
+  if (configProperty?.workspaceValue != undefined)
+    config.update("javaHome", javaHome, false);
+  else config.update("javaHome", javaHome, true);
 }
 
 function launchMetals(
