@@ -2916,10 +2916,10 @@ v8-to-istanbul@^8.0.0:
     convert-source-map "^1.6.0"
     source-map "^0.7.3"
 
-vsce@1.95.1:
-  version "1.95.1"
-  resolved "https://registry.yarnpkg.com/vsce/-/vsce-1.95.1.tgz#95b465c3188508eabc8af72f3e20b632dd71c0da"
-  integrity sha512-2v8g3ZtZkaOTscRjjCAtM3Au6YYWJtg9UNt1iyyWko7ZHejbt5raClcNzQ7/WYVLYhYHc+otHQifV0gCBREgNg==
+vsce@1.96.0:
+  version "1.96.0"
+  resolved "https://registry.yarnpkg.com/vsce/-/vsce-1.96.0.tgz#6da598120331b48a596e289570476c292350bf01"
+  integrity sha512-IgjkoYz1HnlD3scgK2AOAGJzZKuV24aAdkNV9OGXuBxusqlIJo3ZyHxIZXvPY8b0KZ89C8wHfPq2XgNMVkV89A==
   dependencies:
     azure-devops-node-api "^11.0.1"
     chalk "^2.4.2"
