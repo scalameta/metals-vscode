@@ -129,7 +129,7 @@ export function deactivate(): Thenable<void> | undefined {
 function showMissingJavaMessage(): Thenable<void> {
   const message =
     "Unable to find a Java 8 or Java 11 installation on this computer. " +
-    "To fix this problem, update the 'Java Home' setting to point to a Java 8 or Java 11 home directory " +
+    "To fix this problem, update the 'metals.javaHome' setting to point to a Java 8 or Java 11 home directory " +
     "or select a version to install automatically";
 
   outputChannel.appendLine(message);
