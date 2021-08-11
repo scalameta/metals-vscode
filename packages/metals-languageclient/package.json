@@ -17,7 +17,7 @@
     "format-check": "prettier --check '**/*.{ts,js,json,yml}'"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.0",
+    "@types/jest": "^27.0.0",
     "@types/mkdirp": "^1.0.0",
     "@types/node": "^16.0.0",
     "@types/node-fetch": "^2.5.4",
