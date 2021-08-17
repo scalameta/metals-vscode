@@ -183,7 +183,7 @@
         },
         "metals.superMethodLensesEnabled": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "description": "Enable/disable goto super method code lens."
         },
         "metals.enableStripMarginOnTypeFormatting": {
