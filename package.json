@@ -133,6 +133,13 @@
         }
       ]
     },
+    "keybindings": [
+      {
+        "key": "alt+=",
+        "command": "editor.action.showHover",
+        "when": "editorTextFocus"
+      }
+    ],
     "configuration": {
       "title": "Metals",
       "properties": {

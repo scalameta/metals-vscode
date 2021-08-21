@@ -29,6 +29,11 @@ import {
   TextDocumentContentProvider,
   CompletionList,
   CompletionItem,
+  ProviderResult,
+  Hover,
+  TextDocument,
+  MarkdownString,
+  CancellationTokenSource,
 } from "vscode";
 import {
   LanguageClient,
@@ -37,7 +42,8 @@ import {
   ExecuteCommandRequest,
   Location,
   TextDocumentPositionParams,
-  TextDocument,
+  ProvideHoverSignature,
+  CancellationToken,
 } from "vscode-languageclient/node";
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
@@ -85,6 +91,7 @@ import {
   executeFindInFiles,
   startFindInFilesProvider,
 } from "./findinfiles";
+import * as ext from "./lsp_extension";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -221,7 +228,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   if (dottyIde.enabled) {
     outputChannel.appendLine(
       `Metals will not start since Dotty is enabled for this workspace. ` +
-        `To enable Metals, remove the file ${dottyIde.path} and run 'Reload window'`
+      `To enable Metals, remove the file ${dottyIde.path} and run 'Reload window'`
     );
     return;
   }
@@ -399,8 +406,32 @@ function launchMetals(
         });
         return new CompletionList(items, isIncomplete);
       },
+      provideHover: hoverLinksMiddlewareHook
     },
   };
+
+  function hoverLinksMiddlewareHook(
+    document: TextDocument,
+    position: Position,
+    token: CancellationToken,
+    _next: ProvideHoverSignature
+  ): ProviderResult<Hover> {
+    const editor = window.activeTextEditor;
+    const pos = client.code2ProtocolConverter.asPosition(position);
+    const range = editor?.selection?.contains(position) ? client.code2ProtocolConverter.asRange(editor.selection) : undefined;
+    return client.sendRequest(ext.hover, {
+      textDocument: client.code2ProtocolConverter.asTextDocumentIdentifier(document),
+      position: pos,
+      range: range
+    }, token).then(
+      (result) => {
+        return client.protocol2CodeConverter.asHover(result);
+      },
+      () => {
+        return Promise.resolve(null);
+      }
+    );
+  }
 
   const client = new LanguageClient(
     "metals",
