@@ -32,8 +32,6 @@ import {
   ProviderResult,
   Hover,
   TextDocument,
-  MarkdownString,
-  CancellationTokenSource,
 } from "vscode";
 import {
   LanguageClient,
