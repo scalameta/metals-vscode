@@ -115,7 +115,7 @@ export async function activate(context: ExtensionContext) {
         );
         return fetchAndLaunchMetals(context, javaHome);
       } catch (err) {
-        outputChannel.appendLine(err);
+        outputChannel.appendLine(`${err}`);
         showMissingJavaMessage();
       }
     }
