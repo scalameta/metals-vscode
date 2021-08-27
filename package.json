@@ -609,7 +609,7 @@
     "ovsx": "0.1.0",
     "prettier": "2.3.2",
     "ts-jest": "^27.0.5",
-    "typescript": "4.3.5",
+    "typescript": "4.4.2",
     "vsce": "1.96.1"
   },
   "dependencies": {
