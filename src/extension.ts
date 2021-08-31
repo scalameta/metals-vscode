@@ -40,7 +40,6 @@ import {
   ExecuteCommandRequest,
   Location,
   TextDocumentPositionParams,
-  ProvideHoverSignature,
   CancellationToken,
 } from "vscode-languageclient/node";
 import { LazyProgress } from "./lazy-progress";
@@ -415,19 +414,28 @@ function launchMetals(
   ): ProviderResult<Hover> {
     const editor = window.activeTextEditor;
     const pos = client.code2ProtocolConverter.asPosition(position);
-    const range = editor?.selection?.contains(position) ? client.code2ProtocolConverter.asRange(editor.selection) : undefined;
-    return client.sendRequest(ext.hover, {
-      textDocument: client.code2ProtocolConverter.asTextDocumentIdentifier(document),
-      position: pos,
-      range: range
-    }, token).then(
-      (result) => {
-        return client.protocol2CodeConverter.asHover(result);
-      },
-      () => {
-        return Promise.resolve(null);
-      }
-    );
+    const range = editor?.selection?.contains(position)
+      ? client.code2ProtocolConverter.asRange(editor.selection)
+      : undefined;
+    return client
+      .sendRequest(
+        ext.hover,
+        {
+          textDocument:
+            client.code2ProtocolConverter.asTextDocumentIdentifier(document),
+          position: pos,
+          range: range,
+        },
+        token
+      )
+      .then(
+        (result) => {
+          return client.protocol2CodeConverter.asHover(result);
+        },
+        () => {
+          return Promise.resolve(null);
+        }
+      );
   }
 
   const client = new LanguageClient(
