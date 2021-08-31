@@ -89,7 +89,7 @@ import {
   executeFindInFiles,
   startFindInFilesProvider,
 } from "./findinfiles";
-import * as ext from "./lsp_extension";
+import * as ext from "./hoverExtension";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -411,8 +411,7 @@ function launchMetals(
   function hoverLinksMiddlewareHook(
     document: TextDocument,
     position: Position,
-    token: CancellationToken,
-    _next: ProvideHoverSignature
+    token: CancellationToken
   ): ProviderResult<Hover> {
     const editor = window.activeTextEditor;
     const pos = client.code2ProtocolConverter.asPosition(position);
