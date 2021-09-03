@@ -604,7 +604,7 @@
     "@types/jest": "^27.0.1",
     "@types/node": "16.7.10",
     "@types/shell-quote": "1.7.1",
-    "@types/vscode": "1.43.0",
+    "@types/vscode": "1.60.0",
     "jest": "^27.1.0",
     "ovsx": "0.1.0",
     "prettier": "2.3.2",
