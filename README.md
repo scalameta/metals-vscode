@@ -26,29 +26,25 @@ The following table shows the status of various features.
 
 ## Requirements
 
-**Java 8 or 11 provided by OpenJDK or Oracle**. Eclipse OpenJ9 is not
-supported, please make sure the `JAVA_HOME` environment variable
-points to a valid Java 8 or 11 installation.
+**Java 8, 11, 17 provided by OpenJDK or Oracle**. Eclipse OpenJ9 is not
+supported, please make sure the `JAVA_HOME` environment variable points to a
+valid Java 8, 11 or 17 installation.
 
-**macOS, Linux or Windows**. Metals is developed on macOS and every PR is
-tested on Ubuntu+Windows.
+**macOS, Linux or Windows**. Metals is developed on many operating systems and
+every PR is tested on Ubuntu, Windows and MacOS.
 
 **Scala 2.13, 2.12, 2.11 and Scala 3**. Metals supports these Scala versions:
 
- - **Scala 2.13**:
-   2.13.6, 2.13.5, 2.13.4, 2.13.3, 2.13.2, 2.13.1, 2.13.0
+- **Scala 2.13**: 2.13.6, 2.13.5, 2.13.4, 2.13.3, 2.13.2, 2.13.1, 2.13.0
 
- - **Scala 2.12**:
-   2.12.14, 2.12.13, 2.12.12, 2.12.11, 2.12.10, 2.12.9, 2.12.8
+- **Scala 2.12**: 2.12.14, 2.12.13, 2.12.12, 2.12.11, 2.12.10, 2.12.9, 2.12.8
 
- - **Scala 2.11**:
-   2.11.12
+- **Scala 2.11**: 2.11.12
 
- - **Scala 3**:
-   3.0.2-RC1, 3.0.1, 3.0.0
+- **Scala 3**: 3.1.0-RC1, 3.0.2, 3.0.1, 3.0.0
 
-Note that 2.11.x support is deprecated and it will be removed in future releases.
-It's recommended to upgrade to Scala 2.12 or Scala 2.13
+Note that 2.11.x support is deprecated and it will be removed in future
+releases. It's recommended to upgrade to Scala 2.12 or Scala 2.13
 
 ## Installation
 
@@ -252,7 +248,7 @@ hierarchy using two commands:
 - `Metals: Go to super method` - immediately goes to the parent of the method
   the cursor is pointing to
 
-- `Metals: Reveal super method hierarchy` - displays the full method hierarchy and
+- `Metals: Reveal super method hierachy` - displays the full method hierachy and
   enables to move to any parent, it is best used with the Metals Quick Pick
   extension.
 
@@ -260,7 +256,7 @@ You can also bind those commands to a shortcut.
 
 ## Create new project from template
 
-It is possible using Metals to easily setup a new project using the existing
+It is possible using Metals to easily setup a new project using the exiting
 [giter8](https://github.com/foundweekends/giter8/wiki/giter8-templates)
 templates. This is an equivalent to the `sbt new` command, which uses the same
 mechanism. There is a great number of templates already available and it should
@@ -370,6 +366,18 @@ Multiple configurations can be stored in that file and can be chosen either
 manually in the `Run` view or can be picked by invoking a shortcut defined under
 `workbench.action.debug.selectandstart`.
 
+### via Metals' commands
+
+You can also use commands that can be easily bound to shortcuts:
+
+- `metals.run-current-file` - Run main class in the current file.
+- `metals.test-current-file` - Run test class in the current file
+- `metals.test-current-target` - Run all tests in the current project.
+
+To assign shortcuts just go to the Keyboard Shortcuts page (`File` ->
+`Preferences` -> `Keyboard Shortcuts`) and search for a command, click on it and
+use you preffered shortcut.
+
 ## On type formatting for multiline string formatting
 
 ![on-type](https://imgur.com/a0O2vCs.gif)
@@ -456,3 +464,8 @@ extension to use default IntelliJ shortcuts with VS Code.
 | Type info        | Show hover                |
 | Expand           | Fold                      |
 | Extend Selection | Expand selection          |
+
+## GitHub Codespaces and GitHub.dev support
+
+See
+https://scalameta.org/metals/docs/editors/online-ides#github-codespaces-and-githubdev
