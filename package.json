@@ -279,6 +279,19 @@
             "3.0.0"
           ],
           "markdownDescription": "The Scala compiler version that is used as the default or fallback in case a file doesn't belong to any build target or the specified Scala version isn't supported by Metals.\n\nThis applies to standalone Scala files, worksheets, and Ammonite scripts.\n\n The `automatic` value means that the Scala version for these files will be inferred from the highest supported Scala version in your projects build definition"
+        },
+        "metals.eclipseFormatConfigPath": {
+          "type": "string",
+          "markdownDescription": "Optional custom path to the eclipse-formatter.xml file.\n\nShould be an absolute path and use forward slashes `/` for file separators (even on Windows)."
+        },
+        "metals.enableFormatJavaComments": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "When enabled, if you format a Java file then comments will also be formatted."
+        },
+        "metals.eclipseFormatProfile": {
+          "type": "string",
+          "markdownDescription": "Optional Eclipse format profile to use."
         }
       }
     },
