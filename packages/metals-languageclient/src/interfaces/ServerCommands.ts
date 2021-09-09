@@ -81,6 +81,10 @@ export const ServerCommands = {
    * worksheet.
    */
   NewScalaFile: "new-scala-file",
+  /**
+   * Create and open a new Java class, enum or interface
+   */
+  NewJavaFile: "new-java-file",
   /** Creaet a new Scala project using one of the available g8 templates. */
   NewScalaProject: "new-scala-project",
   /** Reset a decision you made about a specific setting. */
