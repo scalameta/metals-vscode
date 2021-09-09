@@ -64,6 +64,8 @@ export const ServerCommands = {
   DebugAdapterStart: "debug-adapter-start",
   /** Open the Metals doctor to troubleshoot potential problems with the build. */
   DoctorRun: "doctor-run",
+  /** Decode a file to human readable format.  E.g. class, semanticdb */
+  DecodeFile: "file-decode",
   /**
    * Detect the build tool for a workspace and generate the bsp config for the
    * build tool. If there are multiple build tools for a workspace ,the user
