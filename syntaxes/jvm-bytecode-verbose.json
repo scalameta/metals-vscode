@@ -1,0 +1,745 @@
+{
+  "$schema": "./schema/tmlanguage.json",
+  "name": "jvm-bytecode-verbose",
+  "scopeName": "source.jvm-bytecode-verbose",
+  "extensions": [".javap-verbose"],
+  "patterns": [
+    {
+      "include": "#info"
+    },
+    {
+      "include": "#header"
+    },
+    {
+      "include": "#constant-pool"
+    },
+    {
+      "include": "#metadata"
+    },
+    {
+      "include": "#attributes"
+    },
+    {
+      "include": "source.jvm-bytecode"
+    },
+    {
+      "include": "#hex"
+    }
+  ],
+  "repository": {
+    "info": {
+      "patterns": [
+        {
+          "name": "comment.line.jvm-bytecode-verbose",
+          "match": "^Classfile (.*)$",
+          "captures": {
+            "1": { "name": "string.other.jvm-bytecode-verbose" }
+          }
+        },
+        {
+          "name": "comment.line.jvm-bytecode-verbose",
+          "match": "^\\s*Last modified (.*); size (.*)$",
+          "captures": {
+            "1": { "name": "string.other.jvm-bytecode-verbose" },
+            "2": { "name": "string.other.jvm-bytecode-verbose" }
+          }
+        },
+        {
+          "name": "comment.line.jvm-bytecode-verbose",
+          "match": "^\\s*(?:SHA-256|MD5) checksum (.*)$",
+          "captures": {
+            "1": { "name": "string.other.jvm-bytecode-verbose" }
+          }
+        }
+      ]
+    },
+    "header": {
+      "patterns": [
+        {
+          "match": "^\\s*(minor version:) (.*)$",
+          "captures": {
+            "1": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "2": { "name": "constant.numeric.int.jvm-bytecode-verbose" }
+          }
+        },
+        {
+          "match": "^\\s*(major version:) (.*)$",
+          "captures": {
+            "1": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "2": { "name": "constant.numeric.int.jvm-bytecode-verbose" }
+          }
+        },
+        {
+          "begin": "^\\s*(flags:) \\((.*)\\)",
+          "end": "$",
+          "beginCaptures": {
+            "1": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "2": { "name": "constant.numeric.hex.jvm-bytecode-verbose" }
+          },
+          "patterns": [
+            {
+              "name": "constant.language.jvm-bytecode-verbose",
+              "match": "\\b(ACC_[A-Z]+)\\b"
+            }
+          ]
+        },
+        {
+          "match": "^\\s*(this_class:) (#[0-9]+)\\s*(//)(.*)$",
+          "captures": {
+            "1": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "2": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "3": { "name": "comment.line.jvm-bytecode-verbose" },
+            "4": { "name": "support.type.class.jvm-bytecode-verbose" }
+          }
+        },
+        {
+          "match": "^\\s*(super_class:) (#[0-9]+)\\s*(?:(//)(.*))?$",
+          "captures": {
+            "1": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "2": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "3": { "name": "comment.line.jvm-bytecode-verbose" },
+            "4": { "name": "support.type.class.jvm-bytecode-verbose" }
+          }
+        },
+        {
+          "match": "^\\s*(interfaces:) ([0-9]+), (fields:) ([0-9]+), (methods:) ([0-9]+), (attributes:) ([0-9]+)$",
+          "captures": {
+            "1": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "2": { "name": "constant.numeric.int.jvm-bytecode-verbose" },
+            "3": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "4": { "name": "constant.numeric.int.jvm-bytecode-verbose" },
+            "5": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "6": { "name": "constant.numeric.int.jvm-bytecode-verbose" },
+            "7": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "8": { "name": "constant.numeric.int.jvm-bytecode-verbose" }
+          }
+        }
+      ]
+    },
+    "constant-pool": {
+      "patterns": [
+        {
+          "match": "^Constant pool:",
+          "name": "keyword.other.jvm-bytecode-verbose"
+        },
+        {
+          "comment": "Class",
+          "match": "^\\s*(#[0-9]+) = (Class)\\s+(#[0-9]+)\\s+(//) (.*)$",
+          "captures": {
+            "1": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "2": { "name": "support.type.class.jvm-bytecode-verbose" },
+            "3": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "4": { "name": "comment.line.jvm-bytecode-verbose" },
+            "5": { "name": "support.type.class.jvm-bytecode-verbose" }
+          }
+        },
+        {
+          "comment": "Fieldref",
+          "begin": "^\\s*(#[0-9]+) = (Fieldref)\\s*(#[0-9]+)(\\.)(#[0-9]+)\\s*(//) (.*)(\\.)(.*)(:)",
+          "end": "$",
+          "beginCaptures": {
+            "1": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "2": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "3": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "4": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "5": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "6": { "name": "comment.line.jvm-bytecode-verbose" },
+            "7": { "name": "support.type.class.jvm-bytecode-verbose" },
+            "8": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "9": { "name": "variable.other.definition.jvm-bytecode-verbose" },
+            "10": { "name": "keyword.other.jvm-bytecode-verbose" }
+          },
+          "patterns": [{ "include": "source.jvm-bytecode#descriptors" }]
+        },
+        {
+          "comment": "Methodref",
+          "begin": "^\\s*(#[0-9]+) = (Methodref)\\s*(#[0-9]+)(\\.)(#[0-9]+)\\s*(//)(.*)(\\.)(.*)(:)",
+          "end": "$",
+          "beginCaptures": {
+            "1": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "2": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "3": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "4": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "5": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "6": { "name": "comment.line.jvm-bytecode-verbose" },
+            "7": { "name": "support.type.class.jvm-bytecode-verbose" },
+            "8": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "9": { "name": "entity.name.function.opcode.jvm-bytecode-verbose" },
+            "10": { "name": "keyword.other.jvm-bytecode-verbose" }
+          },
+          "patterns": [{ "include": "source.jvm-bytecode#descriptors" }]
+        },
+        {
+          "comment": "InterfaceMethodref",
+          "begin": "^\\s*(#[0-9]+) = (InterfaceMethodref)\\s*(#[0-9]+)(\\.)(#[0-9]+)\\s*(//)(.*)(\\.)(.*)(:)",
+          "end": "$",
+          "beginCaptures": {
+            "1": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "2": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "3": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "4": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "5": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "6": { "name": "comment.line.jvm-bytecode-verbose" },
+            "7": { "name": "support.type.class.jvm-bytecode-verbose" },
+            "8": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "9": { "name": "entity.name.function.opcode.jvm-bytecode-verbose" },
+            "10": { "name": "keyword.other.jvm-bytecode-verbose" }
+          },
+          "patterns": [{ "include": "source.jvm-bytecode#descriptors" }]
+        },
+        {
+          "comment": "String",
+          "match": "^\\s*(#[0-9]+) = (String)\\s+(#[0-9]+)\\s+(//)(.*)$",
+          "captures": {
+            "1": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "2": { "name": "support.type.class.jvm-bytecode-verbose" },
+            "3": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "4": { "name": "comment.line.jvm-bytecode-verbose" },
+            "5": { "name": "string.other.jvm-bytecode-verbose" }
+          }
+        },
+        {
+          "comment": "Integer",
+          "match": "^\\s*(#[0-9]+) = (Integer)\\s+(.*)$",
+          "captures": {
+            "1": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "2": { "name": "support.type.constant.jvm-bytecode-verbose" },
+            "3": { "name": "constant.numeric.int.jvm-bytecode-verbose" }
+          }
+        },
+        {
+          "comment": "Float",
+          "match": "^\\s*(#[0-9]+) = (Float)\\s+(.*)$",
+          "captures": {
+            "1": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "2": { "name": "support.type.constant.jvm-bytecode-verbose" },
+            "3": { "name": "constant.numeric.float.jvm-bytecode-verbose" }
+          }
+        },
+        {
+          "comment": "Long",
+          "match": "^\\s*(#[0-9]+) = (Long)\\s+(.*)$",
+          "captures": {
+            "1": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "2": { "name": "support.type.constant.jvm-bytecode-verbose" },
+            "3": { "name": "constant.numeric.long.jvm-bytecode-verbose" }
+          }
+        },
+        {
+          "comment": "Double",
+          "match": "^\\s*(#[0-9]+) = (Double)\\s+(.*)$",
+          "captures": {
+            "1": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "2": { "name": "support.type.constant.jvm-bytecode-verbose" },
+            "3": { "name": "constant.numeric.double.jvm-bytecode-verbose" }
+          }
+        },
+        {
+          "comment": "NameAndType",
+          "begin": "^\\s*(#[0-9]+) = (NameAndType)\\s*(#[0-9]+)(:)(#[0-9]+)\\s*(//) (.*)(:)",
+          "end": "$",
+          "beginCaptures": {
+            "1": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "2": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "3": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "4": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "5": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "6": { "name": "comment.line.jvm-bytecode-verbose" },
+            "7": { "name": "entity.name.function.opcode.jvm-bytecode-verbose" },
+            "8": { "name": "keyword.other.jvm-bytecode-verbose" }
+          },
+          "patterns": [{ "include": "source.jvm-bytecode#descriptors" }]
+        },
+        {
+          "comment": "Utf8",
+          "match": "^\\s*(#[0-9]+) = (Utf8)(.*)$",
+          "captures": {
+            "1": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "2": { "name": "support.type.constant.jvm-bytecode-verbose" },
+            "3": { "name": "string.other.jvm-bytecode-verbose" }
+          }
+        },
+        {
+          "comment": "MethodHandle",
+          "begin": "^\\s*(#[0-9]+) = (MethodHandle)\\s*([0-9])(:)(#[0-9]+)\\s*(//) ([A-Za-z_]+) (.*)(\\.)(.*)(:)",
+          "end": "$",
+          "beginCaptures": {
+            "1": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "2": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "3": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "4": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "5": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "6": { "name": "comment.line.jvm-bytecode-verbose" },
+            "7": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "8": { "name": "support.type.class.jvm-bytecode-verbose" },
+            "9": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "10": {
+              "name": "entity.name.function.opcode.jvm-bytecode-verbose"
+            },
+            "11": { "name": "keyword.other.jvm-bytecode-verbose" }
+          },
+          "patterns": [{ "include": "source.jvm-bytecode#descriptors" }]
+        },
+        {
+          "comment": "MethodType",
+          "begin": "^\\s*(#[0-9]+) = (MethodType)\\s*(#[0-9]+)\\s*(//)",
+          "end": "$",
+          "beginCaptures": {
+            "1": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "2": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "3": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "4": { "name": "comment.line.jvm-bytecode-verbose" }
+          },
+          "patterns": [{ "include": "source.jvm-bytecode#descriptors" }]
+        },
+        {
+          "comment": "InvokeDynamic",
+          "begin": "^\\s*(#[0-9]+) = (InvokeDynamic)\\s*(#[0-9]+)(:)(#[0-9]+)\\s*(//) (#[0-9]+)(:)(.*)(:)",
+          "end": "$",
+          "beginCaptures": {
+            "1": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "2": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "3": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "4": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "5": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "6": { "name": "comment.line.jvm-bytecode-verbose" },
+            "7": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "8": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "9": { "name": "entity.name.function.opcode.jvm-bytecode-verbose" },
+            "10": { "name": "keyword.other.jvm-bytecode-verbose" }
+          },
+          "patterns": [{ "include": "source.jvm-bytecode#descriptors" }]
+        },
+        {
+          "comment": "Module",
+          "match": "^\\s*(#[0-9]+) = (Module)\\s+(#[0-9]+)\\s+(//)(.*)$",
+          "captures": {
+            "1": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "2": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "3": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "4": { "name": "comment.line.jvm-bytecode-verbose" },
+            "5": { "name": "entity.name.type.module.jvm-bytecode-verbose" }
+          }
+        },
+        {
+          "comment": "Package",
+          "match": "^\\s*(#[0-9]+) = (Package)\\s+(#[0-9]+)\\s+(//)(.*)$",
+          "captures": {
+            "1": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "2": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "3": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "4": { "name": "comment.line.jvm-bytecode-verbose" },
+            "5": { "name": "entity.name.type.module.jvm-bytecode-verbose" }
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "patterns": [
+        { "include": "source.jvm-bytecode#exception-table" },
+        {
+          "begin": "^\\s*(descriptor:)",
+          "end": "$",
+          "beginCaptures": {
+            "1": { "name": "keyword.other.jvm-bytecode-verbose" }
+          },
+          "patterns": [{ "include": "source.jvm-bytecode#descriptors" }]
+        },
+        {
+          "match": "^\\s*(stack)=([0-9]+), (locals)=([0-9]+), (args_size)=([0-9]+)$",
+          "captures": {
+            "1": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "2": { "name": "constant.numeric.int.jvm-bytecode-verbose" },
+            "3": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "4": { "name": "constant.numeric.int.jvm-bytecode-verbose" },
+            "5": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "6": { "name": "constant.numeric.int.jvm-bytecode-verbose" }
+          }
+        },
+        {
+          "comment": "LineNumberTable",
+          "match": "^\\s*(line) ([0-9]+)(:)",
+          "captures": {
+            "1": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "2": { "name": "constant.numeric.int.jvm-bytecode-verbose" },
+            "3": { "name": "keyword.other.jvm-bytecode-verbose" }
+          }
+        },
+        {
+          "comment": "RuntimeInvisibleParameterAnnotations",
+          "match": "^\\s*(parameter) ([0-9]+)(:)",
+          "captures": {
+            "1": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "2": { "name": "constant.numeric.int.jvm-bytecode-verbose" },
+            "3": { "name": "keyword.other.jvm-bytecode-verbose" }
+          }
+        },
+        {
+          "comment": "MethodParameters",
+          "name": "keyword.other.jvm-bytecode-verbose",
+          "match": "^\\s*Name                           Flags$"
+        },
+        {
+          "comment": "MethodParameters",
+          "match": "^\\s*([A-Za-z_$][A-Za-z0-9_$]*)\\s+(final)( synthetic)?$",
+          "captures": {
+            "1": { "name": "variable.other.definition.jvm-bytecode-verbose" },
+            "2": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "3": { "name": "keyword.other.jvm-bytecode-verbose" }
+          }
+        },
+        {
+          "comment": "LocalVariableTable",
+          "name": "keyword.other.jvm-bytecode-verbose",
+          "match": "^\\s*Start  Length  Slot  Name   Signature$"
+        },
+        {
+          "comment": "LocalVariableTable",
+          "begin": "^\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([A-Za-z_$][A-Za-z0-9_$<>\\-]*)\\s+",
+          "end": "$",
+          "beginCaptures": {
+            "1": { "name": "constant.numeric.int.jvm-bytecode-verbose" },
+            "2": { "name": "constant.numeric.int.jvm-bytecode-verbose" },
+            "3": { "name": "constant.numeric.int.jvm-bytecode-verbose" },
+            "4": { "name": "variable.other.definition.jvm-bytecode-verbose" }
+          },
+          "patterns": [{ "include": "source.jvm-bytecode#descriptors" }]
+        },
+        {
+          "comment": "InnerClasses",
+          "match": "(#[0-9]+) (of) (#[0-9]+);\\s+(//) (.*)=(class) (.*) (of class) (.*)$",
+          "captures": {
+            "1": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "2": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "3": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "4": { "name": "comment.line.jvm-bytecode-verbose" },
+            "5": { "name": "support.type.class.jvm-bytecode-verbose" },
+            "6": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "7": { "name": "support.type.class.jvm-bytecode-verbose" },
+            "8": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "9": { "name": "support.type.class.jvm-bytecode-verbose" }
+          }
+        },
+        {
+          "comment": "Signature",
+          "begin": "^\\s*(Signature:)\\s*(#[0-9]+)\\s*(//)",
+          "end": "$",
+          "beginCaptures": {
+            "1": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "2": { "name": "constant.symbol.jvm-bytecode-verbose" },
+            "3": { "name": "comment.other.jvm-bytecode-verbose" }
+          },
+          "patterns": [{ "include": "#signatures" }]
+        },
+        {
+          "comment": "Error: unknown attribute",
+          "match": "^(Error:) (unknown attribute)$",
+          "name": "keyword.other.jvm-bytecode-verbose"
+        },
+        {
+          "comment": "Unknown Attribute",
+          "begin": "^\\s*([A-Za-z]+)(:) (length) = (.*)( \\(unknown attribute\\))?",
+          "end": "",
+          "beginCaptures": {
+            "1": { "name": "variable.other.definition.jvm-bytecode-verbose" },
+            "2": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "3": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "4": { "name": "constant.numeric.hex.jvm-bytecode-verbose" },
+            "5": { "name": "comment.other.jvm-bytecode-verbose" }
+          },
+          "patterns": [
+            {
+              "comment": "Hex Literals for Unknown Attribute",
+              "name": "constant.numeric.hex.jvm-bytecode-verbose",
+              "match": "^\\s+([0-9A-F]{2})( [0-9A-F]{2})*$"
+            },
+            { "include": "source.jvm-bytecode-verbose" }
+          ]
+        },
+        {
+          "comment": "Unknown Attribute",
+          "begin": "^\\s*([A-Za-z]+)(:) (length) = (.*)( \\(unknown attribute\\))?",
+          "end": "",
+          "beginCaptures": {
+            "1": { "name": "variable.other.definition.jvm-bytecode-verbose" },
+            "2": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "3": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "4": { "name": "constant.numeric.hex.jvm-bytecode-verbose" },
+            "5": { "name": "comment.other.jvm-bytecode-verbose" }
+          },
+          "patterns": [
+            {
+              "comment": "Hex Literals for Unknown Attribute",
+              "name": "constant.numeric.hex.jvm-bytecode-verbose",
+              "match": "^\\s+([0-9A-F]{2})( [0-9A-F]{2})*$"
+            },
+            { "include": "source.jvm-bytecode-verbose" }
+          ]
+        },
+        {
+          "comment": "BootstrapMethods",
+          "begin": "^\\s*(BootstrapMethods:)",
+          "end": "^(?=[A-Za-z])",
+          "beginCaptures": {
+            "1": { "name": "keyword.other.jvm-bytecode-verbose" }
+          },
+          "patterns": [
+            {
+              "match": "^\\s*Method arguments:$",
+              "name": "keyword.other.jvm-bytecode-verbose"
+            },
+            {
+              "match": "^\\s*([0-9]+)(:)",
+              "captures": {
+                "1": { "name": "constant.language.jvm-bytecode-verbose" },
+                "2": { "name": "keyword.other.jvm-bytecode-verbose" }
+              }
+            },
+            {
+              "begin": "(#[0-9]+) ([A-Za-z_]+) (.*)(\\.)(.*)(:)",
+              "end": "$",
+              "beginCaptures": {
+                "1": { "name": "constant.symbol.jvm-bytecode-verbose" },
+                "2": { "name": "keyword.other.jvm-bytecode-verbose" },
+                "3": { "name": "support.type.class.jvm-bytecode-verbose" },
+                "4": { "name": "keyword.other.jvm-bytecode-verbose" },
+                "5": {
+                  "name": "entity.name.function.opcode.jvm-bytecode-verbose"
+                },
+                "6": { "name": "keyword.other.jvm-bytecode-verbose" }
+              },
+              "patterns": [{ "include": "source.jvm-bytecode#descriptors" }]
+            },
+            {
+              "begin": "(#[0-9]+)",
+              "end": "$",
+              "beginCaptures": {
+                "1": { "name": "constant.symbol.jvm-bytecode-verbose" }
+              },
+              "patterns": [
+                { "include": "source.jvm-bytecode#values" },
+                { "include": "source.jvm-bytecode#descriptors" }
+              ],
+              "contentName": "string.other.jvm-bytecode-verbose"
+            },
+            { "include": "#metadata" },
+            { "include": "#attributes" },
+            { "include": "source.jvm-bytecode#values" }
+          ]
+        },
+        {
+          "comment": "Stack Map Table",
+          "patterns": [
+            {
+              "match": "(number_of_entries) = ([0-9]+)$",
+              "captures": {
+                "1": { "name": "keyword.other.jvm-bytecode-verbose" },
+                "2": { "name": "constant.numeric.int.jvm-bytecode-verbose" }
+              }
+            },
+            {
+              "begin": "(frame_type) = ([0-9]+) (/\\*)",
+              "end": "(\\*/)",
+              "beginCaptures": {
+                "1": { "name": "keyword.other.jvm-bytecode-verbose" },
+                "2": { "name": "constant.numeric.int.jvm-bytecode-verbose" },
+                "3": { "name": "comment.block.jvm-bytecode-verbose" }
+              },
+              "endCaptures": {
+                "1": { "name": "comment.block.jvm-bytecode-verbose" }
+              },
+              "contentName": "comment.block.jvm-bytecode-verbose"
+            },
+            {
+              "match": "(offset_delta) = ([0-9]+)$",
+              "captures": {
+                "1": { "name": "keyword.other.jvm-bytecode-verbose" },
+                "2": { "name": "constant.numeric.int.jvm-bytecode-verbose" }
+              }
+            },
+            {
+              "begin": "(locals|stack) = \\[",
+              "end": "\\]",
+              "beginCaptures": {
+                "1": { "name": "keyword.other.jvm-bytecode-verbose" }
+              },
+              "patterns": [
+                {
+                  "name": "support.type.jvm-bytecode-verbose",
+                  "match": "\\b(top|int|float|long|double|null|uninit_this)\\b"
+                },
+                {
+                  "match": "(class) ([^, ]*)",
+                  "captures": {
+                    "1": { "name": "keyword.other.jvm-bytecode-verbose" },
+                    "2": { "name": "support.type.class.jvm-bytecode-verbose" }
+                  }
+                },
+                {
+                  "match": "(uninitialized) ([0-9]+)",
+                  "captures": {
+                    "1": { "name": "keyword.other.jvm-bytecode-verbose" },
+                    "2": { "name": "constant.numeric.int.jvm-bytecode-verbose" }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "attributes": {
+      "patterns": [
+        {
+          "name": "keyword.other.jvm-bytecode-verbose",
+          "match": "^\\s*(SourceFile|InnerClasses|EnclosingMethod|SourceDebugExtension|BootstrapMethods):"
+        },
+        {
+          "comment": "Modules",
+          "name": "keyword.other.jvm-bytecode-verbose",
+          "match": "^\\s*(Module|ModulePackages|ModuleMainClass):"
+        },
+        {
+          "comment": "Nest",
+          "name": "keyword.other.jvm-bytecode-verbose",
+          "match": "^\\s*(NestHost|NestMembers):"
+        },
+        {
+          "name": "keyword.other.jvm-bytecode-verbose",
+          "match": "^\\s*(ConstantValue|Code|Exceptions):"
+        },
+        {
+          "name": "keyword.other.jvm-bytecode-verbose",
+          "match": "^\\s*(RuntimeVisibleParameterAnnotations|RuntimeInvisibleParameterAnnotations):"
+        },
+        {
+          "name": "keyword.other.jvm-bytecode-verbose",
+          "match": "^\\s*(AnnotationDefault|MethodParameters):"
+        },
+        {
+          "name": "keyword.other.jvm-bytecode-verbose",
+          "match": "^\\s*(Synthetic|Deprecated|Signature):"
+        },
+        {
+          "name": "keyword.other.jvm-bytecode-verbose",
+          "match": "^\\s*(RuntimeVisibleAnnotations|RuntimeInvisibleAnnotations):"
+        },
+        {
+          "name": "keyword.other.jvm-bytecode-verbose",
+          "match": "^\\s*(LineNumberTable|LocalVariableTable|LocalVariableTypeTable|StackMapTable):"
+        },
+        {
+          "name": "keyword.other.jvm-bytecode-verbose",
+          "match": "^\\s*(RuntimeVisibleTypeAnnotations|RuntimeInvisibleTypeAnnotations):"
+        }
+      ]
+    },
+    "signatures": {
+      "patterns": [
+        {
+          "comment": "Generic Parameters",
+          "name": "support.type.class.jvm-bytecode-verbose",
+          "begin": "(<)",
+          "end": "(>)",
+          "beginCaptures": {
+            "1": { "name": "keyword.other.jvm-bytecode-verbose" }
+          },
+          "endCaptures": {
+            "1": { "name": "keyword.other.jvm-bytecode-verbose" }
+          },
+          "patterns": [
+            {
+              "comment": "Type Constraint",
+              "match": "([A-Za-z_$][A-Za-z0-9_$]*)?(:|::)",
+              "captures": {
+                "1": { "name": "support.type.class.jvm-bytecode-verbose" },
+                "2": { "name": "keyword.other.jvm-bytecode-verbose" }
+              }
+            },
+            {
+              "comment": "Wildcard",
+              "name": "keyword.other.wildcard.jvm-bytecode-verbose",
+              "match": "\\*"
+            },
+            {
+              "comment": "Variance",
+              "name": "keyword.other.variance.jvm-bytecode-verbose",
+              "match": "\\+|-"
+            },
+            { "include": "#signatures" }
+          ]
+        },
+        {
+          "comment": "Throws Symbol",
+          "name": "keyword.other.throws.jvm-bytecode-verbose",
+          "match": "\\^"
+        },
+        {
+          "comment": "Type Variable",
+          "name": "support.type.class.jvm-bytecode-verbose",
+          "begin": "(T)",
+          "end": "(;)",
+          "beginCaptures": {
+            "1": { "name": "keyword.other.jvm-bytecode-verbose" }
+          },
+          "endCaptures": {
+            "1": { "name": "keyword.other.jvm-bytecode-verbose" }
+          }
+        },
+        {
+          "comment": "Primitive Types - byte, char, double, float, int, long, short, boolean",
+          "name": "support.type.primitive.jvm-bytecode-verbose",
+          "match": "[BCDFIJSZ]"
+        },
+        {
+          "comment": "Class Reference Type",
+          "name": "support.type.class.jvm-bytecode-verbose",
+          "begin": "(L)",
+          "end": "(;)",
+          "beginCaptures": {
+            "1": { "name": "keyword.other.jvm-bytecode-verbose" }
+          },
+          "endCaptures": {
+            "1": { "name": "keyword.other.jvm-bytecode-verbose" }
+          },
+          "patterns": [
+            {
+              "comment": "Inner Class",
+              "name": "keyword.other.jvm-bytecode-verbose",
+              "match": "\\."
+            },
+            {
+              "begin": "(<)",
+              "end": "(>)",
+              "beginCaptures": {
+                "1": { "name": "keyword.other.jvm-bytecode-verbose" }
+              },
+              "endCaptures": {
+                "1": { "name": "keyword.other.jvm-bytecode-verbose" }
+              },
+              "patterns": [{ "include": "#signatures" }]
+            }
+          ]
+        },
+        {
+          "comment": "Array Reference Type",
+          "name": "keyword.other.jvm-bytecode-verbose",
+          "match": "\\["
+        },
+        {
+          "comment": "Method Type (possibly void)",
+          "begin": "(\\()",
+          "end": "(\\))(V?)",
+          "beginCaptures": {
+            "1": { "name": "keyword.other.jvm-bytecode-verbose" }
+          },
+          "endCaptures": {
+            "1": { "name": "keyword.other.jvm-bytecode-verbose" },
+            "2": { "name": "support.type.void.jvm-bytecode-verbose" }
+          },
+          "patterns": [{ "include": "#signatures" }]
+        }
+      ]
+    }
+  }
+}

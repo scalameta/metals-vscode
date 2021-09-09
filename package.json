@@ -53,6 +53,32 @@
     "workspaceContains:*/*/src/main/scala"
   ],
   "contributes": {
+    "languages": [
+      {
+        "id": "javap-verbose",
+        "extensions": [
+          ".javap-verbose"
+        ]
+      },
+      {
+        "id": "javap",
+        "extensions": [
+          ".javap"
+        ]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "javap-verbose",
+        "scopeName": "source.jvm-bytecode-verbose",
+        "path": "./syntaxes/jvm-bytecode-verbose.json"
+      },
+      {
+        "language": "javap",
+        "scopeName": "source.jvm-bytecode",
+        "path": "./syntaxes/jvm-bytecode.json"
+      }
+    ],
     "configurationDefaults": {
       "[scala]": {
         "editor.suggestSelection": "first",
@@ -298,6 +324,26 @@
         "title": "Run doctor"
       },
       {
+        "command": "metals.show-javap",
+        "category": "Metals",
+        "title": "Show decompiled with javap"
+      },
+      {
+        "command": "metals.show-javap-verbose",
+        "category": "Metals",
+        "title": "Show decompiled with javap verbose"
+      },
+      {
+        "command": "metals.show-semanticdb-compact",
+        "category": "Metals",
+        "title": "Show Semanticdb"
+      },
+      {
+        "command": "metals.show-semanticdb-detailed",
+        "category": "Metals",
+        "title": "Show Semanticdb detailed"
+      },
+      {
         "command": "metals.new-scala-project",
         "category": "Metals",
         "title": "New Scala Project"
@@ -388,6 +434,12 @@
         "title": "Search symbol in workspace"
       }
     ],
+    "submenus": [
+      {
+        "id": "metals.analyze",
+        "label": "Metals Analyse Source"
+      }
+    ],
     "menus": {
       "view/title": [
         {
@@ -397,6 +449,22 @@
         }
       ],
       "commandPalette": [
+        {
+          "command": "metals.show-javap",
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.javap"
+        },
+        {
+          "command": "metals.show-javap-verbose",
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.javap-verbose"
+        },
+        {
+          "command": "metals.show-semanticdb-compact",
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb || metals:enabled && resourceExtname==.semanticdb-compact"
+        },
+        {
+          "command": "metals.show-semanticdb-detailed",
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb || metals:enabled && resourceExtname==.semanticdb-detailed"
+        },
         {
           "command": "metals.reveal-active-file",
           "when": "metals:enabled"
@@ -490,7 +558,34 @@
         {
           "command": "metals.new-scala-file",
           "when": "metals:enabled",
-          "group": "navigation@4"
+          "group": "navigation@1"
+        },
+        {
+          "submenu": "metals.analyze",
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.semanticdb",
+          "group": "navigation@3"
+        }
+      ],
+      "metals.analyze": [
+        {
+          "command": "metals.show-javap",
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class",
+          "group": "metals-2@1"
+        },
+        {
+          "command": "metals.show-javap-verbose",
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class",
+          "group": "metals-2@2"
+        },
+        {
+          "command": "metals.show-semanticdb-compact",
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb",
+          "group": "metals-3@1"
+        },
+        {
+          "command": "metals.show-semanticdb-detailed",
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb",
+          "group": "metals-3@2"
         }
       ]
     },
@@ -635,7 +730,7 @@
     "vsce": "1.99.0"
   },
   "dependencies": {
-    "metals-languageclient": "0.5.1",
+    "metals-languageclient": "0.5.2",
     "promisify-child-process": "4.1.1",
     "vscode-languageclient": "7.0.0"
   },
