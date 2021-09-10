@@ -1,4 +1,4 @@
-import { decreaseIndentPattern, increaseIndentPattern } from "../indentPattern";
+import { increaseIndentPattern } from "../indentPattern";
 
 function checkIndent(indentPattern: RegExp, result: Boolean) {
   return (text: string) => expect(indentPattern.test(text)).toEqual(result);
@@ -12,18 +12,6 @@ describe("IncreaseIndentPattern Test Suite", () => {
   const [checkIncrease, checkNotIncrease] = checkFunctions(
     increaseIndentPattern()
   );
-
-  test("Scala2", () => {
-    checkIncrease("object Main extends App {");
-    checkIncrease("{");
-    checkIncrease("def myFunc(): Unit = {");
-    checkIncrease("val myLambda = () => {");
-
-    checkNotIncrease('val a: String = "a"');
-    checkNotIncrease("def myFunc(): Unit = {}");
-    checkNotIncrease("val myLambda = () => {}");
-    checkNotIncrease("val a: String = \"blocks starts with '{'\"");
-  });
 
   test("Scala3", () => {
     // after the closing ) of a condition in an old-style if or while.
@@ -63,28 +51,5 @@ describe("IncreaseIndentPattern Test Suite", () => {
     checkIncrease("{some code} yield");
 
     checkNotIncrease("{some code} yield {some other code}");
-  });
-});
-
-describe("DecreaseIndentPattern Test Suite", () => {
-  const [checkDecrease, checkNotDecrease] = checkFunctions(
-    decreaseIndentPattern()
-  );
-
-  test("Scala2 ", () => {
-    checkDecrease("}");
-    checkDecrease("*/ }");
-
-    checkNotDecrease('val a = \'"ciao" }');
-    checkNotDecrease("object Main extends App {");
-  });
-
-  test("Scala3", () => {
-    checkDecrease("end if");
-    checkDecrease("end while");
-    checkDecrease("end for");
-    checkDecrease("end match");
-    checkDecrease("end try");
-    checkDecrease("end Class");
   });
 });
