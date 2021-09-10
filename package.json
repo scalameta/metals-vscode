@@ -406,6 +406,11 @@
         "title": "New Scala File..."
       },
       {
+        "command": "metals.new-java-file",
+        "category": "Metals",
+        "title": "New Java File..."
+      },
+      {
         "command": "metals.new-scala-worksheet",
         "category": "Metals",
         "title": "Create Worksheet"
@@ -590,6 +595,10 @@
           "when": "metals:enabled"
         },
         {
+          "command": "metals.new-java-file",
+          "when": "metals:enabled"
+        },
+        {
           "command": "metals.new-scala-project",
           "when": "metals:enabled"
         },
@@ -623,6 +632,11 @@
           "command": "metals.new-scala-file",
           "when": "metals:enabled",
           "group": "navigation@1"
+        },
+        {
+          "command": "metals.new-java-file",
+          "when": "metals:enabled",
+          "group": "navigation@2"
         },
         {
           "submenu": "metals.analyze",

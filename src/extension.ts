@@ -878,6 +878,16 @@ function launchMetals(
         }
       );
 
+      registerCommand(
+        `metals.${ServerCommands.NewJavaFile}`,
+        async (directory: Uri) => {
+          return client.sendRequest(ExecuteCommandRequest.type, {
+            command: ServerCommands.NewJavaFile,
+            arguments: [directory?.toString()],
+          });
+        }
+      );
+
       const findInFilesProvider = startFindInFilesProvider(context);
       const findInFilesView = createFindInFilesTreeView(
         findInFilesProvider,
