@@ -72,7 +72,7 @@ import {
   DecorationsRangesDidChange,
 } from "./decoration-protocol";
 import { clearTimeout } from "timers";
-import { decreaseIndentPattern, increaseIndentPattern } from "./indentPattern";
+import { increaseIndentPattern } from "./indentPattern";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -1030,9 +1030,9 @@ function enableScaladocIndentation() {
   languages.setLanguageConfiguration("scala", {
     indentationRules: {
       // ^(.*\*/)?\s*\}.*$
-      decreaseIndentPattern: decreaseIndentPattern(),
+      decreaseIndentPattern: /^(.*\*\/)?\s*\}.*$/,
       // ^.*\{[^}"']*$
-      increaseIndentPattern: increaseIndentPattern(),
+      increaseIndentPattern: /^.*\{[^}"']*$/,
     },
     wordPattern:
       /(-?\d*\.\d\w*)|([^\`\~\!\@\#\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\?\s]+)/g,
@@ -1042,6 +1042,16 @@ function enableScaladocIndentation() {
         beforeText: /^\s*\/\*\*(?!\/)([^\*]|\*(?!\/))*$/,
         afterText: /^\s*\*\/$/,
         action: { indentAction: IndentAction.IndentOutdent, appendText: " * " },
+      },
+      {
+        // indent in places with optional braces
+        beforeText: increaseIndentPattern(),
+        action: { indentAction: IndentAction.Indent },
+      },
+      {
+        // stop vscode from indenting automatically to last known indentation
+        beforeText: /^\s*/,
+        action: { indentAction: IndentAction.None },
       },
       {
         // e.g. /** ...|
