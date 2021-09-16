@@ -18,6 +18,7 @@ describe("IncreaseIndentPattern Test Suite", () => {
     checkIncrease("if (x < 0)");
     checkIncrease("if (x < 0)          ");
     checkIncrease("while (x < 0)");
+    checkIncrease("extension (str: String)");
     checkNotIncrease("if (x < 0");
     checkNotIncrease("if (x < 0) (not possible code)");
     checkNotIncrease("while (x < 0) (not possible code)");
