@@ -74,6 +74,8 @@ import {
 import { clearTimeout } from "timers";
 import { increaseIndentPattern } from "./indentPattern";
 import { TastyResponse } from "./executeCommand";
+import { gotoLocation } from "./goToLocation";
+import { openSymbolSearch } from "./openSymbolSearch";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -867,6 +869,9 @@ function launchMetals(
         });
       });
 
+      // NOTE: we offer a custom symbol search command to work around the limitations of the built-in one, see https://github.com/microsoft/vscode/issues/98125 for more details.
+      registerCommand(`metals.symbol-search`, () => openSymbolSearch(client));
+
       window.onDidChangeActiveTextEditor((editor) => {
         if (editor && isSupportedLanguage(editor.document.languageId)) {
           client.sendNotification(
@@ -1006,32 +1011,6 @@ function launchMetals(
         outputChannel.appendLine(reason.message);
       }
     }
-  );
-}
-
-function gotoLocation(location: Location, otherWindow: Boolean): void {
-  const range = new Range(
-    location.range.start.line,
-    location.range.start.character,
-    location.range.end.line,
-    location.range.end.character
-  );
-  var vs = ViewColumn.Active;
-  if (otherWindow) {
-    vs =
-      window.visibleTextEditors
-        .filter(
-          (vte) =>
-            window.activeTextEditor?.document.uri.scheme != "output" &&
-            vte.viewColumn
-        )
-        .pop()?.viewColumn || ViewColumn.Beside;
-  }
-  workspace.openTextDocument(Uri.parse(location.uri)).then((textDocument) =>
-    window.showTextDocument(textDocument, {
-      selection: range,
-      viewColumn: vs,
-    })
   );
 }
 

@@ -381,6 +381,11 @@
         "command": "metals.test-current-target",
         "category": "Metals",
         "title": "Run all test in the current project"
+      },
+      {
+        "command": "metals.symbol-search",
+        "category": "Metals",
+        "title": "Search symbol in workspace"
       }
     ],
     "menus": {
