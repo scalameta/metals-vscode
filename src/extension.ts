@@ -73,6 +73,7 @@ import {
 } from "./decoration-protocol";
 import { clearTimeout } from "timers";
 import { increaseIndentPattern } from "./indentPattern";
+import { TastyResponse } from "./executeCommand";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -399,6 +400,7 @@ function launchMetals(
     () => {
       let doctor: WebviewPanel | undefined;
       let stacktrace: WebviewPanel | undefined;
+      let tastyView: WebviewPanel | undefined;
 
       function getDoctorPanel(isReload: boolean): WebviewPanel {
         if (!doctor) {
@@ -417,6 +419,7 @@ function launchMetals(
         }
         return doctor;
       }
+
       function getStacktracePanel(): WebviewPanel {
         if (!stacktrace) {
           stacktrace = window.createWebviewPanel(
@@ -432,6 +435,23 @@ function launchMetals(
         }
         stacktrace.reveal();
         return stacktrace;
+      }
+
+      function getTastyPreview(): WebviewPanel {
+        if (!tastyView) {
+          tastyView = window.createWebviewPanel(
+            "metals-show-tasty",
+            "Show TASTy",
+            ViewColumn.Beside,
+            { enableCommandUris: true }
+          );
+          context.subscriptions.push(tastyView);
+          tastyView.onDidDispose(() => {
+            tastyView = undefined;
+          });
+        }
+        tastyView.reveal();
+        return tastyView;
       }
 
       [
@@ -535,6 +555,17 @@ function launchMetals(
             if (typeof html === "string") {
               const panel = getStacktracePanel();
               panel.webview.html = html;
+            }
+            break;
+          case "metals-show-tasty":
+            if (params.arguments && params.arguments[0]) {
+              const { tasty, error } = params.arguments[0] as TastyResponse;
+              if (tasty) {
+                const panel = getTastyPreview();
+                panel.webview.html = tasty;
+              } else if (error) {
+                window.showErrorMessage(error);
+              }
             }
             break;
           case ClientCommands.RunDoctor:
@@ -677,6 +708,14 @@ function launchMetals(
               arguments: [clip],
             });
           }
+        });
+      });
+
+      registerTextEditorCommand(`metals.show-tasty`, (editor) => {
+        const uri = editor.document.uri;
+        client.sendRequest(ExecuteCommandRequest.type, {
+          command: "show-tasty",
+          arguments: [uri.toString()],
         });
       });
 
