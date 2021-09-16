@@ -192,6 +192,11 @@
           "default": true,
           "markdownDescription": "When enabled, if you press the return key from the first line of a multiline string containing a pipe, it will automatically add `.stripMargin`."
         },
+        "metals.enableIndentOnPaste": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "When this option is enabled, when user pastes any snippet into a Scala file, Metals will try to adjust the indentation to that of the current cursor."
+        },
         "metals.fallbackScalaVersion": {
           "type": "string",
           "default": "automatic",
