@@ -2,6 +2,25 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.10.10 (2021/09/16 17:10 +00:00)
+- [d4d7b0f](https://github.com/scalameta/metals-vscode/commit/d4d7b0f9a24a5538e9047b8fbe4245fbcbac754c) Update Metals to 0.10.7 (@tgodzik)
+- [c35c291](https://github.com/scalameta/metals-vscode/commit/c35c291ede9031add7383bdf919d7ceb0c6c1a7d) Auto indent on extension groups (@tgodzik)
+- [3b5f95d](https://github.com/scalameta/metals-vscode/commit/3b5f95d91931327c167c72d1ffc450a86396d6ea) Add enable indent on paste setting (@tgodzik)
+- [1ce6225](https://github.com/scalameta/metals-vscode/commit/1ce62258e3e486780c21063acfcaa242ed4b51ec) Add support for TASTy command (@kpodsiad)
+- [bae4785](https://github.com/scalameta/metals-vscode/commit/bae4785cee1da9ffa787dfcd135b5d1299e45a28) Bump jest from 27.1.1 to 27.2.0 (@dependabot[bot])
+- [9b5d273](https://github.com/scalameta/metals-vscode/commit/9b5d273920d16bf2649f139dae57dda083d48dd1) Bump typescript from 4.4.2 to 4.4.3 (@dependabot[bot])
+- [3c6d609](https://github.com/scalameta/metals-vscode/commit/3c6d6091d829eb180d8a432d8f8052076b590296) Bump vsce from 1.97.0 to 1.99.0 (@dependabot[bot])
+- [e509dc8](https://github.com/scalameta/metals-vscode/commit/e509dc8e3337adcbb4fae3f79cbbac56f52ca548) Make Java Home setting machine-scoped (@aldum)
+- [ef5d8c3](https://github.com/scalameta/metals-vscode/commit/ef5d8c311de3ec3accda54d54cc912f336881d04) Fix issues with indentation when tying end markers (@tgodzik)
+- [c0529d1](https://github.com/scalameta/metals-vscode/commit/c0529d1a034df803af0da7840575f809d34fa7ae) Bump prettier from 2.3.2 to 2.4.0 (@dependabot[bot])
+- [2973f56](https://github.com/scalameta/metals-vscode/commit/2973f56352a61e4487b80bda15a9b07dd814bf91) Bump @types/node from 16.9.0 to 16.9.1 (@dependabot[bot])
+- [42dc231](https://github.com/scalameta/metals-vscode/commit/42dc231acda2e4d527a3f0229c1e47a4eec9f4ec) Bump jest from 27.1.0 to 27.1.1 (@dependabot[bot])
+- [2de476e](https://github.com/scalameta/metals-vscode/commit/2de476ec4430583fff4fb6ca1c19899fd2be316f) Bump @types/node from 16.7.13 to 16.9.0 (@dependabot[bot])
+- [1771b2b](https://github.com/scalameta/metals-vscode/commit/1771b2b4e299f38c429fe260a2f0228755b4cee5) Bump @types/node from 16.7.11 to 16.7.13 (@dependabot[bot])
+- [80627e9](https://github.com/scalameta/metals-vscode/commit/80627e9bbedf81b3110078b5735a48e0c9583a9a) Bump vsce from 1.96.3 to 1.97.0 (@dependabot[bot])
+- [904497a](https://github.com/scalameta/metals-vscode/commit/904497a227b4dbef2baeab05e3b694efee723249) Bump @types/node from 16.7.10 to 16.7.11 (@dependabot[bot])
+- [2a6b039](https://github.com/scalameta/metals-vscode/commit/2a6b0392c5568f2a9cf825f44f192266af5bd4eb) v1.10.9
+
 ### v1.10.9 (2021/09/06 18:06 +00:00)
 - [3e06009](https://github.com/scalameta/metals-vscode/commit/3e06009584ad56f5f01388fda8dd5f662234771d) Update Metals server to 0.10.6 (@tgodzik)
 - [8ba676f](https://github.com/scalameta/metals-vscode/commit/8ba676f2fb0c1d9228e3c86310d09aac953c2a01) Increase default Xmx to 1G (@dos65)
