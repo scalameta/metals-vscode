@@ -2,6 +2,12 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.10.11 (2021/09/17 10:45 +00:00)
+- [c4c76f1](https://github.com/scalameta/metals-vscode/commit/c4c76f1e2da183485051509b0e137c28d513c8c9) Allow braces to be split with an added indentation (@tgodzik)
+- [3dd2079](https://github.com/scalameta/metals-vscode/commit/3dd207902a27704a11eb40606b75eb5c10bcbc1a) Bump prettier from 2.4.0 to 2.4.1 (@dependabot[bot])
+- [0a5ed9f](https://github.com/scalameta/metals-vscode/commit/0a5ed9fcd6bc4680dec898de9fa2b107255c223b) Bump @types/node from 16.9.1 to 16.9.2 (@dependabot[bot])
+- [2acc967](https://github.com/scalameta/metals-vscode/commit/2acc967f5a58accbb744a30cd73e91bdf6c901fe) v1.10.10
+
 ### v1.10.10 (2021/09/16 17:10 +00:00)
 - [d4d7b0f](https://github.com/scalameta/metals-vscode/commit/d4d7b0f9a24a5538e9047b8fbe4245fbcbac754c) Update Metals to 0.10.7 (@tgodzik)
 - [c35c291](https://github.com/scalameta/metals-vscode/commit/c35c291ede9031add7383bdf919d7ceb0c6c1a7d) Auto indent on extension groups (@tgodzik)
