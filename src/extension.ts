@@ -1090,6 +1090,12 @@ function enableScaladocIndentation() {
       {
         // stop vscode from indenting automatically to last known indentation
         beforeText: /^\s*/,
+        /* we still want {} to be nicely split with two new lines into
+         *{
+         *  |
+         *}
+         */
+        afterText: /[^\]\}\)]+/,
         action: { indentAction: IndentAction.None },
       },
       {
