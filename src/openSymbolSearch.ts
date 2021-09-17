@@ -33,6 +33,16 @@ export function openSymbolSearch(client: LanguageClient): void {
   inputBox.matchOnDetail = false;
   inputBox.matchOnDescription = false;
 
+  const activeTextEditor = window.activeTextEditor;
+  const wordRange = activeTextEditor?.document?.getWordRangeAtPosition(
+    activeTextEditor?.selection.active
+  );
+  const wordUnderCursor =
+    wordRange && activeTextEditor?.document?.getText(wordRange);
+  if (wordUnderCursor) {
+    inputBox.value = wordUnderCursor;
+  }
+
   let cancelToken: CancellationTokenSource | null = null;
 
   inputBox.onDidChangeValue(() => {
