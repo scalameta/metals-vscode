@@ -1,0 +1,120 @@
+import {
+  window,
+  QuickPickItem,
+  SymbolInformation,
+  CancellationTokenSource,
+  SymbolKind,
+} from "vscode";
+import { LanguageClient, Location } from "vscode-languageclient/node";
+import { gotoLocation } from "./goToLocation";
+
+class SymbolItem implements QuickPickItem {
+  label: string;
+  description?: string | undefined;
+  alwaysShow?: boolean | undefined;
+  location: Location;
+
+  constructor(si: SymbolInformation) {
+    const icon = symbolKindIcon(si.kind);
+    this.label = `$(symbol-${icon}) ${si.name}`;
+    this.description = si.containerName;
+    this.alwaysShow = true;
+    this.location = Location.create(
+      si.location.uri.toString(),
+      si.location.range
+    );
+  }
+}
+
+export function openSymbolSearch(client: LanguageClient): void {
+  const inputBox = window.createQuickPick<SymbolItem>();
+  inputBox.placeholder =
+    "Examples: `List`, `s.c.i.List`, `List;`(include dependencies)";
+  inputBox.matchOnDetail = false;
+  inputBox.matchOnDescription = false;
+
+  let cancelToken: CancellationTokenSource | null = null;
+
+  inputBox.onDidChangeValue(() => {
+    if (cancelToken) cancelToken.cancel();
+
+    cancelToken = new CancellationTokenSource();
+    client
+      .sendRequest(
+        "workspace/symbol",
+        { query: inputBox.value },
+        cancelToken.token
+      )
+      .then((v) => {
+        const symbols = v as SymbolInformation[];
+        const items = symbols.map((si) => new SymbolItem(si));
+        inputBox.items = items;
+      });
+  });
+
+  inputBox.onDidAccept(() => {
+    const location = inputBox.activeItems[0].location;
+    inputBox.dispose();
+    gotoLocation(location, false);
+  });
+  inputBox.show();
+}
+
+function symbolKindIcon(kind: SymbolKind): string {
+  switch (kind - 1) {
+    case SymbolKind.File:
+      return "file";
+    case SymbolKind.Module:
+      return "module";
+    case SymbolKind.Namespace:
+      return "namespace";
+    case SymbolKind.Package:
+      return "package";
+    case SymbolKind.Class:
+      return "class";
+    case SymbolKind.Method:
+      return "method";
+    case SymbolKind.Property:
+      return "property";
+    case SymbolKind.Field:
+      return "field";
+    case SymbolKind.Constructor:
+      return "constructor";
+    case SymbolKind.Enum:
+      return "enum";
+    case SymbolKind.Interface:
+      return "interface";
+    case SymbolKind.Function:
+      return "function";
+    case SymbolKind.Variable:
+      return "variable";
+    case SymbolKind.Constant:
+      return "constant";
+    case SymbolKind.String:
+      return "string";
+    case SymbolKind.Number:
+      return "number";
+    case SymbolKind.Boolean:
+      return "boolean";
+    case SymbolKind.Array:
+      return "array";
+    case SymbolKind.Object:
+      return "object";
+    case SymbolKind.Key:
+      return "key";
+    case SymbolKind.Null:
+      return "null";
+    case SymbolKind.EnumMember:
+      return "enum-member";
+    case SymbolKind.Struct:
+      return "struct";
+    case SymbolKind.Event:
+      return "event";
+    case SymbolKind.Operator:
+      return "operator";
+    case SymbolKind.TypeParameter:
+      return "type-parameter";
+    default:
+      return "file";
+  }
+}
