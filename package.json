@@ -440,6 +440,14 @@
         "label": "Metals Analyse Source"
       }
     ],
+    "keybindings": [
+      {
+        "key": "ctrl+t",
+        "mac": "cmd+t",
+        "command": "metals.symbol-search",
+        "when": "editorLangId == scala"
+      }
+    ],
     "menus": {
       "view/title": [
         {
