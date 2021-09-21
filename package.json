@@ -623,7 +623,7 @@
     "format-check": "prettier --check '**/*.{ts,js,json,yml}'"
   },
   "devDependencies": {
-    "@types/jest": "^27.0.1",
+    "@types/jest": "^27.0.2",
     "@types/node": "16.9.4",
     "@types/shell-quote": "1.7.1",
     "@types/vscode": "1.43.0",
