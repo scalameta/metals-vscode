@@ -21,6 +21,7 @@ export interface MetalsInitializationOptions {
   globSyntax?: "vscode" | "uri";
   icons?: "vscode" | "octicons" | "atom" | "unicode";
   inputBoxProvider?: boolean;
+  isVirtualDocumentSupported?: boolean;
   isExitOnShutdown?: boolean;
   isHttpEnabled?: boolean;
   openFilesOnRenameProvider?: boolean;
