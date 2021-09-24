@@ -2153,10 +2153,10 @@ merge-stream@^2.0.0:
   resolved "https://registry.yarnpkg.com/merge-stream/-/merge-stream-2.0.0.tgz#52823629a14dd00c9770fb6ad47dc6310f2c1f60"
   integrity sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==
 
-metals-languageclient@0.5.1:
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/metals-languageclient/-/metals-languageclient-0.5.1.tgz#f83c85b518eab15add22a448004b2b5bff6d6b34"
-  integrity sha512-+SdzopP5wm/joRzPk7ONm1+5wLZTwHMG+JdLyB3j2n3jV2Jbl9NXchng0RZpO90t1idfWMU5mch/jI7ALBWxyg==
+metals-languageclient@0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/metals-languageclient/-/metals-languageclient-0.5.2.tgz#6440bf7d22e7e3e983a7bfadd1d406130e29c768"
+  integrity sha512-3+U7f6RdhFMfL5fysl7DbxOiYbVa7dIMqhhCi4atIT2OEE2hzxXKOo/JwphwpiH55JqWIyFuYsxCHDNiSlar1Q==
   dependencies:
     fp-ts "^2.4.1"
     locate-java-home "^1.1.2"
