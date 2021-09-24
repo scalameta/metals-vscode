@@ -1,0 +1,395 @@
+{
+  "$schema": "./schema/tmlanguage.json",
+  "name": "jvm-bytecode",
+  "scopeName": "source.jvm-bytecode",
+  "extensions": [".javap"],
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#opcodes"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#labels"
+    },
+    {
+      "include": "#values"
+    },
+    {
+      "include": "#constructors"
+    },
+    {
+      "include": "#methods"
+    },
+    {
+      "include": "#fields"
+    },
+    {
+      "include": "#types"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.jvm-bytecode",
+          "match": "Compiled from (\".*\")",
+          "captures": { "1": { "name": "string.quoted.double.jvm-bytecode" } }
+        },
+        {
+          "comment": "String Constant Comment",
+          "name": "comment.line.jvm-bytecode",
+          "match": "// (String)(.*)$",
+          "captures": {
+            "1": { "name": "support.type.class.jvm-bytecode" },
+            "2": { "name": "string.other.jvm-bytecode" }
+          }
+        },
+        {
+          "comment": "float Constant Comment",
+          "name": "comment.line.jvm-bytecode",
+          "match": "// (float) (.*)$",
+          "captures": {
+            "1": { "name": "support.type.primitive.jvm-bytecode" },
+            "2": { "name": "constant.language.numeric.float.jvm-bytecode" }
+          }
+        },
+        {
+          "comment": "double Constant Comment",
+          "name": "comment.line.jvm-bytecode",
+          "match": "// (double) (.*)$",
+          "captures": {
+            "1": { "name": "support.type.primitive.jvm-bytecode" },
+            "2": { "name": "constant.language.numeric.double.jvm-bytecode" }
+          }
+        },
+        {
+          "comment": "long Constant Comment",
+          "name": "comment.line.jvm-bytecode",
+          "match": "// (long) (.*)$",
+          "captures": {
+            "1": { "name": "support.type.primitive.jvm-bytecode" },
+            "2": { "name": "constant.language.numeric.long.jvm-bytecode" }
+          }
+        },
+        {
+          "comment": "int Constant Comment",
+          "name": "comment.line.jvm-bytecode",
+          "match": "// (int) (.*)$",
+          "captures": {
+            "1": { "name": "support.type.primitive.jvm-bytecode" },
+            "2": { "name": "constant.language.numeric.int.jvm-bytecode" }
+          }
+        },
+        {
+          "comment": "Class Constant Comment",
+          "name": "comment.line.jvm-bytecode",
+          "match": "// (class) (.*)$",
+          "captures": {
+            "1": { "name": "keyword.jvm-bytecode" },
+            "2": { "name": "support.type.class.jvm-bytecode" }
+          }
+        },
+        {
+          "comment": "Field Constant Comment",
+          "name": "comment.line.jvm-bytecode",
+          "begin": "// (Field) (?:(.*)(\\.))?(.*)(:)",
+          "end": "$",
+          "beginCaptures": {
+            "1": { "name": "keyword.jvm-bytecode" },
+            "2": { "name": "support.type.class.jvm-bytecode" },
+            "3": { "name": "keyword.other.jvm-bytecode" },
+            "4": { "name": "variable.other.definition.jvm-bytecode" },
+            "5": { "name": "keyword.other.jvm-bytecode" }
+          },
+          "patterns": [{ "include": "#descriptors" }]
+        },
+        {
+          "comment": "Method Constant Comment",
+          "name": "comment.line.jvm-bytecode",
+          "begin": "// (Method) (?:(.*)(\\.))?(.*)(:)",
+          "end": "$",
+          "beginCaptures": {
+            "1": { "name": "keyword.jvm-bytecode" },
+            "2": { "name": "support.type.class.jvm-bytecode" },
+            "3": { "name": "keyword.other.jvm-bytecode" },
+            "4": { "name": "entity.name.function.opcode.jvm-bytecode" },
+            "5": { "name": "keyword.other.jvm-bytecode" }
+          },
+          "patterns": [{ "include": "#descriptors" }]
+        },
+        {
+          "comment": "Interface Method Constant Comment",
+          "name": "comment.line.jvm-bytecode",
+          "begin": "// (InterfaceMethod) (.*)(\\.)(.*)(:)",
+          "end": "$",
+          "beginCaptures": {
+            "1": { "name": "keyword.jvm-bytecode" },
+            "2": { "name": "support.type.class.jvm-bytecode" },
+            "3": { "name": "keyword.other.jvm-bytecode" },
+            "4": { "name": "entity.name.function.opcode.jvm-bytecode" },
+            "5": { "name": "keyword.other.jvm-bytecode" }
+          },
+          "patterns": [{ "include": "#descriptors" }]
+        },
+        {
+          "comment": "Invoke Dynamic Constant Comment",
+          "name": "comment.line.jvm-bytecode",
+          "begin": "// (InvokeDynamic) (#[0-9]+)(:)(.*)(:)",
+          "end": "$",
+          "beginCaptures": {
+            "1": { "name": "keyword.jvm-bytecode" },
+            "2": { "name": "constant.symbol.jvm-bytecode" },
+            "3": { "name": "keyword.jvm-bytecode" },
+            "4": { "name": "entity.name.function.opcode.jvm-bytecode" },
+            "5": { "name": "keyword.other.jvm-bytecode" }
+          },
+          "patterns": [{ "include": "#descriptors" }]
+        },
+        {
+          "comment": "Method Handle Constant Comment",
+          "name": "comment.line.jvm-bytecode",
+          "begin": "// (MethodHandle) ([A-Za-z_]+) (.*)(\\.)(.*)(:)",
+          "end": "$",
+          "beginCaptures": {
+            "1": { "name": "keyword.jvm-bytecode" },
+            "2": { "name": "keyword.jvm-bytecode" },
+            "3": { "name": "support.type.class.jvm-bytecode" },
+            "4": { "name": "keyword.other.jvm-bytecode" },
+            "5": { "name": "entity.name.function.opcode.jvm-bytecode" },
+            "6": { "name": "keyword.other.jvm-bytecode" }
+          },
+          "patterns": [{ "include": "#descriptors" }]
+        },
+        {
+          "name": "comment.line.jvm-bytecode",
+          "begin": "//",
+          "end": "$"
+        }
+      ]
+    },
+    "opcodes": {
+      "patterns": [
+        {
+          "comment": "Constants",
+          "name": "entity.name.function.opcode.constants.jvm-bytecode",
+          "match": "\\b(nop|aconst_null|iconst_m1|iconst_0|iconst_1|iconst_2|iconst_3|iconst_4|iconst_5|lconst_0|lconst_1|fconst_0|fconst_1|fconst_2|dconst_0|dconst_1|bipush|sipush|ldc|ldc_w|ldc2_w)\\b"
+        },
+        {
+          "comment": "Loads",
+          "name": "entity.name.function.opcode.loads.jvm-bytecode",
+          "match": "\\b(iload|lload|fload|dload|aload|iload_0|iload_1|iload_2|iload_3|lload_0|lload_1|lload_2|lload_3|fload_0|fload_1|fload_2|fload_3|dload_0|dload_1|dload_2|dload_3|aload_0|aload_1|aload_2|aload_3|iaload|laload|faload|daload|aaload|baload|caload|saload)\\b"
+        },
+        {
+          "comment": "Stores",
+          "name": "entity.name.function.opcode.stores.jvm-bytecode",
+          "match": "\\b(istore|lstore|fstore|dstore|astore|istore_0|istore_1|istore_2|istore_3|lstore_0|lstore_1|lstore_2|lstore_3|fstore_0|fstore_1|fstore_2|fstore_3|dstore_0|dstore_1|dstore_2|dstore_3|astore_0|astore_1|astore_2|astore_3|iastore|lastore|fastore|dastore|aastore|bastore|castore|sastore)\\b"
+        },
+        {
+          "comment": "Stack",
+          "name": "entity.name.function.opcode.stack.jvm-bytecode",
+          "match": "\\b(pop|pop2|dup|dup_x1|dup_x2|dup2|dup2_x1|dup2_x2|swap)\\b"
+        },
+        {
+          "comment": "Math",
+          "name": "entity.name.function.opcode.math.jvm-bytecode",
+          "match": "\\b(iadd|ladd|fadd|dadd|isub|lsub|fsub|dsub|imul|lmul|fmul|dmul|idiv|ldiv|fdiv|ddiv|irem|lrem|frem|drem|ineg|lneg|fneg|dneg|ishl|lshl|ishr|lshr|iushr|lushr|iand|land|ior|lor|ixor|lxor|iinc)\\b"
+        },
+        {
+          "comment": "Conversions",
+          "name": "entity.name.function.opcode.conversions.jvm-bytecode",
+          "match": "\\b(i2l|i2f|i2d|l2i|l2f|l2d|f2i|f2l|f2d|d2i|d2l|d2f|i2b|i2c|i2s)\\b"
+        },
+        {
+          "comment": "Comparisons",
+          "name": "entity.name.function.opcode.comparisons.jvm-bytecode",
+          "match": "\\b(lcmp|fcmpl|fcmpg|dcmpl|dcmpg|ifeq|ifne|iflt|ifge|ifgt|ifle|if_icmpeq|if_icmpne|if_icmplt|if_icmpge|if_icmpgt|if_icmple|if_acmpeq|if_acmpne)\\b"
+        },
+        {
+          "comment": "References",
+          "name": "entity.name.function.opcode.references.jvm-bytecode",
+          "match": "\\b(getstatic|putstatic|getfield|putfield|invokevirtual|invokespecial|invokestatic|invokeinterface|invokedynamic|new|newarray|anewarray|arraylength|athrow|checkcast|instanceof|monitorenter|monitorexit)\\b"
+        },
+        {
+          "comment": "Control",
+          "name": "entity.name.function.opcode.control.jvm-bytecode",
+          "match": "\\b(goto|jsr|ret|tableswitch|lookupswitch|ireturn|lreturn|freturn|dreturn|areturn|return)\\b"
+        },
+        {
+          "comment": "Extended",
+          "name": "entity.name.function.opcode.extended.jvm-bytecode",
+          "match": "\\b(wide|multianewarray|ifnull|ifnonnull|goto_w|jsr_w)\\b"
+        },
+        {
+          "comment": "Reserved",
+          "name": "entity.name.function.opcode.reserved.jvm-bytecode",
+          "match": "\\b(breakpoint|impdep1|impdep2)\\b"
+        }
+      ]
+    },
+    "keywords": {
+      "name": "keyword.jvm-bytecode",
+      "match": "\\b(abstract|class|default|extends|final|implements|interface|module|native|private|protected|public|static|synchronized|throws|transient|volatile)\\b"
+    },
+    "labels": {
+      "patterns": [
+        {
+          "name": "keyword.other.jvm-bytecode",
+          "match": "^\\s*Code:$"
+        },
+        {
+          "comment": "default label in tableswitch or lookupswitch",
+          "name": "keyword.other.jvm-bytecode",
+          "match": "^\\s*default:"
+        },
+        {
+          "match": "^\\s*(-?[0-9]+)(:)",
+          "captures": {
+            "1": { "name": "constant.language.jvm-bytecode" },
+            "2": { "name": "keyword.other.jvm-bytecode" }
+          }
+        },
+        { "include": "#exception-table" }
+      ]
+    },
+    "exception-table": {
+      "patterns": [
+        {
+          "name": "keyword.other.jvm-bytecode",
+          "match": "^\\s*(Exception table:)$"
+        },
+        {
+          "name": "keyword.other.jvm-bytecode",
+          "match": "^\\s*from    to  target type$"
+        },
+        {
+          "name": "keyword.other.jvm-bytecode",
+          "match": "^\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+(Class|any)(.*)$",
+          "captures": {
+            "1": { "name": "constant.numeric.int.jvm-bytecode" },
+            "2": { "name": "constant.numeric.int.jvm-bytecode" },
+            "3": { "name": "constant.numeric.int.jvm-bytecode" },
+            "4": { "name": "keyword.other.jvm-bytecode" },
+            "5": { "name": "support.type.class.jvm-bytecode" }
+          }
+        }
+      ]
+    },
+    "values": {
+      "patterns": [
+        {
+          "comment": "Symbol",
+          "name": "constant.symbol.jvm-bytecode",
+          "match": "(#[0-9]+)\\b"
+        },
+        {
+          "comment": "boolean",
+          "name": "constant.boolean.jvm-bytecode",
+          "match": "\\b(true|false)\\b"
+        },
+        {
+          "comment": "float",
+          "name": "constant.numeric.float.jvm-bytecode",
+          "match": "\\b([0-9]+\\.[0-9]+(E-?)?[0-9]*f)\\b"
+        },
+        {
+          "comment": "double",
+          "name": "constant.numeric.double.jvm-bytecode",
+          "match": "\\b([0-9]+\\.[0-9]+(E-?)?[0-9]*d)\\b"
+        },
+        {
+          "comment": "long",
+          "name": "constant.numeric.long.jvm-bytecode",
+          "match": "\\b([0-9]+l)\\b"
+        },
+        {
+          "comment": "int",
+          "name": "constant.numeric.int.jvm-bytecode",
+          "match": "\\b([0-9]+)\\b"
+        },
+        {
+          "comment": "String",
+          "name": "string.quoted.double.jvm-bytecode",
+          "match": "\".*\""
+        },
+        {
+          "comment": "Character",
+          "name": "constant.character.jvm-bytecode",
+          "match": "'.*'"
+        }
+      ]
+    },
+    "constructor": {
+      "comment": "Constructor",
+      "begin": "\\b([A-Z][A-Za-z0-9_$]*)\\(",
+      "end": "\\)",
+      "beginCaptures": { "1": { "name": "support.type.class.jvm-bytecode" } },
+      "patterns": [{ "include": "$self" }]
+    },
+    "methods": {
+      "comment": "Method",
+      "begin": "((\\$|\\b)([a-z_$][A-Za-z0-9_$]*))\\(",
+      "end": "\\)",
+      "beginCaptures": {
+        "1": { "name": "entity.name.function.opcode.jvm-bytecode" }
+      },
+      "patterns": [{ "include": "$self" }]
+    },
+    "fields": {
+      "comment": "Class Field",
+      "match": "((\\$|\\b)([A-Za-z_$][A-Za-z0-9_$]*))(;| =)",
+      "captures": { "1": { "name": "variable.other.definition.jvm-bytecode" } }
+    },
+    "types": {
+      "patterns": [
+        {
+          "comment": "Class Type",
+          "name": "support.type.class.jvm-bytecode",
+          "match": "\\b(([A-Za-z_$][A-Za-z0-9_$]*\\.)*[A-Z][A-Za-z0-9_$]*)(\\$|\\b)"
+        },
+        {
+          "comment": "Primitive Type",
+          "name": "support.type.primitive.jvm-bytecode",
+          "match": "\\b(boolean|byte|char|double|float|int|long|short|void)\\b"
+        }
+      ]
+    },
+    "descriptors": {
+      "patterns": [
+        {
+          "comment": "Primitive Types - byte, char, double, float, int, long, short, boolean",
+          "name": "support.type.primitive.jvm-bytecode",
+          "match": "[BCDFIJSZ]"
+        },
+        {
+          "comment": "Class Reference Type",
+          "name": "support.type.class.jvm-bytecode",
+          "begin": "(L)",
+          "end": "(;)",
+          "beginCaptures": { "1": { "name": "keyword.other.jvm-bytecode" } },
+          "endCaptures": { "1": { "name": "keyword.other.jvm-bytecode" } }
+        },
+        {
+          "comment": "Array Reference Type",
+          "name": "keyword.other.jvm-bytecode",
+          "match": "\\["
+        },
+        {
+          "comment": "Method Type (possibly void)",
+          "begin": "(\\()",
+          "end": "(\\))(V?)",
+          "beginCaptures": { "1": { "name": "keyword.other.jvm-bytecode" } },
+          "endCaptures": {
+            "1": { "name": "keyword.other.jvm-bytecode" },
+            "2": { "name": "support.type.void.jvm-bytecode" }
+          },
+          "patterns": [{ "include": "#descriptors" }]
+        }
+      ]
+    }
+  }
+}

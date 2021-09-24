@@ -26,6 +26,7 @@ import {
   TextEditor,
   TextEditorEdit,
   ConfigurationTarget,
+  TextDocumentContentProvider,
 } from "vscode";
 import {
   LanguageClient,
@@ -76,7 +77,7 @@ import { increaseIndentPattern } from "./indentPattern";
 import { TastyResponse } from "./executeCommand";
 import { gotoLocation } from "./goToLocation";
 import { openSymbolSearch } from "./openSymbolSearch";
-
+import MetalsFileProvider from "./metalsContentProvider";
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
 const downloadJava = "Download Java";
@@ -384,6 +385,89 @@ function launchMetals(
       commands.registerTextEditorCommand(command, callback)
     );
   }
+
+  function registerTextDocumentContentProvider(
+    scheme: string,
+    provider: TextDocumentContentProvider
+  ) {
+    context.subscriptions.push(
+      workspace.registerTextDocumentContentProvider(scheme, provider)
+    );
+  }
+
+  const metalsFileProvider = new MetalsFileProvider(client);
+
+  registerTextDocumentContentProvider("metalsDecode", metalsFileProvider);
+  registerTextDocumentContentProvider("jar", metalsFileProvider);
+
+  async function decodeAndShowFile(
+    uri: Uri,
+    additionalExtension: string,
+    decoder: string,
+    alwaysUpdate: boolean,
+    ...args: [string, string | number | boolean][]
+  ) {
+    if (!uri) {
+      // no uri supplied then use the current active file
+      const editor = window.visibleTextEditors.find(
+        (e) =>
+          isSupportedLanguage(e.document.languageId) ||
+          e.document.fileName.endsWith(additionalExtension)
+      );
+      if (editor) uri = editor.document.uri;
+    }
+    if (uri) {
+      // don't re-add extension. Refreshing the output file.
+      const newPath = uri.path.endsWith(additionalExtension)
+        ? uri.path
+        : `${uri.path}.${additionalExtension}`;
+      var query = `decoder=${encodeURIComponent(decoder)}`;
+      for (const keyValue of args) {
+        const additionalParam = `${encodeURIComponent(
+          keyValue[0]
+        )}=${encodeURIComponent(keyValue[1])}`;
+        query = `${query}&${additionalParam}`;
+      }
+      // don't re-add scheme. Refreshing the output file.
+      const additionalScheme =
+        uri.scheme == "metalsDecode" ? "" : "metalsDecode:";
+      const uriWithParams = Uri.parse(
+        additionalScheme + uri.scheme + ":" + newPath
+      ).with({
+        query: query,
+      });
+      // VSCode by default caches the output and won't refresh it
+      if (alwaysUpdate)
+        metalsFileProvider.onDidChangeEmitter.fire(uriWithParams);
+      let doc = await workspace.openTextDocument(uriWithParams);
+      await window.showTextDocument(doc, { preview: false });
+    }
+  }
+
+  registerCommand("metals.show-javap-verbose", async (uri: Uri) => {
+    await decodeAndShowFile(uri, "javap-verbose", "javap", true, [
+      "verbose",
+      true,
+    ]);
+  });
+
+  registerCommand("metals.show-javap", async (uri: Uri) => {
+    await decodeAndShowFile(uri, "javap", "javap", true, ["verbose", false]);
+  });
+
+  registerCommand("metals.show-semanticdb-compact", async (uri: Uri) => {
+    await decodeAndShowFile(uri, "semanticdb-compact", "semanticdb", true, [
+      "format",
+      "compact",
+    ]);
+  });
+
+  registerCommand("metals.show-semanticdb-detailed", async (uri: Uri) => {
+    await decodeAndShowFile(uri, "semanticdb-detailed", "semanticdb", true, [
+      "format",
+      "detailed",
+    ]);
+  });
 
   registerCommand(
     "metals.restartServer",
