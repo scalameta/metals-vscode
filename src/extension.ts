@@ -34,7 +34,6 @@ import {
   RevealOutputChannelOn,
   ExecuteCommandRequest,
   Location,
-  TextDocumentPositionParams,
   TextDocument,
 } from "vscode-languageclient/node";
 import { LazyProgress } from "./lazy-progress";
@@ -74,10 +73,10 @@ import {
 } from "./decoration-protocol";
 import { clearTimeout } from "timers";
 import { increaseIndentPattern } from "./indentPattern";
-import { TastyResponse } from "./executeCommand";
 import { gotoLocation } from "./goToLocation";
 import { openSymbolSearch } from "./openSymbolSearch";
-import MetalsFileProvider from "./metalsContentProvider";
+import { DecoderResponse, MetalsFileProvider } from "./metalsContentProvider";
+import { getTextDocumentPositionParams } from "./util";
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
 const downloadJava = "Download Java";
@@ -645,10 +644,10 @@ function launchMetals(
             break;
           case "metals-show-tasty":
             if (params.arguments && params.arguments[0]) {
-              const { tasty, error } = params.arguments[0] as TastyResponse;
-              if (tasty) {
+              const { value, error } = params.arguments[0] as DecoderResponse;
+              if (value) {
                 const panel = getTastyPreview();
-                panel.webview.html = tasty;
+                panel.webview.html = value;
               } else if (error) {
                 window.showErrorMessage(error);
               }
@@ -798,10 +797,10 @@ function launchMetals(
       });
 
       registerTextEditorCommand(`metals.show-tasty`, (editor) => {
-        const uri = editor.document.uri;
+        const params = getTextDocumentPositionParams(editor);
         client.sendRequest(ExecuteCommandRequest.type, {
           command: "show-tasty",
-          arguments: [uri.toString()],
+          arguments: [params],
         });
       });
 
@@ -862,11 +861,7 @@ function launchMetals(
             isSupportedLanguage(e.document.languageId)
           );
           if (editor) {
-            const pos = editor.selection.start;
-            const params: TextDocumentPositionParams = {
-              textDocument: { uri: editor.document.uri.toString() },
-              position: { line: pos.line, character: pos.character },
-            };
+            const params = getTextDocumentPositionParams(editor);
             return window.withProgress(
               {
                 location: ProgressLocation.Window,

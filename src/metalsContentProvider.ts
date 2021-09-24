@@ -14,7 +14,7 @@ export interface DecoderResponse {
   error?: string;
 }
 
-export default class MetalsFileProvider implements TextDocumentContentProvider {
+export class MetalsFileProvider implements TextDocumentContentProvider {
   readonly onDidChangeEmitter = new EventEmitter<Uri>();
   readonly onDidChange = this.onDidChangeEmitter.event;
   readonly client: LanguageClient;
