@@ -722,7 +722,7 @@
     "@types/node": "16.10.2",
     "@types/shell-quote": "1.7.1",
     "@types/vscode": "1.43.0",
-    "jest": "^27.2.3",
+    "jest": "^27.2.4",
     "ovsx": "0.1.0",
     "prettier": "2.4.1",
     "ts-jest": "^27.0.5",
