@@ -1,7 +1,5 @@
 import { OutputChannel, window, ProgressLocation } from "vscode";
 
-("use strict");
-
 /**
  * A progress bar that starts only the first time `startOrContinue` is called.
  */
@@ -10,7 +8,7 @@ export class LazyProgress {
   startOrContinue(
     title: string,
     output: OutputChannel,
-    download: Promise<any>
+    download: Promise<unknown>
   ): void {
     if (!this.progress) {
       this.progress = window.withProgress(

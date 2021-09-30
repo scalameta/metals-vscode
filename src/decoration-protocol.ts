@@ -1,11 +1,10 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 import { NotificationType } from "vscode-jsonrpc";
 import {
   DecorationRenderOptions,
   DecorationInstanceRenderOptions,
   Range,
 } from "vscode";
-
-("use strict");
 
 /**
  * This protocol is one notable exception that we can't port over to

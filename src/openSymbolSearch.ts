@@ -46,7 +46,9 @@ export function openSymbolSearch(client: LanguageClient): void {
   let cancelToken: CancellationTokenSource | null = null;
 
   inputBox.onDidChangeValue(() => {
-    if (cancelToken) cancelToken.cancel();
+    if (cancelToken) {
+      cancelToken.cancel();
+    }
 
     cancelToken = new CancellationTokenSource();
     client

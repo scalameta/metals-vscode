@@ -1,5 +1,3 @@
-"use strict";
-
 import * as path from "path";
 import { ChildProcessPromise } from "promisify-child-process";
 import {
@@ -95,7 +93,7 @@ const installJava11Action = "Install Java (JDK 11)";
 let treeViews: MetalsTreeViews | undefined;
 let currentClient: LanguageClient | undefined;
 
-let worksheetDecorationType: TextEditorDecorationType =
+const worksheetDecorationType: TextEditorDecorationType =
   window.createTextEditorDecorationType({
     isWholeLine: true,
     rangeBehavior: DecorationRangeBehavior.OpenClosed,
@@ -108,7 +106,7 @@ let decorationType: TextEditorDecorationType =
 
 const config = workspace.getConfiguration("metals");
 
-export async function activate(context: ExtensionContext) {
+export async function activate(context: ExtensionContext): Promise<void> {
   detectLaunchConfigurationChanges();
   checkServerVersion();
   configureSettingsDefaults();
@@ -228,7 +226,8 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
 
   outputChannel.appendLine(`Java home: ${javaHome}`);
 
-  const serverVersionConfig: string = config.get<string>("serverVersion")!;
+  /* eslint-disable @typescript-eslint/no-non-null-assertion */
+  const serverVersionConfig = config.get<string>("serverVersion")!;
   const defaultServerVersion =
     config.inspect<string>("serverVersion")!.defaultValue!;
   const serverVersion = serverVersionConfig
@@ -239,6 +238,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
 
   const serverProperties = config.get<string[]>("serverProperties")!;
   const customRepositories = config.get<string[]>("customRepositories")!;
+  /* eslint-enable @typescript-eslint/no-non-null-assertion */
 
   const javaConfig = getJavaConfig({
     workspaceRoot: workspace.workspaceFolders[0]?.uri.fsPath,
@@ -313,9 +313,11 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
 function updateJavaConfig(javaHome: string) {
   const config = workspace.getConfiguration("metals");
   const configProperty = config.inspect<Record<string, string>>("javaHome");
-  if (configProperty?.workspaceValue != undefined)
+  if (configProperty?.workspaceValue != undefined) {
     config.update("javaHome", javaHome, false);
-  else config.update("javaHome", javaHome, true);
+  } else {
+    config.update("javaHome", javaHome, true);
+  }
 }
 
 function launchMetals(
@@ -411,7 +413,10 @@ function launchMetals(
   );
 
   currentClient = client;
-  function registerCommand(command: string, callback: (...args: any[]) => any) {
+  function registerCommand(
+    command: string,
+    callback: (...args: any[]) => unknown
+  ) {
     context.subscriptions.push(commands.registerCommand(command, callback));
   }
 
@@ -421,7 +426,7 @@ function launchMetals(
       textEditor: TextEditor,
       edit: TextEditorEdit,
       ...args: any[]
-    ) => any
+    ) => unknown
   ) {
     context.subscriptions.push(
       commands.registerTextEditorCommand(command, callback)
@@ -486,7 +491,6 @@ function launchMetals(
     restartServer(
       // NOTE(gabro): this is due to mismatching versions of vscode-languageserver-protocol
       // which are not trivial to fix, currently
-      // @ts-ignore
       client,
       window
     )
@@ -592,9 +596,9 @@ function launchMetals(
 
       // should be the compilation of a currently opened file
       // but some race conditions may apply
-      let compilationDoneEmitter = new EventEmitter<void>();
+      const compilationDoneEmitter = new EventEmitter<void>();
 
-      let codeLensRefresher: CodeLensProvider = {
+      const codeLensRefresher: CodeLensProvider = {
         onDidChangeCodeLenses: compilationDoneEmitter.event,
         provideCodeLenses: () => undefined,
       };
@@ -607,19 +611,20 @@ function launchMetals(
       // Handle the metals/executeClientCommand extension notification.
       client.onNotification(ExecuteClientCommand.type, (params) => {
         switch (params.command) {
-          case ClientCommands.GotoLocation:
+          case ClientCommands.GotoLocation: {
             const location =
               params.arguments && (params.arguments[0] as Location);
             const otherWindow =
-              (params.arguments && (params.arguments[1] as Boolean)) || false;
+              (params.arguments && (params.arguments[1] as boolean)) || false;
             if (location) {
               gotoLocation(location, otherWindow);
             }
             break;
+          }
           case ClientCommands.RefreshModel:
             compilationDoneEmitter.fire();
             break;
-          case ClientCommands.OpenFolder:
+          case ClientCommands.OpenFolder: {
             const openWindowParams = params
               .arguments?.[0] as MetalsOpenWindowParams;
             if (openWindowParams) {
@@ -630,15 +635,17 @@ function launchMetals(
               );
             }
             break;
-          case "metals-show-stacktrace":
+          }
+          case "metals-show-stacktrace": {
             const html = params.arguments && params.arguments[0];
             if (typeof html === "string") {
               const panel = getStacktracePanel();
               panel.webview.html = html;
             }
             break;
+          }
           case ClientCommands.RunDoctor:
-          case ClientCommands.ReloadDoctor:
+          case ClientCommands.ReloadDoctor: {
             const isRun = params.command === ClientCommands.RunDoctor;
             const isReload = params.command === ClientCommands.ReloadDoctor;
             if (isRun || (doctor && isReload)) {
@@ -649,6 +656,7 @@ function launchMetals(
               }
             }
             break;
+          }
           case ClientCommands.FocusDiagnostics:
             commands.executeCommand(ClientCommands.FocusDiagnostics);
             break;
@@ -675,13 +683,12 @@ function launchMetals(
           item.tooltip = params.tooltip;
         }
         if (params.command) {
+          const command = params.command;
           item.command = params.command;
           commands.getCommands().then((values) => {
-            if (params.command && values.includes(params.command)) {
-              registerCommand(params.command, () => {
-                client.sendRequest(ExecuteCommandRequest.type, {
-                  command: params.command!,
-                });
+            if (values.includes(command)) {
+              registerCommand(command, () => {
+                client.sendRequest(ExecuteCommandRequest.type, { command });
               });
             }
           });
@@ -690,54 +697,45 @@ function launchMetals(
         }
       });
 
-      registerTextEditorCommand(
-        `metals.run-current-file`,
-        (editor, _edit, _args) => {
-          const args: DebugDiscoveryParams = {
-            path: editor.document.uri.toString(true),
-            runType: RunType.Run,
-          };
-          scalaDebugger.start(true, args).then((wasStarted) => {
-            if (!wasStarted) {
-              window.showErrorMessage("Debug session not started");
-            }
-          });
-        }
-      );
+      registerTextEditorCommand(`metals.run-current-file`, (editor) => {
+        const args: DebugDiscoveryParams = {
+          path: editor.document.uri.toString(true),
+          runType: RunType.Run,
+        };
+        scalaDebugger.start(true, args).then((wasStarted) => {
+          if (!wasStarted) {
+            window.showErrorMessage("Debug session not started");
+          }
+        });
+      });
 
-      registerTextEditorCommand(
-        `metals.test-current-file`,
-        (editor, _edit, _args) => {
-          const args: DebugDiscoveryParams = {
-            path: editor.document.uri.toString(true),
-            runType: RunType.TestFile,
-          };
-          scalaDebugger.start(true, args).then((wasStarted) => {
-            if (!wasStarted) {
-              window.showErrorMessage("Debug session not started");
-            }
-          });
-        }
-      );
+      registerTextEditorCommand(`metals.test-current-file`, (editor) => {
+        const args: DebugDiscoveryParams = {
+          path: editor.document.uri.toString(true),
+          runType: RunType.TestFile,
+        };
+        scalaDebugger.start(true, args).then((wasStarted) => {
+          if (!wasStarted) {
+            window.showErrorMessage("Debug session not started");
+          }
+        });
+      });
 
-      registerTextEditorCommand(
-        `metals.test-current-target`,
-        (editor, _edit, _args) => {
-          const args: DebugDiscoveryParams = {
-            path: editor.document.uri.toString(true),
-            runType: RunType.TestTarget,
-          };
-          scalaDebugger.start(true, args).then((wasStarted) => {
-            if (!wasStarted) {
-              window.showErrorMessage("Debug session not started");
-            }
-          });
-        }
-      );
+      registerTextEditorCommand(`metals.test-current-target`, (editor) => {
+        const args: DebugDiscoveryParams = {
+          path: editor.document.uri.toString(true),
+          runType: RunType.TestTarget,
+        };
+        scalaDebugger.start(true, args).then((wasStarted) => {
+          if (!wasStarted) {
+            window.showErrorMessage("Debug session not started");
+          }
+        });
+      });
 
       registerTextEditorCommand(
         `metals.${ServerCommands.GotoSuperMethod}`,
-        (editor, _edit, _args) => {
+        (editor) => {
           client.sendRequest(ExecuteCommandRequest.type, {
             command: ServerCommands.GotoSuperMethod,
             arguments: [
@@ -752,7 +750,7 @@ function launchMetals(
 
       registerTextEditorCommand(
         `metals.${ServerCommands.SuperMethodHierarchy}`,
-        (editor, _edit, _args) => {
+        (editor) => {
           client.sendRequest(ExecuteCommandRequest.type, {
             command: ServerCommands.SuperMethodHierarchy,
             arguments: [
@@ -782,7 +780,7 @@ function launchMetals(
 
       registerTextEditorCommand(
         `metals.${ServerCommands.CopyWorksheetOutput}`,
-        (editor, _edit, _args) => {
+        (editor) => {
           const uri = editor.document.uri;
           if (uri.toString().endsWith("worksheet.sc")) {
             client
@@ -984,7 +982,7 @@ function launchMetals(
 
           // Wait a bit before showing the progress notification
           const waitTime = 2;
-          let delay = Math.max(0, waitTime - (params.secondsElapsed || 0));
+          const delay = Math.max(0, waitTime - (params.secondsElapsed || 0));
           const timeout = setTimeout(() => {
             window.withProgress(
               {
@@ -1066,9 +1064,11 @@ function launchMetals(
               renderOptions: o.renderOptions,
             };
           });
-          if (params.uri.endsWith(".worksheet.sc"))
+          if (params.uri.endsWith(".worksheet.sc")) {
             editor.setDecorations(worksheetDecorationType, options);
-          else editor.setDecorations(decorationType, options);
+          } else {
+            editor.setDecorations(decorationType, options);
+          }
         } else {
           outputChannel.appendLine(
             `Ignoring decorations for non-active document '${params.uri}'.`
@@ -1106,8 +1106,11 @@ function readableSeconds(totalSeconds: number): string {
   const minutes = (totalSeconds / 60) | 0;
   const seconds = totalSeconds % 60;
   if (minutes > 0) {
-    if (seconds === 0) return `${minutes}m`;
-    else return `${minutes}m${seconds}s`;
+    if (seconds === 0) {
+      return `${minutes}m`;
+    } else {
+      return `${minutes}m${seconds}s`;
+    }
   } else {
     return `${seconds}s`;
   }

@@ -1,6 +1,6 @@
 import { increaseIndentPattern } from "../indentPattern";
 
-function checkIndent(indentPattern: RegExp, result: Boolean) {
+function checkIndent(indentPattern: RegExp, result: boolean) {
   return (text: string) => expect(indentPattern.test(text)).toEqual(result);
 }
 

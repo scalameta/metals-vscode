@@ -58,7 +58,7 @@ export async function decodeAndShowFile(
   metalsFileProvider: MetalsFileProvider,
   uri: Uri | undefined,
   decodeExtension: DecodeExtension
-) {
+): Promise<void> {
   // returns an active editor uri, fallbacks to currently active file
   function uriWithFallback(): Uri | undefined {
     if (uri) {

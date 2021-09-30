@@ -1,14 +1,14 @@
 import { workspace, window, ViewColumn, Uri, Range } from "vscode";
 import { Location } from "vscode-languageclient/node";
 
-export function gotoLocation(location: Location, otherWindow: Boolean): void {
+export function gotoLocation(location: Location, otherWindow: boolean): void {
   const range = new Range(
     location.range.start.line,
     location.range.start.character,
     location.range.end.line,
     location.range.end.character
   );
-  var vs = ViewColumn.Active;
+  let vs = ViewColumn.Active;
   if (otherWindow) {
     vs =
       window.visibleTextEditors
