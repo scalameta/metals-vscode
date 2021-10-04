@@ -65,6 +65,16 @@
         "extensions": [
           ".javap"
         ]
+      },
+      {
+        "id": "tasty",
+        "aliases": [
+          "TASTy",
+          "tasty"
+        ],
+        "extensions": [
+          ".tasty-detailed"
+        ]
       }
     ],
     "grammars": [
@@ -77,6 +87,11 @@
         "language": "javap",
         "scopeName": "source.jvm-bytecode",
         "path": "./syntaxes/jvm-bytecode.json"
+      },
+      {
+        "language": "tasty",
+        "scopeName": "source.tasty",
+        "path": "./syntaxes/tasty.json"
       }
     ],
     "configurationDefaults": {
