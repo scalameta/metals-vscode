@@ -73,7 +73,7 @@
           "tasty"
         ],
         "extensions": [
-          ".tasty-detailed"
+          ".tasty-decoded"
         ]
       }
     ],
@@ -495,7 +495,7 @@
       "commandPalette": [
         {
           "command": "metals.show-tasty",
-          "when": "metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.tasty || metals:enabled && resourceExtname==.tasty-detailed"
+          "when": "metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.tasty || metals:enabled && resourceExtname==.tasty-decoded"
         },
         {
           "command": "metals.show-javap",
@@ -617,7 +617,7 @@
       "metals.analyze": [
         {
           "command": "metals.show-tasty",
-          "when": "metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.tasty || metals:enabled && resourceExtname==.tasty-detailed",
+          "when": "metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.tasty || metals:enabled && resourceExtname==.tasty-decoded",
           "group": "metals-1@1"
         },
         {

@@ -51,7 +51,7 @@ type DecodeExtension =
   | "semanticdb-compact"
   | "semanticdb-detailed"
   | "semanticdb-proto"
-  | "tasty-detailed";
+  | "tasty-decoded";
 
 export async function decodeAndShowFile(
   client: LanguageClient,
@@ -89,14 +89,14 @@ export async function decodeAndShowFile(
         currentUri.path.endsWith(".scala") &&
         (decodeExtension === "javap" ||
           decodeExtension === "javap-verbose" ||
-          decodeExtension === "tasty-detailed")
+          decodeExtension === "tasty-decoded")
       ) {
         const { value } = await executeCommand<DecoderResponse>(
           client,
           "metals.choose-class",
           {
             textDocument: { uri: currentUri.toString() },
-            includeInnerClasses: decodeExtension !== "tasty-detailed",
+            kind: decodeExtension === "tasty-decoded" ? "tasty" : "class",
           }
         );
         if (value) {

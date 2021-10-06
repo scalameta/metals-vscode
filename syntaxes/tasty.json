@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
   "name": "TASTy",
-  "extensions": [".tasty-detailed"],
+  "extensions": [".tasty-decoded"],
   "scopeName": "source.tasty",
   "patterns": [
     {

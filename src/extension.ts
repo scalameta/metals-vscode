@@ -511,7 +511,7 @@ function launchMetals(
   });
 
   registerCommand("metals.show-tasty", async (uri: Uri) => {
-    await decodeAndShowFile(client, metalsFileProvider, uri, "tasty-detailed");
+    await decodeAndShowFile(client, metalsFileProvider, uri, "tasty-decoded");
   });
 
   registerCommand(
