@@ -27,6 +27,8 @@ import {
   TextEditorEdit,
   ConfigurationTarget,
   TextDocumentContentProvider,
+  CompletionList,
+  CompletionItem,
 } from "vscode";
 import {
   LanguageClient,
@@ -359,6 +361,39 @@ function launchMetals(
     revealOutputChannelOn: RevealOutputChannelOn.Never,
     outputChannel: outputChannel,
     initializationOptions,
+    middleware: {
+      // VSCode might reorder items in case if items were matched by fuzzySearch
+      // This workarond is taken from:
+      //   https://github.com/llvm/llvm-project/commit/c86f794bd555a272f0f74a0b0a48f158e84b26b4
+      provideCompletionItem: async (
+        document,
+        position,
+        context,
+        token,
+        next
+      ) => {
+        // Get the incomplete identifier before the cursor.
+        let word = document.getWordRangeAtPosition(position);
+        let prefix = word && document.getText(new Range(word.start, position));
+
+        let list = await next(document, position, context, token);
+
+        let isIncomplete = false;
+        let originalItems: CompletionItem[] = [];
+        if (Array.isArray(list)) {
+          originalItems = list;
+          isIncomplete = false;
+        } else if (list) {
+          originalItems = list.items;
+        }
+
+        let items = originalItems.map((item) => {
+          if (prefix) item.filterText = prefix + "_" + item.filterText;
+          return item;
+        });
+        return new CompletionList(items, isIncomplete);
+      },
+    },
   };
 
   const client = new LanguageClient(
@@ -988,6 +1023,7 @@ function launchMetals(
             }
           });
       });
+      languages.registerCompletionItemProvider;
 
       // Long running tasks such as "import project" trigger start a progress
       // bar with a "cancel" button.
