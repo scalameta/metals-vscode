@@ -2,6 +2,7 @@ import {
   Event,
   EventEmitter,
   ExtensionContext,
+  OutputChannel,
   Position,
   Range,
   TextEditorRevealType,
@@ -13,13 +14,13 @@ import {
   window,
   workspace,
 } from "vscode";
-import { Location } from "vscode-languageclient/node";
+import { LanguageClient, Location } from "vscode-languageclient/node";
 
 class TopLevel {
   constructor(
     public readonly positions: PositionInFile[],
     public readonly resourceUri: Uri
-  ) {}
+  ) { }
 
   public readonly key = "TopLevel";
 }
@@ -29,7 +30,7 @@ class PositionInFile {
     public readonly location: Location,
     public readonly uri: Uri,
     public label: string
-  ) {}
+  ) { }
 
   public readonly key = "PositionInFile";
 }
@@ -86,12 +87,105 @@ export function createFindInFilesTreeView(
   return treeView;
 }
 
+export async function executeFindInFiles(client: LanguageClient, provider: FindInFilesProvider, view: TreeView<unknown>, outputChannel: OutputChannel) {
+  try {
+    const include = await window
+      .showInputBox({
+        prompt: "Enter file mask",
+        placeHolder: ".conf",
+      })
+      .then((include) => {
+        if (include === undefined) {
+          return Promise.reject("Undefined mask");
+        } else if (include === "") {
+          return Promise.reject("Empty file mask");
+        } else {
+          return include;
+        }
+      });
+
+    const pattern = await window
+      .showInputBox({
+        prompt: "Enter search pattern",
+      })
+      .then((pattern) => {
+        if (pattern === undefined) {
+          return Promise.reject("Undefined pattern");
+        } else if (pattern === "") {
+          return Promise.reject("Empty pattern");
+        } else {
+          return pattern;
+        }
+      });
+
+    const response = await client.sendRequest(
+      "metals/findTextInDependencyJars",
+      {
+        options: {
+          include: include,
+          exclude: undefined,
+        },
+        query: {
+          pattern: pattern,
+          isRegExp: undefined,
+          isCaseSensitive: undefined,
+          isWordMatch: undefined,
+        },
+      }
+    );
+
+    const locations: Location[] = response as Location[];
+    const newTopLevel = await toTopLevel(locations);
+
+    provider.update(newTopLevel);
+
+    if (newTopLevel.length != 0) {
+      return await view.reveal(newTopLevel[0]);
+    } else return await Promise.resolve();
+  } catch (error) {
+    outputChannel.appendLine(
+      "Error finding text in dependency jars: " + JSON.stringify(error)
+    );
+  }
+}
+
+async function toTopLevel(locations: Location[]): Promise<TopLevel[]> {
+  const locationsByFile: Map<string, Location[]> = locations.reduce(
+    (entryMap, e) => entryMap.set(e.uri, [...(entryMap.get(e.uri) || []), e]),
+    new Map<string, Location[]>()
+  );
+
+  return await Promise.all(
+    Array.from(locationsByFile, async ([filePath, locations]) => {
+      const uri: Uri = Uri.parse(filePath);
+
+      const readData = await workspace.fs.readFile(uri);
+      const fileContent = Buffer.from(readData).toString('utf8');
+      const lines = fileContent.split(/\r?\n/);
+
+      const newPositions: PositionInFile[] = locations.reduce(
+        (arr, location) => {
+          const line = lines[location.range.start.line];
+          const newPosition = new PositionInFile(
+            location,
+            uri,
+            line.trimStart()
+          );
+          return arr.concat(newPosition);
+        },
+        [] as PositionInFile[]
+      );
+      return new TopLevel(newPositions, uri);
+    })
+  );
+}
+
 class FindInFilesProvider implements TreeDataProvider<Node> {
   private items: TopLevel[] = Array.of();
   didChange: EventEmitter<Node> = new EventEmitter<Node>();
   onDidChangeTreeData?: Event<Node> = this.didChange.event;
 
-  constructor() {}
+  constructor() { }
 
   getTreeItem(element: Node): TreeItem {
     switch (element.key) {
@@ -147,32 +241,5 @@ class FindInFilesProvider implements TreeDataProvider<Node> {
   update(newElems: TopLevel[]) {
     this.items.splice(0, this.items.length, ...newElems);
     this.didChange.fire(undefined);
-  }
-
-  async toTopLevel(locations: Location[]): Promise<TopLevel[]> {
-    const locationsByFile: Map<string, Location[]> = locations.reduce(
-      (entryMap, e) => entryMap.set(e.uri, [...(entryMap.get(e.uri) || []), e]),
-      new Map<string, Location[]>()
-    );
-
-    return await Promise.all(
-      Array.from(locationsByFile, async ([filePath, locations]) => {
-        const uri: Uri = Uri.parse(filePath);
-        const openTextDocument = await workspace.openTextDocument(uri);
-        const newPositions: PositionInFile[] = locations.reduce(
-          (arr, location) => {
-            const line = openTextDocument.lineAt(location.range.start.line);
-            const newPosition = new PositionInFile(
-              location,
-              uri,
-              line.text.trimStart()
-            );
-            return arr.concat(newPosition);
-          },
-          [] as PositionInFile[]
-        );
-        return new TopLevel(newPositions, uri);
-      })
-    );
   }
 }

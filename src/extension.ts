@@ -82,6 +82,7 @@ import { openSymbolSearch } from "./openSymbolSearch";
 import MetalsFileProvider from "./metalsContentProvider";
 import {
   createFindInFilesTreeView,
+  executeFindInFiles,
   startFindInFilesProvider,
 } from "./findinfiles";
 
@@ -220,7 +221,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   if (dottyIde.enabled) {
     outputChannel.appendLine(
       `Metals will not start since Dotty is enabled for this workspace. ` +
-        `To enable Metals, remove the file ${dottyIde.path} and run 'Reload window'`
+      `To enable Metals, remove the file ${dottyIde.path} and run 'Reload window'`
     );
     return;
   }
@@ -965,67 +966,7 @@ function launchMetals(
         context
       );
 
-      registerCommand(`metals.find-text-in-dependency-jars`, async () => {
-        try {
-          const include = await window
-            .showInputBox({
-              prompt: "Enter file mask",
-              placeHolder: ".conf",
-            })
-            .then((include) => {
-              if (include === undefined) {
-                return Promise.reject("Undefined mask");
-              } else if (include === "") {
-                return Promise.reject("Empty file mask");
-              } else {
-                return include;
-              }
-            });
-
-          const pattern = await window
-            .showInputBox({
-              prompt: "Enter search pattern",
-            })
-            .then((pattern) => {
-              if (pattern === undefined) {
-                return Promise.reject("Undefined pattern");
-              } else if (pattern === "") {
-                return Promise.reject("Empty pattern");
-              } else {
-                return pattern;
-              }
-            });
-
-          const response = await client.sendRequest(
-            "metals/findTextInDependencyJars",
-            {
-              options: {
-                include: include,
-                exclude: undefined,
-              },
-              query: {
-                pattern: pattern,
-                isRegExp: undefined,
-                isCaseSensitive: undefined,
-                isWordMatch: undefined,
-              },
-            }
-          );
-
-          const locations: Location[] = response as Location[];
-          const newTopLevel = await findInFilesProvider.toTopLevel(locations);
-
-          findInFilesProvider.update(newTopLevel);
-
-          if (newTopLevel.length != 0) {
-            return await findInFilesView.reveal(newTopLevel[0]);
-          } else return await Promise.resolve();
-        } catch (error) {
-          outputChannel.appendLine(
-            "Error finding text in dependency jars: " + JSON.stringify(error)
-          );
-        }
-      });
+      registerCommand(`metals.find-text-in-dependency-jars`, async () => executeFindInFiles(client, findInFilesProvider, findInFilesView, outputChannel));
 
       registerCommand(`metals.new-scala-worksheet`, async () => {
         const sendRequest = (args: Array<string | undefined>) => {
