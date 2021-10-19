@@ -20,7 +20,7 @@ class TopLevel {
   constructor(
     public readonly positions: PositionInFile[],
     public readonly resourceUri: Uri
-  ) { }
+  ) {}
 
   public readonly key = "TopLevel";
 }
@@ -30,7 +30,7 @@ class PositionInFile {
     public readonly location: Location,
     public readonly uri: Uri,
     public label: string
-  ) { }
+  ) {}
 
   public readonly key = "PositionInFile";
 }
@@ -87,7 +87,12 @@ export function createFindInFilesTreeView(
   return treeView;
 }
 
-export async function executeFindInFiles(client: LanguageClient, provider: FindInFilesProvider, view: TreeView<unknown>, outputChannel: OutputChannel) {
+export async function executeFindInFiles(
+  client: LanguageClient,
+  provider: FindInFilesProvider,
+  view: TreeView<unknown>,
+  outputChannel: OutputChannel
+) {
   try {
     const include = await window
       .showInputBox({
@@ -160,7 +165,7 @@ async function toTopLevel(locations: Location[]): Promise<TopLevel[]> {
       const uri: Uri = Uri.parse(filePath);
 
       const readData = await workspace.fs.readFile(uri);
-      const fileContent = Buffer.from(readData).toString('utf8');
+      const fileContent = Buffer.from(readData).toString("utf8");
       const lines = fileContent.split(/\r?\n/);
 
       const newPositions: PositionInFile[] = locations.reduce(
@@ -185,7 +190,7 @@ class FindInFilesProvider implements TreeDataProvider<Node> {
   didChange: EventEmitter<Node> = new EventEmitter<Node>();
   onDidChangeTreeData?: Event<Node> = this.didChange.event;
 
-  constructor() { }
+  constructor() {}
 
   getTreeItem(element: Node): TreeItem {
     switch (element.key) {

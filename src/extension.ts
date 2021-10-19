@@ -221,7 +221,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   if (dottyIde.enabled) {
     outputChannel.appendLine(
       `Metals will not start since Dotty is enabled for this workspace. ` +
-      `To enable Metals, remove the file ${dottyIde.path} and run 'Reload window'`
+        `To enable Metals, remove the file ${dottyIde.path} and run 'Reload window'`
     );
     return;
   }
@@ -966,7 +966,14 @@ function launchMetals(
         context
       );
 
-      registerCommand(`metals.find-text-in-dependency-jars`, async () => executeFindInFiles(client, findInFilesProvider, findInFilesView, outputChannel));
+      registerCommand(`metals.find-text-in-dependency-jars`, async () =>
+        executeFindInFiles(
+          client,
+          findInFilesProvider,
+          findInFilesView,
+          outputChannel
+        )
+      );
 
       registerCommand(`metals.new-scala-worksheet`, async () => {
         const sendRequest = (args: Array<string | undefined>) => {
