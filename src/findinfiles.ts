@@ -1,5 +1,4 @@
 import {
-  Event,
   EventEmitter,
   ExtensionContext,
   OutputChannel,
@@ -18,21 +17,21 @@ import { LanguageClient, Location } from "vscode-languageclient/node";
 
 class TopLevel {
   constructor(
-    public readonly positions: PositionInFile[],
-    public readonly resourceUri: Uri
+    readonly positions: PositionInFile[],
+    readonly resourceUri: Uri
   ) {}
 
-  public readonly key = "TopLevel";
+  readonly key = "TopLevel";
 }
 
 class PositionInFile {
   constructor(
-    public readonly location: Location,
-    public readonly uri: Uri,
-    public label: string
+    readonly location: Location,
+    readonly uri: Uri,
+    readonly label: string
   ) {}
 
-  public readonly key = "PositionInFile";
+  readonly key = "PositionInFile";
 }
 
 type Node = TopLevel | PositionInFile;
@@ -68,7 +67,7 @@ export function createFindInFilesTreeView(
         case "TopLevel":
           return Promise.resolve();
         case "PositionInFile":
-          const positionInFile = head as PositionInFile;
+          const positionInFile = head;
           const textDocument = await workspace.openTextDocument(
             positionInFile.uri
           );
@@ -123,23 +122,14 @@ export async function executeFindInFiles(
         }
       });
 
-    const response = await client.sendRequest(
+    const locations = await client.sendRequest<Location[]>(
       "metals/findTextInDependencyJars",
       {
-        options: {
-          include: include,
-          exclude: undefined,
-        },
-        query: {
-          pattern: pattern,
-          isRegExp: undefined,
-          isCaseSensitive: undefined,
-          isWordMatch: undefined,
-        },
+        options: { include },
+        query: { pattern },
       }
     );
 
-    const locations: Location[] = response as Location[];
     const newTopLevel = await toTopLevel(locations);
 
     provider.update(newTopLevel);
@@ -155,10 +145,12 @@ export async function executeFindInFiles(
 }
 
 async function toTopLevel(locations: Location[]): Promise<TopLevel[]> {
-  const locationsByFile: Map<string, Location[]> = locations.reduce(
-    (entryMap, e) => entryMap.set(e.uri, [...(entryMap.get(e.uri) || []), e]),
-    new Map<string, Location[]>()
-  );
+  const locationsByFile = new Map<string, Location[]>();
+
+  for (const loc of locations) {
+    const previous = locationsByFile.get(loc.uri) || [];
+    locationsByFile.set(loc.uri, [...previous, loc]);
+  }
 
   return await Promise.all(
     Array.from(locationsByFile, async ([filePath, locations]) => {
@@ -168,29 +160,21 @@ async function toTopLevel(locations: Location[]): Promise<TopLevel[]> {
       const fileContent = Buffer.from(readData).toString("utf8");
       const lines = fileContent.split(/\r?\n/);
 
-      const newPositions: PositionInFile[] = locations.reduce(
-        (arr, location) => {
-          const line = lines[location.range.start.line];
-          const newPosition = new PositionInFile(
-            location,
-            uri,
-            line.trimStart()
-          );
-          return arr.concat(newPosition);
-        },
-        [] as PositionInFile[]
-      );
+      const newPositions = locations.reduce((arr, location) => {
+        const line = lines[location.range.start.line];
+        const newPosition = new PositionInFile(location, uri, line.trimStart());
+        return [...arr, newPosition];
+      }, [] as PositionInFile[]);
       return new TopLevel(newPositions, uri);
     })
   );
 }
 
 class FindInFilesProvider implements TreeDataProvider<Node> {
-  private items: TopLevel[] = Array.of();
-  didChange: EventEmitter<Node> = new EventEmitter<Node>();
-  onDidChangeTreeData?: Event<Node> = this.didChange.event;
+  private items: TopLevel[] = [];
 
-  constructor() {}
+  didChange = new EventEmitter<Node>();
+  onDidChangeTreeData = this.didChange.event;
 
   getTreeItem(element: Node): TreeItem {
     switch (element.key) {
@@ -204,11 +188,9 @@ class FindInFilesProvider implements TreeDataProvider<Node> {
         return topLevelResult;
       case "PositionInFile":
         const start = element.location.range.start;
-        const line: number = start.line;
-        const fileName: string | undefined = element.uri.fsPath
-          .split("/")
-          .pop();
-        const shortDescription: string = fileName + ":" + (line + 1);
+        const line = start.line;
+        const fileName = element.uri.fsPath.split("/").pop();
+        const shortDescription = fileName + ":" + (line + 1);
         const positionResult: TreeItem = {
           label: element.label,
           description: shortDescription,
@@ -244,7 +226,7 @@ class FindInFilesProvider implements TreeDataProvider<Node> {
   }
 
   update(newElems: TopLevel[]) {
-    this.items.splice(0, this.items.length, ...newElems);
+    this.items = newElems;
     this.didChange.fire(undefined);
   }
 }
