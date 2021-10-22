@@ -35,7 +35,7 @@ export class MetalsFileProvider implements TextDocumentContentProvider {
       })
       .then((result) => {
         const { value, error } = result as DecoderResponse;
-        if (value) {
+        if (value != null) {
           return value;
         } else {
           return error;
