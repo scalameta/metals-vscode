@@ -39,7 +39,6 @@ import {
   RevealOutputChannelOn,
   ExecuteCommandRequest,
   Location,
-  TextDocumentPositionParams,
   CancellationToken,
 } from "vscode-languageclient/node";
 import { LazyProgress } from "./lazy-progress";
@@ -79,17 +78,16 @@ import {
 } from "./decoration-protocol";
 import { clearTimeout } from "timers";
 import { increaseIndentPattern } from "./indentPattern";
-import { TastyResponse } from "./executeCommand";
 import { gotoLocation } from "./goToLocation";
 import { openSymbolSearch } from "./openSymbolSearch";
-import MetalsFileProvider from "./metalsContentProvider";
 import {
   createFindInFilesTreeView,
   executeFindInFiles,
   startFindInFilesProvider,
 } from "./findinfiles";
 import * as ext from "./hoverExtension";
-
+import { decodeAndShowFile, MetalsFileProvider } from "./metalsContentProvider";
+import { getTextDocumentPositionParams } from "./util";
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
 const downloadJava = "Download Java";
@@ -477,73 +475,43 @@ function launchMetals(
   registerTextDocumentContentProvider("metalsDecode", metalsFileProvider);
   registerTextDocumentContentProvider("jar", metalsFileProvider);
 
-  async function decodeAndShowFile(
-    uri: Uri,
-    additionalExtension: string,
-    decoder: string,
-    alwaysUpdate: boolean,
-    ...args: [string, string | number | boolean][]
-  ) {
-    if (!uri) {
-      // no uri supplied then use the current active file
-      const editor = window.visibleTextEditors.find(
-        (e) =>
-          isSupportedLanguage(e.document.languageId) ||
-          e.document.fileName.endsWith(additionalExtension)
-      );
-      if (editor) uri = editor.document.uri;
-    }
-    if (uri) {
-      // don't re-add extension. Refreshing the output file.
-      const newPath = uri.path.endsWith(additionalExtension)
-        ? uri.path
-        : `${uri.path}.${additionalExtension}`;
-      var query = `decoder=${encodeURIComponent(decoder)}`;
-      for (const keyValue of args) {
-        const additionalParam = `${encodeURIComponent(
-          keyValue[0]
-        )}=${encodeURIComponent(keyValue[1])}`;
-        query = `${query}&${additionalParam}`;
-      }
-      // don't re-add scheme. Refreshing the output file.
-      const additionalScheme =
-        uri.scheme == "metalsDecode" ? "" : "metalsDecode:";
-      const uriWithParams = Uri.parse(
-        additionalScheme + uri.scheme + ":" + newPath
-      ).with({
-        query: query,
-      });
-      // VSCode by default caches the output and won't refresh it
-      if (alwaysUpdate)
-        metalsFileProvider.onDidChangeEmitter.fire(uriWithParams);
-      let doc = await workspace.openTextDocument(uriWithParams);
-      await window.showTextDocument(doc, { preview: false });
-    }
-  }
-
   registerCommand("metals.show-javap-verbose", async (uri: Uri) => {
-    await decodeAndShowFile(uri, "javap-verbose", "javap", true, [
-      "verbose",
-      true,
-    ]);
+    await decodeAndShowFile(client, metalsFileProvider, uri, "javap-verbose");
   });
 
   registerCommand("metals.show-javap", async (uri: Uri) => {
-    await decodeAndShowFile(uri, "javap", "javap", true, ["verbose", false]);
+    await decodeAndShowFile(client, metalsFileProvider, uri, "javap");
   });
 
   registerCommand("metals.show-semanticdb-compact", async (uri: Uri) => {
-    await decodeAndShowFile(uri, "semanticdb-compact", "semanticdb", true, [
-      "format",
-      "compact",
-    ]);
+    await decodeAndShowFile(
+      client,
+      metalsFileProvider,
+      uri,
+      "semanticdb-compact"
+    );
   });
 
   registerCommand("metals.show-semanticdb-detailed", async (uri: Uri) => {
-    await decodeAndShowFile(uri, "semanticdb-detailed", "semanticdb", true, [
-      "format",
-      "detailed",
-    ]);
+    await decodeAndShowFile(
+      client,
+      metalsFileProvider,
+      uri,
+      "semanticdb-detailed"
+    );
+  });
+
+  registerCommand("metals.show-semanticdb-proto", async (uri: Uri) => {
+    await decodeAndShowFile(
+      client,
+      metalsFileProvider,
+      uri,
+      "semanticdb-proto"
+    );
+  });
+
+  registerCommand("metals.show-tasty", async (uri: Uri) => {
+    await decodeAndShowFile(client, metalsFileProvider, uri, "tasty-decoded");
   });
 
   registerCommand(
@@ -563,7 +531,6 @@ function launchMetals(
     () => {
       let doctor: WebviewPanel | undefined;
       let stacktrace: WebviewPanel | undefined;
-      let tastyView: WebviewPanel | undefined;
 
       function getDoctorPanel(isReload: boolean): WebviewPanel {
         if (!doctor) {
@@ -598,23 +565,6 @@ function launchMetals(
         }
         stacktrace.reveal();
         return stacktrace;
-      }
-
-      function getTastyPreview(): WebviewPanel {
-        if (!tastyView) {
-          tastyView = window.createWebviewPanel(
-            "metals-show-tasty",
-            "Show TASTy",
-            ViewColumn.Beside,
-            { enableCommandUris: true }
-          );
-          context.subscriptions.push(tastyView);
-          tastyView.onDidDispose(() => {
-            tastyView = undefined;
-          });
-        }
-        tastyView.reveal();
-        return tastyView;
       }
 
       [
@@ -718,17 +668,6 @@ function launchMetals(
             if (typeof html === "string") {
               const panel = getStacktracePanel();
               panel.webview.html = html;
-            }
-            break;
-          case "metals-show-tasty":
-            if (params.arguments && params.arguments[0]) {
-              const { tasty, error } = params.arguments[0] as TastyResponse;
-              if (tasty) {
-                const panel = getTastyPreview();
-                panel.webview.html = tasty;
-              } else if (error) {
-                window.showErrorMessage(error);
-              }
             }
             break;
           case ClientCommands.RunDoctor:
@@ -874,14 +813,6 @@ function launchMetals(
         });
       });
 
-      registerTextEditorCommand(`metals.show-tasty`, (editor) => {
-        const uri = editor.document.uri;
-        client.sendRequest(ExecuteCommandRequest.type, {
-          command: "show-tasty",
-          arguments: [uri.toString()],
-        });
-      });
-
       registerTextEditorCommand(
         `metals.${ServerCommands.CopyWorksheetOutput}`,
         (editor, _edit, _args) => {
@@ -939,11 +870,7 @@ function launchMetals(
             isSupportedLanguage(e.document.languageId)
           );
           if (editor) {
-            const pos = editor.selection.start;
-            const params: TextDocumentPositionParams = {
-              textDocument: { uri: editor.document.uri.toString() },
-              position: { line: pos.line, character: pos.character },
-            };
+            const params = getTextDocumentPositionParams(editor);
             return window.withProgress(
               {
                 location: ProgressLocation.Window,

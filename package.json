@@ -65,6 +65,16 @@
         "extensions": [
           ".javap"
         ]
+      },
+      {
+        "id": "tasty",
+        "aliases": [
+          "TASTy",
+          "tasty"
+        ],
+        "extensions": [
+          ".tasty-decoded"
+        ]
       }
     ],
     "grammars": [
@@ -77,6 +87,11 @@
         "language": "javap",
         "scopeName": "source.jvm-bytecode",
         "path": "./syntaxes/jvm-bytecode.json"
+      },
+      {
+        "language": "tasty",
+        "scopeName": "source.tasty",
+        "path": "./syntaxes/tasty.json"
       }
     ],
     "configurationDefaults": {
@@ -335,6 +350,11 @@
         "title": "Run doctor"
       },
       {
+        "command": "metals.show-tasty",
+        "category": "Metals",
+        "title": "Show decoded TASTy"
+      },
+      {
         "command": "metals.show-javap",
         "category": "Metals",
         "title": "Show decompiled with javap"
@@ -353,6 +373,11 @@
         "command": "metals.show-semanticdb-detailed",
         "category": "Metals",
         "title": "Show Semanticdb detailed"
+      },
+      {
+        "command": "metals.show-semanticdb-proto",
+        "category": "Metals",
+        "title": "Show Semanticdb proto"
       },
       {
         "command": "metals.new-scala-project",
@@ -383,11 +408,6 @@
         "command": "metals.analyze-stacktrace",
         "category": "Metals",
         "title": "Analyze Stacktrace"
-      },
-      {
-        "command": "metals.show-tasty",
-        "category": "Metals",
-        "title": "Show TASTy"
       },
       {
         "command": "metals.goto-super-method",
@@ -474,6 +494,10 @@
       ],
       "commandPalette": [
         {
+          "command": "metals.show-tasty",
+          "when": "metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.tasty || metals:enabled && resourceExtname==.tasty-decoded"
+        },
+        {
           "command": "metals.show-javap",
           "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.javap"
         },
@@ -488,6 +512,10 @@
         {
           "command": "metals.show-semanticdb-detailed",
           "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb || metals:enabled && resourceExtname==.semanticdb-detailed"
+        },
+        {
+          "command": "metals.show-semanticdb-proto",
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb || metals:enabled && resourceExtname==.semanticdb-proto"
         },
         {
           "command": "metals.reveal-active-file",
@@ -558,10 +586,6 @@
           "when": "metals:enabled"
         },
         {
-          "command": "metals.show-tasty",
-          "when": "metals:enabled"
-        },
-        {
           "command": "metals.goto-super-method",
           "when": "metals:enabled"
         },
@@ -586,11 +610,16 @@
         },
         {
           "submenu": "metals.analyze",
-          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.semanticdb",
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.semanticdb || metals:enabled && resourceExtname==.tasty",
           "group": "navigation@3"
         }
       ],
       "metals.analyze": [
+        {
+          "command": "metals.show-tasty",
+          "when": "metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.tasty || metals:enabled && resourceExtname==.tasty-decoded",
+          "group": "metals-1@1"
+        },
         {
           "command": "metals.show-javap",
           "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class",
@@ -610,6 +639,11 @@
           "command": "metals.show-semanticdb-detailed",
           "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb",
           "group": "metals-3@2"
+        },
+        {
+          "command": "metals.show-semanticdb-proto",
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb",
+          "group": "metals-3@3"
         }
       ]
     },
