@@ -80,6 +80,12 @@ import { TastyResponse } from "./executeCommand";
 import { gotoLocation } from "./goToLocation";
 import { openSymbolSearch } from "./openSymbolSearch";
 import MetalsFileProvider from "./metalsContentProvider";
+import {
+  createFindInFilesTreeView,
+  executeFindInFiles,
+  startFindInFilesProvider,
+} from "./findinfiles";
+
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
 const downloadJava = "Download Java";
@@ -952,6 +958,21 @@ function launchMetals(
             arguments: [directory?.toString()],
           });
         }
+      );
+
+      const findInFilesProvider = startFindInFilesProvider(context);
+      const findInFilesView = createFindInFilesTreeView(
+        findInFilesProvider,
+        context
+      );
+
+      registerCommand(`metals.find-text-in-dependency-jars`, async () =>
+        executeFindInFiles(
+          client,
+          findInFilesProvider,
+          findInFilesView,
+          outputChannel
+        )
       );
 
       registerCommand(`metals.new-scala-worksheet`, async () => {

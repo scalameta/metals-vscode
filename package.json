@@ -92,6 +92,11 @@
           "id": "metals-explorer",
           "title": "Metals",
           "icon": "images/scalameta.svg"
+        },
+        {
+          "id": "metals-find-in-files",
+          "title": "Find in files (Metals)",
+          "icon": "$(search)"
         }
       ]
     },
@@ -103,6 +108,12 @@
       }
     ],
     "views": {
+      "metals-find-in-files": [
+        {
+          "id": "metalsFindInFiles",
+          "name": "Find in files (Metals)"
+        }
+      ],
       "metals-explorer": [
         {
           "id": "metalsPackages",
@@ -432,6 +443,11 @@
         "command": "metals.symbol-search",
         "category": "Metals",
         "title": "Search symbol in workspace"
+      },
+      {
+        "command": "metals.find-text-in-dependency-jars",
+        "category": "Metals",
+        "title": "Find text in dependency JAR files"
       }
     ],
     "submenus": [
