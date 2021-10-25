@@ -52,10 +52,16 @@ describe("getJavaHome", () => {
     expect(javaHome).toBe(java8Jdk.path);
   });
 
-  it("prefers the most recent installed JDK", async () => {
+  it("prefers the most recent installed JDK 11", async () => {
     mockLocateJavaHome([java11Jdk, java8Jdk, java8Jre]);
     const javaHome = await require("../getJavaHome").getJavaHome(undefined);
     expect(javaHome).toBe(java11Jdk.path);
+  });
+
+  it("prefers the most recent installed JDK 17", async () => {
+    mockLocateJavaHome([java17Jdk, java11Jdk, java8Jdk, java8Jre]);
+    const javaHome = await require("../getJavaHome").getJavaHome(undefined);
+    expect(javaHome).toBe(java17Jdk.path);
   });
 
   it("prefers the most recent security patch", async () => {
@@ -82,6 +88,13 @@ const java8Jre = {
 const java11Jdk = {
   path: "/path/to/java11jdk",
   version: "1.11.0",
+  security: 1,
+  isJDK: true,
+};
+
+const java17Jdk = {
+  path: "/path/to/java17jdk",
+  version: "1.17.0",
   security: 1,
   isJDK: true,
 };
