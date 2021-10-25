@@ -1,5 +1,28 @@
 ## metals-languageclient changelog
 
+### v0.5.3 (2021/10/25 15:05 +00:00)
+- [5f56249](https://github.com/scalameta/metals-languageclient/commit/5f562498dfb6231761c53777edde80999f010995) Allow to use JDK versions up to 17 (@tgodzik)
+- [07d8c07](https://github.com/scalameta/metals-languageclient/commit/07d8c07cad65d281e0bbca7f9e12d29723285e86) Bump @types/node from 16.11.2 to 16.11.4 (@dependabot[bot])
+- [97ef6e1](https://github.com/scalameta/metals-languageclient/commit/97ef6e19cf7539e5cb8163ec86dcec18fe318d20) Bump shell-quote from 1.7.2 to 1.7.3 (@dependabot[bot])
+- [851e1c5](https://github.com/scalameta/metals-languageclient/commit/851e1c577cc030aefd30f604b2e73cc66c7ffc4e) Bump @types/node from 16.11.1 to 16.11.2 (@dependabot[bot])
+- [a592056](https://github.com/scalameta/metals-languageclient/commit/a592056b94f8ae062114f027a3ea318791b5c5c5) Bump @types/semver from 7.3.8 to 7.3.9 (@dependabot[bot])
+- [5f7efda](https://github.com/scalameta/metals-languageclient/commit/5f7efda061c33a7b729a36c8c3747e292e874dd5) Bump @types/node from 16.11.0 to 16.11.1 (@dependabot[bot])
+- [f5c168c](https://github.com/scalameta/metals-languageclient/commit/f5c168cacd6c61166a627c0768297cfa6d939f3d) Bump fp-ts from 2.11.4 to 2.11.5 (@dependabot[bot])
+- [2365fcf](https://github.com/scalameta/metals-languageclient/commit/2365fcfb146df8e85b5abbac4a3fdecb0308605a) Bump @types/node from 16.10.9 to 16.11.0 (@dependabot[bot])
+- [80c14c5](https://github.com/scalameta/metals-languageclient/commit/80c14c5bf88748cfa13d24d6aaceef020be2e638) Bump @types/node from 16.10.4 to 16.10.9 (@dependabot[bot])
+- [86645bc](https://github.com/scalameta/metals-languageclient/commit/86645bcdef81d6b4d2b934598857471738e31b6e) Bump @types/node from 16.10.3 to 16.10.4 (@dependabot[bot])
+- [10694ea](https://github.com/scalameta/metals-languageclient/commit/10694ea9988914e438efe7c4c2b9bbf33efb8e5d) Bump @types/node from 16.10.2 to 16.10.3 (@dependabot[bot])
+- [f60f46a](https://github.com/scalameta/metals-languageclient/commit/f60f46a5bba492086e97192f0825972f7fd17834) Bump @types/node from 16.10.1 to 16.10.2 (@dependabot[bot])
+- [aedf9e6](https://github.com/scalameta/metals-languageclient/commit/aedf9e6ba01349266d0e91f243a04890c0af4e0c) Bump fp-ts from 2.11.3 to 2.11.4 (@dependabot[bot])
+- [2764fd7](https://github.com/scalameta/metals-languageclient/commit/2764fd7a0912a57bd8f1cd419922a4574f5395c8) Bump @types/node from 16.9.6 to 16.10.1 (@dependabot[bot])
+- [94427ed](https://github.com/scalameta/metals-languageclient/commit/94427ed69a9e7ce94c9d5073be80543c01db72ba) Bump @types/node from 16.9.4 to 16.9.6 (@dependabot[bot])
+- [dc29c46](https://github.com/scalameta/metals-languageclient/commit/dc29c46db61e93170d88cdb37de574f608d20dc9) Bump fp-ts from 2.11.2 to 2.11.3 (@dependabot[bot])
+- [9b9ec90](https://github.com/scalameta/metals-languageclient/commit/9b9ec90bf83f5f7861d724ae5e671d69c4228162) add virtual document config option (@Arthurm1)
+- [6761d49](https://github.com/scalameta/metals-languageclient/commit/6761d4903b47cb36ff6f9245c3c5368d9b613a2e) Bump tmpl from 1.0.4 to 1.0.5 (@dependabot[bot])
+- [64e2cf9](https://github.com/scalameta/metals-languageclient/commit/64e2cf96ac4990879944f5af8ec4d42be336ae50) Bump @types/jest from 27.0.1 to 27.0.2 (@dependabot[bot])
+- [fbddb20](https://github.com/scalameta/metals-languageclient/commit/fbddb207cdfdacd0e6ad7eaa96f47198aaa4242b) Bump @types/node from 16.9.2 to 16.9.4 (@dependabot[bot])
+- [41fc31e](https://github.com/scalameta/metals-languageclient/commit/41fc31e131cd3039118a2fa145bf243f37158b91) Release v0.5.2
+
 ### v0.5.2 (2021/09/17 05:08 +00:00)
 - [36a2b2b](https://github.com/scalameta/metals-languageclient/commit/36a2b2bf6f76a7e1f6daf706c6f73ca9f49a4449) Bump prettier from 2.4.0 to 2.4.1 (@dependabot[bot])
 - [2682c42](https://github.com/scalameta/metals-languageclient/commit/2682c4277a0d651f54ec73cf394f02177f9c6d13) Bump @types/node from 16.9.1 to 16.9.2 (@dependabot[bot])
