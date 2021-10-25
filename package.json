@@ -788,7 +788,7 @@
     "vsce": "1.100.2"
   },
   "dependencies": {
-    "metals-languageclient": "0.5.2",
+    "metals-languageclient": "0.5.3",
     "promisify-child-process": "4.1.1",
     "vscode-languageclient": "7.0.0"
   },
