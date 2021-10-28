@@ -1,4 +1,4 @@
-export function increaseIndentPattern() {
+export function increaseIndentPattern(): RegExp {
   const old_if = /\b(if|while)\s+\([^\)]*?\)/;
   const keywords_not_ending = /((?<!\bend\b\s*?)\b(if|while|for|match|try))/;
 

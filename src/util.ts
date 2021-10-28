@@ -18,10 +18,10 @@ export function getTextDocumentPositionParams(
 export function executeCommand<T>(
   client: LanguageClient,
   command: string,
-  args: any
+  ...args: any[]
 ): Promise<T> {
   return client.sendRequest(ExecuteCommandRequest.type, {
     command,
-    arguments: [args],
+    arguments: args,
   });
 }

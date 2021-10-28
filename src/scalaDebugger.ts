@@ -28,9 +28,9 @@ export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
 }
 
 export async function start(
-  noDebug: Boolean,
+  noDebug: boolean,
   ...parameters: any[]
-): Promise<Boolean> {
+): Promise<boolean> {
   return commands
     .executeCommand("workbench.action.files.save")
     .then(() =>
@@ -40,7 +40,9 @@ export async function start(
       )
     )
     .then((response) => {
-      if (response === undefined) return false;
+      if (response === undefined) {
+        return false;
+      }
 
       const port = debugServerFromUri(response.uri).port;
 
@@ -95,7 +97,9 @@ class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
     _folder: WorkspaceFolder | undefined,
     debugConfiguration: DebugConfiguration
   ): ProviderResult<DebugConfiguration> {
-    if (debugConfiguration.type === undefined) return null;
+    if (debugConfiguration.type === undefined) {
+      return null;
+    }
     return debugConfiguration;
   }
 
@@ -230,7 +234,9 @@ class ScalaDebugServerFactory implements vscode.DebugAdapterDescriptorFactory {
           session.configuration
         )
         .then((debugSession) => {
-          if (debugSession === undefined) return null;
+          if (debugSession === undefined) {
+            return null;
+          }
           return debugServerFromUri(debugSession.uri);
         });
     }

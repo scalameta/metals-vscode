@@ -66,7 +66,7 @@ export function createFindInFilesTreeView(
       switch (head.key) {
         case "TopLevel":
           return Promise.resolve();
-        case "PositionInFile":
+        case "PositionInFile": {
           const positionInFile = head;
           const textDocument = await workspace.openTextDocument(
             positionInFile.uri
@@ -78,6 +78,8 @@ export function createFindInFilesTreeView(
             new Position(range.end.line, range.end.character)
           );
           textEditor.revealRange(vscodeRange, TextEditorRevealType.InCenter);
+          break;
+        }
       }
     }
   });
@@ -91,7 +93,7 @@ export async function executeFindInFiles(
   provider: FindInFilesProvider,
   view: TreeView<unknown>,
   outputChannel: OutputChannel
-) {
+): Promise<void> {
   try {
     const include = await window
       .showInputBox({
@@ -136,7 +138,9 @@ export async function executeFindInFiles(
 
     if (newTopLevel.length != 0) {
       return await view.reveal(newTopLevel[0]);
-    } else return await Promise.resolve();
+    } else {
+      return await Promise.resolve();
+    }
   } catch (error) {
     outputChannel.appendLine(
       "Error finding text in dependency jars: " + JSON.stringify(error)
@@ -178,7 +182,7 @@ class FindInFilesProvider implements TreeDataProvider<Node> {
 
   getTreeItem(element: Node): TreeItem {
     switch (element.key) {
-      case "TopLevel":
+      case "TopLevel": {
         const topLevelResult: TreeItem = {
           resourceUri: element.resourceUri,
           description: element.resourceUri.path,
@@ -186,7 +190,8 @@ class FindInFilesProvider implements TreeDataProvider<Node> {
         };
 
         return topLevelResult;
-      case "PositionInFile":
+      }
+      case "PositionInFile": {
         const start = element.location.range.start;
         const line = start.line;
         const fileName = element.uri.fsPath.split("/").pop();
@@ -198,6 +203,7 @@ class FindInFilesProvider implements TreeDataProvider<Node> {
         };
 
         return positionResult;
+      }
     }
   }
 

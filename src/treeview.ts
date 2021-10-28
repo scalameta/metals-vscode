@@ -93,7 +93,9 @@ export function startTreeView(
   client.onNotification(MetalsTreeViewDidChange.type, (params) => {
     params.nodes.forEach((node) => {
       const provider = allProviders.get(node.viewId);
-      if (!provider) return;
+      if (!provider) {
+        return;
+      }
       if (node.nodeUri) {
         provider.items.set(node.nodeUri, node);
       }
@@ -114,12 +116,14 @@ export function startTreeView(
           const isExpanded = expandedNode(params.viewId).has(uri);
           const isDestinationNode = i === 0;
           if (isExpanded) {
-            if (isDestinationNode)
+            if (isDestinationNode) {
               return view.reveal(uri, {
                 select: true,
                 focus: true,
               });
-            else return Promise.resolve();
+            } else {
+              return Promise.resolve();
+            }
           } else {
             // Recursively resolves the parent nodes before revealing the final child
             // node at index 0.
@@ -177,7 +181,9 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
   // Populate TreeItem based on cached children response from the server.
   getTreeItem(uri: string): TreeItem {
     const item = this.items.get(uri);
-    if (!item) return {};
+    if (!item) {
+      return {};
+    }
     const result: TreeItem = {
       label: item.label,
       id: item.nodeUri,
@@ -232,8 +238,9 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
   icons: Map<string, TreeItem["iconPath"]> = new Map();
   iconPath(icon: string): TreeItem["iconPath"] | ThemeIcon {
     const result = this.icons.get(icon);
-    if (result) return result;
-    else {
+    if (result) {
+      return result;
+    } else {
       const noTheme = this.joinIcon(icon);
       if (noTheme) {
         this.icons.set(icon, noTheme);
@@ -254,8 +261,11 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
 
   joinIcon(icon: string): string | undefined {
     const file = path.join(this.context.extensionPath, "icons", icon + ".svg");
-    if (fs.existsSync(file)) return file;
-    else return undefined;
+    if (fs.existsSync(file)) {
+      return file;
+    } else {
+      return undefined;
+    }
   }
 }
 
