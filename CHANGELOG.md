@@ -2,6 +2,10 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.10.13 (2021/10/28 08:41 +00:00)
+- [9b4fc92](https://github.com/scalameta/metals-vscode/commit/9b4fc929bb1ae1097ebd6481e8e469f975d1458e) Revert #717 (@dos65)
+- [a9737ee](https://github.com/scalameta/metals-vscode/commit/a9737ee64165d1515b9bea0ad366f489e58614db) v1.10.12
+
 ### v1.10.12 (2021/10/26 11:04 +00:00)
 - [62147d9](https://github.com/scalameta/metals-vscode/commit/62147d9855d727b72a5b94cf0fcfb782242065e5) Bump @types/node from 16.11.4 to 16.11.6 (@dependabot[bot])
 - [4be9475](https://github.com/scalameta/metals-vscode/commit/4be9475ae628fd6054dadb530b6533f124db9f73) Update languageclient to 0.5.3 (@tgodzik)
