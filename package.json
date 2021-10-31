@@ -67,6 +67,12 @@
         ]
       },
       {
+        "id": "java",
+        "extensions": [
+          ".cfr"
+        ]
+      },
+      {
         "id": "tasty",
         "aliases": [
           "TASTy",
@@ -356,6 +362,11 @@
         "title": "Show decoded TASTy"
       },
       {
+        "command": "metals.show-cfr",
+        "category": "Metals",
+        "title": "Show decompiled with CFR"
+      },
+      {
         "command": "metals.show-javap",
         "category": "Metals",
         "title": "Show decompiled with javap"
@@ -499,6 +510,10 @@
           "when": "metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.tasty || metals:enabled && resourceExtname==.tasty-decoded"
         },
         {
+          "command": "metals.show-cfr",
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.cfr"
+        },
+        {
           "command": "metals.show-javap",
           "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.javap"
         },
@@ -622,29 +637,34 @@
           "group": "metals-1@1"
         },
         {
-          "command": "metals.show-javap",
+          "command": "metals.show-cfr",
           "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class",
           "group": "metals-2@1"
         },
         {
+          "command": "metals.show-javap",
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class",
+          "group": "metals-3@1"
+        },
+        {
           "command": "metals.show-javap-verbose",
           "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class",
-          "group": "metals-2@2"
+          "group": "metals-3@2"
         },
         {
           "command": "metals.show-semanticdb-compact",
           "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb",
-          "group": "metals-3@1"
+          "group": "metals-4@1"
         },
         {
           "command": "metals.show-semanticdb-detailed",
           "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb",
-          "group": "metals-3@2"
+          "group": "metals-4@2"
         },
         {
           "command": "metals.show-semanticdb-proto",
           "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb",
-          "group": "metals-3@3"
+          "group": "metals-4@3"
         }
       ]
     },
