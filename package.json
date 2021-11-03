@@ -153,7 +153,7 @@
       "properties": {
         "metals.serverVersion": {
           "type": "string",
-          "default": "0.10.8",
+          "default": "0.10.9",
           "markdownDescription": "The version of the Metals server artifact. Requires reloading the window.\n\n**Change only if you know what you're doing**"
         },
         "metals.serverProperties": {
@@ -254,6 +254,7 @@
           "default": "automatic",
           "enum": [
             "automatic",
+            "2.13.7",
             "2.13.6",
             "2.13.5",
             "2.13.4",
