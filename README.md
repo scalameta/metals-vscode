@@ -27,28 +27,25 @@ The following table shows the status of various features.
 ## Requirements
 
 **Java 8, 11, 17 provided by OpenJDK or Oracle**. Eclipse OpenJ9 is not
-supported, please make sure the `JAVA_HOME` environment variable
-points to a valid Java 8, 11 or 17 installation.
+supported, please make sure the `JAVA_HOME` environment variable points to a
+valid Java 8, 11 or 17 installation.
 
-**macOS, Linux or Windows**. Metals is developed on many operating systems and 
+**macOS, Linux or Windows**. Metals is developed on many operating systems and
 every PR is tested on Ubuntu, Windows and MacOS.
 
 **Scala 2.13, 2.12, 2.11 and Scala 3**. Metals supports these Scala versions:
 
- - **Scala 2.13**:
-   2.13.6, 2.13.5, 2.13.4, 2.13.3, 2.13.2, 2.13.1, 2.13.0
+- **Scala 2.13**: 2.13.7, 2.13.6, 2.13.5, 2.13.4, 2.13.3, 2.13.2, 2.13.1, 2.13.0
 
- - **Scala 2.12**:
-   2.12.15, 2.12.14, 2.12.13, 2.12.12, 2.12.11, 2.12.10, 2.12.9, 2.12.8
+- **Scala 2.12**: 2.12.15, 2.12.14, 2.12.13, 2.12.12, 2.12.11, 2.12.10, 2.12.9,
+  2.12.8
 
- - **Scala 2.11**:
-   2.11.12
+- **Scala 2.11**: 2.11.12
 
- - **Scala 3**:
-   3.1.1-RC1, 3.1.0, 3.0.2, 3.0.1, 3.0.0
+- **Scala 3**: 3.1.1-RC1, 3.1.0, 3.0.2, 3.0.1, 3.0.0
 
-Note that 2.11.x support is deprecated and it will be removed in future releases.
-It's recommended to upgrade to Scala 2.12 or Scala 2.13
+Note that 2.11.x support is deprecated and it will be removed in future
+releases. It's recommended to upgrade to Scala 2.12 or Scala 2.13
 
 ## Installation
 
@@ -452,6 +449,26 @@ You can also import `scalac` options in a special `$scalac` import like below:
 
 ```scala
 import $scalac.`-Ywarn-unused`
+```
+
+## Searching a symbol in the workspace
+
+Metals provides an alternative command to the native "Go to symbol in
+workspace..." command, in order to work around some VS Code limitations (see
+[this issue](https://github.com/microsoft/vscode/issues/98125) for more context)
+and provide richer search capabilities.
+
+You can invoke this command from the command palette (look for "Metals: Search
+symbol in workspace"). Optionally you can also bind this command to a shorcut.
+For example, if you want to replace the native command with the Metals one you
+can configure this shortcut:
+
+```js
+  {
+    "key": "ctrl+t", // or "cmd+t" if you're on macOS
+    "command": "metals.symbol-search",
+    "when": "editorLangId == scala"
+  }
 ```
 
 ## Coming from IntelliJ
