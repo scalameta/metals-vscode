@@ -791,7 +791,7 @@
     "prettier": "2.4.1",
     "ts-jest": "^27.0.7",
     "typescript": "4.4.4",
-    "vsce": "1.100.2"
+    "vsce": "1.102.0"
   },
   "dependencies": {
     "metals-languageclient": "0.5.3",
