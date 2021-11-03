@@ -2,6 +2,19 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.10.14 (2021/11/03 14:33 +00:00)
+- [7efe73b](https://github.com/scalameta/metals-vscode/commit/7efe73b439cef41b163b80853fb292701422e770) Update plugin with the new release (@tgodzik)
+- [8fe96b6](https://github.com/scalameta/metals-vscode/commit/8fe96b648752d1f5a9e9d32308133b1402681524) Bump vsce from 1.100.2 to 1.102.0 (@dependabot[bot])
+- [1b3a92d](https://github.com/scalameta/metals-vscode/commit/1b3a92db92485d064575405f5d155ccbf2cacb47) Bump @typescript-eslint/eslint-plugin from 4.32.0 to 4.33.0 (@dependabot[bot])
+- [3cd8383](https://github.com/scalameta/metals-vscode/commit/3cd8383303ed9dd0efd761082dcb42bee7cc4571) Bump @typescript-eslint/parser from 4.32.0 to 4.33.0 (@dependabot[bot])
+- [d98e292](https://github.com/scalameta/metals-vscode/commit/d98e292b74b5c88e0c71cf57c43f2f476ad998c5) Bump ansi-regex from 5.0.0 to 5.0.1 (@dependabot[bot])
+- [8a059cc](https://github.com/scalameta/metals-vscode/commit/8a059cc525f313adf6594ed725a56d1761f991be) Bump nth-check from 2.0.0 to 2.0.1 (@dependabot[bot])
+- [3c30fd8](https://github.com/scalameta/metals-vscode/commit/3c30fd84ba5df13a6520667b7b7d59431601cb55) Bump tmpl from 1.0.4 to 1.0.5 (@dependabot[bot])
+- [a4c2246](https://github.com/scalameta/metals-vscode/commit/a4c2246b3b6e46f38a9e7d6d85b59f616922f002) Add extension.json (@kpodsiad)
+- [025959b](https://github.com/scalameta/metals-vscode/commit/025959b9aa2db0de2b6b33e37f00812b21810024) Setup eslint (@kpodsiad)
+- [bec7341](https://github.com/scalameta/metals-vscode/commit/bec73418f0524f4c1960cd53086e7507ae1f457d) Add eslint stage to CI (@kpodsiad)
+- [aed92ba](https://github.com/scalameta/metals-vscode/commit/aed92ba16594b10eeed6becee529c3519c6c12c6) v1.10.13
+
 ### v1.10.13 (2021/10/28 08:41 +00:00)
 - [9b4fc92](https://github.com/scalameta/metals-vscode/commit/9b4fc929bb1ae1097ebd6481e8e469f975d1458e) Revert #717 (@dos65)
 - [a9737ee](https://github.com/scalameta/metals-vscode/commit/a9737ee64165d1515b9bea0ad366f489e58614db) v1.10.12
