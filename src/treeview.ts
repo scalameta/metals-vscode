@@ -4,7 +4,6 @@ import * as fs from "fs";
 import {
   TreeDataProvider,
   TreeItem,
-  Event,
   EventEmitter,
   TreeItemCollapsibleState,
   window,
@@ -167,8 +166,8 @@ export function startTreeView(
  * node children and parents to the Metals server.
  */
 class MetalsTreeDataProvider implements TreeDataProvider<string> {
-  didChange = new EventEmitter<string>();
-  onDidChangeTreeData?: Event<string> = this.didChange.event;
+  didChange = new EventEmitter<string | undefined>();
+  onDidChangeTreeData = this.didChange.event;
   items: Map<string, MetalsTreeViewNode> = new Map();
   constructor(
     readonly client: LanguageClient,
@@ -246,11 +245,10 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
         this.icons.set(icon, noTheme);
         return noTheme;
       } else {
-        const themed = {
-          dark: this.joinIcon(icon + "-dark"),
-          light: this.joinIcon(icon + "-light"),
-        };
-        if (themed.dark && themed.light) {
+        const dark = this.joinIcon(icon + "-dark");
+        const light = this.joinIcon(icon + "-light");
+        if (dark && light) {
+          const themed = { dark, light };
           this.icons.set(icon, themed);
           return themed;
         }

@@ -177,7 +177,7 @@ async function toTopLevel(locations: Location[]): Promise<TopLevel[]> {
 class FindInFilesProvider implements TreeDataProvider<Node> {
   private items: TopLevel[] = [];
 
-  didChange = new EventEmitter<Node>();
+  didChange = new EventEmitter<Node | undefined>();
   onDidChangeTreeData = this.didChange.event;
 
   getTreeItem(element: Node): TreeItem {
