@@ -2,6 +2,19 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.10.15 (2021/11/12 14:44 +00:00)
+- [310a5f4](https://github.com/scalameta/metals-vscode/commit/310a5f4a9ecf580e2359b5610babef6373a0dc4c) Fix recently changed go-to-super-method and super-method-hierarchy commands (@tgodzik)
+- [958ec99](https://github.com/scalameta/metals-vscode/commit/958ec99f91d44afe52ded8fba4e388ab9d84eb27) Bump vsce from 2.2.0 to 2.3.0 (@dependabot[bot])
+- [ce618ff](https://github.com/scalameta/metals-vscode/commit/ce618ffa062065fd88be439a6356aa968dab2ab8) Bump vs code version to ^1.59 (@kpodsiad)
+- [8a3b2bd](https://github.com/scalameta/metals-vscode/commit/8a3b2bdbe14e6e03cb3bdd6b96489ed4f3ab5e4c) Bump @types/node from 16.11.6 to 16.11.7 (@dependabot[bot])
+- [c86b85e](https://github.com/scalameta/metals-vscode/commit/c86b85ebbcb90729b25f0eba69791b22a60fee5d) Change the number of successful checks for mergify to 5 (@tgodzik)
+- [f3f146b](https://github.com/scalameta/metals-vscode/commit/f3f146bc974ad46ff94f69fc795835bee7819011) Revert "Merge pull request #750 from scalameta/dependabot/npm_and_yarn/types/vscode-1.62.0" (@tgodzik)
+- [e55afbb](https://github.com/scalameta/metals-vscode/commit/e55afbb83100c7380a8f81c2cfc323b1d10b5401) Bump @types/vscode from 1.43.0 to 1.62.0 (@dependabot[bot])
+- [62d851f](https://github.com/scalameta/metals-vscode/commit/62d851fae61e1e981272a55173e3b9b3fd7d488e) Bump vsce from 2.1.0 to 2.2.0 (@dependabot[bot])
+- [9c73f83](https://github.com/scalameta/metals-vscode/commit/9c73f83167cd120b3e75f771cc90db43c61c0e7b) Bump vsce from 1.103.0 to 2.1.0 (@dependabot[bot])
+- [7cf2c4d](https://github.com/scalameta/metals-vscode/commit/7cf2c4d732225282fbbc9bcf8c12f68fe13763df) Bump vsce from 1.102.0 to 1.103.0 (@dependabot[bot])
+- [d37a0ea](https://github.com/scalameta/metals-vscode/commit/d37a0eadec9aea4c3e4329b33a4621a95225eab1) v1.10.14
+
 ### v1.10.14 (2021/11/03 14:33 +00:00)
 - [7efe73b](https://github.com/scalameta/metals-vscode/commit/7efe73b439cef41b163b80853fb292701422e770) Update plugin with the new release (@tgodzik)
 - [8fe96b6](https://github.com/scalameta/metals-vscode/commit/8fe96b648752d1f5a9e9d32308133b1402681524) Bump vsce from 1.100.2 to 1.102.0 (@dependabot[bot])
