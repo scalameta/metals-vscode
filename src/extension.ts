@@ -738,12 +738,7 @@ function launchMetals(
         (editor) => {
           client.sendRequest(ExecuteCommandRequest.type, {
             command: ServerCommands.GotoSuperMethod,
-            arguments: [
-              {
-                document: editor.document.uri.toString(true),
-                position: editor.selection.start,
-              },
-            ],
+            arguments: [getTextDocumentPositionParams(editor)],
           });
         }
       );
@@ -753,12 +748,7 @@ function launchMetals(
         (editor) => {
           client.sendRequest(ExecuteCommandRequest.type, {
             command: ServerCommands.SuperMethodHierarchy,
-            arguments: [
-              {
-                document: editor.document.uri.toString(true),
-                position: editor.selection.start,
-              },
-            ],
+            arguments: [getTextDocumentPositionParams(editor)],
           });
         }
       );
