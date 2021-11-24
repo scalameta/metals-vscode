@@ -780,7 +780,7 @@
   },
   "devDependencies": {
     "@types/jest": "^27.0.3",
-    "@types/node": "16.11.9",
+    "@types/node": "16.11.10",
     "@types/shell-quote": "1.7.1",
     "@types/vscode": "1.59.0",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
