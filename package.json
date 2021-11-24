@@ -39,7 +39,8 @@
   },
   "icon": "images/logo.png",
   "categories": [
-    "Programming Languages"
+    "Programming Languages",
+    "Debuggers"
   ],
   "activationEvents": [
     "onCommand:metals.new-scala-project",
