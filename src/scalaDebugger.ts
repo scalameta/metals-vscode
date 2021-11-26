@@ -6,19 +6,23 @@ import {
   ProviderResult,
   WorkspaceFolder,
   DebugAdapterDescriptor,
+  DebugConfigurationProviderTriggerKind,
 } from "vscode";
-import { ServerCommands } from "metals-languageclient";
+import {
+  DebugDiscoveryParams,
+  RunType,
+  ServerCommands,
+} from "metals-languageclient";
 
 const configurationType = "scala";
-const launchRequestType = "launch";
-const attachRequestType = "attach";
 
 export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
   outputChannel.appendLine("Initializing Scala Debugger");
   return [
     vscode.debug.registerDebugConfigurationProvider(
       configurationType,
-      new ScalaConfigProvider()
+      new ScalaMainConfigProvider(),
+      DebugConfigurationProviderTriggerKind.Initial
     ),
     vscode.debug.registerDebugAdapterDescriptorFactory(
       configurationType,
@@ -58,164 +62,39 @@ export async function start(
     });
 }
 
-class ScalaConfigProvider implements vscode.DebugConfigurationProvider {
-  provideDebugConfigurations(): ProviderResult<DebugConfiguration[]> {
-    const mainClassPick = "Main Class";
-    const testClassPick = "Test Suite";
-    const attachPick = "Attach to JVM";
-
-    return vscode.window
-      .showQuickPick([mainClassPick, testClassPick, attachPick], {
-        placeHolder:
-          "Pick the kind of the class to debug (Press 'Escape' to create 'launch.json' with no initial configuration)",
-      })
-      .then((result) => {
-        switch (result) {
-          case mainClassPick:
-            return this.provideDebugMainClassConfiguration().then((config) => [
-              config,
-            ]);
-          case testClassPick:
-            return this.provideDebugTestClassConfiguration().then((config) => [
-              config,
-            ]);
-          case attachPick:
-            return this.provideDebugAttachConfiguration().then((config) => [
-              config,
-            ]);
-          default:
-            return [];
-        }
-      })
-      .then(
-        (result) => result,
-        () => []
-      );
-  }
-
+class ScalaMainConfigProvider implements vscode.DebugConfigurationProvider {
   resolveDebugConfiguration(
     _folder: WorkspaceFolder | undefined,
     debugConfiguration: DebugConfiguration
   ): ProviderResult<DebugConfiguration> {
-    if (debugConfiguration.type === undefined) {
-      return null;
-    }
-    return debugConfiguration;
-  }
+    let editor = vscode.window.activeTextEditor;
+    // debugConfiguration.type is undefined if there are no configurations
+    // we are running whatever is in the file
+    if (debugConfiguration.type === undefined && editor) {
+      const args: DebugDiscoveryParams = {
+        path: editor.document.uri.toString(true),
+        runType: RunType.RunOrTestFile,
+      };
+      return vscode.commands
+        .executeCommand<DebugSession>(ServerCommands.DebugAdapterStart, args)
+        .then((response) => {
+          if (response === undefined) {
+            return;
+          }
 
-  private provideDebugMainClassConfiguration(): Thenable<DebugConfiguration> {
-    return this.askForOptionalBuildTarget().then((buildTarget) =>
-      this.askForClassName().then((className) =>
-        this.askForConfigurationName(className).then((name) => {
-          const result: DebugConfiguration = {
+          const port = debugServerFromUri(response.uri).port;
+
+          const configuration: vscode.DebugConfiguration = {
             type: configurationType,
-            name: name,
-            request: launchRequestType,
-            mainClass: className,
-            buildTarget: buildTarget,
-            args: [],
+            name: response.name,
+            noDebug: false,
+            request: "launch",
+            debugServer: port, // note: MUST be a number. vscode magic - automatically connects to the server
           };
-          return result;
-        })
-      )
-    );
-  }
-
-  private provideDebugTestClassConfiguration(): Thenable<DebugConfiguration> {
-    return this.askForOptionalBuildTarget().then((buildTarget) =>
-      this.askForClassName().then((className) =>
-        this.askForConfigurationName(className).then((name) => {
-          const result: DebugConfiguration = {
-            type: configurationType,
-            name: name,
-            request: launchRequestType,
-            testClass: className,
-            buildTarget: buildTarget,
-          };
-          return result;
-        })
-      )
-    );
-  }
-
-  provideDebugAttachConfiguration(): Thenable<DebugConfiguration> {
-    return this.askForHostName().then((hostName) =>
-      this.askForPort().then((port) =>
-        this.askForBuildTarget().then((buildTarget) => {
-          const result: DebugConfiguration = {
-            type: configurationType,
-            name: `Attach to ${hostName}:${port} - ${buildTarget}`,
-            request: attachRequestType,
-            hostName: hostName,
-            port: port,
-            buildTarget: buildTarget,
-          };
-          return result;
-        })
-      )
-    );
-  }
-
-  private askForOptionalBuildTarget(): Thenable<string | undefined> {
-    return vscode.window
-      .showInputBox({
-        prompt: "Enter the name of the build target",
-        placeHolder: "Optional, you can leave it empty",
-      })
-      .then((buildTarget) => {
-        if (buildTarget === undefined) {
-          return Promise.reject();
-        } else if (buildTarget === "") {
-          return undefined;
-        } else {
-          return buildTarget;
-        }
-      });
-  }
-
-  private askForHostName(): Thenable<string> {
-    return vscode.window
-      .showInputBox({
-        prompt: "Enter host name of the debuggee JVM",
-        placeHolder: "localhost",
-      })
-      .then((hostName) => hostName ?? Promise.reject());
-  }
-
-  private askForPort(): Thenable<number> {
-    return vscode.window
-      .showInputBox({
-        prompt: "Enter port to attach to",
-        placeHolder: "5005",
-      })
-      .then((port) => port ?? Promise.reject())
-      .then((port) => parseInt(port));
-  }
-
-  private askForBuildTarget(): Thenable<string> {
-    return vscode.window
-      .showInputBox({
-        prompt: "Enter the name of the build target",
-      })
-      .then((buildTarget) => buildTarget ?? Promise.reject());
-  }
-
-  private askForClassName(): Thenable<string> {
-    return vscode.window
-      .showInputBox({
-        prompt: "Enter the name of the class to debug",
-        placeHolder: "<package>.<Class>",
-      })
-      .then((name) => name ?? Promise.reject());
-  }
-
-  private askForConfigurationName(className: string): Thenable<string> {
-    return vscode.window
-      .showInputBox({
-        prompt: "Enter the name of the configuration",
-        value: `Debug ${className}`,
-      })
-      .then((name) => name ?? Promise.reject());
+          commands.executeCommand("workbench.panel.repl.view.focus");
+          return configuration;
+        });
+    } else return debugConfiguration;
   }
 }
 
