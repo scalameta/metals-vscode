@@ -362,7 +362,10 @@ function launchMetals(
   };
 
   const clientOptions: LanguageClientOptions = {
-    documentSelector: [{ scheme: "file", language: "scala" }],
+    documentSelector: [
+      { scheme: "file", language: "scala" },
+      { scheme: "file", language: "java" },
+    ],
     synchronize: {
       configurationSection: "metals",
     },
