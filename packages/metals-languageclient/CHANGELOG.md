@@ -1,5 +1,17 @@
 ## metals-languageclient changelog
 
+### v0.5.4 (2021/11/30 16:07 +00:00)
+- [92e2c60](https://github.com/scalameta/metals-languageclient/commit/92e2c6050e1d7712783dec5c8f68b84bb7b85ba2) Bump @types/node from 16.11.10 to 16.11.11 (@dependabot[bot])
+- [1c7ff05](https://github.com/scalameta/metals-languageclient/commit/1c7ff05c55b7c008fa018f408d67996c46d90632) Add `RunOrTestFile` RunType (@tgodzik)
+- [654e406](https://github.com/scalameta/metals-languageclient/commit/654e406f150d07dd694e3554b7fb39b64477d363) Bump prettier from 2.4.1 to 2.5.0 (@dependabot[bot])
+- [882f7c5](https://github.com/scalameta/metals-languageclient/commit/882f7c5e08b6594f9888bf19d5fbb0ff6ed437a0) Bump @types/node from 16.11.9 to 16.11.10 (@dependabot[bot])
+- [9c55893](https://github.com/scalameta/metals-languageclient/commit/9c5589300d9563bb079d671c871b41bda069558e) Bump @types/node from 16.11.8 to 16.11.9 (@dependabot[bot])
+- [3582a97](https://github.com/scalameta/metals-languageclient/commit/3582a97eeeb4420a8d4c9dea169adb72e5f5b03c) Bump @types/jest from 27.0.2 to 27.0.3 (@dependabot[bot])
+- [72414a0](https://github.com/scalameta/metals-languageclient/commit/72414a0d44316da565e0ca184e368df51234524b) Bump @types/node from 16.11.7 to 16.11.8 (@dependabot[bot])
+- [17db721](https://github.com/scalameta/metals-languageclient/commit/17db7213a0b1fc9b6fde3d6b56256a5d78bc57e5) Bump @types/node from 16.11.6 to 16.11.7 (@dependabot[bot])
+- [633db6c](https://github.com/scalameta/metals-languageclient/commit/633db6ce68873de6ee6311d79328985637722901) Bump @types/node from 16.11.4 to 16.11.6 (@dependabot[bot])
+- [c2011ac](https://github.com/scalameta/metals-languageclient/commit/c2011aceb57ea8171c83158aa933169dc40ae580) Release v0.5.3
+
 ### v0.5.3 (2021/10/25 15:05 +00:00)
 - [5f56249](https://github.com/scalameta/metals-languageclient/commit/5f562498dfb6231761c53777edde80999f010995) Allow to use JDK versions up to 17 (@tgodzik)
 - [07d8c07](https://github.com/scalameta/metals-languageclient/commit/07d8c07cad65d281e0bbca7f9e12d29723285e86) Bump @types/node from 16.11.2 to 16.11.4 (@dependabot[bot])
