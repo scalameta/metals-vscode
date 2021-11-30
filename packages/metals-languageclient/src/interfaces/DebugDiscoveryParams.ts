@@ -5,6 +5,7 @@ export interface DebugDiscoveryParams {
 
 export enum RunType {
   Run = "run",
+  RunOrTestFile = "runOrTestFile",
   TestFile = "testFile",
   TestTarget = "testTarget",
 }
