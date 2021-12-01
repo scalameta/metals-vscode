@@ -372,6 +372,9 @@ function launchMetals(
     middleware: {
       provideHover: hoverLinksMiddlewareHook,
     },
+    markdown: {
+      isTrusted: true,
+    },
   };
 
   function hoverLinksMiddlewareHook(
