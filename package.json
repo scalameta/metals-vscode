@@ -788,7 +788,7 @@
     "@typescript-eslint/parser": "^4.33.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
-    "jest": "^27.4.0",
+    "jest": "^27.4.2",
     "ovsx": "0.1.0",
     "prettier": "2.5.0",
     "ts-jest": "^27.0.7",
