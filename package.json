@@ -284,11 +284,6 @@
           "type": "string",
           "markdownDescription": "Optional custom path to the eclipse-formatter.xml file.\n\nShould be an absolute path and use forward slashes `/` for file separators (even on Windows)."
         },
-        "metals.enableFormatJavaComments": {
-          "type": "boolean",
-          "default": false,
-          "markdownDescription": "When enabled, if you format a Java file then comments will also be formatted."
-        },
         "metals.eclipseFormatProfile": {
           "type": "string",
           "markdownDescription": "Optional Eclipse format profile to use."
