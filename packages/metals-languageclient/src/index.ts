@@ -21,3 +21,4 @@ export * from "./interfaces/MetalsInputBox";
 export * from "./interfaces/MetalsQuickPick";
 export * from "./interfaces/MetalsStatus";
 export * from "./interfaces/DebugDiscoveryParams";
+export * from "./interfaces/TestUI";

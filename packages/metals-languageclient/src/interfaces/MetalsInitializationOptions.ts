@@ -30,6 +30,7 @@ export interface MetalsInitializationOptions {
   slowTaskProvider?: boolean;
   statusBarProvider?: "on" | "off" | "log-message" | "show-message";
   treeViewProvider?: boolean;
+  testExplorerProvider?: boolean;
   openNewWindowProvider?: boolean;
   copyWorksheetOutputProvider?: boolean;
 }
