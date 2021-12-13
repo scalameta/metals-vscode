@@ -822,6 +822,13 @@ function launchMetals(
         });
       });
 
+      registerCommand(`metals.goto-position`, (args) => {
+        client.sendRequest(ExecuteCommandRequest.type, {
+          command: "goto-position",
+          arguments: args,
+        });
+      });
+
       registerCommand("metals.reveal-active-file", () => {
         if (treeViews) {
           const editor = window.visibleTextEditors.find((e) =>
