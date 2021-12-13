@@ -363,6 +363,7 @@ function launchMetals(
     statusBarProvider: "on",
     treeViewProvider: true,
     testExplorerProvider: true,
+    commandInHtmlFormat: "vscode",
   };
 
   const clientOptions: LanguageClientOptions = {
@@ -836,16 +837,6 @@ function launchMetals(
         }
       );
 
-      registerCommand("metals.goto-path-uri", (...args) => {
-        const uri = args[0] as string;
-        const line = args[1] as number;
-        const otherWindow = args[2] as boolean;
-        const pos = new Position(line, 0);
-        const range = new Range(pos, pos);
-        const location = Location.create(uri, range);
-        gotoLocation(location, otherWindow);
-      });
-
       registerCommand(`metals.${ServerCommands.ResetChoice}`, (args = []) => {
         client.sendRequest(ExecuteCommandRequest.type, {
           command: ServerCommands.ResetChoice,
@@ -859,6 +850,13 @@ function launchMetals(
           arguments: args,
         });
       });
+
+      registerCommand(
+        `metals.${ServerCommands.GotoPosition}`,
+        (location: Location) => {
+          if (location) gotoLocation(location, false);
+        }
+      );
 
       registerCommand("metals.reveal-active-file", () => {
         if (treeViews) {
