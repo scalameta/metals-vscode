@@ -1043,10 +1043,10 @@ function launchMetals(
       client.onNotification(DecorationsRangesDidChange.type, (params) => {
         const editors = window.visibleTextEditors;
         const path = Uri.parse(params.uri).toString();
-        const editor = editors.find(
+        const workheetEditors = editors.filter(
           (editor) => editor.document.uri.toString() == path
         );
-        if (editor) {
+        if (workheetEditors.length > 0) {
           const options = params.options.map<DecorationOptions>((o) => {
             return {
               range: new Range(
@@ -1057,11 +1057,13 @@ function launchMetals(
               renderOptions: o.renderOptions,
             };
           });
-          if (params.uri.endsWith(".worksheet.sc")) {
-            editor.setDecorations(worksheetDecorationType, options);
-          } else {
-            editor.setDecorations(decorationType, options);
-          }
+          workheetEditors.forEach((editor) => {
+            if (params.uri.endsWith(".worksheet.sc")) {
+              editor.setDecorations(worksheetDecorationType, options);
+            } else {
+              editor.setDecorations(decorationType, options);
+            }
+          });
         } else {
           outputChannel.appendLine(
             `Ignoring decorations for non-active document '${params.uri}'.`
