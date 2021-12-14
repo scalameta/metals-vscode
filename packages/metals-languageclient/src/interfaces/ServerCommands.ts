@@ -76,6 +76,8 @@ export const ServerCommands = {
   GenerateBspConfig: "generate-bsp-config",
   /** Move the cursor to the definition of the argument symbol. */
   Goto: "goto",
+  /** Move the cursor to the position in a file */
+  GotoPosition: "goto-position",
   /** Jumps to the super method/field definition of a symbol. */
   GotoSuperMethod: "goto-super-method",
   /**
