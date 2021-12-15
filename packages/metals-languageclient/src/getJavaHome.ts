@@ -1,7 +1,7 @@
 import { TaskEither, chain } from "fp-ts/lib/TaskEither";
 import * as TE from "fp-ts/lib/TaskEither";
 import * as E from "fp-ts/lib/Either";
-import { pipe } from "fp-ts/lib/pipeable";
+import { pipe } from "fp-ts/lib/function";
 import _locateJavaHome from "locate-java-home";
 import * as semver from "semver";
 import {
@@ -9,12 +9,16 @@ import {
   IJavaHomeInfo,
 } from "locate-java-home/js/es5/lib/interfaces";
 import { toPromise } from "./util";
+//import os from "os";
+import fs from "fs";
+import path from "path";
 
 /**
  * Computes the user's Java Home path, using various strategies:
  *
  * - explicitly configured value
  * - JAVA_HOME environment variable
+ * - realpath for `java` if it's presented in PATH enviroment variable
  * - the most recent compatible Java version found on the computer
  *   (with a preference for JDK over JRE)
  *
@@ -24,7 +28,12 @@ export function getJavaHome(
   configuredJavaHome: string | undefined
 ): Promise<string> {
   return toPromise(
-    pipe(fromConfig(configuredJavaHome), TE.orElse(fromEnv), TE.orElse(locate))
+    pipe(
+      fromConfig(configuredJavaHome),
+      TE.orElse(fromEnv),
+      TE.orElse(fromPath),
+      TE.orElse(locate)
+    )
   );
 }
 
@@ -44,6 +53,30 @@ function fromConfig(
 function fromEnv(): TaskEither<unknown, string> {
   const javaHome = process.env["JAVA_HOME"];
   return javaHome ? TE.right(javaHome) : TE.left({});
+}
+
+function fromPath(): TaskEither<unknown, string> {
+  const value = process.env["PATH"];
+  if (value) {
+    const result = value
+      .split(path.delimiter)
+      .map((p) => path.join(p, "java"))
+      .filter((p) => fs.existsSync(p));
+
+    if (result.length > 0) {
+      const realpath = fs.realpathSync(result[0]);
+      if (realpath.endsWith(path.join("bin", "java"))) {
+        const normalized = path.normalize(path.join(realpath, "..", ".."));
+        return TE.right(normalized);
+      } else {
+        return TE.left({});
+      }
+    } else {
+      return TE.left({});
+    }
+  } else {
+    return TE.left({});
+  }
 }
 
 function locate(): TaskEither<Error, string> {

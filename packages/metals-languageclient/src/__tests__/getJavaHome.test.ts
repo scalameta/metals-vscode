@@ -1,11 +1,13 @@
 import { getJavaHome } from "../getJavaHome";
 import { IJavaHomeInfo } from "locate-java-home/js/es5/lib/interfaces";
+import path from "path";
 
 describe("getJavaHome", () => {
   const originalEnv = process.env;
 
   beforeEach(() => {
     delete process.env.JAVA_HOME;
+    delete process.env.PATH;
   });
 
   afterEach(() => {
@@ -23,6 +25,37 @@ describe("getJavaHome", () => {
     process.env = { ...originalEnv, JAVA_HOME };
     const javaHome = await getJavaHome(undefined);
     expect(javaHome).toBe(JAVA_HOME);
+  });
+
+  it("checks PATH variable", async () => {
+    const javaPaths = [
+      {
+        binPath: path.join("/", "test", "usr", "bin", "java"),
+        realPath: path.join(
+          "/",
+          "test",
+          "usr",
+          "lib",
+          "jvm",
+          "java-11-openjdk-amd64",
+          "bin",
+          "java"
+        ),
+      },
+    ];
+    const PATH = path.join("/", "test", "usr", "bin");
+    mockFs(javaPaths);
+    process.env = { PATH };
+    const javaHome = await getJavaHome(undefined);
+    const expected = path.join(
+      "/",
+      "test",
+      "usr",
+      "lib",
+      "jvm",
+      "java-11-openjdk-amd64"
+    );
+    expect(javaHome).toBe(expected);
   });
 
   it("prefers configuration to JAVA_HOME and installed Java", async () => {
@@ -132,5 +165,28 @@ function mockLocateJavaHome(
           },
         }))
       );
+    });
+}
+
+function mockFs(javaLinks: { binPath: String; realPath: String }[]): void {
+  jest.resetModules();
+  jest
+    .spyOn(require("fs"), "existsSync")
+    .mockImplementation((path: unknown) => {
+      if (javaLinks.find((o) => o.binPath == path)) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  jest
+    .spyOn(require("fs"), "realpathSync")
+    .mockImplementation((path: unknown) => {
+      const value = javaLinks.find((o) => o.binPath == path);
+      if (value) {
+        return value.realPath;
+      } else {
+        return path;
+      }
     });
 }
