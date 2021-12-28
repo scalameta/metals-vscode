@@ -450,6 +450,10 @@ function launchMetals(
   registerTextDocumentContentProvider("metalsDecode", metalsFileProvider);
   registerTextDocumentContentProvider("jar", metalsFileProvider);
 
+  registerCommand("metals.show-cfr", async (uri: Uri) => {
+    await decodeAndShowFile(client, metalsFileProvider, uri, "cfr");
+  });
+
   registerCommand("metals.show-javap-verbose", async (uri: Uri) => {
     await decodeAndShowFile(client, metalsFileProvider, uri, "javap-verbose");
   });

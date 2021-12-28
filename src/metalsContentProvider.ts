@@ -46,6 +46,7 @@ export class MetalsFileProvider implements TextDocumentContentProvider {
 }
 
 type DecodeExtension =
+  | "cfr"
   | "javap"
   | "javap-verbose"
   | "semanticdb-compact"
@@ -84,10 +85,11 @@ export async function decodeAndShowFile(
     } else {
       let uriToResource: Uri | undefined = undefined;
 
-      // for tasty and javap we must translate scala path to .tasty or .class one
+      // for tasty, javap and CFR we must translate scala path to .tasty or .class one
       if (
         currentUri.path.endsWith(".scala") &&
-        (decodeExtension === "javap" ||
+        (decodeExtension === "cfr" ||
+          decodeExtension === "javap" ||
           decodeExtension === "javap-verbose" ||
           decodeExtension === "tasty-decoded")
       ) {
