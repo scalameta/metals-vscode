@@ -1082,9 +1082,9 @@ function launchMetals(
       );
       treeViews = startTreeView(client, outputChannel, context, viewIds);
       context.subscriptions.concat(treeViews.disposables);
-      scalaDebugger
-        .initialize(outputChannel)
-        .forEach((disposable) => context.subscriptions.push(disposable));
+      scalaDebugger.initialize(outputChannel).forEach((disposable) => {
+        context.subscriptions.push(disposable);
+      });
       client.onNotification(DecorationTypeDidChange.type, (options) => {
         decorationType = window.createTextEditorDecorationType(options);
       });
