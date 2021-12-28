@@ -285,6 +285,14 @@
             "3.0.0"
           ],
           "markdownDescription": "The Scala compiler version that is used as the default or fallback in case a file doesn't belong to any build target or the specified Scala version isn't supported by Metals.\n\nThis applies to standalone Scala files, worksheets, and Ammonite scripts.\n\n The `automatic` value means that the Scala version for these files will be inferred from the highest supported Scala version in your projects build definition"
+        },
+        "metals.javaFormat.eclipseConfigPath": {
+          "type": "string",
+          "markdownDescription": "Optional custom path to the eclipse-formatter.xml file.\n\nShould be an absolute path and use forward slashes `/` for file separators (even on Windows)."
+        },
+        "metals.javaFormat.eclipseProfile": {
+          "type": "string",
+          "markdownDescription": "Optional Eclipse format profile to use."
         }
       }
     },
@@ -402,6 +410,11 @@
         "command": "metals.new-scala-file",
         "category": "Metals",
         "title": "New Scala File..."
+      },
+      {
+        "command": "metals.new-java-file",
+        "category": "Metals",
+        "title": "New Java File..."
       },
       {
         "command": "metals.new-scala-worksheet",
@@ -592,6 +605,10 @@
           "when": "metals:enabled"
         },
         {
+          "command": "metals.new-java-file",
+          "when": "metals:enabled"
+        },
+        {
           "command": "metals.new-scala-project",
           "when": "metals:enabled"
         },
@@ -625,6 +642,11 @@
           "command": "metals.new-scala-file",
           "when": "metals:enabled",
           "group": "navigation@1"
+        },
+        {
+          "command": "metals.new-java-file",
+          "when": "metals:enabled",
+          "group": "navigation@2"
         },
         {
           "submenu": "metals.analyze",

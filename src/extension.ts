@@ -362,7 +362,10 @@ function launchMetals(
   };
 
   const clientOptions: LanguageClientOptions = {
-    documentSelector: [{ scheme: "file", language: "scala" }],
+    documentSelector: [
+      { scheme: "file", language: "scala" },
+      { scheme: "file", language: "java" },
+    ],
     synchronize: {
       configurationSection: "metals",
     },
@@ -880,6 +883,16 @@ function launchMetals(
         async (directory: Uri) => {
           return client.sendRequest(ExecuteCommandRequest.type, {
             command: ServerCommands.NewScalaFile,
+            arguments: [directory?.toString()],
+          });
+        }
+      );
+
+      registerCommand(
+        `metals.${ServerCommands.NewJavaFile}`,
+        async (directory: Uri) => {
+          return client.sendRequest(ExecuteCommandRequest.type, {
+            command: ServerCommands.NewJavaFile,
             arguments: [directory?.toString()],
           });
         }
