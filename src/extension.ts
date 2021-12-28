@@ -36,6 +36,7 @@ import {
   ExecuteCommandRequest,
   Location,
   CancellationToken,
+  CodeLensRefreshRequest,
 } from "vscode-languageclient/node";
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
@@ -64,6 +65,7 @@ import {
   MetalsQuickPick,
   DebugDiscoveryParams,
   RunType,
+  TestUIKind,
 } from "metals-languageclient";
 import * as metalsLanguageClient from "metals-languageclient";
 import { startTreeView } from "./treeview";
@@ -83,7 +85,8 @@ import {
 } from "./findinfiles";
 import * as ext from "./hoverExtension";
 import { decodeAndShowFile, MetalsFileProvider } from "./metalsContentProvider";
-import { getTextDocumentPositionParams } from "./util";
+import { getTextDocumentPositionParams, getValueFromConfig } from "./util";
+import { createTestManager } from "./test-explorer/test-manager";
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
 const downloadJava = "Download Java";
@@ -359,6 +362,7 @@ function launchMetals(
     slowTaskProvider: true,
     statusBarProvider: "on",
     treeViewProvider: true,
+    testExplorerProvider: true,
   };
 
   const clientOptions: LanguageClientOptions = {
@@ -617,6 +621,33 @@ function launchMetals(
         { scheme: "file", language: "scala" },
         codeLensRefresher
       );
+
+      const getTestUI = () =>
+        getValueFromConfig<TestUIKind>(
+          config,
+          "testUserInterface",
+          "Test Explorer"
+        );
+
+      const istTestManagerDisabled = getTestUI() === "Code Lenses";
+      const testManager = createTestManager(client, istTestManagerDisabled);
+
+      const disableTestExplorer = workspace.onDidChangeConfiguration(() => {
+        const testUI = getTestUI();
+        if (testUI === "Code Lenses") {
+          testManager.disable();
+        } else {
+          testManager.enable();
+        }
+      });
+
+      const refreshTests = client.onRequest(CodeLensRefreshRequest.type, () => {
+        testManager.discoverTestSuites();
+      });
+
+      context.subscriptions.push(disableTestExplorer);
+      context.subscriptions.push(refreshTests);
+      context.subscriptions.push(testManager.testController);
 
       // Handle the metals/executeClientCommand extension notification.
       client.onNotification(ExecuteClientCommand.type, (params) => {
