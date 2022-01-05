@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "fp-ts": "^2.4.1",
-    "locate-java-home": "^1.1.2",
+    "@viperproject/locate-java-home": "^1.1.5",
     "mkdirp": "^1.0.3",
     "node-fetch": "^2.6.0",
     "promisify-child-process": "^4.0.0",
