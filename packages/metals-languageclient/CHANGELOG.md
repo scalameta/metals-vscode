@@ -1,5 +1,21 @@
 ## metals-languageclient changelog
 
+### v0.5.6 (2022/01/05 16:36 +00:00)
+- [15d70d5](https://github.com/scalameta/metals-languageclient/commit/15d70d5143510ef0216b9ad2c97299319e51d2f6) Switch to an active fork of locate-java-home (@tgodzik)
+- [429849b](https://github.com/scalameta/metals-languageclient/commit/429849bd36af0582654fbfcdc123acab655ebeb1) Bump @types/node from 17.0.7 to 17.0.8 (@dependabot[bot])
+- [807e025](https://github.com/scalameta/metals-languageclient/commit/807e0257990aaec435a1913c97123404551a1ba0) Bump @types/node from 17.0.6 to 17.0.7 (@dependabot[bot])
+- [ae1c467](https://github.com/scalameta/metals-languageclient/commit/ae1c467f7edfd774ba84de4602c0a07da2350158) Bump @types/node from 17.0.5 to 17.0.6 (@dependabot[bot])
+- [eb3f0e6](https://github.com/scalameta/metals-languageclient/commit/eb3f0e68af6114016eeab716b15c387ba7b0c2e0) Bump @types/jest from 27.0.3 to 27.4.0 (@dependabot[bot])
+- [118fcdc](https://github.com/scalameta/metals-languageclient/commit/118fcdc638673e8750479226e45bf73d0a08de7e) Bump @types/node from 17.0.4 to 17.0.5 (@dependabot[bot])
+- [2f1fbcf](https://github.com/scalameta/metals-languageclient/commit/2f1fbcff969621cad2f259e1ea9b74c558693f7f) Bump @types/node from 17.0.2 to 17.0.4 (@dependabot[bot])
+- [7934d16](https://github.com/scalameta/metals-languageclient/commit/7934d16b078cda4a9c4c1598cc7825f2f3cdd1b1) Bump @types/node from 17.0.1 to 17.0.2 (@dependabot[bot])
+- [9a1a2d9](https://github.com/scalameta/metals-languageclient/commit/9a1a2d9a47dd4b6b129cb5deb86e9f4f759602a0) Add commandInHtmlFormat init option (@tgodzik)
+- [9690d5e](https://github.com/scalameta/metals-languageclient/commit/9690d5ec1bafc59253dc7829c99c1c67db879d2f) Bump @types/node from 17.0.0 to 17.0.1 (@dependabot[bot])
+- [d334818](https://github.com/scalameta/metals-languageclient/commit/d3348187e1150219ff1031eda3f26233fe44e120) Bump @types/node from 16.11.13 to 17.0.0 (@dependabot[bot])
+- [95aaa07](https://github.com/scalameta/metals-languageclient/commit/95aaa071df078d82c70315700704023e798f3209) Bump @types/node from 16.11.12 to 16.11.13 (@dependabot[bot])
+- [1b03372](https://github.com/scalameta/metals-languageclient/commit/1b03372036ecc51ae800f6a010b34e415e78c7f2) Add GotoPosition server command (@tgodzik)
+- [8742524](https://github.com/scalameta/metals-languageclient/commit/87425244724013a92ac5f442fc8e199eb89212d1) Release v0.5.5
+
 ### v0.5.5 (2021/12/08 07:46 +00:00)
 - [00033ee](https://github.com/scalameta/metals-languageclient/commit/00033eeb1e827a73946941f2d5d5847e50913e78) Bump @types/node from 16.11.11 to 16.11.12 (@dependabot[bot])
 - [c591b57](https://github.com/scalameta/metals-languageclient/commit/c591b575e767c5be0affc0d4ae536a4fcaf2164a) Add test ui kind datatype (@kpodsiad)
@@ -441,8 +457,8 @@
 ### v0.1.15 (2020/02/04 07:17 +00:00)
 - [04fc84e](https://github.com/scalameta/metals-languageclient/commit/04fc84e55f889990a10083f83ea6f395fc7ee81b) v0.1.15 (@gabro)
 - [9a5fcf5](https://github.com/scalameta/metals-languageclient/commit/9a5fcf5757989832f522a8db585f2e71c64bc081) Use the same version of vscode-languageserver-protocol as coc.nvim (@gabro)
-- [0dffea3](https://github.com/scalameta/metals-languageclient/commit/0dffea3660ce9969d946100c55c05ae9eeb8e0a3) Fix potentially undefined arrays (@gabro)
 - [e7144b4](https://github.com/scalameta/metals-languageclient/commit/e7144b4eeb9e153c5d7e060d04e2bf7c74d99883) v0.1.14 (@gabro)
+- [0dffea3](https://github.com/scalameta/metals-languageclient/commit/0dffea3660ce9969d946100c55c05ae9eeb8e0a3) Fix potentially undefined arrays (@gabro)
 - [5b3aafc](https://github.com/scalameta/metals-languageclient/commit/5b3aafcf25f72a5b4269ef6568d372c2c34775e9) Bump @types/node from 13.5.3 to 13.7.0 (@dependabot-preview[bot])
 
 ### v0.1.13 (2020/02/01 09:20 +00:00)
