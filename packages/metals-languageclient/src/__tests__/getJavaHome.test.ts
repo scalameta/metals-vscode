@@ -1,5 +1,5 @@
 import { getJavaHome } from "../getJavaHome";
-import { IJavaHomeInfo } from "locate-java-home/js/es5/lib/interfaces";
+import { IJavaHomeInfo } from "@viperproject/locate-java-home/js/es5/lib/interfaces";
 import path from "path";
 
 describe("getJavaHome", () => {
@@ -151,7 +151,7 @@ function mockLocateJavaHome(
 ): void {
   jest.resetModules();
   jest
-    .spyOn(require("locate-java-home"), "default")
+    .spyOn(require("@viperproject/locate-java-home"), "default")
     .mockImplementation((_options: unknown, cb: unknown) => {
       (cb as (err: Error | null, found?: IJavaHomeInfo[]) => void)(
         null,

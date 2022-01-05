@@ -2,12 +2,12 @@ import { TaskEither, chain } from "fp-ts/lib/TaskEither";
 import * as TE from "fp-ts/lib/TaskEither";
 import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
-import _locateJavaHome from "locate-java-home";
+import _locateJavaHome from "@viperproject/locate-java-home";
 import * as semver from "semver";
 import {
   ILocateJavaHomeOptions,
   IJavaHomeInfo,
-} from "locate-java-home/js/es5/lib/interfaces";
+} from "@viperproject/locate-java-home/js/es5/lib/interfaces";
 import { toPromise } from "./util";
 //import os from "os";
 import fs from "fs";
