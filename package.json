@@ -848,7 +848,7 @@
   },
   "dependencies": {
     "ansicolor": "^1.1.95",
-    "metals-languageclient": "0.5.5",
+    "metals-languageclient": "0.5.6",
     "promisify-child-process": "4.1.1",
     "vscode-languageclient": "7.0.0"
   },
