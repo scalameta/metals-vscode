@@ -1,4 +1,5 @@
 import {
+  commands,
   EventEmitter,
   ExtensionContext,
   OutputChannel,
@@ -53,6 +54,7 @@ export function createFindInFilesTreeView(
   provider: FindInFilesProvider,
   context: ExtensionContext
 ): TreeView<unknown> {
+  commands.executeCommand("setContext", "metals.showFindInFiles", false);
   const treeView = window.createTreeView("metalsFindInFiles", {
     treeDataProvider: provider,
     showCollapseAll: true,
@@ -132,6 +134,7 @@ export async function executeFindInFiles(
       }
     );
 
+    commands.executeCommand("setContext", "metals.showFindInFiles", true);
     const newTopLevel = await toTopLevel(locations);
 
     provider.update(newTopLevel);
