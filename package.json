@@ -133,7 +133,8 @@
       "metals-find-in-files": [
         {
           "id": "metalsFindInFiles",
-          "name": "Find in files (Metals)"
+          "name": "Find in files (Metals)",
+          "when": "metals.showFindInFiles"
         }
       ],
       "metals-explorer": [
