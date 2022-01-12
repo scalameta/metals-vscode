@@ -23,6 +23,7 @@ The following table shows the status of various features.
 | Code actions          |   ✅   |                                                                                                  |
 | Organize imports      |   ✅   |                                                                                                  |
 | Show implicits        |   ✅   |                                                                                                  |
+| Basic Java support    |   ✅   | Most feature aside from hover, signature help and completions.                                   |
 
 ## Requirements
 
@@ -35,14 +36,14 @@ every PR is tested on Ubuntu, Windows and MacOS.
 
 **Scala 2.13, 2.12, 2.11 and Scala 3**. Metals supports these Scala versions:
 
-- **Scala 2.13**: 2.13.7, 2.13.6, 2.13.5, 2.13.4, 2.13.3, 2.13.2, 2.13.1, 2.13.0
+- **Scala 2.13**: 2.13.8, 2.13.7, 2.13.6, 2.13.5, 2.13.4, 2.13.3, 2.13.2, 2.13.1
 
 - **Scala 2.12**: 2.12.15, 2.12.14, 2.12.13, 2.12.12, 2.12.11, 2.12.10, 2.12.9,
   2.12.8
 
 - **Scala 2.11**: 2.11.12
 
-- **Scala 3**: 3.1.1-RC1, 3.1.0, 3.0.2, 3.0.1, 3.0.0
+- **Scala 3**: 3.1.1-RC2, 3.1.0, 3.0.2, 3.0.1, 3.0.0
 
 Note that 2.11.x support is deprecated and it will be removed in future
 releases. It's recommended to upgrade to Scala 2.12 or Scala 2.13
@@ -344,6 +345,19 @@ guide them. In the end users should end up with something like this:
       "name": "Launch Test",
       // full name of the class to run
       "testClass": "com.example.Test"
+    }
+    // Attach debugger when running via:
+    // `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=localhost:5005`
+    {
+      "type": "scala",
+      "request": "attach",
+      "name": "Attach debugger",
+      // name of the module that is being debugging
+      "buildTarget": "root",
+      // Host of the jvm to connect to
+      "hostName": "localhost",
+      // Port to connect to
+      "port": 5005
     }
   ]
 }
