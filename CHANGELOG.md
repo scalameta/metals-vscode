@@ -2,7 +2,8 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
-### v1.11.0 (2022/01/12 22:07 +00:00)
+### v1.11.0 (2022/01/12 22:15 +00:00)
+- [5aa50e3](https://github.com/scalameta/metals-vscode/commit/5aa50e3f4101df6613c2ad16393cebf0e668717f) v1.11.0
 - [e18b537](https://github.com/scalameta/metals-vscode/commit/e18b537f4abd3fd9181d730339446240c03f5bda) Update Metals version to 0.11.0 (@tgodzik)
 - [27da298](https://github.com/scalameta/metals-vscode/commit/27da298b4541be7f735fb3e9ea220a0c4cec6b15) Make go to definition work with the newest languageclient (@tgodzik)
 - [43b52b3](https://github.com/scalameta/metals-vscode/commit/43b52b3c4e6f7ed485124c3c0be59016de9f5b23) Update package.json (@kpodsiad)
