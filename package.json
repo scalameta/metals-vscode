@@ -828,7 +828,7 @@
     "build": "vsce package --yarn",
     "vscode:publish": "vsce publish --yarn",
     "ovsx:publish": "ovsx publish",
-    "lint": "eslint . --ext .ts --fix",
+    "lint": "eslint . --ext .ts --fix && yarn format",
     "format": "prettier --write '**/*.{ts,js,json,yml}'",
     "format-check": "prettier --check '**/*.{ts,js,json,yml}'"
   },

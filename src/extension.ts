@@ -854,7 +854,9 @@ function launchMetals(
       registerCommand(
         `metals.${ServerCommands.GotoPosition}`,
         (location: Location) => {
-          if (location) gotoLocation(location, false);
+          if (location) {
+            gotoLocation(location, false);
+          }
         }
       );
 

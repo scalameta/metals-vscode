@@ -67,7 +67,7 @@ class ScalaMainConfigProvider implements vscode.DebugConfigurationProvider {
     _folder: WorkspaceFolder | undefined,
     debugConfiguration: DebugConfiguration
   ): ProviderResult<DebugConfiguration> {
-    let editor = vscode.window.activeTextEditor;
+    const editor = vscode.window.activeTextEditor;
     // debugConfiguration.type is undefined if there are no configurations
     // we are running whatever is in the file
     if (debugConfiguration.type === undefined && editor) {
@@ -94,7 +94,9 @@ class ScalaMainConfigProvider implements vscode.DebugConfigurationProvider {
           commands.executeCommand("workbench.panel.repl.view.focus");
           return configuration;
         });
-    } else return debugConfiguration;
+    } else {
+      return debugConfiguration;
+    }
   }
 }
 
