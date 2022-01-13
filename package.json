@@ -260,7 +260,7 @@
         },
         "metals.testUserInterface": {
           "type": "string",
-          "default": "Test Explorer",
+          "default": "Code Lenses",
           "enum": [
             "Test Explorer",
             "Code Lenses"
