@@ -2,6 +2,12 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.11.1 (2022/01/13 14:18 +00:00)
+- [8eb8fe3](https://github.com/scalameta/metals-vscode/commit/8eb8fe31af0759edf4c5f2f038c01453bebedd0f) Change back to code lenses for the time being due to a performance issue. (@tgodzik)
+- [391a6ad](https://github.com/scalameta/metals-vscode/commit/391a6adfade79b018ff6fecd910d064af7d03aee) Bump follow-redirects from 1.14.1 to 1.14.7 (@dependabot[bot])
+- [8b6412b](https://github.com/scalameta/metals-vscode/commit/8b6412b07ffdbca4277c030b77560f6bac967157) Bump ansicolor from 1.1.95 to 1.1.100 (@dependabot[bot])
+- [543f141](https://github.com/scalameta/metals-vscode/commit/543f14142b06fe12d7884eb19e6f5bb5b1cbf7c5) v1.11.0
+
 ### v1.11.0 (2022/01/12 22:15 +00:00)
 - [5aa50e3](https://github.com/scalameta/metals-vscode/commit/5aa50e3f4101df6613c2ad16393cebf0e668717f) v1.11.0
 - [e18b537](https://github.com/scalameta/metals-vscode/commit/e18b537f4abd3fd9181d730339446240c03f5bda) Update Metals version to 0.11.0 (@tgodzik)
