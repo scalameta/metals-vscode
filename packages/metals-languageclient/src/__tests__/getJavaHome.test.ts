@@ -31,31 +31,15 @@ describe("getJavaHome", () => {
     const javaPaths = [
       {
         binPath: path.join("/", "test", "usr", "bin", "java"),
-        realPath: path.join(
-          "/",
-          "test",
-          "usr",
-          "lib",
-          "jvm",
-          "java-11-openjdk-amd64",
-          "bin",
-          "java"
-        ),
+        realPath: path.join(java8Jdk.path, "bin", "java"),
       },
     ];
     const PATH = path.join("/", "test", "usr", "bin");
+    mockLocateJavaHome([java8Jdk, java11Jdk]);
     mockFs(javaPaths);
     process.env = { PATH };
-    const javaHome = await getJavaHome(undefined);
-    const expected = path.join(
-      "/",
-      "test",
-      "usr",
-      "lib",
-      "jvm",
-      "java-11-openjdk-amd64"
-    );
-    expect(javaHome).toBe(expected);
+    const javaHome = await require("../getJavaHome").getJavaHome(undefined);
+    expect(javaHome).toBe(java8Jdk.path);
   });
 
   it("prefers configuration to JAVA_HOME and installed Java", async () => {
@@ -105,42 +89,42 @@ describe("getJavaHome", () => {
 });
 
 const java8Jdk = {
-  path: "/path/to/java8jdk",
+  path: path.join("/", "path", "to", "java8jdk"),
   version: "1.8.0",
   security: 1,
   isJDK: true,
 };
 
 const java8Jre = {
-  path: "/path/to/java8jdk",
+  path: path.join("/", "path", "to", "java8jdk"),
   version: "1.8.0",
   security: 1,
   isJDK: false,
 };
 
 const java11Jdk = {
-  path: "/path/to/java11jdk",
+  path: path.join("/", "path", "to", "java11jdk"),
   version: "1.11.0",
   security: 1,
   isJDK: true,
 };
 
 const java17Jdk = {
-  path: "/path/to/java17jdk",
+  path: path.join("/", "path", "to", "java17jdk"),
   version: "1.17.0",
   security: 1,
   isJDK: true,
 };
 
 const java11Jre = {
-  path: "/path/to/java11jdk",
+  path: path.join("/", "path", "to", "java11jdk"),
   version: "1.11.0",
   security: 1,
   isJDK: false,
 };
 
 const java11JdkNewPatch = {
-  path: "/path/to/java11jdk/high/security",
+  path: path.join("/", "path", "to", "java11jdk", "high", "securiry"),
   version: "1.11.0",
   security: 192,
   isJDK: true,
@@ -159,9 +143,9 @@ function mockLocateJavaHome(
           ...j,
           is64Bit: true,
           executables: {
-            java: j.path + "/bin/java",
-            javac: j.path + "/bin/javac",
-            javap: j.path + "/bin/javap",
+            java: path.join(j.path, "bin", "java"),
+            javac: path.join(j.path, "bin", "javac"),
+            javap: path.join(j.path, "bin", "javap"),
           },
         }))
       );
@@ -169,7 +153,6 @@ function mockLocateJavaHome(
 }
 
 function mockFs(javaLinks: { binPath: String; realPath: String }[]): void {
-  jest.resetModules();
   jest
     .spyOn(require("fs"), "existsSync")
     .mockImplementation((path: unknown) => {
