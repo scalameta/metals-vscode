@@ -1,5 +1,11 @@
 ## metals-languageclient changelog
 
+### v0.5.7 (2022/01/16 16:44 +00:00)
+- [a4532c4](https://github.com/scalameta/metals-languageclient/commit/a4532c4cf03854cae53da9873881382956da4298) Fix javaHome selection for MacOs (@dos65)
+- [c5033af](https://github.com/scalameta/metals-languageclient/commit/c5033af2dfc7eb4eb1a1d0b31b879af087866b7b) Bump fp-ts from 2.11.6 to 2.11.7 (@dependabot[bot])
+- [2d2a67f](https://github.com/scalameta/metals-languageclient/commit/2d2a67fd3aa69636f2ace3a8c7d81815789befc3) Bump fp-ts from 2.11.5 to 2.11.6 (@dependabot[bot])
+- [6d30afb](https://github.com/scalameta/metals-languageclient/commit/6d30afb0185b9a3fee4176c418368fc2705d1176) Release v0.5.6
+
 ### v0.5.6 (2022/01/05 16:36 +00:00)
 - [15d70d5](https://github.com/scalameta/metals-languageclient/commit/15d70d5143510ef0216b9ad2c97299319e51d2f6) Switch to an active fork of locate-java-home (@tgodzik)
 - [429849b](https://github.com/scalameta/metals-languageclient/commit/429849bd36af0582654fbfcdc123acab655ebeb1) Bump @types/node from 17.0.7 to 17.0.8 (@dependabot[bot])
@@ -457,8 +463,8 @@
 ### v0.1.15 (2020/02/04 07:17 +00:00)
 - [04fc84e](https://github.com/scalameta/metals-languageclient/commit/04fc84e55f889990a10083f83ea6f395fc7ee81b) v0.1.15 (@gabro)
 - [9a5fcf5](https://github.com/scalameta/metals-languageclient/commit/9a5fcf5757989832f522a8db585f2e71c64bc081) Use the same version of vscode-languageserver-protocol as coc.nvim (@gabro)
-- [e7144b4](https://github.com/scalameta/metals-languageclient/commit/e7144b4eeb9e153c5d7e060d04e2bf7c74d99883) v0.1.14 (@gabro)
 - [0dffea3](https://github.com/scalameta/metals-languageclient/commit/0dffea3660ce9969d946100c55c05ae9eeb8e0a3) Fix potentially undefined arrays (@gabro)
+- [e7144b4](https://github.com/scalameta/metals-languageclient/commit/e7144b4eeb9e153c5d7e060d04e2bf7c74d99883) v0.1.14 (@gabro)
 - [5b3aafc](https://github.com/scalameta/metals-languageclient/commit/5b3aafcf25f72a5b4269ef6568d372c2c34775e9) Bump @types/node from 13.5.3 to 13.7.0 (@dependabot-preview[bot])
 
 ### v0.1.13 (2020/02/01 09:20 +00:00)
