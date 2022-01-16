@@ -28,12 +28,7 @@ export function getJavaHome(
   configuredJavaHome: string | undefined
 ): Promise<string> {
   return toPromise(
-    pipe(
-      fromConfig(configuredJavaHome),
-      TE.orElse(fromEnv),
-      TE.orElse(fromPath),
-      TE.orElse(locate)
-    )
+    pipe(fromConfig(configuredJavaHome), TE.orElse(fromEnv), TE.orElse(locate))
   );
 }
 
@@ -55,30 +50,6 @@ function fromEnv(): TaskEither<unknown, string> {
   return javaHome ? TE.right(javaHome) : TE.left({});
 }
 
-function fromPath(): TaskEither<unknown, string> {
-  const value = process.env["PATH"];
-  if (value) {
-    const result = value
-      .split(path.delimiter)
-      .map((p) => path.join(p, "java"))
-      .filter((p) => fs.existsSync(p));
-
-    if (result.length > 0) {
-      const realpath = fs.realpathSync(result[0]);
-      if (realpath.endsWith(path.join("bin", "java"))) {
-        const normalized = path.normalize(path.join(realpath, "..", ".."));
-        return TE.right(normalized);
-      } else {
-        return TE.left({});
-      }
-    } else {
-      return TE.left({});
-    }
-  } else {
-    return TE.left({});
-  }
-}
-
 function locate(): TaskEither<Error, string> {
   return pipe(
     locateJavaHome({ version: ">=1.8 <=17" }),
@@ -86,12 +57,9 @@ function locate(): TaskEither<Error, string> {
       if (!javaHomes || javaHomes.length === 0) {
         return TE.left(new Error("No suitable Java version found"));
       } else {
-        javaHomes.sort((a, b) => {
-          const byVersion = -semver.compare(a.version, b.version);
-          if (byVersion === 0) return b.security - a.security;
-          else return byVersion;
-        });
-        const jdkHome = javaHomes.find((j) => j.isJDK);
+        const jdkHomes = javaHomes.filter((j) => j.isJDK);
+        const fromBinPath = matchesBinFromPath(jdkHomes);
+        const jdkHome = fromBinPath ? fromBinPath : latestJdk(jdkHomes);
         if (jdkHome) {
           return TE.right(jdkHome.path);
         } else {
@@ -100,6 +68,43 @@ function locate(): TaskEither<Error, string> {
       }
     })
   );
+}
+
+function matchesBinFromPath(
+  jdkHomes: IJavaHomeInfo[]
+): IJavaHomeInfo | undefined {
+  const value = process.env["PATH"];
+  if (value && jdkHomes.length > 0) {
+    const result = value
+      .split(path.delimiter)
+      .map((p) => path.join(p, "java"))
+      .filter((p) => fs.existsSync(p));
+
+    if (result.length > 0) {
+      const realpath = fs.realpathSync(result[0]);
+      const matched = jdkHomes.find((home) => {
+        const javaBin = path.join(home.path, "bin", "java");
+        return javaBin == realpath;
+      });
+      return matched;
+    } else {
+      return undefined;
+    }
+  } else {
+    return undefined;
+  }
+}
+
+function latestJdk(jdkHomes: IJavaHomeInfo[]): IJavaHomeInfo | undefined {
+  if (jdkHomes.length > 0) {
+    return jdkHomes.sort((a, b) => {
+      const byVersion = -semver.compare(a.version, b.version);
+      if (byVersion === 0) return b.security - a.security;
+      else return byVersion;
+    })[0];
+  } else {
+    return undefined;
+  }
 }
 
 function locateJavaHome(
