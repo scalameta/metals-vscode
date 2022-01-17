@@ -1,0 +1,44 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  logging:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+        echo "${{toJSON(github.event.commits[0])}}"
+        echo "${{toJSON(github.event.head_commit)}}"
+  pre-release:
+    if: |
+      !contains(github.event.head_commit.message, 'scalameta/dependabot/') &&
+      !contains(github.event.head_commit.message, 'Signed-off-by: dependabot[bot]') &&
+      github.event.author.email != 'bot@scalameta.org'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+      - uses: actions/checkout@v2
+      - name: Setup git env
+        run: |
+          git config --global user.email "bot@scalameta.org"
+          git config --global user.name "Scalameta bot"
+      - run: |
+          yarn install
+          yarn version --no-git-tag-version --patch
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m "Increase patch version for pre-release"
+      - name: Publish pre-release version to Visual Studio Marketplace
+        uses: HaaLeo/publish-vscode-extension@v1
+        with:
+          pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+          registryUrl: https://marketplace.visualstudio.com
+          preRelease: true
+          yarn: true
+      # Don't publish for VSX, it doesn't support pre-release versions
