@@ -2,6 +2,12 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.12.0 (2022/01/17 10:22 +00:00)
+- [d5d0c84](https://github.com/scalameta/metals-vscode/commit/d5d0c84f3fea24900d07e4eeb71d3e1f877358a4) Update Metals version to 0.11.1 (@tgodzik)
+- [82c4671](https://github.com/scalameta/metals-vscode/commit/82c467142df70e197fcc0449c0d100fa047b098d) Bump ts-jest from 27.1.2 to 27.1.3 (@dependabot[bot])
+- [620b0b3](https://github.com/scalameta/metals-vscode/commit/620b0b3454ac5112888fbdef84a8dd3b98b6d62d) Update languageclient with fixes for the java home issues (@tgodzik)
+- [997e2f1](https://github.com/scalameta/metals-vscode/commit/997e2f1b6dedf44b8ce45971a5ffef12d35524fd) v1.11.1
+
 ### v1.11.1 (2022/01/13 14:18 +00:00)
 - [8eb8fe3](https://github.com/scalameta/metals-vscode/commit/8eb8fe31af0759edf4c5f2f038c01453bebedd0f) Change back to code lenses for the time being due to a performance issue. (@tgodzik)
 - [391a6ad](https://github.com/scalameta/metals-vscode/commit/391a6adfade79b018ff6fecd910d064af7d03aee) Bump follow-redirects from 1.14.1 to 1.14.7 (@dependabot[bot])
