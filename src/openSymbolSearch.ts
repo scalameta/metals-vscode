@@ -6,7 +6,7 @@ import {
   SymbolKind,
 } from "vscode";
 import { LanguageClient, Location } from "vscode-languageclient/node";
-import { gotoLocation } from "./goToLocation";
+import { gotoLocation, WindowLocation } from "./goToLocation";
 
 class SymbolItem implements QuickPickItem {
   label: string;
@@ -66,8 +66,14 @@ export function openSymbolSearch(client: LanguageClient): void {
 
   inputBox.onDidAccept(() => {
     const location = inputBox.activeItems[0].location;
+    const windowLocation: WindowLocation = {
+      uri: location.uri,
+      range: location.range,
+      otherWindow: false,
+    };
     inputBox.dispose();
-    gotoLocation(location, false);
+
+    gotoLocation(windowLocation);
   });
   inputBox.show();
 }
