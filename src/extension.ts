@@ -355,6 +355,7 @@ function launchMetals(
     globSyntax: "vscode",
     icons: "vscode",
     inputBoxProvider: true,
+    isVirtualDocumentSupported: true,
     openFilesOnRenameProvider: true,
     openNewWindowProvider: true,
     quickPickProvider: true,
@@ -369,6 +370,8 @@ function launchMetals(
     documentSelector: [
       { scheme: "file", language: "scala" },
       { scheme: "file", language: "java" },
+      { scheme: "jar", language: "scala" },
+      { scheme: "jar", language: "java" },
     ],
     synchronize: {
       configurationSection: "metals",
@@ -629,6 +632,10 @@ function launchMetals(
 
       languages.registerCodeLensProvider(
         { scheme: "file", language: "scala" },
+        codeLensRefresher
+      );
+      languages.registerCodeLensProvider(
+        { scheme: "jar", language: "scala" },
         codeLensRefresher
       );
 
