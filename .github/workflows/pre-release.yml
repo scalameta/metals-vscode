@@ -16,7 +16,7 @@ jobs:
   pre-release:
     if: |
       !contains(github.event.head_commit.message, 'scalameta/dependabot/') &&
-      !contains(github.event.head_commit.message, 'Signed-off-by: dependabot[bot]') &&
+      !contains(github.event.author.email, 'dependabot[bot]@users.noreply.github.com') &&
       github.event.author.email != 'bot@scalameta.org'
     runs-on: ubuntu-latest
     steps:
