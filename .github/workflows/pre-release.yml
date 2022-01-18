@@ -6,13 +6,6 @@ on:
       - main
 
 jobs:
-  logging:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Print event metadata
-        run: |
-          echo "${{toJSON(github.event.commits[0])}}"
-          echo "${{toJSON(github.event.head_commit)}}"
   pre-release:
     if: |
       !contains(github.event.head_commit.message, 'scalameta/dependabot/') &&
