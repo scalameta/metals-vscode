@@ -965,10 +965,10 @@ function launchMetals(
               .openTextDocument(fullPath)
               .then((textDocument) => window.showTextDocument(textDocument));
           } else {
-            return sendRequest([parentUri, name, "worksheet"]);
+            return sendRequest([parentUri, name, "scala-worksheet"]);
           }
         } else {
-          return sendRequest([undefined, undefined, "worksheet"]);
+          return sendRequest([undefined, undefined, "scala-worksheet"]);
         }
       });
 
