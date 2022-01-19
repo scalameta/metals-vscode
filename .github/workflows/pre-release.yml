@@ -28,6 +28,12 @@ jobs:
         run: |
           git add .
           git commit -m "Increase patch version for pre-release"
+      # Pre release version requires vscode ^1.63
+      # but we don't want to force normal users to update, modify it
+      - name: Update required vs code version
+        run: |
+          node ./update-version.js
+          yarn install
       - name: Publish pre-release version to Visual Studio Marketplace
         uses: HaaLeo/publish-vscode-extension@v1
         with:
@@ -36,3 +42,6 @@ jobs:
           preRelease: true
           yarn: true
       # Don't publish for VSX, it doesn't support pre-release versions
+      # Push changes - increased patch version
+      - name: Push changes
+        run: git push origin HEAD:main
