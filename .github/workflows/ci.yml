@@ -17,6 +17,20 @@ jobs:
       - run: yarn install
       - run: yarn test
 
+  extension-test:
+    name: Extension test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+      - run: yarn install
+      - name: Run extension tests
+        run: xvfb-run -a yarn test-extension
+        # In headless Linux CI machines xvfb is required to run VS Code
+        # https://code.visualstudio.com/api/working-with-extensions/continuous-integration#github-actions
+
   build:
     name: Build
     runs-on: ubuntu-latest
