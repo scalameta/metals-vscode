@@ -9,9 +9,11 @@ jobs:
   pre-release:
     if: |
       github.event.author.email != 'bot@scalameta.org' &&
-      !contains(github.event.head_commit.message, 'scalameta/dependabot/') &&
+      !contains(github.event.commits.*.message, 'scalameta/dependabot/') &&
+      !contains(github.event.commits.*.message, 'dependabot[bot]') &&
       !contains(github.event.author.email, 'dependabot[bot]@users.noreply.github.com') &&
-      !contains(github.event.head_commit.message, '[skip pre]')
+      !contains(github.event.commits.*.message, '[skip pre]') &&
+      !contains(github.event.commits.*.message, '[skip-pre]') &&
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-node@v2
