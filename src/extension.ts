@@ -729,9 +729,7 @@ function launchMetals(
           item.command = params.command;
           commands.getCommands().then((values) => {
             if (values.includes(command)) {
-              registerCommand(command, () => {
-                client.sendRequest(ExecuteCommandRequest.type, { command });
-              });
+              commands.executeCommand(command);
             }
           });
         } else {
