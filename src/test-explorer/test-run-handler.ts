@@ -77,6 +77,7 @@ export async function runHandler(
 
         await analyzeResults(run, children, callback);
       } catch (error) {
+        callback();
         console.error(error);
       }
     }
