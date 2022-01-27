@@ -45,7 +45,7 @@ vscode.debug.registerDebugAdapterTrackerFactory("scala", {
 export async function runHandler(
   testController: TestController,
   noDebug: boolean,
-  callback: () => void,
+  afterFinished: () => void,
   request: TestRunRequest,
   token: CancellationToken
 ): Promise<void> {
@@ -75,10 +75,11 @@ export async function runHandler(
           return run.failed(test, { message: "Debug session not started" });
         }
 
-        await analyzeResults(run, children, callback);
+        await analyzeResults(run, children);
       } catch (error) {
-        callback();
         console.error(error);
+      } finally {
+        afterFinished();
       }
     }
   }
@@ -151,8 +152,7 @@ async function startDebugging(session: DebugSession, noDebug: boolean) {
  */
 async function analyzeResults(
   run: vscode.TestRun,
-  children: vscode.TestItem[],
-  callback: () => void
+  children: vscode.TestItem[]
 ) {
   return new Promise<void>((resolve) => {
     const disposable = vscode.debug.onDidTerminateDebugSession(
@@ -163,7 +163,6 @@ async function analyzeResults(
         const teardown = () => {
           disposable.dispose();
           testCache.clearSuiteResultsFor(session.id);
-          callback();
         };
 
         // analyze current TestRun
