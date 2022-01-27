@@ -1,7 +1,13 @@
 import { workspace, window, ViewColumn, Uri, Range } from "vscode";
-import { Location } from "vscode-languageclient/node";
+import { DocumentUri, Range as LspRange } from "vscode-languageclient/node";
 
-export function gotoLocation(location: Location, otherWindow: boolean): void {
+export interface WindowLocation {
+  uri: DocumentUri;
+  range: LspRange;
+  otherWindow: boolean;
+}
+
+export function gotoLocation(location: WindowLocation): void {
   const range = new Range(
     location.range.start.line,
     location.range.start.character,
@@ -9,7 +15,7 @@ export function gotoLocation(location: Location, otherWindow: boolean): void {
     location.range.end.character
   );
   let vs = ViewColumn.Active;
-  if (otherWindow) {
+  if (location.otherWindow) {
     vs =
       window.visibleTextEditors
         .filter(

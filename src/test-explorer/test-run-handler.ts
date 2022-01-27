@@ -47,7 +47,7 @@ vscode.debug.registerDebugAdapterTrackerFactory("scala", {
 export async function runHandler(
   testController: TestController,
   noDebug: boolean,
-  callback: () => void,
+  afterFinished: () => void,
   request: TestRunRequest,
   token: CancellationToken
 ): Promise<void> {
@@ -70,7 +70,7 @@ export async function runHandler(
     await runDebugSession(run, noDebug, test, data.targetUri, suites);
   }
   run.end();
-  callback();
+  afterFinished();
 }
 
 async function runDebugSession(

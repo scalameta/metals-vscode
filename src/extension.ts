@@ -34,7 +34,6 @@ import {
   LanguageClientOptions,
   RevealOutputChannelOn,
   ExecuteCommandRequest,
-  Location,
   CancellationToken,
 } from "vscode-languageclient/node";
 import { LazyProgress } from "./lazy-progress";
@@ -75,7 +74,7 @@ import {
 } from "./decoration-protocol";
 import { clearTimeout } from "timers";
 import { increaseIndentPattern } from "./indentPattern";
-import { gotoLocation } from "./goToLocation";
+import { gotoLocation, WindowLocation } from "./goToLocation";
 import { openSymbolSearch } from "./openSymbolSearch";
 import {
   createFindInFilesTreeView,
@@ -649,13 +648,11 @@ function launchMetals(
       client.onNotification(ExecuteClientCommand.type, (params) => {
         switch (params.command) {
           case ClientCommands.GotoLocation: {
-            const location =
-              params.arguments && (params.arguments[0] as Location);
-            const otherWindow =
-              (params.arguments && (params.arguments[1] as boolean)) || false;
-            if (location) {
-              gotoLocation(location, otherWindow);
-            }
+            const location = params.arguments?.[0] as WindowLocation;
+            commands.executeCommand(
+              `metals.${ClientCommands.GotoLocation}`,
+              location
+            );
             break;
           }
           case ClientCommands.RefreshModel:
@@ -729,9 +726,7 @@ function launchMetals(
           item.command = params.command;
           commands.getCommands().then((values) => {
             if (values.includes(command)) {
-              registerCommand(command, () => {
-                client.sendRequest(ExecuteCommandRequest.type, { command });
-              });
+              commands.executeCommand(command);
             }
           });
         } else {
@@ -852,10 +847,10 @@ function launchMetals(
       });
 
       registerCommand(
-        `metals.${ServerCommands.GotoPosition}`,
-        (location: Location) => {
+        `metals.${ClientCommands.GotoLocation}`,
+        (location: WindowLocation) => {
           if (location) {
-            gotoLocation(location, false);
+            gotoLocation(location);
           }
         }
       );
