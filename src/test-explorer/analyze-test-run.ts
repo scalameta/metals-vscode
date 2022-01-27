@@ -3,6 +3,8 @@ import {
   Failed,
   SingleTestResult,
   SuiteName,
+  TargetName,
+  TestName,
   TestRunActions,
   TestSuiteResult,
 } from "./types";
@@ -12,42 +14,38 @@ import { ansicolor } from "ansicolor";
  * Analyze results from TestRun and pass inform Test Controller about them.
  *
  * @param run Interface which corresponds to available actions in vscode.TestRun
- * @param tests which should have been run in this TestRun
+ * @param targetName target name for which TestRun was created
+ * @param testSuites which should have been run in this TestRun
  * @param testSuitesResult result which came back from DAP server
  * @param teardown cleanup logic which has to be called at the end of function
  */
-export const analyzeTestRun = (
+export function analyzeTestRun(
   run: TestRunActions,
-  tests: vscode.TestItem[],
+  targetName: TargetName,
+  testSuites: vscode.TestItem[],
   testSuitesResults: TestSuiteResult[],
   teardown?: () => void
-): void => {
+): void {
   const results = createResultsMap(testSuitesResults);
-  for (const test of tests) {
-    const suiteName = test.id as SuiteName;
+  for (const testSuite of testSuites) {
+    const suiteName = testSuite.id as SuiteName;
     const result = results.get(suiteName);
     if (result != null) {
-      const duration = result.duration;
-      const failed = result.tests.filter(isFailed);
-      if (failed.length > 0) {
-        const msg = extractErrorMessages(failed);
-        run.failed?.(test, msg, duration);
+      // if test suite has children (test cases) do a more fine-grained analyze of results.
+      if (testSuite.children.size > 0) {
+        analyzeTestCases(result, targetName, testSuite, run);
       } else {
-        run.passed?.(test, duration);
+        analyzeTestSuite(result, run, testSuite);
       }
     } else {
-      run.skipped?.(test);
+      run.skipped?.(testSuite);
     }
   }
   teardown?.();
-};
-
-function isFailed(result: SingleTestResult): result is Failed {
-  return result.kind === "failed";
 }
 
 /**
- * Transforms array of suite results into mapping between suite name and suite result
+ * Transforms array of suite results into mapping between suite name and suite result.
  */
 function createResultsMap(
   testSuitesResults: TestSuiteResult[]
@@ -60,13 +58,74 @@ function createResultsMap(
 }
 
 /**
+ * Analyze result of each test case from the test suite independently.
+ */
+function analyzeTestCases(
+  result: TestSuiteResult,
+  targetName: TargetName,
+  testSuite: vscode.TestItem,
+  run: TestRunActions
+) {
+  const testCasesResults = createTestCasesMap(result);
+  testSuite.children.forEach((child) => {
+    const testCaseResult = testCasesResults.get(child.id as TestName);
+
+    if (testCaseResult?.kind === "passed") {
+      run.passed?.(child, testCaseResult.duration);
+    } else if (testCaseResult?.kind === "failed") {
+      const errorMsg = toTestMessage(testCaseResult.error);
+      run.failed?.(child, errorMsg, testCaseResult.duration);
+    } else {
+      run.skipped?.(child);
+    }
+  });
+}
+
+/**
+ * Transforms suite result into mapping between test case name and its result.
+ */
+function createTestCasesMap(
+  testSuiteResult: TestSuiteResult
+): Map<TestName, SingleTestResult> {
+  const tuples: [TestName, SingleTestResult][] = testSuiteResult.tests.map(
+    (test) => [test.testName, test]
+  );
+  const testCasesResult = new Map(tuples);
+  return testCasesResult;
+}
+
+/**
+ * Analyze suite result treating test cases as whole, one entity.
+ * If one of them fails, the whole suite fails.
+ */
+function analyzeTestSuite(
+  result: TestSuiteResult,
+  run: TestRunActions,
+  testSuite: vscode.TestItem
+) {
+  const failed = result.tests.filter(isFailed);
+  if (failed.length > 0) {
+    const msg = extractErrorMessages(failed);
+    run.failed?.(testSuite, msg, result.duration);
+  } else {
+    run.passed?.(testSuite, result.duration);
+  }
+}
+
+function isFailed(result: SingleTestResult): result is Failed {
+  return result.kind === "failed";
+}
+
+/**
  * Extract error messages for array of failed tests and map them to the TestMessage.
  * Messages can include ANSI escape sequences such as colors, but they have to be stripped
  * because vscode test explorer doesn't support ANSI color codes.
  */
 function extractErrorMessages(failed: Failed[]): vscode.TestMessage[] {
-  const msg = failed
-    .map((t) => ansicolor.strip(t.error))
-    .map((message) => ({ message }));
-  return msg;
+  const messages = failed.map((entry) => toTestMessage(entry.error));
+  return messages;
+}
+
+function toTestMessage(error: string): vscode.TestMessage {
+  return { message: ansicolor.strip(error) };
 }

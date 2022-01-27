@@ -5,15 +5,18 @@ import { newtype } from "../util";
 export type TargetName = newtype<string, "targetName">;
 export type TargetUri = newtype<string, "targetUri">;
 export type ClassName = newtype<string, "className">;
-export type FullyQualifiedName = newtype<string, "fullyQualifiedName">;
+export type FullyQualifiedClassName = newtype<
+  string,
+  "fullyQualifiedClassName"
+>;
 export type TestName = newtype<string, "testName">;
 export type SuiteName = newtype<string, "suiteName">;
 
 /**
  * Additional information about tests which is stored in map and retrieved when test is scheduled to run.
  */
-export interface TestItemMetadata {
-  kind: "project" | "package" | "suite";
+export interface BuildTargetMetadata {
+  kind: "project" | "package" | "suite" | "testcase";
   targetName: TargetName;
   targetUri: TargetUri;
 }
@@ -21,25 +24,36 @@ export interface TestItemMetadata {
 /**
  * Information about test classes which is returned by Metals Language Server
  */
-export interface SuiteDiscovery {
+export interface BuildTargetUpdate {
   targetName: TargetName;
   targetUri: TargetUri;
-  discovered: TestDiscoveryResult[];
+  events: TestExplorerEvent[];
 }
+export type TestExplorerEvent = RemoveTestSuite | AddTestSuite | AddTestCases;
 
-export type TestDiscoveryResult = SuiteDiscovery | PackageDiscovery;
-
-export interface SuiteDiscovery {
-  kind: "suite";
+interface BaseTestExplorerEvent {
+  fullyQualifiedClassName: FullyQualifiedClassName;
   className: ClassName;
-  fullyQualifiedName: FullyQualifiedName;
-  location: Location;
+}
+export interface RemoveTestSuite extends BaseTestExplorerEvent {
+  kind: "removeSuite";
 }
 
-export interface PackageDiscovery {
-  kind: "package";
-  prefix: string;
-  children: TestDiscoveryResult[];
+export interface AddTestSuite extends BaseTestExplorerEvent {
+  kind: "addSuite";
+  symbol: string;
+  location: Location;
+  canResolveChildren: boolean;
+}
+
+export interface AddTestCases extends BaseTestExplorerEvent {
+  kind: "addTestCases";
+  testCases: TestCaseEntry[];
+}
+
+export interface TestCaseEntry {
+  name: string;
+  location: Location;
 }
 
 /**
@@ -62,6 +76,9 @@ export type DapEvent =
       };
     };
 
+/**
+ * Test execution result which comes from DAP
+ */
 export interface TestSuiteResult {
   suiteName: SuiteName;
   duration: number;

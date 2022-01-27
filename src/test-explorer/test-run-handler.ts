@@ -9,7 +9,7 @@ import {
 import { debugServerFromUri, DebugSession } from "../scalaDebugger";
 import { analyzeTestRun } from "./analyze-test-run";
 import { testCache } from "./test-cache";
-import { DapEvent, TargetUri, TestItemMetadata } from "./types";
+import { DapEvent, TargetUri, BuildTargetMetadata } from "./types";
 
 // this id is used to mark DAP sessions created by TestController
 // thanks to that debug tracker knows which requests it should track and gather results
@@ -39,8 +39,10 @@ vscode.debug.registerDebugAdapterTrackerFactory("scala", {
 });
 
 /**
- * runHandler is a function which is called to start a TestRun. Depending on the run profile it may be ordinary run or a debug TestRun.
- * It creates run queue which contains test supposed to be run and then for each entry it creates & run a debug session
+ * runHandler is a function which is called to start a TestRun.
+ * Depending on the run profile it may be ordinary run or a debug TestRun.
+ * It creates run queue which contains test supposed to be run and then,
+ * for each entry it creates & run a debug session.
  */
 export async function runHandler(
   testController: TestController,
@@ -72,10 +74,11 @@ export async function runHandler(
         const wasStarted = await startDebugging(session, noDebug);
         if (!wasStarted) {
           vscode.window.showErrorMessage("Debug session not started");
-          return run.failed(test, { message: "Debug session not started" });
+          run.failed(test, { message: "Debug session not started" });
+          return;
         }
 
-        await analyzeResults(run, children, callback);
+        await analyzeResults(run, data, children, callback);
       } catch (error) {
         console.error(error);
       }
@@ -89,8 +92,8 @@ export async function runHandler(
  */
 function createRunQueue(
   request: vscode.TestRunRequest
-): { test: vscode.TestItem; data: TestItemMetadata }[] {
-  const queue: { test: vscode.TestItem; data: TestItemMetadata }[] = [];
+): { test: vscode.TestItem; data: BuildTargetMetadata }[] {
+  const queue: { test: vscode.TestItem; data: BuildTargetMetadata }[] = [];
 
   if (request.include) {
     const excludes = new Set(request.exclude ?? []);
@@ -150,6 +153,7 @@ async function startDebugging(session: DebugSession, noDebug: boolean) {
  */
 async function analyzeResults(
   run: vscode.TestRun,
+  data: BuildTargetMetadata,
   children: vscode.TestItem[],
   callback: () => void
 ) {
@@ -166,7 +170,13 @@ async function analyzeResults(
         };
 
         // analyze current TestRun
-        analyzeTestRun(run, children, testSuitesResult, teardown);
+        analyzeTestRun(
+          run,
+          data.targetName,
+          children,
+          testSuitesResult,
+          teardown
+        );
         return resolve();
       }
     );

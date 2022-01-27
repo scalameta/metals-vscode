@@ -36,7 +36,6 @@ import {
   ExecuteCommandRequest,
   Location,
   CancellationToken,
-  CodeLensRefreshRequest,
 } from "vscode-languageclient/node";
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
@@ -87,6 +86,7 @@ import * as ext from "./hoverExtension";
 import { decodeAndShowFile, MetalsFileProvider } from "./metalsContentProvider";
 import { getTextDocumentPositionParams, getValueFromConfig } from "./util";
 import { createTestManager } from "./test-explorer/test-manager";
+import { BuildTargetUpdate } from "./test-explorer/types";
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
 const downloadJava = "Download Java";
@@ -642,12 +642,7 @@ function launchMetals(
         }
       });
 
-      const refreshTests = client.onRequest(CodeLensRefreshRequest.type, () => {
-        testManager.discoverTestSuites();
-      });
-
       context.subscriptions.push(disableTestExplorer);
-      context.subscriptions.push(refreshTests);
       context.subscriptions.push(testManager.testController);
 
       // Handle the metals/executeClientCommand extension notification.
@@ -702,6 +697,11 @@ function launchMetals(
           case ClientCommands.FocusDiagnostics:
             commands.executeCommand(ClientCommands.FocusDiagnostics);
             break;
+          case "metals-update-test-explorer": {
+            const updates: BuildTargetUpdate[] = params.arguments || [];
+            testManager.updateTestExplorer(updates);
+            break;
+          }
           default:
             outputChannel.appendLine(`unknown command: ${params.command}`);
         }

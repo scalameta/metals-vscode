@@ -1,16 +1,23 @@
 import * as vscode from "vscode";
-import { TestItemMetadata, TestSuiteResult } from "./types";
+import { BuildTargetMetadata, TestSuiteResult } from "./types";
 
 class TestCache {
-  private readonly metadata = new WeakMap<vscode.TestItem, TestItemMetadata>();
+  private readonly metadata = new WeakMap<
+    vscode.TestItem,
+    BuildTargetMetadata
+  >();
   private readonly suiteResults = new Map<string, TestSuiteResult[]>();
 
-  setMetadata(test: vscode.TestItem, data: TestItemMetadata): void {
+  setMetadata(test: vscode.TestItem, data: BuildTargetMetadata): void {
     this.metadata.set(test, data);
   }
 
-  getMetadata(test: vscode.TestItem): TestItemMetadata | undefined {
+  getMetadata(test: vscode.TestItem): BuildTargetMetadata | undefined {
     return this.metadata.get(test);
+  }
+
+  deleteMetadata(test: vscode.TestItem): boolean {
+    return this.metadata.delete(test);
   }
 
   /**

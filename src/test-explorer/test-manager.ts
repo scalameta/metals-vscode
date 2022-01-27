@@ -4,16 +4,11 @@ import {
   ExecuteCommandRequest,
   LanguageClient,
 } from "vscode-languageclient/node";
-import { testCache } from "./test-cache";
+import { addTestCases } from "./add-test-cases";
+import { addTestSuite } from "./add-test-suite";
+import { removeTestItem } from "./remove-test-item";
 import { runHandler } from "./test-run-handler";
-import {
-  SuiteDiscovery,
-  TargetName,
-  TargetUri,
-  TestDiscoveryResult,
-  TestItemMetadata,
-} from "./types";
-import { toVscodeRange } from "./util";
+import { BuildTargetUpdate } from "./types";
 
 export function createTestManager(
   client: LanguageClient,
@@ -35,13 +30,6 @@ class TestManager {
     if (isDisabled) {
       this.disable();
     }
-    this.testController.resolveHandler = async (item?: vscode.TestItem) => {
-      if (item != null) {
-        return;
-      } else {
-        await this.discoverTestSuites();
-      }
-    };
 
     const callback = () => (this.isRunning = false);
 
@@ -68,11 +56,35 @@ class TestManager {
       },
       false
     );
+
+    this.testController.resolveHandler = async (item?: vscode.TestItem) => {
+      const uri = item?.uri?.toString();
+      if (uri) {
+        await this.discoverTestSuites(uri);
+      }
+    };
   }
 
   async enable(): Promise<void> {
     this.isDisabled = false;
     await this.discoverTestSuites();
+  }
+
+  debug() {
+    const traverse = (items: vscode.TestItemCollection) => {
+      const testItems: unknown[] = [];
+      items.forEach((c) => {
+        testItems.push({
+          id: c.id,
+          label: c.label,
+          children: traverse(c.children),
+        });
+      });
+      return testItems;
+    };
+    const result = traverse(this.testController.items);
+    console.log(JSON.stringify(result, undefined, 2));
+    return result;
   }
 
   /**
@@ -85,91 +97,37 @@ class TestManager {
     this.isDisabled = true;
   }
 
-  discoverTestSuites(): Promise<void> {
+  updateTestExplorer(updates: BuildTargetUpdate[]) {
+    for (const { targetUri, targetName, events } of updates) {
+      for (const event of events) {
+        if (event.kind === "removeSuite") {
+          removeTestItem(this.testController, targetName, event);
+        } else if (event.kind === "addSuite") {
+          addTestSuite(this.testController, targetName, targetUri, event);
+        } else if (event.kind === "addTestCases") {
+          addTestCases(this.testController, targetName, targetUri, event);
+        }
+      }
+    }
+  }
+
+  discoverTestSuites(uri?: string): Promise<void> {
     if (this.isDisabled) {
       return Promise.resolve();
     }
 
+    const args = uri ? [{ uri }] : [];
+
     return this.client
       .sendRequest(ExecuteCommandRequest.type, {
-        command: "discover-test-suites",
+        command: "discover-tests",
+        arguments: args,
       })
       .then(
-        (value: SuiteDiscovery[]) => {
-          for (const { targetName, targetUri, discovered } of value) {
-            const rootNode = this.testController.createTestItem(
-              targetName,
-              targetName
-            );
-            createTestItems(
-              this.testController,
-              discovered,
-              rootNode,
-              targetName,
-              targetUri
-            );
-            const data: TestItemMetadata = {
-              kind: "project",
-              targetName,
-              targetUri,
-            };
-            testCache.setMetadata(rootNode, data);
-            this.testController.items.add(rootNode);
-          }
+        (updates: BuildTargetUpdate[]) => {
+          this.updateTestExplorer(updates);
         },
         (err) => console.error(err)
       );
-  }
-}
-
-/**
- * Create TestItems from the given @param discoveredArray and add them to the @param parent
- */
-function createTestItems(
-  testController: vscode.TestController,
-  discoveredArray: TestDiscoveryResult[],
-  parent: vscode.TestItem,
-  targetName: TargetName,
-  targetUri: TargetUri
-) {
-  for (const discovered of discoveredArray) {
-    if (discovered.kind === "suite") {
-      const { className, location, fullyQualifiedName } = discovered;
-      const parsedUri = vscode.Uri.parse(location.uri);
-      const parsedRange = toVscodeRange(location.range);
-      const testItem = testController.createTestItem(
-        fullyQualifiedName,
-        className,
-        parsedUri
-      );
-      testItem.range = parsedRange;
-      const data: TestItemMetadata = {
-        kind: "suite",
-        targetName,
-        targetUri,
-      };
-      testCache.setMetadata(testItem, data);
-      parent.children.add(testItem);
-    } else {
-      const data: TestItemMetadata = {
-        kind: "package",
-        targetName,
-        targetUri,
-      };
-
-      const packageNode = testController.createTestItem(
-        `${parent.id}.${discovered.prefix}`,
-        discovered.prefix
-      );
-      parent.children.add(packageNode);
-      testCache.setMetadata(packageNode, data);
-      createTestItems(
-        testController,
-        discovered.children,
-        packageNode,
-        targetName,
-        targetUri
-      );
-    }
   }
 }

@@ -825,7 +825,7 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "test": "jest",
-    "test-extension": "tsc -p ./ && node out/test/extension/run-test.js",
+    "test-extension": "rimraf out/ && tsc -p ./ && node out/test/extension/run-test.js",
     "build": "vsce package --yarn",
     "vscode:publish": "vsce publish --yarn",
     "ovsx:publish": "ovsx publish",
@@ -850,6 +850,7 @@
     "mocha": "^9.1.4",
     "ovsx": "0.1.0",
     "prettier": "2.5.1",
+    "rimraf": "^3.0.2",
     "ts-jest": "^27.1.3",
     "typescript": "4.5.4",
     "vsce": "2.6.3"
