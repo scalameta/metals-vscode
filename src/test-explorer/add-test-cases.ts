@@ -44,7 +44,7 @@ export function addTestCases(
         const testItem = testController.createTestItem(id, name, parsedUri);
         testItem.range = parsedRange;
         const data: BuildTargetMetadata = {
-          kind: "suite",
+          kind: "testcase",
           targetName,
           targetUri,
         };

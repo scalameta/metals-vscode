@@ -29,12 +29,12 @@ export function addTestSuite(
     targetUri
   );
 
-  function addTestLoop(parent: vscode.TestItem, testIds: string[]) {
+  function addTestSuiteLoop(parent: vscode.TestItem, testIds: string[]) {
     if (testIds.length > 0) {
       const [currentId, ...restOfIds] = testIds;
       const child = parent.children.get(currentId);
       if (child) {
-        addTestLoop(child, restOfIds);
+        addTestSuiteLoop(child, restOfIds);
       } else {
         const packageNode = testController.createTestItem(currentId, currentId);
         parent.children.add(packageNode);
@@ -45,7 +45,7 @@ export function addTestSuite(
           targetUri,
         };
         testCache.setMetadata(packageNode, data);
-        addTestLoop(packageNode, restOfIds);
+        addTestSuiteLoop(packageNode, restOfIds);
       }
     } else {
       const { className, location, fullyQualifiedClassName } = event;
@@ -74,7 +74,7 @@ export function addTestSuite(
   }
 
   const testIds = prefixesOf(event.fullyQualifiedClassName);
-  addTestLoop(buildTargetItem, testIds);
+  addTestSuiteLoop(buildTargetItem, testIds);
 }
 
 /**
