@@ -1,7 +1,8 @@
+import assert from "assert";
 import { increaseIndentPattern } from "../../indentPattern";
 
 function checkIndent(indentPattern: RegExp, result: boolean) {
-  return (text: string) => expect(indentPattern.test(text)).toEqual(result);
+  return (text: string) => assert(indentPattern.test(text) === result);
 }
 
 function checkFunctions(indentPattern: RegExp) {
@@ -13,7 +14,7 @@ describe("IncreaseIndentPattern Test Suite", () => {
     increaseIndentPattern()
   );
 
-  test("Scala3", () => {
+  it("Scala3", () => {
     // after the closing ) of a condition in an old-style if or while.
     checkIncrease("if (x < 0)");
     checkIncrease("if (x < 0)          ");
