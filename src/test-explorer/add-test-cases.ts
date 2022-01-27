@@ -1,11 +1,6 @@
 import * as vscode from "vscode";
 import { testCache } from "./test-cache";
-import {
-  TargetName,
-  TargetUri,
-  AddTestCases,
-  BuildTargetMetadata,
-} from "./types";
+import { TargetName, TargetUri, AddTestCases, TestItemMetadata } from "./types";
 import { prefixesOf, toVscodeRange } from "./util";
 
 /**
@@ -43,7 +38,7 @@ export function addTestCases(
         const id = `${parent.id}.${name}`;
         const testItem = testController.createTestItem(id, name, parsedUri);
         testItem.range = parsedRange;
-        const data: BuildTargetMetadata = {
+        const data: TestItemMetadata = {
           kind: "testcase",
           targetName,
           targetUri,
@@ -56,9 +51,7 @@ export function addTestCases(
 
   const buildTargetItem = testController.items.get(targetName);
   if (buildTargetItem) {
-    const testIds = prefixesOf(event.fullyQualifiedClassName);
-    // all n prefixes of fully qualified name are needed
-    const newPrefixes = [...testIds, event.fullyQualifiedClassName];
-    addTestCasesLoop(buildTargetItem, newPrefixes);
+    const prefixes = prefixesOf(event.fullyQualifiedClassName, true);
+    addTestCasesLoop(buildTargetItem, prefixes);
   }
 }

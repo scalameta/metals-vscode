@@ -1,11 +1,6 @@
 import * as vscode from "vscode";
 import { testCache } from "./test-cache";
-import {
-  TargetName,
-  TargetUri,
-  BuildTargetMetadata,
-  AddTestSuite,
-} from "./types";
+import { TargetName, TargetUri, TestItemMetadata, AddTestSuite } from "./types";
 import { prefixesOf, toVscodeRange } from "./util";
 
 /**
@@ -39,7 +34,7 @@ export function addTestSuite(
         const packageNode = testController.createTestItem(currentId, currentId);
         parent.children.add(packageNode);
 
-        const data: BuildTargetMetadata = {
+        const data: TestItemMetadata = {
           kind: "package",
           targetName,
           targetUri,
@@ -63,7 +58,7 @@ export function addTestSuite(
       );
       testItem.canResolveChildren = event.canResolveChildren;
       testItem.range = parsedRange;
-      const data: BuildTargetMetadata = {
+      const data: TestItemMetadata = {
         kind: "suite",
         targetName,
         targetUri,
@@ -98,7 +93,7 @@ function getOrCreateBuildTargetItem(
   );
   testController.items.add(createdNode);
 
-  const data: BuildTargetMetadata = {
+  const data: TestItemMetadata = {
     kind: "project",
     targetName,
     targetUri,

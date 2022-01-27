@@ -9,7 +9,7 @@ import {
 import { debugServerFromUri, DebugSession } from "../scalaDebugger";
 import { analyzeTestRun } from "./analyze-test-run";
 import { testCache } from "./test-cache";
-import { DapEvent, TargetUri, BuildTargetMetadata } from "./types";
+import { DapEvent, TargetUri, TestItemMetadata } from "./types";
 
 // this id is used to mark DAP sessions created by TestController
 // thanks to that debug tracker knows which requests it should track and gather results
@@ -57,34 +57,50 @@ export async function runHandler(
   for (const { test, data } of queue) {
     if (token.isCancellationRequested) {
       run.skipped(test);
-    } else {
-      run.started(test);
-      const children = testCache.getTestItemChildren(test);
-      children.forEach((c) => run.enqueued(c));
-
-      try {
-        await commands.executeCommand("workbench.action.files.save");
-        const testsIds = children.map((t) => t.id);
-        const session = await createDebugSession(data.targetUri, testsIds);
-
-        if (!session) {
-          return;
-        }
-
-        const wasStarted = await startDebugging(session, noDebug);
-        if (!wasStarted) {
-          vscode.window.showErrorMessage("Debug session not started");
-          run.failed(test, { message: "Debug session not started" });
-          return;
-        }
-
-        await analyzeResults(run, data, children, callback);
-      } catch (error) {
-        console.error(error);
-      }
+      continue;
     }
+
+    if (data.kind === "testcase" && test.parent) {
+      const suites = [test.parent];
+      await runDebugSession(run, noDebug, test.parent, data.targetUri, suites);
+      continue;
+    }
+
+    const suites = testCache.getTestItemChildren(test);
+    await runDebugSession(run, noDebug, test, data.targetUri, suites);
   }
   run.end();
+  callback();
+}
+
+async function runDebugSession(
+  run: vscode.TestRun,
+  noDebug: boolean,
+  root: vscode.TestItem,
+  targetUri: TargetUri,
+  suites: vscode.TestItem[]
+): Promise<void> {
+  try {
+    suites.forEach((suite) => {
+      suite.children.forEach((child) => run.started(child));
+      run.started(suite);
+    });
+    await commands.executeCommand("workbench.action.files.save");
+    const testsIds = suites.map((c) => c.id);
+    const session = await createDebugSession(targetUri, testsIds);
+    if (!session) {
+      return;
+    }
+    const wasStarted = await startDebugging(session, noDebug);
+    if (!wasStarted) {
+      vscode.window.showErrorMessage("Debug session not started");
+      run.failed(root, { message: "Debug session not started" });
+      return;
+    }
+    await analyzeResults(run, suites);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 /**
@@ -92,8 +108,8 @@ export async function runHandler(
  */
 function createRunQueue(
   request: vscode.TestRunRequest
-): { test: vscode.TestItem; data: BuildTargetMetadata }[] {
-  const queue: { test: vscode.TestItem; data: BuildTargetMetadata }[] = [];
+): { test: vscode.TestItem; data: TestItemMetadata }[] {
+  const queue: { test: vscode.TestItem; data: TestItemMetadata }[] = [];
 
   if (request.include) {
     const excludes = new Set(request.exclude ?? []);
@@ -151,12 +167,7 @@ async function startDebugging(session: DebugSession, noDebug: boolean) {
  * Retrieves test suite results for current debus session gathered by DAP tracker and passes
  * them to the analyzer function. After analysis ends, results are cleaned.
  */
-async function analyzeResults(
-  run: vscode.TestRun,
-  data: BuildTargetMetadata,
-  children: vscode.TestItem[],
-  callback: () => void
-) {
+async function analyzeResults(run: vscode.TestRun, suites: vscode.TestItem[]) {
   return new Promise<void>((resolve) => {
     const disposable = vscode.debug.onDidTerminateDebugSession(
       (session: vscode.DebugSession) => {
@@ -166,17 +177,10 @@ async function analyzeResults(
         const teardown = () => {
           disposable.dispose();
           testCache.clearSuiteResultsFor(session.id);
-          callback();
         };
 
         // analyze current TestRun
-        analyzeTestRun(
-          run,
-          data.targetName,
-          children,
-          testSuitesResult,
-          teardown
-        );
+        analyzeTestRun(run, suites, testSuitesResult, teardown);
         return resolve();
       }
     );

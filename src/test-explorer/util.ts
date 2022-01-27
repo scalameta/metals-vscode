@@ -1,6 +1,5 @@
 import { Range } from "vscode-languageclient/node";
 import * as vscode from "vscode";
-import { TargetName } from "./types";
 
 export function toVscodeRange(range: Range): vscode.Range {
   return new vscode.Range(
@@ -12,13 +11,19 @@ export function toVscodeRange(range: Range): vscode.Range {
 }
 
 /**
- * Return n-1 prefixes of fully qualified name.
+ * Return prefixes of fully qualified name.
+ * includeSelf = false :
  * 'a.b.c.d.TestSuite' -> ['a', 'a.b', 'a.b.c', 'a.b.c.d']
- * 'a.b.c.d.TestSuite' is omitted on purpose
+ * includeSelf = true :
+ * 'a.b.c.d.TestSuite' -> ['a', 'a.b', 'a.b.c', 'a.b.c.d', 'a.b.c.d.TestSuite']
  */
-export function prefixesOf(str: string): string[] {
+export function prefixesOf(str: string, includeSelf = false): string[] {
   const parts = str.split(".");
-  const prefixes: string[] = [];
-  parts.forEach((_, idx) => prefixes.push(parts.slice(0, idx).join(".")));
-  return prefixes.filter((p) => p.length > 0);
+  const prefixes = parts
+    .map((_, idx) => {
+      const joined = parts.slice(0, idx).join(".");
+      return joined;
+    })
+    .filter((p) => p.length > 0);
+  return includeSelf ? [...prefixes, str] : prefixes;
 }

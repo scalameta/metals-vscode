@@ -15,7 +15,7 @@ export type SuiteName = newtype<string, "suiteName">;
 /**
  * Additional information about tests which is stored in map and retrieved when test is scheduled to run.
  */
-export interface BuildTargetMetadata {
+export interface TestItemMetadata {
   kind: "project" | "package" | "suite" | "testcase";
   targetName: TargetName;
   targetUri: TargetUri;

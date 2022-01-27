@@ -1,7 +1,9 @@
 import * as vscode from "vscode";
 import { TargetName, TargetUri } from "../../../../test-explorer/types";
 
-export const randomString = () => Math.random().toString(36).substring(2, 15);
+export function randomString(): string {
+  return Math.random().toString(36).substring(2, 15);
+}
 
 export function buildTarget(
   targetName: string,

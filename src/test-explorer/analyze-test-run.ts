@@ -1,14 +1,13 @@
+import { ansicolor } from "ansicolor";
 import * as vscode from "vscode";
 import {
   Failed,
   SingleTestResult,
   SuiteName,
-  TargetName,
   TestName,
   TestRunActions,
   TestSuiteResult,
 } from "./types";
-import { ansicolor } from "ansicolor";
 
 /**
  * Analyze results from TestRun and pass inform Test Controller about them.
@@ -21,21 +20,20 @@ import { ansicolor } from "ansicolor";
  */
 export function analyzeTestRun(
   run: TestRunActions,
-  targetName: TargetName,
-  testSuites: vscode.TestItem[],
+  suites: vscode.TestItem[],
   testSuitesResults: TestSuiteResult[],
   teardown?: () => void
 ): void {
   const results = createResultsMap(testSuitesResults);
-  for (const testSuite of testSuites) {
+  for (const testSuite of suites) {
     const suiteName = testSuite.id as SuiteName;
     const result = results.get(suiteName);
     if (result != null) {
       // if test suite has children (test cases) do a more fine-grained analyze of results.
       if (testSuite.children.size > 0) {
-        analyzeTestCases(result, targetName, testSuite, run);
+        analyzeTestCases(run, result, testSuite);
       } else {
-        analyzeTestSuite(result, run, testSuite);
+        analyzeTestSuite(run, result, testSuite);
       }
     } else {
       run.skipped?.(testSuite);
@@ -61,10 +59,9 @@ function createResultsMap(
  * Analyze result of each test case from the test suite independently.
  */
 function analyzeTestCases(
+  run: TestRunActions,
   result: TestSuiteResult,
-  targetName: TargetName,
-  testSuite: vscode.TestItem,
-  run: TestRunActions
+  testSuite: vscode.TestItem
 ) {
   const testCasesResults = createTestCasesMap(result);
   testSuite.children.forEach((child) => {
@@ -99,8 +96,8 @@ function createTestCasesMap(
  * If one of them fails, the whole suite fails.
  */
 function analyzeTestSuite(
-  result: TestSuiteResult,
   run: TestRunActions,
+  result: TestSuiteResult,
   testSuite: vscode.TestItem
 ) {
   const failed = result.tests.filter(isFailed);

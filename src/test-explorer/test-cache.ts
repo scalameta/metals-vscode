@@ -1,18 +1,15 @@
 import * as vscode from "vscode";
-import { BuildTargetMetadata, TestSuiteResult } from "./types";
+import { TestItemMetadata, TestSuiteResult } from "./types";
 
 class TestCache {
-  private readonly metadata = new WeakMap<
-    vscode.TestItem,
-    BuildTargetMetadata
-  >();
+  private readonly metadata = new WeakMap<vscode.TestItem, TestItemMetadata>();
   private readonly suiteResults = new Map<string, TestSuiteResult[]>();
 
-  setMetadata(test: vscode.TestItem, data: BuildTargetMetadata): void {
+  setMetadata(test: vscode.TestItem, data: TestItemMetadata): void {
     this.metadata.set(test, data);
   }
 
-  getMetadata(test: vscode.TestItem): BuildTargetMetadata | undefined {
+  getMetadata(test: vscode.TestItem): TestItemMetadata | undefined {
     return this.metadata.get(test);
   }
 
@@ -26,7 +23,8 @@ class TestCache {
    * If is called with TestItem which is a suite, then returns itself
    */
   getTestItemChildren(test: vscode.TestItem): vscode.TestItem[] {
-    if (this.getMetadata(test)?.kind === "suite") {
+    const metadata = this.getMetadata(test);
+    if (metadata?.kind === "suite" || metadata?.kind === "testcase") {
       return [test];
     } else {
       let children: vscode.TestItem[] = [];
