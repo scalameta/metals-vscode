@@ -201,7 +201,7 @@
         },
         "metals.javaHome": {
           "type": "string",
-          "scope": "machine",
+          "scope": "machine-overridable",
           "markdownDescription": "Optional path to the Java home directory. Requires reloading the window.\n\nDefaults to the most recent Java version between 8 and 11 (inclusive) computed by the `locate-java-home` npm package."
         },
         "metals.sbtScript": {
