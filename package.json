@@ -485,12 +485,7 @@
       {
         "command": "metals.run-current-file",
         "category": "Metals",
-        "title": "Run main class in the current file"
-      },
-      {
-        "command": "metals.test-current-file",
-        "category": "Metals",
-        "title": "Run test class in the current file"
+        "title": "Run main class or tests in the current file"
       },
       {
         "command": "metals.test-current-target",

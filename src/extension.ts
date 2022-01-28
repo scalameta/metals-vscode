@@ -737,19 +737,7 @@ function launchMetals(
       registerTextEditorCommand(`metals.run-current-file`, (editor) => {
         const args: DebugDiscoveryParams = {
           path: editor.document.uri.toString(true),
-          runType: RunType.Run,
-        };
-        scalaDebugger.start(true, args).then((wasStarted) => {
-          if (!wasStarted) {
-            window.showErrorMessage("Debug session not started");
-          }
-        });
-      });
-
-      registerTextEditorCommand(`metals.test-current-file`, (editor) => {
-        const args: DebugDiscoveryParams = {
-          path: editor.document.uri.toString(true),
-          runType: RunType.TestFile,
+          runType: RunType.RunOrTestFile,
         };
         scalaDebugger.start(true, args).then((wasStarted) => {
           if (!wasStarted) {
