@@ -69,10 +69,7 @@ import {
 import * as metalsLanguageClient from "metals-languageclient";
 import { startTreeView } from "./treeview";
 import * as scalaDebugger from "./scalaDebugger";
-import {
-  DecorationTypeDidChange,
-  DecorationsRangesDidChange,
-} from "./decoration-protocol";
+import { DecorationsRangesDidChange } from "./decoration-protocol";
 import { clearTimeout } from "timers";
 import { increaseIndentPattern } from "./indentPattern";
 import { gotoLocation, WindowLocation } from "./goToLocation";
@@ -95,14 +92,15 @@ const installJava11Action = "Install Java (JDK 11)";
 let treeViews: MetalsTreeViews | undefined;
 let currentClient: LanguageClient | undefined;
 
-const worksheetDecorationType: TextEditorDecorationType =
+// Inline needs to be first to be shown always first
+const inlineDecorationType: TextEditorDecorationType =
   window.createTextEditorDecorationType({
-    isWholeLine: true,
-    rangeBehavior: DecorationRangeBehavior.OpenClosed,
+    rangeBehavior: DecorationRangeBehavior.OpenOpen,
   });
 
-let decorationType: TextEditorDecorationType =
+const decorationType: TextEditorDecorationType =
   window.createTextEditorDecorationType({
+    isWholeLine: true,
     rangeBehavior: DecorationRangeBehavior.OpenClosed,
   });
 
@@ -1068,9 +1066,6 @@ function launchMetals(
       scalaDebugger.initialize(outputChannel).forEach((disposable) => {
         context.subscriptions.push(disposable);
       });
-      client.onNotification(DecorationTypeDidChange.type, (options) => {
-        decorationType = window.createTextEditorDecorationType(options);
-      });
       client.onNotification(DecorationsRangesDidChange.type, (params) => {
         const editors = window.visibleTextEditors;
         const path = Uri.parse(params.uri).toString();
@@ -1089,8 +1084,8 @@ function launchMetals(
             };
           });
           workheetEditors.forEach((editor) => {
-            if (params.uri.endsWith(".worksheet.sc")) {
-              editor.setDecorations(worksheetDecorationType, options);
+            if (params.isInline) {
+              editor.setDecorations(inlineDecorationType, options);
             } else {
               editor.setDecorations(decorationType, options);
             }

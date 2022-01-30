@@ -29,6 +29,7 @@ export interface MetalsDecorationOptions {
 
 export interface PublishDecorationsParams {
   uri: string;
+  isInline: boolean | undefined;
   options: MetalsDecorationOptions[];
 }
 
