@@ -84,7 +84,11 @@ import {
 } from "./findinfiles";
 import * as ext from "./hoverExtension";
 import { decodeAndShowFile, MetalsFileProvider } from "./metalsContentProvider";
-import { getTextDocumentPositionParams, getValueFromConfig } from "./util";
+import {
+  getJavaHomeFromConfig,
+  getTextDocumentPositionParams,
+  getValueFromConfig,
+} from "./util";
 import { createTestManager } from "./test-explorer/test-manager";
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -122,19 +126,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
     async () => {
       commands.executeCommand("setContext", "metals:enabled", true);
 
-      const javaHomeConfig = ((jhPath) =>
-        jhPath?.trim() && !path.isAbsolute(jhPath)
-          ? path.resolve(
-              ...[workspace.workspaceFolders?.[0]?.uri.fsPath, jhPath].filter(
-                (s): s is string => !!s
-              )
-            )
-          : jhPath)(
-        workspace.getConfiguration("metals").get<string>("javaHome")
-      );
-
       try {
-        const javaHome = await getJavaHome(javaHomeConfig);
+        const javaHome = await getJavaHome(getJavaHomeFromConfig());
         return fetchAndLaunchMetals(context, javaHome);
       } catch (err) {
         outputChannel.appendLine(`${err}`);
