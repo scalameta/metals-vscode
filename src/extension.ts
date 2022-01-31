@@ -125,7 +125,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
     },
     async () => {
       commands.executeCommand("setContext", "metals:enabled", true);
-
       try {
         const javaHome = await getJavaHome(getJavaHomeFromConfig());
         return fetchAndLaunchMetals(context, javaHome);
