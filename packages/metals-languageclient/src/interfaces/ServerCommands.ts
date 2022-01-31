@@ -66,6 +66,8 @@ export const ServerCommands = {
   DoctorRun: "doctor-run",
   /** Decode a file to human readable format.  E.g. class, semanticdb */
   DecodeFile: "file-decode",
+  /** Prompt for build targets and get info about selected */
+  DisplayTargetInfo: "target-info-display",
   /**
    * Detect the build tool for a workspace and generate the bsp config for the
    * build tool. If there are multiple build tools for a workspace ,the user
