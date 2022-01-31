@@ -29,10 +29,11 @@ export function gotoLocation(
         )
         .pop()?.viewColumn || ViewColumn.Beside;
   }
-  let uri = Uri.parse(location.uri);
+  const uri = Uri.parse(location.uri);
   // vscode will cache the virtual documents even after closing unless onDidChange is fired
-  if (uri.scheme == "metalsDecode" && metalsFileProvider)
+  if (uri.scheme == "metalsDecode" && metalsFileProvider) {
     metalsFileProvider.onDidChangeEmitter.fire(uri);
+  }
   workspace.openTextDocument(uri).then((textDocument) =>
     window.showTextDocument(textDocument, {
       selection: range,
