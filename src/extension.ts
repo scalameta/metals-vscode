@@ -121,10 +121,20 @@ export async function activate(context: ExtensionContext): Promise<void> {
     },
     async () => {
       commands.executeCommand("setContext", "metals:enabled", true);
+
+      const javaHomeConfig = ((jhPath) =>
+        jhPath?.trim() && !path.isAbsolute(jhPath)
+          ? path.resolve(
+              ...[workspace.workspaceFolders?.[0]?.uri.fsPath, jhPath].filter(
+                (s): s is string => !!s
+              )
+            )
+          : jhPath)(
+        workspace.getConfiguration("metals").get<string>("javaHome")
+      );
+
       try {
-        const javaHome = await getJavaHome(
-          workspace.getConfiguration("metals").get("javaHome")
-        );
+        const javaHome = await getJavaHome(javaHomeConfig);
         return fetchAndLaunchMetals(context, javaHome);
       } catch (err) {
         outputChannel.appendLine(`${err}`);
