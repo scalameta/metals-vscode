@@ -1,5 +1,15 @@
 ## metals-languageclient changelog
 
+### v0.5.8 (2022/01/31 15:13 +00:00)
+- [18a99ff](https://github.com/scalameta/metals-languageclient/commit/18a99ffb21ac8627cc0c00d312ee36775f61fd0b) Remove contextValue API change (@Arthurm1)
+- [df00f88](https://github.com/scalameta/metals-languageclient/commit/df00f88713081ccbd86f8d44ffc820719db44657) Bump @types/node from 17.0.12 to 17.0.13 (@dependabot[bot])
+- [51af4b8](https://github.com/scalameta/metals-languageclient/commit/51af4b8d79b91338df6b32aa255343a4a2eb56a2) Bump @types/node from 17.0.10 to 17.0.11 (@dependabot[bot])
+- [bb1f72b](https://github.com/scalameta/metals-languageclient/commit/bb1f72be365b51bb52d15727ef4b1733e1122f47) Bump @types/node from 17.0.9 to 17.0.10 (@dependabot[bot])
+- [72a42c5](https://github.com/scalameta/metals-languageclient/commit/72a42c51b9ec3b87eb0ebe692b17b21cfc3adb66) Bump @types/node from 17.0.8 to 17.0.9 (@dependabot[bot])
+- [aa37308](https://github.com/scalameta/metals-languageclient/commit/aa37308ff021877a4d2e1628428a14d128571baf) Bump fp-ts from 2.11.7 to 2.11.8 (@dependabot[bot])
+- [da8d971](https://github.com/scalameta/metals-languageclient/commit/da8d9714b56c6c882562ce97dac7cd92731528c1) chore: use newest setup node gh action (@kpodsiad)
+- [286a550](https://github.com/scalameta/metals-languageclient/commit/286a550c74da6da520d8e2c241b0ae8e2fefa846) Release v0.5.7
+
 ### v0.5.7 (2022/01/16 16:44 +00:00)
 - [a4532c4](https://github.com/scalameta/metals-languageclient/commit/a4532c4cf03854cae53da9873881382956da4298) Fix javaHome selection for MacOs (@dos65)
 - [c5033af](https://github.com/scalameta/metals-languageclient/commit/c5033af2dfc7eb4eb1a1d0b31b879af087866b7b) Bump fp-ts from 2.11.6 to 2.11.7 (@dependabot[bot])
