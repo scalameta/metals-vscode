@@ -582,6 +582,16 @@ function launchMetals(
         commands.executeCommand(ClientCommands.RunDoctor)
       );
 
+      registerCommand(
+        `metals.${ServerCommands.DisplayTargetInfo}`,
+        (...args) => {
+          client.sendRequest(ExecuteCommandRequest.type, {
+            command: ServerCommands.DisplayTargetInfo,
+            arguments: args,
+          });
+        }
+      );
+
       registerCommand(ClientCommands.ToggleLogs, () => {
         if (channelOpen) {
           client.outputChannel.hide();
@@ -656,7 +666,8 @@ function launchMetals(
             const location = params.arguments?.[0] as WindowLocation;
             commands.executeCommand(
               `metals.${ClientCommands.GotoLocation}`,
-              location
+              location,
+              metalsFileProvider
             );
             break;
           }

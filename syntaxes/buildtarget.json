@@ -1,0 +1,37 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "build-target",
+  "scopeName": "source.buildtarget",
+  "extensions": [".metals-buildtarget"],
+  "patterns": [
+    {
+      "include": "#general"
+    }
+  ],
+  "repository": {
+    "general": {
+      "patterns": [
+        {
+          "name": "strong",
+          "match": "^\\S.*$"
+        },
+        {
+          "name": "invalid.illegal",
+          "match": "  .*NO SOURCE.*"
+        },
+        {
+          "name": "invalid.illegal",
+          "match": "  .*MISSING.*"
+        },
+        {
+          "name": "invalid.illegal",
+          "match": "  .* NOT SUPPORTED"
+        },
+        {
+          "name": "entity.other",
+          "match": "  .*"
+        }
+      ]
+    }
+  }
+}

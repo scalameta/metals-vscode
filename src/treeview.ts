@@ -191,6 +191,10 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
           ? Uri.parse(item.nodeUri)
           : undefined,
       collapsibleState: toTreeItemCollapsibleState(item.collapseState),
+      contextValue:
+        item.nodeUri && item.nodeUri.startsWith("projects:file:")
+          ? "project"
+          : undefined,
       command: item.command,
       tooltip: item.tooltip,
       iconPath: item.icon ? this.iconPath(item.icon) : undefined,

@@ -83,6 +83,12 @@
         "extensions": [
           ".tasty-decoded"
         ]
+      },
+      {
+        "id": "buildtarget",
+        "extensions": [
+          ".metals-buildtarget"
+        ]
       }
     ],
     "grammars": [
@@ -100,6 +106,11 @@
         "language": "tasty",
         "scopeName": "source.tasty",
         "path": "./syntaxes/tasty.json"
+      },
+      {
+        "language": "buildtarget",
+        "scopeName": "source.buildtarget",
+        "path": "./syntaxes/buildtarget.json"
       }
     ],
     "configurationDefaults": {
@@ -413,6 +424,11 @@
         "title": "Show Semanticdb proto"
       },
       {
+        "command": "metals.target-info-display",
+        "category": "Metals",
+        "title": "Display build target info"
+      },
+      {
         "command": "metals.new-scala-project",
         "category": "Metals",
         "title": "New Scala Project"
@@ -607,6 +623,10 @@
           "when": "metals:enabled"
         },
         {
+          "command": "metals.target-info-display",
+          "when": "metals:enabled"
+        },
+        {
           "command": "metals.new-scala-file",
           "when": "metals:enabled"
         },
@@ -695,6 +715,12 @@
           "command": "metals.show-semanticdb-proto",
           "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb",
           "group": "metals-4@3"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "metals.target-info-display",
+          "when": "view == metalsPackages && viewItem == project"
         }
       ]
     },

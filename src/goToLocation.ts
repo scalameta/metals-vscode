@@ -1,5 +1,6 @@
 import { workspace, window, ViewColumn, Uri, Range } from "vscode";
 import { DocumentUri, Range as LspRange } from "vscode-languageclient/node";
+import { MetalsFileProvider } from "./metalsContentProvider";
 
 export interface WindowLocation {
   uri: DocumentUri;
@@ -7,7 +8,10 @@ export interface WindowLocation {
   otherWindow: boolean;
 }
 
-export function gotoLocation(location: WindowLocation): void {
+export function gotoLocation(
+  location: WindowLocation,
+  metalsFileProvider: MetalsFileProvider | undefined = undefined
+): void {
   const range = new Range(
     location.range.start.line,
     location.range.start.character,
@@ -25,7 +29,11 @@ export function gotoLocation(location: WindowLocation): void {
         )
         .pop()?.viewColumn || ViewColumn.Beside;
   }
-  workspace.openTextDocument(Uri.parse(location.uri)).then((textDocument) =>
+  let uri = Uri.parse(location.uri);
+  // vscode will cache the virtual documents even after closing unless onDidChange is fired
+  if (uri.scheme == "metalsDecode" && metalsFileProvider)
+    metalsFileProvider.onDidChangeEmitter.fire(uri);
+  workspace.openTextDocument(uri).then((textDocument) =>
     window.showTextDocument(textDocument, {
       selection: range,
       viewColumn: vs,
