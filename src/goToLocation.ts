@@ -10,7 +10,7 @@ export interface WindowLocation {
 
 export function gotoLocation(
   location: WindowLocation,
-  metalsFileProvider: MetalsFileProvider | undefined = undefined
+  metalsFileProvider?: MetalsFileProvider
 ): void {
   const range = new Range(
     location.range.start.line,
