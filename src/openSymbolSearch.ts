@@ -7,6 +7,7 @@ import {
 } from "vscode";
 import { LanguageClient, Location } from "vscode-languageclient/node";
 import { gotoLocation, WindowLocation } from "./goToLocation";
+import { MetalsFileProvider } from "./metalsContentProvider";
 
 class SymbolItem implements QuickPickItem {
   label: string;
@@ -26,7 +27,10 @@ class SymbolItem implements QuickPickItem {
   }
 }
 
-export function openSymbolSearch(client: LanguageClient): void {
+export function openSymbolSearch(
+  client: LanguageClient,
+  metalsFileProvider: MetalsFileProvider
+): void {
   const inputBox = window.createQuickPick<SymbolItem>();
   inputBox.placeholder =
     "Examples: `List`, `s.c.i.List`, `List;`(include dependencies)";
@@ -73,7 +77,7 @@ export function openSymbolSearch(client: LanguageClient): void {
     };
     inputBox.dispose();
 
-    gotoLocation(windowLocation);
+    gotoLocation(windowLocation, metalsFileProvider);
   });
   inputBox.show();
 }
