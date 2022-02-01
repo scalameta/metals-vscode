@@ -1,4 +1,5 @@
-import { TextEditor, WorkspaceConfiguration } from "vscode";
+import * as path from "path";
+import { workspace, TextEditor, WorkspaceConfiguration } from "vscode";
 import {
   ExecuteCommandRequest,
   TextDocumentPositionParams,
@@ -45,4 +46,19 @@ export function getValueFromConfig<T>(
     inspected?.globalValue ||
     inspected?.defaultValue;
   return fromConfig ?? defaultValue;
+}
+
+export function getJavaHomeFromConfig(): string | undefined {
+  const javaHomePath = workspace
+    .getConfiguration("metals")
+    .get<string>("javaHome");
+  if (javaHomePath?.trim() && !path.isAbsolute(javaHomePath)) {
+    const pathSegments = [
+      workspace.workspaceFolders?.[0]?.uri.fsPath,
+      javaHomePath,
+    ].filter((s): s is string => s != null);
+    return path.resolve(...pathSegments);
+  } else {
+    return javaHomePath;
+  }
 }
