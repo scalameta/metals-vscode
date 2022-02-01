@@ -726,7 +726,7 @@
               },
               "buildTarget": {
                 "type": "string",
-                "description": "Name of the build target of the class to run"
+                "description": "Name of the build target of the class to run, can be found in the projects section of the Metals tab"
               },
               "args": {
                 "type": "array",
@@ -808,6 +808,19 @@
               "buildTarget": "???",
               "hostName": "localhost",
               "port": 5005
+            }
+          },
+          {
+            "label": "Scala: Play framework prod server",
+            "description": "A new configuration for running a production Play framework production server",
+            "body": {
+              "type": "scala",
+              "request": "launch",
+              "name": "Play main",
+              "mainClass": "play.core.server.ProdServerStart",
+              "args": [],
+              "jvmOptions": [],
+              "buildTarget": "???"
             }
           }
         ]
