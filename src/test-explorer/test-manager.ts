@@ -70,23 +70,6 @@ class TestManager {
     await this.discoverTestSuites();
   }
 
-  debug() {
-    const traverse = (items: vscode.TestItemCollection) => {
-      const testItems: unknown[] = [];
-      items.forEach((c) => {
-        testItems.push({
-          id: c.id,
-          label: c.label,
-          children: traverse(c.children),
-        });
-      });
-      return testItems;
-    };
-    const result = traverse(this.testController.items);
-    console.log(JSON.stringify(result, undefined, 2));
-    return result;
-  }
-
   /**
    * Disables test manager, also it deletes all discovered test items in order to hide gutter icons.
    */

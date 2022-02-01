@@ -57,17 +57,14 @@ export async function runHandler(
   for (const { test, data } of queue) {
     if (token.isCancellationRequested) {
       run.skipped(test);
-      continue;
-    }
-
-    if (data.kind === "testcase" && test.parent) {
+    } else if (data.kind === "testcase" && test.parent) {
       const suites = [test.parent];
       await runDebugSession(run, noDebug, test.parent, data.targetUri, suites);
       continue;
+    } else {
+      const suites = testCache.getTestItemChildren(test);
+      await runDebugSession(run, noDebug, test, data.targetUri, suites);
     }
-
-    const suites = testCache.getTestItemChildren(test);
-    await runDebugSession(run, noDebug, test, data.targetUri, suites);
   }
   run.end();
   afterFinished();

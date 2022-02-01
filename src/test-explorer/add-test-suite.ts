@@ -24,9 +24,9 @@ export function addTestSuite(
     targetUri
   );
 
-  function addTestSuiteLoop(parent: vscode.TestItem, testIds: string[]) {
-    if (testIds.length > 0) {
-      const [currentId, ...restOfIds] = testIds;
+  function addTestSuiteLoop(parent: vscode.TestItem, testPath: string[]) {
+    if (testPath.length > 0) {
+      const [currentId, ...restOfIds] = testPath;
       const child = parent.children.get(currentId);
       if (child) {
         addTestSuiteLoop(child, restOfIds);
@@ -45,10 +45,6 @@ export function addTestSuite(
     } else {
       const { className, location, fullyQualifiedClassName } = event;
 
-      if (parent.children.get(fullyQualifiedClassName)) {
-        return;
-      }
-
       const parsedUri = vscode.Uri.parse(location.uri);
       const parsedRange = toVscodeRange(location.range);
       const testItem = testController.createTestItem(
@@ -56,6 +52,7 @@ export function addTestSuite(
         className,
         parsedUri
       );
+      // if canResolveChildren is true then test item is shown as expandable in the Test Explorer view
       testItem.canResolveChildren = event.canResolveChildren;
       testItem.range = parsedRange;
       const data: TestItemMetadata = {
@@ -68,8 +65,8 @@ export function addTestSuite(
     }
   }
 
-  const testIds = prefixesOf(event.fullyQualifiedClassName);
-  addTestSuiteLoop(buildTargetItem, testIds);
+  const testPath = prefixesOf(event.fullyQualifiedClassName);
+  addTestSuiteLoop(buildTargetItem, testPath);
 }
 
 /**

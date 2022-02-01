@@ -18,9 +18,9 @@ export function addTestCases(
   event: AddTestCases
 ): void {
   //
-  function addTestCasesLoop(parent: vscode.TestItem, testIds: string[]): void {
-    if (testIds.length > 0) {
-      const [currentId, ...restOfIds] = testIds;
+  function addTestCasesLoop(parent: vscode.TestItem, testPath: string[]): void {
+    if (testPath.length > 0) {
+      const [currentId, ...restOfIds] = testPath;
       const child = parent.children.get(currentId);
       if (child) {
         addTestCasesLoop(child, restOfIds);
@@ -51,7 +51,7 @@ export function addTestCases(
 
   const buildTargetItem = testController.items.get(targetName);
   if (buildTargetItem) {
-    const prefixes = prefixesOf(event.fullyQualifiedClassName, true);
-    addTestCasesLoop(buildTargetItem, prefixes);
+    const testPath = prefixesOf(event.fullyQualifiedClassName, true);
+    addTestCasesLoop(buildTargetItem, testPath);
   }
 }
