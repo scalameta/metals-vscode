@@ -9,7 +9,7 @@ import {
 } from "vscode";
 import { ExecuteCommandRequest } from "vscode-languageclient";
 import { LanguageClient } from "vscode-languageclient/node";
-import { executeCommand } from "./util";
+import { executeCommand } from "../util";
 
 export interface DecoderResponse {
   requestedUri: string;

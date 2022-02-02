@@ -1,92 +1,83 @@
+import * as fs from "fs";
+import * as metalsLanguageClient from "metals-languageclient";
+import {
+  checkDottyIde,
+  ClientCommands,
+  downloadProgress,
+  fetchMetals,
+  getJavaConfig,
+  getJavaHome,
+  getServerOptions,
+  installJava,
+  JavaConfig,
+  MetalsDidFocus,
+  MetalsInitializationOptions,
+  MetalsInputBox,
+  MetalsQuickPick,
+  MetalsSlowTask,
+  MetalsStatus,
+  MetalsTreeViewReveal,
+  MetalsTreeViews,
+  MetalsWindowStateDidChange,
+  restartServer,
+  TestUIKind,
+} from "metals-languageclient";
 import * as path from "path";
 import { ChildProcessPromise } from "promisify-child-process";
+import { clearTimeout } from "timers";
 import {
-  workspace,
-  ExtensionContext,
-  window,
-  env,
-  commands,
   CodeLensProvider,
+  commands,
+  ConfigurationTarget,
+  DecorationOptions,
+  DecorationRangeBehavior,
   EventEmitter,
-  StatusBarAlignment,
-  ProgressLocation,
+  ExtensionContext,
+  Hover,
   IndentAction,
   languages,
-  WebviewPanel,
-  ViewColumn,
   OutputChannel,
-  Uri,
-  Range,
-  DecorationRangeBehavior,
-  DecorationOptions,
   Position,
-  TextEditorDecorationType,
-  TextEditor,
-  TextEditorEdit,
-  ConfigurationTarget,
-  TextDocumentContentProvider,
+  ProgressLocation,
   ProviderResult,
-  Hover,
+  Range,
+  StatusBarAlignment,
   TextDocument,
+  TextEditorDecorationType,
+  Uri,
+  window,
+  workspace,
 } from "vscode";
 import {
+  CancellationToken,
+  CodeLensRefreshRequest,
   LanguageClient,
   LanguageClientOptions,
   RevealOutputChannelOn,
-  ExecuteCommandRequest,
-  CancellationToken,
-  CodeLensRefreshRequest,
 } from "vscode-languageclient/node";
-import { LazyProgress } from "./lazy-progress";
-import * as fs from "fs";
-import {
-  getJavaHome,
-  restartServer,
-  checkDottyIde,
-  getJavaConfig,
-  fetchMetals,
-  JavaConfig,
-  getServerOptions,
-  downloadProgress,
-  installJava,
-  ClientCommands,
-  MetalsTreeViews,
-  MetalsTreeViewReveal,
-  MetalsInitializationOptions,
-  ServerCommands,
-  MetalsSlowTask,
-  ExecuteClientCommand,
-  MetalsOpenWindowParams,
-  MetalsStatus,
-  MetalsDidFocus,
-  MetalsWindowStateDidChange,
-  MetalsInputBox,
-  MetalsQuickPick,
-  DebugDiscoveryParams,
-  RunType,
-  TestUIKind,
-} from "metals-languageclient";
-import * as metalsLanguageClient from "metals-languageclient";
-import { startTreeView } from "./treeview";
-import * as scalaDebugger from "./scalaDebugger";
+import { registerClientCommands } from "./commands/client-commands";
+import { registerExecuteClientCommands } from "./commands/execute-client-command";
+import { registerServerCommands } from "./commands/server-comands";
+import { registerTextEditorCommands } from "./commands/text-editor-commands";
+import { registerMetalsDecodeCommands } from "./decode-file/decode-file-commands";
 import { DecorationsRangesDidChange } from "./decoration-protocol";
-import { clearTimeout } from "timers";
-import { increaseIndentPattern } from "./indentPattern";
-import { gotoLocation, WindowLocation } from "./goToLocation";
-import { openSymbolSearch } from "./openSymbolSearch";
 import {
   createFindInFilesTreeView,
   executeFindInFiles,
   startFindInFilesProvider,
 } from "./findinfiles";
 import * as ext from "./hoverExtension";
-import { decodeAndShowFile, MetalsFileProvider } from "./metalsContentProvider";
+import { increaseIndentPattern } from "./indentPattern";
+import { LazyProgress } from "./lazy-progress";
+import { openSymbolSearch } from "./openSymbolSearch";
+import * as scalaDebugger from "./scalaDebugger";
+import { createTestManager } from "./test-explorer/test-manager";
+import { startTreeView } from "./treeview";
 import {
   getJavaHomeFromConfig,
   getTextDocumentPositionParams,
   getValueFromConfig,
 } from "./util";
-import { createTestManager } from "./test-explorer/test-manager";
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
 const downloadJava = "Download Java";
@@ -430,76 +421,6 @@ function launchMetals(
     context.subscriptions.push(commands.registerCommand(command, callback));
   }
 
-  function registerTextEditorCommand(
-    command: string,
-    callback: (
-      textEditor: TextEditor,
-      edit: TextEditorEdit,
-      ...args: any[]
-    ) => unknown
-  ) {
-    context.subscriptions.push(
-      commands.registerTextEditorCommand(command, callback)
-    );
-  }
-
-  function registerTextDocumentContentProvider(
-    scheme: string,
-    provider: TextDocumentContentProvider
-  ) {
-    context.subscriptions.push(
-      workspace.registerTextDocumentContentProvider(scheme, provider)
-    );
-  }
-
-  const metalsFileProvider = new MetalsFileProvider(client);
-
-  registerTextDocumentContentProvider("metalsDecode", metalsFileProvider);
-  registerTextDocumentContentProvider("jar", metalsFileProvider);
-
-  registerCommand("metals.show-cfr", async (uri: Uri) => {
-    await decodeAndShowFile(client, metalsFileProvider, uri, "cfr");
-  });
-
-  registerCommand("metals.show-javap-verbose", async (uri: Uri) => {
-    await decodeAndShowFile(client, metalsFileProvider, uri, "javap-verbose");
-  });
-
-  registerCommand("metals.show-javap", async (uri: Uri) => {
-    await decodeAndShowFile(client, metalsFileProvider, uri, "javap");
-  });
-
-  registerCommand("metals.show-semanticdb-compact", async (uri: Uri) => {
-    await decodeAndShowFile(
-      client,
-      metalsFileProvider,
-      uri,
-      "semanticdb-compact"
-    );
-  });
-
-  registerCommand("metals.show-semanticdb-detailed", async (uri: Uri) => {
-    await decodeAndShowFile(
-      client,
-      metalsFileProvider,
-      uri,
-      "semanticdb-detailed"
-    );
-  });
-
-  registerCommand("metals.show-semanticdb-proto", async (uri: Uri) => {
-    await decodeAndShowFile(
-      client,
-      metalsFileProvider,
-      uri,
-      "semanticdb-proto"
-    );
-  });
-
-  registerCommand("metals.show-tasty", async (uri: Uri) => {
-    await decodeAndShowFile(client, metalsFileProvider, uri, "tasty-decoded");
-  });
-
   registerCommand(
     "metals.restartServer",
     restartServer(
@@ -514,100 +435,6 @@ function launchMetals(
 
   return client.onReady().then(
     () => {
-      let doctor: WebviewPanel | undefined;
-      let stacktrace: WebviewPanel | undefined;
-
-      function getDoctorPanel(isReload: boolean): WebviewPanel {
-        if (!doctor) {
-          doctor = window.createWebviewPanel(
-            "metals-doctor",
-            "Metals Doctor",
-            ViewColumn.Active,
-            { enableCommandUris: true }
-          );
-          context.subscriptions.push(doctor);
-          doctor.onDidDispose(() => {
-            doctor = undefined;
-          });
-        } else if (!isReload) {
-          doctor.reveal();
-        }
-        return doctor;
-      }
-
-      function getStacktracePanel(): WebviewPanel {
-        if (!stacktrace) {
-          stacktrace = window.createWebviewPanel(
-            "metals-stacktrace",
-            "Analyze Stacktrace",
-            ViewColumn.Beside,
-            { enableCommandUris: true }
-          );
-          context.subscriptions.push(stacktrace);
-          stacktrace.onDidDispose(() => {
-            stacktrace = undefined;
-          });
-        }
-        stacktrace.reveal();
-        return stacktrace;
-      }
-
-      [
-        ServerCommands.BuildImport,
-        ServerCommands.BuildRestart,
-        ServerCommands.BuildConnect,
-        ServerCommands.BuildDisconnect,
-        ServerCommands.GenerateBspConfig,
-        ServerCommands.BspSwitch,
-        ServerCommands.SourcesScan,
-        ServerCommands.DoctorRun,
-        ServerCommands.CascadeCompile,
-        ServerCommands.CleanCompile,
-        ServerCommands.CancelCompilation,
-        ServerCommands.AmmoniteStart,
-        ServerCommands.AmmoniteStop,
-      ].forEach((command) => {
-        registerCommand("metals." + command, async () =>
-          client.sendRequest(ExecuteCommandRequest.type, { command: command })
-        );
-      });
-
-      let channelOpen = false;
-
-      registerCommand(ClientCommands.FocusDiagnostics, () =>
-        commands.executeCommand("workbench.action.problems.focus")
-      );
-
-      registerCommand(ClientCommands.RunDoctor, () =>
-        commands.executeCommand(ClientCommands.RunDoctor)
-      );
-
-      registerCommand(ClientCommands.ToggleLogs, () => {
-        if (channelOpen) {
-          client.outputChannel.hide();
-          channelOpen = false;
-        } else {
-          client.outputChannel.show(true);
-          channelOpen = true;
-        }
-      });
-
-      registerCommand(ClientCommands.StartDebugSession, (...args: any[]) => {
-        scalaDebugger.start(false, ...args).then((wasStarted) => {
-          if (!wasStarted) {
-            window.showErrorMessage("Debug session not started");
-          }
-        });
-      });
-
-      registerCommand(ClientCommands.StartRunSession, (...args: any[]) => {
-        scalaDebugger.start(true, ...args).then((wasStarted) => {
-          if (!wasStarted) {
-            window.showErrorMessage("Run session not started");
-          }
-        });
-      });
-
       // should be the compilation of a currently opened file
       // but some race conditions may apply
       const compilationDoneEmitter = new EventEmitter<void>();
@@ -649,67 +476,6 @@ function launchMetals(
       context.subscriptions.push(refreshTests);
       context.subscriptions.push(testManager.testController);
 
-      // Handle the metals/executeClientCommand extension notification.
-      const executeClientCommandDisposable = client.onNotification(
-        ExecuteClientCommand.type,
-        (params) => {
-          switch (params.command) {
-            case ClientCommands.GotoLocation: {
-              const location = params.arguments?.[0] as WindowLocation;
-              commands.executeCommand(
-                `metals.${ClientCommands.GotoLocation}`,
-                location
-              );
-              break;
-            }
-            case ClientCommands.RefreshModel:
-              compilationDoneEmitter.fire();
-              break;
-            case ClientCommands.OpenFolder: {
-              const openWindowParams = params
-                .arguments?.[0] as MetalsOpenWindowParams;
-              if (openWindowParams) {
-                commands.executeCommand(
-                  "vscode.openFolder",
-                  Uri.parse(openWindowParams.uri),
-                  openWindowParams.openNewWindow
-                );
-              }
-              break;
-            }
-            case "metals-show-stacktrace": {
-              const html = params.arguments && params.arguments[0];
-              if (typeof html === "string") {
-                const panel = getStacktracePanel();
-                panel.webview.html = html;
-              }
-              break;
-            }
-            case ClientCommands.RunDoctor:
-            case ClientCommands.ReloadDoctor: {
-              const isRun = params.command === ClientCommands.RunDoctor;
-              const isReload = params.command === ClientCommands.ReloadDoctor;
-              if (isRun || (doctor && isReload)) {
-                const html = params.arguments && params.arguments[0];
-                if (typeof html === "string") {
-                  const panel = getDoctorPanel(isReload);
-                  panel.webview.html = html;
-                }
-              }
-              break;
-            }
-            case ClientCommands.FocusDiagnostics:
-              commands.executeCommand(ClientCommands.FocusDiagnostics);
-              break;
-            default:
-              outputChannel.appendLine(`unknown command: ${params.command}`);
-          }
-
-          // Ignore other commands since they are less important.
-        }
-      );
-
-      context.subscriptions.push(executeClientCommandDisposable);
       // The server updates the client with a brief text message about what
       // it is currently doing, for example "Compiling..".
       const item = window.createStatusBarItem(StatusBarAlignment.Right, 100);
@@ -742,114 +508,14 @@ function launchMetals(
       );
       context.subscriptions.push(metalsStatusDisposable);
 
-      registerTextEditorCommand(`metals.run-current-file`, (editor) => {
-        const args: DebugDiscoveryParams = {
-          path: editor.document.uri.toString(true),
-          runType: RunType.RunOrTestFile,
-        };
-        scalaDebugger.start(true, args).then((wasStarted) => {
-          if (!wasStarted) {
-            window.showErrorMessage("Debug session not started");
-          }
-        });
+      registerClientCommands(context, client);
+      registerServerCommands(context, client);
+      registerMetalsDecodeCommands(context, client);
+      registerTextEditorCommands(context, client);
+      registerExecuteClientCommands(context, client, {
+        compilationDoneEmitter,
+        outputChannel,
       });
-
-      registerTextEditorCommand(`metals.test-current-target`, (editor) => {
-        const args: DebugDiscoveryParams = {
-          path: editor.document.uri.toString(true),
-          runType: RunType.TestTarget,
-        };
-        scalaDebugger.start(true, args).then((wasStarted) => {
-          if (!wasStarted) {
-            window.showErrorMessage("Debug session not started");
-          }
-        });
-      });
-
-      registerTextEditorCommand(
-        `metals.${ServerCommands.GotoSuperMethod}`,
-        (editor) => {
-          client.sendRequest(ExecuteCommandRequest.type, {
-            command: ServerCommands.GotoSuperMethod,
-            arguments: [getTextDocumentPositionParams(editor)],
-          });
-        }
-      );
-
-      registerTextEditorCommand(
-        `metals.${ServerCommands.SuperMethodHierarchy}`,
-        (editor) => {
-          client.sendRequest(ExecuteCommandRequest.type, {
-            command: ServerCommands.SuperMethodHierarchy,
-            arguments: [getTextDocumentPositionParams(editor)],
-          });
-        }
-      );
-
-      registerCommand(`metals.${ServerCommands.AnalyzeStacktrace}`, () => {
-        env.clipboard.readText().then((clip) => {
-          if (clip.trim().length < 1) {
-            window.showInformationMessage(
-              "Clipboard appears to be empty, copy stacktrace to clipboard and retry this command"
-            );
-          } else {
-            client.sendRequest(ExecuteCommandRequest.type, {
-              command: "analyze-stacktrace",
-              arguments: [clip],
-            });
-          }
-        });
-      });
-
-      registerTextEditorCommand(
-        `metals.${ServerCommands.CopyWorksheetOutput}`,
-        (editor) => {
-          const uri = editor.document.uri;
-          if (uri.toString().endsWith("worksheet.sc")) {
-            client
-              .sendRequest(ExecuteCommandRequest.type, {
-                command: ServerCommands.CopyWorksheetOutput,
-                arguments: [uri.toString()],
-              })
-              .then((result) => {
-                window.showInformationMessage(result);
-                if (result.value) {
-                  env.clipboard.writeText(result.value);
-                  window.showInformationMessage(
-                    "Copied worksheet evaluation to clipboard."
-                  );
-                }
-              });
-          } else {
-            window.showWarningMessage(
-              "You must be in a worksheet to use this feature."
-            );
-          }
-        }
-      );
-
-      registerCommand(`metals.${ServerCommands.ResetChoice}`, (args = []) => {
-        client.sendRequest(ExecuteCommandRequest.type, {
-          command: ServerCommands.ResetChoice,
-          arguments: args,
-        });
-      });
-
-      registerCommand(`metals.${ServerCommands.Goto}`, (args) => {
-        client.sendRequest(ExecuteCommandRequest.type, {
-          command: ServerCommands.Goto,
-          arguments: args,
-        });
-      });
-
-      registerCommand(
-        `metals.${ClientCommands.GotoLocation}`,
-        (location: WindowLocation) => {
-          if (location) {
-            gotoLocation(location);
-          }
-        }
-      );
 
       registerCommand("metals.reveal-active-file", () => {
         if (treeViews) {
@@ -882,12 +548,6 @@ function launchMetals(
         }
       });
 
-      registerCommand(ClientCommands.EchoCommand, (arg: string) => {
-        client.sendRequest(ExecuteCommandRequest.type, {
-          command: arg,
-        });
-      });
-
       registerCommand("metals.toggle-implicit-conversions-and-classes", () => {
         toggleBooleanWorkspaceSetting("showImplicitConversionsAndClasses");
       });
@@ -899,26 +559,6 @@ function launchMetals(
       registerCommand("metals.toggle-show-inferred-type", () => {
         toggleBooleanWorkspaceSetting("showInferredType");
       });
-
-      registerCommand(
-        `metals.${ServerCommands.NewScalaFile}`,
-        async (directory: Uri) => {
-          return client.sendRequest(ExecuteCommandRequest.type, {
-            command: ServerCommands.NewScalaFile,
-            arguments: [directory?.toString()],
-          });
-        }
-      );
-
-      registerCommand(
-        `metals.${ServerCommands.NewJavaFile}`,
-        async (directory: Uri) => {
-          return client.sendRequest(ExecuteCommandRequest.type, {
-            command: ServerCommands.NewJavaFile,
-            arguments: [directory?.toString()],
-          });
-        }
-      );
 
       const findInFilesProvider = startFindInFilesProvider(context);
       const findInFilesView = createFindInFilesTreeView(
@@ -934,40 +574,6 @@ function launchMetals(
           outputChannel
         )
       );
-
-      registerCommand(`metals.new-scala-worksheet`, async () => {
-        const sendRequest = (args: Array<string | undefined>) => {
-          return client.sendRequest(ExecuteCommandRequest.type, {
-            command: ServerCommands.NewScalaFile,
-            arguments: args,
-          });
-        };
-        const currentUri = window.activeTextEditor?.document.uri;
-        if (currentUri != null) {
-          const parentUri = path.dirname(currentUri.toString());
-          const name = path.basename(parentUri);
-          const parentPath = Uri.parse(parentUri).fsPath;
-          const fullPath = path.join(parentPath, `${name}.worksheet.sc`);
-          if (fs.existsSync(fullPath)) {
-            window.showWarningMessage(
-              `A worksheet ${name}.worksheet.sc already exists, opening it instead`
-            );
-            return workspace
-              .openTextDocument(fullPath)
-              .then((textDocument) => window.showTextDocument(textDocument));
-          } else {
-            return sendRequest([parentUri, name, "scala-worksheet"]);
-          }
-        } else {
-          return sendRequest([undefined, undefined, "scala-worksheet"]);
-        }
-      });
-
-      registerCommand(`metals.${ServerCommands.NewScalaProject}`, async () => {
-        return client.sendRequest(ExecuteCommandRequest.type, {
-          command: ServerCommands.NewScalaProject,
-        });
-      });
 
       // NOTE: we offer a custom symbol search command to work around the limitations of the built-in one, see https://github.com/microsoft/vscode/issues/98125 for more details.
       registerCommand(`metals.symbol-search`, () => openSymbolSearch(client));
