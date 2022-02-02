@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { ClientCommands, ServerCommands } from "metals-languageclient";
+import { ServerCommands } from "metals-languageclient";
 import * as path from "path";
 import { env, ExtensionContext, Uri, window, workspace } from "vscode";
 import {
@@ -32,12 +32,6 @@ export function registerServerCommands(
     registerCommand("metals." + command, async () =>
       client.sendRequest(ExecuteCommandRequest.type, { command: command })
     );
-  });
-
-  registerCommand(ClientCommands.EchoCommand, (arg: string) => {
-    client.sendRequest(ExecuteCommandRequest.type, {
-      command: arg,
-    });
   });
 
   registerCommand(`metals.${ServerCommands.AnalyzeStacktrace}`, () => {

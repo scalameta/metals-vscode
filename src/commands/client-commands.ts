@@ -1,6 +1,9 @@
 import { ClientCommands } from "metals-languageclient";
 import { commands, ExtensionContext, window } from "vscode";
-import { LanguageClient } from "vscode-languageclient/node";
+import {
+  ExecuteCommandRequest,
+  LanguageClient,
+} from "vscode-languageclient/node";
 import { gotoLocation, WindowLocation } from "../goToLocation";
 import * as scalaDebugger from "../scalaDebugger";
 import { registerCommandWithin } from "../util";
@@ -52,6 +55,12 @@ export function registerClientCommands(
       if (!wasStarted) {
         window.showErrorMessage("Run session not started");
       }
+    });
+  });
+
+  registerCommand(ClientCommands.EchoCommand, (arg: string) => {
+    client.sendRequest(ExecuteCommandRequest.type, {
+      command: arg,
     });
   });
 }
