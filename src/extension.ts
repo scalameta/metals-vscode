@@ -77,6 +77,7 @@ import {
   getJavaHomeFromConfig,
   getTextDocumentPositionParams,
   getValueFromConfig,
+  toggleBooleanWorkspaceSetting,
 } from "./util";
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -929,11 +930,4 @@ function configureSettingsDefaults() {
     },
     ConfigurationTarget.Workspace
   );
-}
-
-function toggleBooleanWorkspaceSetting(setting: string) {
-  const config = workspace.getConfiguration("metals");
-  const configProperty = config.inspect<boolean>(setting);
-  const currentValues = configProperty?.workspaceValue ?? false;
-  config.update(setting, !currentValues, ConfigurationTarget.Workspace);
 }

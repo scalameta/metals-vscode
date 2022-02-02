@@ -1,5 +1,10 @@
 import * as path from "path";
-import { workspace, TextEditor, WorkspaceConfiguration } from "vscode";
+import {
+  workspace,
+  TextEditor,
+  WorkspaceConfiguration,
+  ConfigurationTarget,
+} from "vscode";
 import {
   ExecuteCommandRequest,
   TextDocumentPositionParams,
@@ -61,4 +66,11 @@ export function getJavaHomeFromConfig(): string | undefined {
   } else {
     return javaHomePath;
   }
+}
+
+export function toggleBooleanWorkspaceSetting(setting: string) {
+  const config = workspace.getConfiguration("metals");
+  const configProperty = config.inspect<boolean>(setting);
+  const currentValues = configProperty?.workspaceValue ?? false;
+  config.update(setting, !currentValues, ConfigurationTarget.Workspace);
 }
