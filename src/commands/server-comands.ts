@@ -1,29 +1,18 @@
 import * as fs from "fs";
 import { ClientCommands, ServerCommands } from "metals-languageclient";
 import * as path from "path";
-import {
-  commands,
-  env,
-  ExtensionContext,
-  Uri,
-  window,
-  workspace,
-} from "vscode";
+import { env, ExtensionContext, Uri, window, workspace } from "vscode";
 import {
   ExecuteCommandRequest,
   LanguageClient,
 } from "vscode-languageclient/node";
+import { registerCommandWithin } from "../util";
 
 export function registerServerCommands(
   context: ExtensionContext,
   client: LanguageClient
 ): void {
-  function registerCommand(
-    command: string,
-    callback: (...args: any[]) => unknown
-  ) {
-    context.subscriptions.push(commands.registerCommand(command, callback));
-  }
+  const registerCommand = registerCommandWithin(context);
 
   [
     ServerCommands.BuildImport,

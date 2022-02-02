@@ -4,6 +4,8 @@ import {
   TextEditor,
   WorkspaceConfiguration,
   ConfigurationTarget,
+  ExtensionContext,
+  commands,
 } from "vscode";
 import {
   ExecuteCommandRequest,
@@ -68,9 +70,15 @@ export function getJavaHomeFromConfig(): string | undefined {
   }
 }
 
-export function toggleBooleanWorkspaceSetting(setting: string) {
+export function toggleBooleanWorkspaceSetting(setting: string): void {
   const config = workspace.getConfiguration("metals");
   const configProperty = config.inspect<boolean>(setting);
   const currentValues = configProperty?.workspaceValue ?? false;
   config.update(setting, !currentValues, ConfigurationTarget.Workspace);
 }
+
+export const registerCommandWithin =
+  (context: ExtensionContext) =>
+  (command: string, callback: (...args: any[]) => unknown): void => {
+    context.subscriptions.push(commands.registerCommand(command, callback));
+  };

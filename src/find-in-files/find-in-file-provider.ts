@@ -15,6 +15,30 @@ import {
   workspace,
 } from "vscode";
 import { LanguageClient, Location } from "vscode-languageclient/node";
+import { registerCommandWithin } from "../util";
+
+export function registerFindInFilesProvider(
+  context: ExtensionContext,
+  client: LanguageClient,
+  outputChannel: OutputChannel
+): void {
+  const findInFilesProvider = startFindInFilesProvider(context);
+  const findInFilesView = createFindInFilesTreeView(
+    findInFilesProvider,
+    context
+  );
+
+  registerCommandWithin(context)(
+    `metals.find-text-in-dependency-jars`,
+    async () =>
+      executeFindInFiles(
+        client,
+        findInFilesProvider,
+        findInFilesView,
+        outputChannel
+      )
+  );
+}
 
 class TopLevel {
   constructor(

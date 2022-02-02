@@ -61,11 +61,7 @@ import { registerServerCommands } from "./commands/server-comands";
 import { registerTextEditorCommands } from "./commands/text-editor-commands";
 import { registerMetalsDecodeCommands } from "./decode-file/decode-file-commands";
 import { DecorationsRangesDidChange } from "./decoration-protocol";
-import {
-  createFindInFilesTreeView,
-  executeFindInFiles,
-  startFindInFilesProvider,
-} from "./findinfiles";
+import { registerFindInFilesProvider } from "./find-in-files/find-in-file-provider";
 import * as ext from "./hoverExtension";
 import { increaseIndentPattern } from "./indentPattern";
 import { LazyProgress } from "./lazy-progress";
@@ -517,6 +513,7 @@ function launchMetals(
         compilationDoneEmitter,
         outputChannel,
       });
+      registerFindInFilesProvider(context, client, outputChannel);
 
       registerCommand("metals.reveal-active-file", () => {
         if (treeViews) {
@@ -560,21 +557,6 @@ function launchMetals(
       registerCommand("metals.toggle-show-inferred-type", () => {
         toggleBooleanWorkspaceSetting("showInferredType");
       });
-
-      const findInFilesProvider = startFindInFilesProvider(context);
-      const findInFilesView = createFindInFilesTreeView(
-        findInFilesProvider,
-        context
-      );
-
-      registerCommand(`metals.find-text-in-dependency-jars`, async () =>
-        executeFindInFiles(
-          client,
-          findInFilesProvider,
-          findInFilesView,
-          outputChannel
-        )
-      );
 
       // NOTE: we offer a custom symbol search command to work around the limitations of the built-in one, see https://github.com/microsoft/vscode/issues/98125 for more details.
       registerCommand(`metals.symbol-search`, () => openSymbolSearch(client));

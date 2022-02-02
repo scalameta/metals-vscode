@@ -22,9 +22,6 @@ type TextEditorCallback = (
   ...args: any[]
 ) => unknown;
 
-/**
- * Register text editor related commands
- */
 export function registerTextEditorCommands(
   context: ExtensionContext,
   client: LanguageClient

@@ -3,18 +3,14 @@ import { commands, ExtensionContext, window } from "vscode";
 import { LanguageClient } from "vscode-languageclient/node";
 import { gotoLocation, WindowLocation } from "../goToLocation";
 import * as scalaDebugger from "../scalaDebugger";
+import { registerCommandWithin } from "../util";
 
 export function registerClientCommands(
   context: ExtensionContext,
   client: LanguageClient
 ): void {
-  function registerCommand(
-    command: string,
-    callback: (...args: any[]) => unknown
-  ) {
-    context.subscriptions.push(commands.registerCommand(command, callback));
-  }
   let channelOpen = false;
+  const registerCommand = registerCommandWithin(context);
 
   registerCommand(
     `metals.${ClientCommands.GotoLocation}`,
