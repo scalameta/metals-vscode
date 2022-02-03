@@ -99,7 +99,7 @@ class TestManager {
       return Promise.resolve();
     }
 
-    const args = uri ? [{ uri }] : [];
+    const args = uri ? [{ uri }] : [{}];
 
     return this.client
       .sendRequest(ExecuteCommandRequest.type, {
