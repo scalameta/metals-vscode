@@ -582,6 +582,16 @@ function launchMetals(
         commands.executeCommand(ClientCommands.RunDoctor)
       );
 
+      registerCommand(
+        `metals.${ServerCommands.DisplayTargetInfo}`,
+        (...args) => {
+          client.sendRequest(ExecuteCommandRequest.type, {
+            command: ServerCommands.DisplayTargetInfo,
+            arguments: args,
+          });
+        }
+      );
+
       registerCommand(ClientCommands.ToggleLogs, () => {
         if (channelOpen) {
           client.outputChannel.hide();
@@ -653,7 +663,8 @@ function launchMetals(
               const location = params.arguments?.[0] as WindowLocation;
               commands.executeCommand(
                 `metals.${ClientCommands.GotoLocation}`,
-                location
+                location,
+                metalsFileProvider
               );
               break;
             }
@@ -844,7 +855,7 @@ function launchMetals(
         `metals.${ClientCommands.GotoLocation}`,
         (location: WindowLocation) => {
           if (location) {
-            gotoLocation(location);
+            gotoLocation(location, metalsFileProvider);
           }
         }
       );
@@ -968,7 +979,9 @@ function launchMetals(
       });
 
       // NOTE: we offer a custom symbol search command to work around the limitations of the built-in one, see https://github.com/microsoft/vscode/issues/98125 for more details.
-      registerCommand(`metals.symbol-search`, () => openSymbolSearch(client));
+      registerCommand(`metals.symbol-search`, () =>
+        openSymbolSearch(client, metalsFileProvider)
+      );
 
       window.onDidChangeActiveTextEditor((editor) => {
         if (editor && isSupportedLanguage(editor.document.languageId)) {
