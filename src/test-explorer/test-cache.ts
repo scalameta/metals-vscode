@@ -13,13 +13,18 @@ class TestCache {
     return this.metadata.get(test);
   }
 
+  deleteMetadata(test: vscode.TestItem): boolean {
+    return this.metadata.delete(test);
+  }
+
   /**
    * Get all descendant suites of a given TestItem.
    * For build target it returns all test suite within it, same for package.
    * If is called with TestItem which is a suite, then returns itself
    */
   getTestItemChildren(test: vscode.TestItem): vscode.TestItem[] {
-    if (this.getMetadata(test)?.kind === "suite") {
+    const metadata = this.getMetadata(test);
+    if (metadata?.kind === "suite" || metadata?.kind === "testcase") {
       return [test];
     } else {
       let children: vscode.TestItem[] = [];

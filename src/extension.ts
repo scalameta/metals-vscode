@@ -35,7 +35,6 @@ import {
   RevealOutputChannelOn,
   ExecuteCommandRequest,
   CancellationToken,
-  CodeLensRefreshRequest,
 } from "vscode-languageclient/node";
 import { LazyProgress } from "./lazy-progress";
 import * as fs from "fs";
@@ -69,10 +68,7 @@ import {
 import * as metalsLanguageClient from "metals-languageclient";
 import { startTreeView } from "./treeview";
 import * as scalaDebugger from "./scalaDebugger";
-import {
-  DecorationTypeDidChange,
-  DecorationsRangesDidChange,
-} from "./decoration-protocol";
+import { DecorationsRangesDidChange } from "./decoration-protocol";
 import { clearTimeout } from "timers";
 import { increaseIndentPattern } from "./indentPattern";
 import { gotoLocation, WindowLocation } from "./goToLocation";
@@ -84,8 +80,13 @@ import {
 } from "./findinfiles";
 import * as ext from "./hoverExtension";
 import { decodeAndShowFile, MetalsFileProvider } from "./metalsContentProvider";
-import { getTextDocumentPositionParams, getValueFromConfig } from "./util";
+import {
+  getJavaHomeFromConfig,
+  getTextDocumentPositionParams,
+  getValueFromConfig,
+} from "./util";
 import { createTestManager } from "./test-explorer/test-manager";
+import { BuildTargetUpdate } from "./test-explorer/types";
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
 const downloadJava = "Download Java";
@@ -95,14 +96,15 @@ const installJava11Action = "Install Java (JDK 11)";
 let treeViews: MetalsTreeViews | undefined;
 let currentClient: LanguageClient | undefined;
 
-const worksheetDecorationType: TextEditorDecorationType =
+// Inline needs to be first to be shown always first
+const inlineDecorationType: TextEditorDecorationType =
   window.createTextEditorDecorationType({
-    isWholeLine: true,
-    rangeBehavior: DecorationRangeBehavior.OpenClosed,
+    rangeBehavior: DecorationRangeBehavior.OpenOpen,
   });
 
-let decorationType: TextEditorDecorationType =
+const decorationType: TextEditorDecorationType =
   window.createTextEditorDecorationType({
+    isWholeLine: true,
     rangeBehavior: DecorationRangeBehavior.OpenClosed,
   });
 
@@ -122,9 +124,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     async () => {
       commands.executeCommand("setContext", "metals:enabled", true);
       try {
-        const javaHome = await getJavaHome(
-          workspace.getConfiguration("metals").get("javaHome")
-        );
+        const javaHome = await getJavaHome(getJavaHomeFromConfig());
         return fetchAndLaunchMetals(context, javaHome);
       } catch (err) {
         outputChannel.appendLine(`${err}`);
@@ -651,99 +651,105 @@ function launchMetals(
         }
       });
 
-      const refreshTests = client.onRequest(CodeLensRefreshRequest.type, () => {
-        testManager.discoverTestSuites();
-      });
-
       context.subscriptions.push(disableTestExplorer);
-      context.subscriptions.push(refreshTests);
       context.subscriptions.push(testManager.testController);
 
       // Handle the metals/executeClientCommand extension notification.
-      client.onNotification(ExecuteClientCommand.type, (params) => {
-        switch (params.command) {
-          case ClientCommands.GotoLocation: {
-            const location = params.arguments?.[0] as WindowLocation;
-            commands.executeCommand(
-              `metals.${ClientCommands.GotoLocation}`,
-              location,
-              metalsFileProvider
-            );
-            break;
-          }
-          case ClientCommands.RefreshModel:
-            compilationDoneEmitter.fire();
-            break;
-          case ClientCommands.OpenFolder: {
-            const openWindowParams = params
-              .arguments?.[0] as MetalsOpenWindowParams;
-            if (openWindowParams) {
+      const executeClientCommandDisposable = client.onNotification(
+        ExecuteClientCommand.type,
+        (params) => {
+          switch (params.command) {
+            case ClientCommands.GotoLocation: {
+              const location = params.arguments?.[0] as WindowLocation;
               commands.executeCommand(
-                "vscode.openFolder",
-                Uri.parse(openWindowParams.uri),
-                openWindowParams.openNewWindow
+                `metals.${ClientCommands.GotoLocation}`,
+                location,
+                metalsFileProvider
               );
+              break;
             }
-            break;
-          }
-          case "metals-show-stacktrace": {
-            const html = params.arguments && params.arguments[0];
-            if (typeof html === "string") {
-              const panel = getStacktracePanel();
-              panel.webview.html = html;
+            case ClientCommands.RefreshModel:
+              compilationDoneEmitter.fire();
+              break;
+            case ClientCommands.OpenFolder: {
+              const openWindowParams = params
+                .arguments?.[0] as MetalsOpenWindowParams;
+              if (openWindowParams) {
+                commands.executeCommand(
+                  "vscode.openFolder",
+                  Uri.parse(openWindowParams.uri),
+                  openWindowParams.openNewWindow
+                );
+              }
+              break;
             }
-            break;
-          }
-          case ClientCommands.RunDoctor:
-          case ClientCommands.ReloadDoctor: {
-            const isRun = params.command === ClientCommands.RunDoctor;
-            const isReload = params.command === ClientCommands.ReloadDoctor;
-            if (isRun || (doctor && isReload)) {
+            case "metals-show-stacktrace": {
               const html = params.arguments && params.arguments[0];
               if (typeof html === "string") {
-                const panel = getDoctorPanel(isReload);
+                const panel = getStacktracePanel();
                 panel.webview.html = html;
               }
+              break;
             }
-            break;
+            case ClientCommands.RunDoctor:
+            case ClientCommands.ReloadDoctor: {
+              const isRun = params.command === ClientCommands.RunDoctor;
+              const isReload = params.command === ClientCommands.ReloadDoctor;
+              if (isRun || (doctor && isReload)) {
+                const html = params.arguments && params.arguments[0];
+                if (typeof html === "string") {
+                  const panel = getDoctorPanel(isReload);
+                  panel.webview.html = html;
+                }
+              }
+              break;
+            }
+            case ClientCommands.FocusDiagnostics:
+              commands.executeCommand(ClientCommands.FocusDiagnostics);
+              break;
+            case "metals-update-test-explorer": {
+              const updates: BuildTargetUpdate[] = params.arguments || [];
+              testManager.updateTestExplorer(updates);
+              break;
+            }
+            default:
+              outputChannel.appendLine(`unknown command: ${params.command}`);
           }
-          case ClientCommands.FocusDiagnostics:
-            commands.executeCommand(ClientCommands.FocusDiagnostics);
-            break;
-          default:
-            outputChannel.appendLine(`unknown command: ${params.command}`);
         }
+      );
 
-        // Ignore other commands since they are less important.
-      });
-
+      context.subscriptions.push(executeClientCommandDisposable);
       // The server updates the client with a brief text message about what
       // it is currently doing, for example "Compiling..".
       const item = window.createStatusBarItem(StatusBarAlignment.Right, 100);
       item.command = ClientCommands.ToggleLogs;
       item.hide();
-      client.onNotification(MetalsStatus.type, (params) => {
-        item.text = params.text;
-        if (params.show) {
-          item.show();
-        } else if (params.hide) {
-          item.hide();
+      const metalsStatusDisposable = client.onNotification(
+        MetalsStatus.type,
+        (params) => {
+          item.text = params.text;
+          if (params.show) {
+            item.show();
+          } else if (params.hide) {
+            item.hide();
+          }
+          if (params.tooltip) {
+            item.tooltip = params.tooltip;
+          }
+          if (params.command) {
+            const command = params.command;
+            item.command = params.command;
+            commands.getCommands().then((values) => {
+              if (values.includes(command)) {
+                commands.executeCommand(command);
+              }
+            });
+          } else {
+            item.command = undefined;
+          }
         }
-        if (params.tooltip) {
-          item.tooltip = params.tooltip;
-        }
-        if (params.command) {
-          const command = params.command;
-          item.command = params.command;
-          commands.getCommands().then((values) => {
-            if (values.includes(command)) {
-              commands.executeCommand(command);
-            }
-          });
-        } else {
-          item.command = undefined;
-        }
-      });
+      );
+      context.subscriptions.push(metalsStatusDisposable);
 
       registerTextEditorCommand(`metals.run-current-file`, (editor) => {
         const args: DebugDiscoveryParams = {
@@ -1081,39 +1087,40 @@ function launchMetals(
       scalaDebugger.initialize(outputChannel).forEach((disposable) => {
         context.subscriptions.push(disposable);
       });
-      client.onNotification(DecorationTypeDidChange.type, (options) => {
-        decorationType = window.createTextEditorDecorationType(options);
-      });
-      client.onNotification(DecorationsRangesDidChange.type, (params) => {
-        const editors = window.visibleTextEditors;
-        const path = Uri.parse(params.uri).toString();
-        const workheetEditors = editors.filter(
-          (editor) => editor.document.uri.toString() == path
-        );
-        if (workheetEditors.length > 0) {
-          const options = params.options.map<DecorationOptions>((o) => {
-            return {
-              range: new Range(
-                new Position(o.range.start.line, o.range.start.character),
-                new Position(o.range.end.line, o.range.end.character)
-              ),
-              hoverMessage: o.hoverMessage?.value,
-              renderOptions: o.renderOptions,
-            };
-          });
-          workheetEditors.forEach((editor) => {
-            if (params.uri.endsWith(".worksheet.sc")) {
-              editor.setDecorations(worksheetDecorationType, options);
-            } else {
-              editor.setDecorations(decorationType, options);
-            }
-          });
-        } else {
-          outputChannel.appendLine(
-            `Ignoring decorations for non-active document '${params.uri}'.`
+      const decorationsRangesDidChangeDispoasable = client.onNotification(
+        DecorationsRangesDidChange.type,
+        (params) => {
+          const editors = window.visibleTextEditors;
+          const path = Uri.parse(params.uri).toString();
+          const workheetEditors = editors.filter(
+            (editor) => editor.document.uri.toString() == path
           );
+          if (workheetEditors.length > 0) {
+            const options = params.options.map<DecorationOptions>((o) => {
+              return {
+                range: new Range(
+                  new Position(o.range.start.line, o.range.start.character),
+                  new Position(o.range.end.line, o.range.end.character)
+                ),
+                hoverMessage: o.hoverMessage?.value,
+                renderOptions: o.renderOptions,
+              };
+            });
+            workheetEditors.forEach((editor) => {
+              if (params.isInline) {
+                editor.setDecorations(inlineDecorationType, options);
+              } else {
+                editor.setDecorations(decorationType, options);
+              }
+            });
+          } else {
+            outputChannel.appendLine(
+              `Ignoring decorations for non-active document '${params.uri}'.`
+            );
+          }
         }
-      });
+      );
+      context.subscriptions.push(decorationsRangesDidChangeDispoasable);
     },
     (reason) => {
       if (reason instanceof Error) {
