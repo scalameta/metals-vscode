@@ -89,22 +89,26 @@ export function startTreeView(
   });
 
   // Update tree nodes on server notificiations
-  client.onNotification(MetalsTreeViewDidChange.type, (params) => {
-    params.nodes.forEach((node) => {
-      const provider = allProviders.get(node.viewId);
-      if (!provider) {
-        return;
-      }
-      if (node.nodeUri) {
-        provider.items.set(node.nodeUri, node);
-      }
-      if (node.nodeUri) {
-        provider.didChange.fire(node.nodeUri);
-      } else {
-        provider.didChange.fire(undefined);
-      }
-    });
-  });
+  const metalsTreeViewDidChangeDispoasble = client.onNotification(
+    MetalsTreeViewDidChange.type,
+    (params) => {
+      params.nodes.forEach((node) => {
+        const provider = allProviders.get(node.viewId);
+        if (!provider) {
+          return;
+        }
+        if (node.nodeUri) {
+          provider.items.set(node.nodeUri, node);
+        }
+        if (node.nodeUri) {
+          provider.didChange.fire(node.nodeUri);
+        } else {
+          provider.didChange.fire(undefined);
+        }
+      });
+    }
+  );
+  context.subscriptions.push(metalsTreeViewDidChangeDispoasble);
 
   return {
     disposables: ([] as Disposable[]).concat(...disposables),

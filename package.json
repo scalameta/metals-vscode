@@ -9,7 +9,7 @@
     "ide",
     "scalameta"
   ],
-  "version": "1.12.11",
+  "version": "1.12.18",
   "publisher": "scalameta",
   "contributors": [
     {
@@ -201,8 +201,8 @@
         },
         "metals.javaHome": {
           "type": "string",
-          "scope": "machine",
-          "markdownDescription": "Optional path to the Java home directory. Requires reloading the window.\n\nDefaults to the most recent Java version between 8 and 11 (inclusive) computed by the `locate-java-home` npm package."
+          "scope": "machine-overridable",
+          "markdownDescription": "Optional path to the Java home directory. Requires reloading the window.\n\nDefaults to the most recent Java version between 8 and 17 (inclusive) computed by the `locate-java-home` npm package."
         },
         "metals.sbtScript": {
           "type": "string",
@@ -485,12 +485,7 @@
       {
         "command": "metals.run-current-file",
         "category": "Metals",
-        "title": "Run main class in the current file"
-      },
-      {
-        "command": "metals.test-current-file",
-        "category": "Metals",
-        "title": "Run test class in the current file"
+        "title": "Run main class or tests in the current file"
       },
       {
         "command": "metals.test-current-target",
@@ -731,7 +726,7 @@
               },
               "buildTarget": {
                 "type": "string",
-                "description": "Name of the build target of the class to run"
+                "description": "Name of the build target of the class to run, can be found in the projects section of the Metals tab"
               },
               "args": {
                 "type": "array",
@@ -814,6 +809,19 @@
               "hostName": "localhost",
               "port": 5005
             }
+          },
+          {
+            "label": "Scala: Play framework prod server",
+            "description": "A new configuration for running a production Play framework production server",
+            "body": {
+              "type": "scala",
+              "request": "launch",
+              "name": "Play main",
+              "mainClass": "play.core.server.ProdServerStart",
+              "args": [],
+              "jvmOptions": [],
+              "buildTarget": "???"
+            }
           }
         ]
       }
@@ -836,11 +844,11 @@
   "devDependencies": {
     "@types/glob": "^7.2.0",
     "@types/mocha": "^9.1.0",
-    "@types/node": "17.0.12",
+    "@types/node": "17.0.15",
     "@types/vscode": "1.59.0",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
-    "@vscode/test-electron": "^2.1.1",
+    "@vscode/test-electron": "^2.1.2",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "glob": "^7.2.0",
@@ -850,7 +858,7 @@
     "rimraf": "^3.0.2",
     "ts-mocha": "^9.0.2",
     "typescript": "4.5.5",
-    "vsce": "2.6.3"
+    "vsce": "2.6.7"
   },
   "dependencies": {
     "ansicolor": "^1.1.100",

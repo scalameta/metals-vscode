@@ -1,7 +1,7 @@
 pull_request_rules:
   - name: CI passes and is @types package from dependabot
     conditions:
-      - "#status-success=5"
+      - "#status-success=6"
       - author~=^dependabot(|-preview)\[bot\]$
       - title~=^Bump @types/(\w+) from .*$
       - base=main
