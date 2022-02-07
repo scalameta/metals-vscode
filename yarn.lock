@@ -199,10 +199,10 @@
     async "^3.2.2"
     semver "^7.3.5"
 
-"@vscode/test-electron@^2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@vscode/test-electron/-/test-electron-2.1.1.tgz#f1616f2e88d67fbcce599064007a99e703eccfa1"
-  integrity sha512-7G9gFGjJGOJ+hQ1ZgZYEV973pzQBclLZngXOEGMyRyvK4GUkl7XeIOwQN/iMv2ttq7gPUKmIxSKF7YGF5J7DZQ==
+"@vscode/test-electron@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@vscode/test-electron/-/test-electron-2.1.2.tgz#38b1a3e2ce2acf6a975cbea8fdf8c038ee50d3bc"
+  integrity sha512-INjJ0YA9RgR1B/xBl8P4sxww4Dy2996f4Xn5oGTFfC0c2Mm45y/1Id8xmfuoba6tR5i8zZaUIHfEYWe7Rt4uZA==
   dependencies:
     http-proxy-agent "^4.0.1"
     https-proxy-agent "^5.0.0"
