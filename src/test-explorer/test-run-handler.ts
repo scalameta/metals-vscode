@@ -39,8 +39,10 @@ vscode.debug.registerDebugAdapterTrackerFactory("scala", {
 });
 
 /**
- * runHandler is a function which is called to start a TestRun. Depending on the run profile it may be ordinary run or a debug TestRun.
- * It creates run queue which contains test supposed to be run and then for each entry it creates & run a debug session
+ * runHandler is a function which is called to start a TestRun.
+ * Depending on the run profile it may be ordinary run or a debug TestRun.
+ * It creates run queue which contains test supposed to be run and then,
+ * for each entry it creates & run a debug session.
  */
 export async function runHandler(
   testController: TestController,
@@ -55,35 +57,47 @@ export async function runHandler(
   for (const { test, data } of queue) {
     if (token.isCancellationRequested) {
       run.skipped(test);
+    } else if (data.kind === "testcase" && test.parent) {
+      const suites = [test.parent];
+      await runDebugSession(run, noDebug, test.parent, data.targetUri, suites);
+      continue;
     } else {
-      run.started(test);
-      const children = testCache.getTestItemChildren(test);
-      children.forEach((c) => run.enqueued(c));
-
-      try {
-        await commands.executeCommand("workbench.action.files.save");
-        const testsIds = children.map((t) => t.id);
-        const session = await createDebugSession(data.targetUri, testsIds);
-
-        if (!session) {
-          return;
-        }
-
-        const wasStarted = await startDebugging(session, noDebug);
-        if (!wasStarted) {
-          vscode.window.showErrorMessage("Debug session not started");
-          return run.failed(test, { message: "Debug session not started" });
-        }
-
-        await analyzeResults(run, children);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        afterFinished();
-      }
+      const suites = testCache.getTestItemChildren(test);
+      await runDebugSession(run, noDebug, test, data.targetUri, suites);
     }
   }
   run.end();
+  afterFinished();
+}
+
+async function runDebugSession(
+  run: vscode.TestRun,
+  noDebug: boolean,
+  root: vscode.TestItem,
+  targetUri: TargetUri,
+  suites: vscode.TestItem[]
+): Promise<void> {
+  try {
+    suites.forEach((suite) => {
+      suite.children.forEach((child) => run.started(child));
+      run.started(suite);
+    });
+    await commands.executeCommand("workbench.action.files.save");
+    const testsIds = suites.map((c) => c.id);
+    const session = await createDebugSession(targetUri, testsIds);
+    if (!session) {
+      return;
+    }
+    const wasStarted = await startDebugging(session, noDebug);
+    if (!wasStarted) {
+      vscode.window.showErrorMessage("Debug session not started");
+      run.failed(root, { message: "Debug session not started" });
+      return;
+    }
+    await analyzeResults(run, suites);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 /**
@@ -150,10 +164,7 @@ async function startDebugging(session: DebugSession, noDebug: boolean) {
  * Retrieves test suite results for current debus session gathered by DAP tracker and passes
  * them to the analyzer function. After analysis ends, results are cleaned.
  */
-async function analyzeResults(
-  run: vscode.TestRun,
-  children: vscode.TestItem[]
-) {
+async function analyzeResults(run: vscode.TestRun, suites: vscode.TestItem[]) {
   return new Promise<void>((resolve) => {
     const disposable = vscode.debug.onDidTerminateDebugSession(
       (session: vscode.DebugSession) => {
@@ -166,7 +177,7 @@ async function analyzeResults(
         };
 
         // analyze current TestRun
-        analyzeTestRun(run, children, testSuitesResult, teardown);
+        analyzeTestRun(run, suites, testSuitesResult, teardown);
         return resolve();
       }
     );
