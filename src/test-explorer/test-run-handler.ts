@@ -9,7 +9,14 @@ import {
 import { debugServerFromUri, DebugSession } from "../scalaDebugger";
 import { analyzeTestRun } from "./analyze-test-run";
 import { testCache } from "./test-cache";
-import { DapEvent, TargetUri, TestItemMetadata } from "./types";
+import {
+  DapEvent,
+  ScalaTestSelection,
+  ScalaTestSuiteSelection,
+  TargetUri,
+  TestItemMetadata,
+  TestSuiteRun,
+} from "./types";
 
 // this id is used to mark DAP sessions created by TestController
 // thanks to that debug tracker knows which requests it should track and gather results
@@ -58,33 +65,62 @@ export async function runHandler(
     if (token.isCancellationRequested) {
       run.skipped(test);
     } else if (data.kind === "testcase" && test.parent) {
-      const suites = [test.parent];
-      await runDebugSession(run, noDebug, test.parent, data.targetUri, suites);
-      continue;
+      await runDebugSession(run, noDebug, data.targetUri, {
+        root: test.parent,
+        suites: [{ suiteItem: test.parent, testCases: [test] }],
+      });
     } else {
-      const suites = testCache.getTestItemChildren(test);
-      await runDebugSession(run, noDebug, test, data.targetUri, suites);
+      const suitesItems = testCache.getTestItemChildren(test);
+      await runDebugSession(run, noDebug, data.targetUri, {
+        root: test,
+        suites: suitesItems.map((suite) => ({
+          suiteItem: suite,
+          testCases: [],
+        })),
+      });
     }
   }
   run.end();
   afterFinished();
 }
 
+/**
+ *  User can start 3 different kind of test runs:
+ * - run a whole build target/package
+ * - run a whole test suite
+ * - run a single test case
+ * This interface describes all these runs and allows to process them in unified way.
+ * @param root test item which was clicked by the user, can be test case/suite/package
+ * @param suites suites which are included in this run
+ */
+export interface RunParams {
+  root: vscode.TestItem;
+  suites: TestSuiteRun[];
+}
+
+/**
+ * @param noDebug determines if debug session will be started as a debug or normal run
+ */
 async function runDebugSession(
   run: vscode.TestRun,
   noDebug: boolean,
-  root: vscode.TestItem,
   targetUri: TargetUri,
-  suites: vscode.TestItem[]
+  runParams: RunParams
 ): Promise<void> {
+  const { root, suites } = runParams;
   try {
     suites.forEach((suite) => {
-      suite.children.forEach((child) => run.started(child));
-      run.started(suite);
+      suite.suiteItem.children.forEach((child) => run.started(child));
+      run.started(suite.suiteItem);
     });
     await commands.executeCommand("workbench.action.files.save");
-    const testsIds = suites.map((c) => c.id);
-    const session = await createDebugSession(targetUri, testsIds);
+    const testSuiteSelection: ScalaTestSuiteSelection[] = runParams.suites.map(
+      (suite) => ({
+        className: suite.suiteItem.id,
+        tests: suite.testCases.map((test) => test.label),
+      })
+    );
+    const session = await createDebugSession(targetUri, testSuiteSelection);
     if (!session) {
       return;
     }
@@ -128,15 +164,17 @@ function createRunQueue(
  */
 async function createDebugSession(
   targetUri: TargetUri,
-  testsIds: string[]
+  classes: ScalaTestSuiteSelection[]
 ): Promise<DebugSession | undefined> {
+  const debugSessionParams: ScalaTestSelection = {
+    target: { uri: targetUri },
+    classes,
+    jvmOptions: [],
+    env: {},
+  };
   return vscode.commands.executeCommand<DebugSession>(
     ServerCommands.DebugAdapterStart,
-    {
-      targets: [{ uri: targetUri }],
-      dataKind: "scala-test-suites",
-      data: testsIds,
-    }
+    debugSessionParams
   );
 }
 
@@ -164,7 +202,7 @@ async function startDebugging(session: DebugSession, noDebug: boolean) {
  * Retrieves test suite results for current debus session gathered by DAP tracker and passes
  * them to the analyzer function. After analysis ends, results are cleaned.
  */
-async function analyzeResults(run: vscode.TestRun, suites: vscode.TestItem[]) {
+async function analyzeResults(run: vscode.TestRun, suites: TestSuiteRun[]) {
   return new Promise<void>((resolve) => {
     const disposable = vscode.debug.onDidTerminateDebugSession(
       (session: vscode.DebugSession) => {

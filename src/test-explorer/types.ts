@@ -117,3 +117,36 @@ export interface TestRunActions {
   passed?(test: vscode.TestItem, duration?: number): void;
   skipped?(test: vscode.TestItem): void;
 }
+
+/**
+ * Describes suites in test run.
+ * @param suiteItem test item which corresponds to the test suite
+ * @param testCases test cases to run from @param suiteItem. If testCases
+ * is an empty array then it means that all children of test suite should
+ * be included in test run.
+ */
+export interface TestSuiteRun {
+  suiteItem: vscode.TestItem;
+  testCases: vscode.TestItem[];
+}
+
+export interface BuildTargetIdentifier {
+  uri: TargetUri;
+}
+export interface ScalaTestSelection {
+  /** The build target that contains the test classes. */
+  target: BuildTargetIdentifier;
+  /** The fully qualified names of the test classes in this target and the tests in this test classes */
+  classes: ScalaTestSuiteSelection[];
+  /** The jvm options for the application. */
+  jvmOptions: string[];
+  /** The environment variables for the application. */
+  env?: Record<string, string>;
+}
+
+export interface ScalaTestSuiteSelection {
+  /** The test class to run. */
+  className: string;
+  /** The selected tests to run. */
+  tests: string[];
+}
