@@ -74,7 +74,7 @@ function arrayEqual<T>(actual: T[], expected: T[]): void {
   assert.deepEqual(actual, expected);
 }
 
-suite.only("Analyze tests results", () => {
+suite("Analyze tests results", () => {
   const testController = vscode.tests.createTestController(
     "testController",
     "Test Explorer"
@@ -83,7 +83,7 @@ suite.only("Analyze tests results", () => {
   test("suite passed", () => {
     const [action, results] = getRunActions();
     const testItem = testController.createTestItem("TestSuite", "TestSuite");
-    analyzeTestRun(action, [testItem], passed);
+    analyzeTestRun(action, [{ suiteItem: testItem, testCases: [] }], passed);
     arrayEqual(results.failed, []);
     arrayEqual(results.skipped, []);
     arrayEqual(results.passed, [{ id: "TestSuite", duration: 100 }]);
@@ -95,7 +95,7 @@ suite.only("Analyze tests results", () => {
     const [action, results] = getRunActions();
     const testItem = testController.createTestItem("TestSuite", "TestSuite");
 
-    analyzeTestRun(action, [testItem], failed);
+    analyzeTestRun(action, [{ suiteItem: testItem, testCases: [] }], failed);
     arrayEqual(results.failed, [
       { id: "TestSuite", duration: 100, msg: [{ message: "Error" }] },
     ]);
@@ -112,7 +112,7 @@ suite.only("Analyze tests results", () => {
       testController.createTestItem("TestSuite.test3", "test3"),
     ]);
 
-    analyzeTestRun(action, [testItem], failed);
+    analyzeTestRun(action, [{ suiteItem: testItem, testCases: [] }], failed);
     arrayEqual(results.failed, [
       {
         id: "TestSuite.test1",
@@ -124,7 +124,7 @@ suite.only("Analyze tests results", () => {
     arrayEqual(results.skipped, [{ id: "TestSuite.test3" }]);
   });
 
-  test.only("testcase", () => {
+  test("testcase", () => {
     const [action, results] = getRunActions();
     const testItem = testController.createTestItem("TestSuite", "TestSuite");
     const child = testController.createTestItem("TestSuite.test1", "test1");
@@ -134,7 +134,11 @@ suite.only("Analyze tests results", () => {
       testController.createTestItem("TestSuite.test3", "test3"),
     ].forEach((c) => testItem.children.add(c));
 
-    analyzeTestRun(action, [testItem], failed);
+    analyzeTestRun(
+      action,
+      [{ suiteItem: testItem, testCases: [child] }],
+      failed
+    );
     arrayEqual(results.failed, [
       {
         id: "TestSuite.test1",
@@ -142,7 +146,7 @@ suite.only("Analyze tests results", () => {
         msg: { message: "Error" },
       },
     ]);
-    arrayEqual(results.passed, [{ id: "TestSuite.test2", duration: 90 }]);
-    arrayEqual(results.skipped, [{ id: "TestSuite.test3" }]);
+    arrayEqual(results.passed, []);
+    arrayEqual(results.skipped, []);
   });
 });
