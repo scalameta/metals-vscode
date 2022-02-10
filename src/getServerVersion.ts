@@ -71,7 +71,7 @@ async function fetchLatest(): Promise<string> {
   const text = await ps;
   const json = JSON.parse(text);
   const sorted = [json["release"], json["snapshot"]].sort();
-  return sorted.at(-1);
+  return sorted[sorted.length - 1];
 }
 
 /* The logic is the following:
@@ -161,7 +161,7 @@ function todayString(): string {
   const date = new Date();
   const year = date.getFullYear().toString();
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = (date.getDay() + 1).toString().padStart(2, "0");
+  const day = (date.getDate() + 1).toString().padStart(2, "0");
   return [year, month, day].join("-");
 }
 
