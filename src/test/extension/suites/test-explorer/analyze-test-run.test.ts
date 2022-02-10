@@ -74,7 +74,7 @@ function arrayEqual<T>(actual: T[], expected: T[]): void {
   assert.deepEqual(actual, expected);
 }
 
-suite.only("Analyze tests results", () => {
+suite("Analyze tests results", () => {
   const testController = vscode.tests.createTestController(
     "testController",
     "Test Explorer"
@@ -124,7 +124,7 @@ suite.only("Analyze tests results", () => {
     arrayEqual(results.skipped, [{ id: "TestSuite.test3" }]);
   });
 
-  test.only("testcase", () => {
+  test("testcase", () => {
     const [action, results] = getRunActions();
     const testItem = testController.createTestItem("TestSuite", "TestSuite");
     const child = testController.createTestItem("TestSuite.test1", "test1");

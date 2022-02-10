@@ -3,7 +3,7 @@ import * as vscode from "vscode";
 import { addTestCases } from "../../../../test-explorer/add-test-cases";
 import { addTestSuite } from "../../../../test-explorer/add-test-suite";
 import { removeTestItem } from "../../../../test-explorer/remove-test-item";
-import { foo, fooTestCases, noPackage } from "./data";
+import { foo, fooBar, fooTestCases, noPackage } from "./data";
 import { buildTarget, prettyPrint, randomString } from "./util";
 
 const [targetName, targetUri] = buildTarget("app", "");
@@ -66,9 +66,10 @@ suite("Test Explorer events", () => {
     cleanup();
   });
 
-  test("add suite with package", () => {
+  test("add suites with packages", () => {
     addTestSuite(testController, targetName, targetUri, noPackage);
     addTestSuite(testController, targetName, targetUri, foo);
+    addTestSuite(testController, targetName, targetUri, fooBar);
 
     checkTestController(testController, {
       id: targetName,
@@ -78,7 +79,18 @@ suite("Test Explorer events", () => {
         {
           id: "a",
           label: "a",
-          children: [{ id: "a.Foo", label: "Foo", children: [] }],
+          children: [
+            {
+              id: "a.Foo",
+              label: "Foo",
+              children: [],
+            },
+            {
+              id: "a.b",
+              label: "b",
+              children: [{ id: "a.b.FooBar", label: "FooBar", children: [] }],
+            },
+          ],
         },
       ],
     });
