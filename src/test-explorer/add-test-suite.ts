@@ -85,11 +85,7 @@ function getOrCreateBuildTargetItem(
     return buildTarget;
   }
 
-  const createdNode = testController.createTestItem(
-    targetName,
-    targetName,
-    vscode.Uri.parse(targetUri)
-  );
+  const createdNode = testController.createTestItem(targetName, targetName);
   testController.items.add(createdNode);
 
   const data: TestItemMetadata = {
