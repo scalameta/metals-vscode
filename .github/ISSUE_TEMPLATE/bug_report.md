@@ -10,6 +10,10 @@ assignees: ""
 
 <!-- A clear and concise description of what the bug is. -->
 
+**Does this happen with only Scala Syntax and Metals enabled?**
+
+Yes/No
+
 **To Reproduce** Steps to reproduce the behavior:
 
 1. Go to '...'
