@@ -22,23 +22,22 @@ export async function getServerVersion(
   channel: OutputChannel
 ): Promise<string> {
   /* eslint-disable @typescript-eslint/no-non-null-assertion */
-  const serverVersionConfig = config.get<string>(serverVersionSection)!;
+  const serverVersionConfig = config.get<string>(serverVersionSection);
   const defaultServerVersion =
     config.inspect<string>(serverVersionSection)!.defaultValue!;
-  const serverVersion = serverVersionConfig
-    ? serverVersionConfig.trim()
-    : defaultServerVersion;
+  const serverVersion = serverVersionConfig?.trim() ?? defaultServerVersion;
   const autoLatestSetting = getConfigValue<boolean>(config, autoLatestSection);
 
-  const lookupForUpdates = await (async () => {
+  const checkForUpdate = async () => {
     if (autoLatestSetting?.value) {
       return needCheckForUpdates(serverVersion, autoLatestSetting.target);
     } else {
       return false;
     }
-  })();
+  };
+  const isUpdateAvailable = await checkForUpdate();
 
-  if (autoLatestSetting && lookupForUpdates) {
+  if (autoLatestSetting && isUpdateAvailable) {
     const nextVersion = await fetchLatest();
     if (nextVersion != serverVersion) {
       channel.appendLine(
@@ -127,44 +126,42 @@ function datesFileDir(target: ConfigurationTarget): string {
 function warnIfIsOutdated(config: WorkspaceConfiguration): void {
   metalsLanguageClient.checkServerVersion({
     config,
-    updateConfig: ({
-      configSection,
-      latestServerVersion,
-      configurationTarget,
-    }) =>
-      config.update(configSection, latestServerVersion, configurationTarget),
-    onOutdated: ({
-      message,
-      upgradeChoice,
-      openSettingsChoice,
-      dismissChoice,
-      upgrade,
-    }) =>
-      window
-        .showWarningMessage(
-          message,
-          upgradeChoice,
-          openSettingsChoice,
-          dismissChoice
-        )
-        .then((choice) => {
-          switch (choice) {
-            case upgradeChoice:
-              upgrade();
-              break;
-            case openSettingsChoice:
-              commands.executeCommand(workbenchCommands.openSettings);
-              break;
-          }
-        }),
+    updateConfig: (updateParams) => {
+      const { configSection, latestServerVersion, configurationTarget } =
+        updateParams;
+      config.update(configSection, latestServerVersion, configurationTarget);
+    },
+    onOutdated: async (outdatedParams) => {
+      const {
+        upgrade,
+        message,
+        upgradeChoice,
+        openSettingsChoice,
+        dismissChoice,
+      } = outdatedParams;
+      const choice = await window.showWarningMessage(
+        message,
+        upgradeChoice,
+        openSettingsChoice,
+        dismissChoice
+      );
+      switch (choice) {
+        case upgradeChoice:
+          upgrade();
+          break;
+        case openSettingsChoice:
+          commands.executeCommand(workbenchCommands.openSettings);
+          break;
+      }
+    },
   });
 }
 
 function todayString(): string {
   const date = new Date();
   const year = date.getFullYear().toString();
-  const month = ("0" + (date.getMonth() + 1)).slice(-2);
-  const day = ("0" + (date.getDay() + 1)).slice(-2);
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = (date.getDate() + 1).toString().padStart(2, "0");
   return [year, month, day].join("-");
 }
 
@@ -175,23 +172,19 @@ function getConfigValue<A>(
   const value = config.get<A>(key);
   const { defaultValue, workspaceValue } = config.inspect<A>(key)!;
   if (value) {
-    const configurationTarget = (() => {
+    const getTarget = () => {
       if (workspaceValue && workspaceValue !== defaultValue) {
         return ConfigurationTarget.Workspace;
       } else {
         return ConfigurationTarget.Global;
       }
-    })();
-    return {
-      value: value,
-      target: configurationTarget,
     };
+    const target = getTarget();
+    return { value, target };
   } else if (defaultValue) {
     return {
       value: defaultValue,
       target: ConfigurationTarget.Global,
     };
-  } else {
-    return undefined;
   }
 }
