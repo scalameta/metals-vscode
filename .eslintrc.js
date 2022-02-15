@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   parser: "@typescript-eslint/parser",
-  plugins: ["@typescript-eslint"],
+  plugins: ["@typescript-eslint", "mocha"],
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -20,6 +20,7 @@ module.exports = {
         "no-var": "error",
         curly: "error",
         "no-useless-escape": "off",
+        "mocha/no-exclusive-tests": "error",
       },
     },
   ],

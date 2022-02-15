@@ -7,5 +7,8 @@
     "out": true // set this to false to include "out" folder in search results
   },
   "editor.formatOnSave": true,
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "files.watcherExclude": {
+    "**/target": true
+  }
 }
