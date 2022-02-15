@@ -1,7 +1,6 @@
 import {
   commands,
   ConfigurationTarget,
-  OutputChannel,
   window,
   workspace,
   WorkspaceConfiguration,
@@ -14,46 +13,62 @@ import fs from "fs";
 import os from "os";
 
 const serverVersionSection = "serverVersion";
-const autoLatestSection = "autoLatestUpgrade";
+const suggestLatestUpgrade = "suggestLatestUpgrade";
 const versionDatesFileName = "versions-meta.json";
 
-export async function getServerVersion(
-  config: WorkspaceConfiguration,
-  channel: OutputChannel
-): Promise<string> {
+export function getServerVersion(config: WorkspaceConfiguration): string {
   /* eslint-disable @typescript-eslint/no-non-null-assertion */
   const serverVersionConfig = config.get<string>(serverVersionSection);
   const defaultServerVersion =
     config.inspect<string>(serverVersionSection)!.defaultValue!;
   const serverVersion = serverVersionConfig?.trim() ?? defaultServerVersion;
-  const autoLatestSetting = getConfigValue<boolean>(config, autoLatestSection);
+
+  validateCurrentVersion(serverVersion, config);
+  return serverVersion;
+}
+
+async function validateCurrentVersion(
+  serverVersion: string,
+  config: WorkspaceConfiguration
+): Promise<void> {
+  const suggestUpgradeSetting = getConfigValue<boolean>(
+    config,
+    suggestLatestUpgrade
+  );
 
   const checkForUpdate = async () => {
-    if (autoLatestSetting?.value) {
-      return needCheckForUpdates(serverVersion, autoLatestSetting.target);
+    if (suggestUpgradeSetting?.value) {
+      return needCheckForUpdates(serverVersion, suggestUpgradeSetting.target);
     } else {
       return false;
     }
   };
   const isUpdateAvailable = await checkForUpdate();
 
-  if (autoLatestSetting && isUpdateAvailable) {
+  if (suggestUpgradeSetting && isUpdateAvailable) {
     const nextVersion = await fetchLatest();
     if (nextVersion != serverVersion) {
-      channel.appendLine(
-        `Auto update Metals server version: switching on ${nextVersion}`
-      );
-      config.update(
-        serverVersionSection,
-        nextVersion,
-        autoLatestSetting.target
-      );
-      saveVersionDate(nextVersion, autoLatestSetting.target);
+      const message = `The latest server version is: ${nextVersion} while you are on ${serverVersion}. Do upgrade?`;
+      const upgradeChoice = "Yes";
+      const ignoreChoice = "No";
+      window
+        .showInformationMessage(message, upgradeChoice, ignoreChoice)
+        .then((result) => {
+          if (result == upgradeChoice) {
+            config.update(
+              serverVersionSection,
+              nextVersion,
+              suggestUpgradeSetting.target
+            );
+            saveVersionDate(nextVersion, suggestUpgradeSetting.target);
+          } else if (result == ignoreChoice) {
+            // extend the current version expiration date
+            saveVersionDate(serverVersion, suggestUpgradeSetting.target);
+          }
+        });
     }
-    return nextVersion;
   } else {
     warnIfIsOutdated(config);
-    return serverVersion;
   }
 }
 
@@ -161,7 +176,7 @@ function todayString(): string {
   const date = new Date();
   const year = date.getFullYear().toString();
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = (date.getDate() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
   return [year, month, day].join("-");
 }
 

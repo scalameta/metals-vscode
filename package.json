@@ -316,10 +316,10 @@
           "type": "string",
           "markdownDescription": "Optional Eclipse format profile to use."
         },
-        "metals.autoLatestUpgrade": {
+        "metals.suggestLatestUpgrade": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "Once in a day, try automatically upgrade server version to the latest snapshot"
+          "markdownDescription": "Once in a day, notify if there are new server releases (including snapshots)"
         }
       }
     },
