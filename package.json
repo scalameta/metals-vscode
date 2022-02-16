@@ -315,6 +315,11 @@
         "metals.javaFormat.eclipseProfile": {
           "type": "string",
           "markdownDescription": "Optional Eclipse format profile to use."
+        },
+        "metals.suggestLatestUpgrade": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Once in a day, notify if there are new server releases (including snapshots)"
         }
       }
     },
