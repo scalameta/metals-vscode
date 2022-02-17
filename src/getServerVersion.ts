@@ -21,7 +21,7 @@ export function getServerVersion(config: WorkspaceConfiguration): string {
   const serverVersionConfig = config.get<string>(serverVersionSection);
   const defaultServerVersion =
     config.inspect<string>(serverVersionSection)!.defaultValue!;
-  const serverVersion = serverVersionConfig?.trim() ?? defaultServerVersion;
+  const serverVersion = serverVersionConfig?.trim() || defaultServerVersion;
 
   validateCurrentVersion(serverVersion, config);
   return serverVersion;
