@@ -33,8 +33,6 @@ export const ClientCommands = {
   ReloadDoctor: "metals-doctor-reload",
   /** Focus on a window displaying troubleshooting help from the Metals doctor. */
   RunDoctor: "metals-doctor-run",
-  /** Show details about a specific build target */
-  DisplayTargetInfo: "metals-target-info-display",
   /**
    * Command to trigger a debug session with Metals. Triggered by a code lens
    * in the editor.
