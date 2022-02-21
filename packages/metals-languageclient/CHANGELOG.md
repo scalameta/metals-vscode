@@ -1,5 +1,14 @@
 ## metals-languageclient changelog
 
+### v0.5.9 (2022/02/21 09:15 +00:00)
+- [e608928](https://github.com/scalameta/metals-languageclient/commit/e6089284a9cb3d093294d3af568df230990d32d1) Change displayBuildTarget to listBuildTargets (@Arthurm1)
+- [a6b33b8](https://github.com/scalameta/metals-languageclient/commit/a6b33b87696b82bbe84bf715bec8021324aede48) Bump @types/node-fetch from 2.6.0 to 2.6.1 (@dependabot[bot])
+- [35ce0bb](https://github.com/scalameta/metals-languageclient/commit/35ce0bb696e0ff0d8b3064d49ca16ff3e0ca2ad2) Bump @types/node from 17.0.17 to 17.0.18 (@dependabot[bot])
+- [d8fb4ea](https://github.com/scalameta/metals-languageclient/commit/d8fb4eac2387fd7db1857c11af7bcbfe989dd1c9) Bump @types/node-fetch from 2.5.12 to 2.6.0 (@dependabot[bot])
+- [38a8daf](https://github.com/scalameta/metals-languageclient/commit/38a8daf8b8940d2d3e8036f932d61adc050cb4a0) Bump ajv from 6.11.0 to 6.12.6 (@dependabot[bot])
+- [d4b06fd](https://github.com/scalameta/metals-languageclient/commit/d4b06fdba8c18e845ddbccf00f0ca6e1d8c6b3df) Bump @types/node from 17.0.13 to 17.0.14 (@dependabot[bot])
+- [0b57edb](https://github.com/scalameta/metals-languageclient/commit/0b57edb21116dc9acefb28d3f1d1c5eb6afb848a) Release v0.5.8
+
 ### v0.5.8 (2022/01/31 15:13 +00:00)
 - [18a99ff](https://github.com/scalameta/metals-languageclient/commit/18a99ffb21ac8627cc0c00d312ee36775f61fd0b) Remove contextValue API change (@Arthurm1)
 - [df00f88](https://github.com/scalameta/metals-languageclient/commit/df00f88713081ccbd86f8d44ffc820719db44657) Bump @types/node from 17.0.12 to 17.0.13 (@dependabot[bot])
@@ -473,8 +482,8 @@
 ### v0.1.15 (2020/02/04 07:17 +00:00)
 - [04fc84e](https://github.com/scalameta/metals-languageclient/commit/04fc84e55f889990a10083f83ea6f395fc7ee81b) v0.1.15 (@gabro)
 - [9a5fcf5](https://github.com/scalameta/metals-languageclient/commit/9a5fcf5757989832f522a8db585f2e71c64bc081) Use the same version of vscode-languageserver-protocol as coc.nvim (@gabro)
-- [0dffea3](https://github.com/scalameta/metals-languageclient/commit/0dffea3660ce9969d946100c55c05ae9eeb8e0a3) Fix potentially undefined arrays (@gabro)
 - [e7144b4](https://github.com/scalameta/metals-languageclient/commit/e7144b4eeb9e153c5d7e060d04e2bf7c74d99883) v0.1.14 (@gabro)
+- [0dffea3](https://github.com/scalameta/metals-languageclient/commit/0dffea3660ce9969d946100c55c05ae9eeb8e0a3) Fix potentially undefined arrays (@gabro)
 - [5b3aafc](https://github.com/scalameta/metals-languageclient/commit/5b3aafcf25f72a5b4269ef6568d372c2c34775e9) Bump @types/node from 13.5.3 to 13.7.0 (@dependabot-preview[bot])
 
 ### v0.1.13 (2020/02/01 09:20 +00:00)
