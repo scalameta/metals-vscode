@@ -31,7 +31,9 @@ export function addTestSuite(
       if (child) {
         addTestSuiteLoop(child, restOfIds);
       } else {
-        const packageNode = testController.createTestItem(currentId, currentId);
+        const parts = currentId.split(".");
+        const label = parts[parts.length - 1];
+        const packageNode = testController.createTestItem(currentId, label);
         parent.children.add(packageNode);
 
         const data: TestItemMetadata = {
@@ -83,11 +85,7 @@ function getOrCreateBuildTargetItem(
     return buildTarget;
   }
 
-  const createdNode = testController.createTestItem(
-    targetName,
-    targetName,
-    vscode.Uri.parse(targetUri)
-  );
+  const createdNode = testController.createTestItem(targetName, targetName);
   testController.items.add(createdNode);
 
   const data: TestItemMetadata = {

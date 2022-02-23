@@ -20,6 +20,7 @@ async function main(): Promise<void> {
     await runTests({
       extensionDevelopmentPath,
       extensionTestsPath,
+      version: "1.64.0",
       reuseMachineInstall: true,
       launchArgs: ["--disable-extension"],
       reporter,

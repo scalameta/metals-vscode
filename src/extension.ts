@@ -87,10 +87,12 @@ import {
 } from "./util";
 import { createTestManager } from "./test-explorer/test-manager";
 import { BuildTargetUpdate } from "./test-explorer/types";
+import * as workbenchCommands from "./workbenchCommands";
+import { getServerVersion } from "./getServerVersion";
+
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
 const downloadJava = "Download Java";
-const openSettingsCommand = "workbench.action.openSettings";
 const installJava8Action = "Install Java (JDK 8)";
 const installJava11Action = "Install Java (JDK 11)";
 let treeViews: MetalsTreeViews | undefined;
@@ -111,8 +113,8 @@ const decorationType: TextEditorDecorationType =
 const config = workspace.getConfiguration("metals");
 
 export async function activate(context: ExtensionContext): Promise<void> {
+  const serverVersion = getServerVersion(config);
   detectLaunchConfigurationChanges();
-  checkServerVersion();
   configureSettingsDefaults();
 
   return window.withProgress(
@@ -125,7 +127,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
       commands.executeCommand("setContext", "metals:enabled", true);
       try {
         const javaHome = await getJavaHome(getJavaHomeFromConfig());
-        return fetchAndLaunchMetals(context, javaHome);
+        return fetchAndLaunchMetals(context, javaHome, serverVersion);
       } catch (err) {
         outputChannel.appendLine(`${err}`);
         showMissingJavaMessage();
@@ -176,7 +178,7 @@ function showInstallJavaMessage(): Thenable<void> {
 function chooseJavaToInstall(choice: string | undefined) {
   switch (choice) {
     case openSettingsAction: {
-      commands.executeCommand(openSettingsCommand);
+      commands.executeCommand(workbenchCommands.openSettings);
       break;
     }
     case installJava8Action: {
@@ -210,7 +212,11 @@ function chooseJavaToInstall(choice: string | undefined) {
   }
 }
 
-function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
+function fetchAndLaunchMetals(
+  context: ExtensionContext,
+  javaHome: string,
+  serverVersion: string
+) {
   if (!workspace.workspaceFolders) {
     outputChannel.appendLine(
       `Metals will not start because you've opened a single file and not a project directory.`
@@ -227,14 +233,6 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
   }
 
   outputChannel.appendLine(`Java home: ${javaHome}`);
-
-  /* eslint-disable @typescript-eslint/no-non-null-assertion */
-  const serverVersionConfig = config.get<string>("serverVersion")!;
-  const defaultServerVersion =
-    config.inspect<string>("serverVersion")!.defaultValue!;
-  const serverVersion = serverVersionConfig
-    ? serverVersionConfig.trim()
-    : defaultServerVersion;
 
   outputChannel.appendLine(`Metals version: ${serverVersion}`);
 
@@ -283,12 +281,6 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
             `Flatpak sandbox, which is known to interfere with the download of Metals. ` +
             `Please, try running Visual Studio Code without Flatpak.`
           );
-        } else if (serverVersion === defaultServerVersion) {
-          return (
-            `Failed to download Metals, make sure you have an internet connection and ` +
-            `the Java Home '${javaHome}' is valid. You can configure the Java Home in the settings.` +
-            proxy
-          );
         } else {
           return (
             `Failed to download Metals, make sure you have an internet connection, ` +
@@ -303,7 +295,7 @@ function fetchAndLaunchMetals(context: ExtensionContext, javaHome: string) {
         .showErrorMessage(msg, openSettingsAction, downloadJava)
         .then((choice) => {
           if (choice === openSettingsAction) {
-            commands.executeCommand(openSettingsCommand);
+            commands.executeCommand(workbenchCommands.openSettings);
           } else if (choice === downloadJava) {
             showInstallJavaMessage();
           }
@@ -355,6 +347,7 @@ function launchMetals(
     globSyntax: "vscode",
     icons: "vscode",
     inputBoxProvider: true,
+    isVirtualDocumentSupported: true,
     openFilesOnRenameProvider: true,
     openNewWindowProvider: true,
     quickPickProvider: true,
@@ -369,6 +362,8 @@ function launchMetals(
     documentSelector: [
       { scheme: "file", language: "scala" },
       { scheme: "file", language: "java" },
+      { scheme: "jar", language: "scala" },
+      { scheme: "jar", language: "java" },
     ],
     synchronize: {
       configurationSection: "metals",
@@ -575,7 +570,7 @@ function launchMetals(
       let channelOpen = false;
 
       registerCommand(ClientCommands.FocusDiagnostics, () =>
-        commands.executeCommand("workbench.action.problems.focus")
+        commands.executeCommand(workbenchCommands.focusDiagnostics)
       );
 
       registerCommand(ClientCommands.RunDoctor, () =>
@@ -629,6 +624,10 @@ function launchMetals(
 
       languages.registerCodeLensProvider(
         { scheme: "file", language: "scala" },
+        codeLensRefresher
+      );
+      languages.registerCodeLensProvider(
+        { scheme: "jar", language: "scala" },
         codeLensRefresher
       );
 
@@ -1234,47 +1233,10 @@ function detectLaunchConfigurationChanges() {
         .showInformationMessage(message, reloadWindowChoice, dismissChoice)
         .then((choice) => {
           if (choice === reloadWindowChoice) {
-            commands.executeCommand("workbench.action.reloadWindow");
+            commands.executeCommand(workbenchCommands.reloadWindow);
           }
         })
   );
-}
-
-function checkServerVersion() {
-  const config = workspace.getConfiguration("metals");
-  metalsLanguageClient.checkServerVersion({
-    config,
-    updateConfig: ({
-      configSection,
-      latestServerVersion,
-      configurationTarget,
-    }) =>
-      config.update(configSection, latestServerVersion, configurationTarget),
-    onOutdated: ({
-      message,
-      upgradeChoice,
-      openSettingsChoice,
-      dismissChoice,
-      upgrade,
-    }) =>
-      window
-        .showWarningMessage(
-          message,
-          upgradeChoice,
-          openSettingsChoice,
-          dismissChoice
-        )
-        .then((choice) => {
-          switch (choice) {
-            case upgradeChoice:
-              upgrade();
-              break;
-            case openSettingsChoice:
-              commands.executeCommand(openSettingsCommand);
-              break;
-          }
-        }),
-  });
 }
 
 function isSupportedLanguage(languageId: TextDocument["languageId"]): boolean {
