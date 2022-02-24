@@ -186,6 +186,10 @@
           ],
           "markdownDescription": "Optional list of properties to pass along to the Metals server. By default, the environment variable `JAVA_OPTS` and `.jvmopts` file are respected. Each property needs to be a separate item.\n\nExample: `-Dhttps.proxyHost=…`, `-Dhttps.proxyPort=…` or `-Dmetals.statistics=all`"
         },
+        "metals.coursierMirror": {
+          "type": "string",
+          "markdownDescription": "Optional alternative repository to maven central if maven central is not available."
+        },
         "metals.ammoniteJvmProperties": {
           "type": "array",
           "items": {

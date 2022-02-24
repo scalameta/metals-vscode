@@ -89,6 +89,7 @@ import { createTestManager } from "./test-explorer/test-manager";
 import { BuildTargetUpdate } from "./test-explorer/types";
 import * as workbenchCommands from "./workbenchCommands";
 import { getServerVersion } from "./getServerVersion";
+import { getMirrorPath } from "./mirrors";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -240,10 +241,12 @@ function fetchAndLaunchMetals(
   const customRepositories = config.get<string[]>("customRepositories")!;
   /* eslint-enable @typescript-eslint/no-non-null-assertion */
 
+  const coursierMirror = getMirrorPath(config);
   const javaConfig = getJavaConfig({
     workspaceRoot: workspace.workspaceFolders[0]?.uri.fsPath,
     javaHome,
     customRepositories,
+    coursierMirrorFilePath: coursierMirror,
     extensionPath: context.extensionPath,
   });
 

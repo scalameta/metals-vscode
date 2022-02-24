@@ -2,7 +2,6 @@ import {
   commands,
   ConfigurationTarget,
   window,
-  workspace,
   WorkspaceConfiguration,
 } from "vscode";
 import * as metalsLanguageClient from "metals-languageclient";
@@ -10,7 +9,7 @@ import * as workbenchCommands from "./workbenchCommands";
 import http from "https";
 import path from "path";
 import fs from "fs";
-import os from "os";
+import { getConfigValue, metalsDir } from "./util";
 
 const serverVersionSection = "serverVersion";
 const suggestLatestUpgrade = "suggestLatestUpgrade";
@@ -97,7 +96,7 @@ async function needCheckForUpdates(
   currentVersion: string,
   target: ConfigurationTarget
 ): Promise<boolean> {
-  const file = path.join(datesFileDir(target), versionDatesFileName);
+  const file = path.join(metalsDir(target), versionDatesFileName);
 
   const records: Record<string, string> = (() => {
     if (!fs.existsSync(file)) {
@@ -119,7 +118,7 @@ async function needCheckForUpdates(
 function saveVersionDate(version: string, target: ConfigurationTarget): void {
   const datesValue: Record<string, string> = {};
   datesValue[version] = todayString();
-  const dir = datesFileDir(target);
+  const dir = metalsDir(target);
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
@@ -127,15 +126,6 @@ function saveVersionDate(version: string, target: ConfigurationTarget): void {
     path.join(dir, versionDatesFileName),
     JSON.stringify(datesValue)
   );
-}
-
-function datesFileDir(target: ConfigurationTarget): string {
-  if (target == ConfigurationTarget.Workspace && workspace.workspaceFolders) {
-    const wsDir = workspace.workspaceFolders[0]?.uri.fsPath;
-    return path.join(wsDir, ".metals");
-  } else {
-    return path.join(os.homedir(), ".metals-data");
-  }
 }
 
 function warnIfIsOutdated(config: WorkspaceConfiguration): void {
@@ -178,28 +168,4 @@ function todayString(): string {
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const day = date.getDate().toString().padStart(2, "0");
   return [year, month, day].join("-");
-}
-
-function getConfigValue<A>(
-  config: WorkspaceConfiguration,
-  key: string
-): { value: A; target: ConfigurationTarget } | undefined {
-  const value = config.get<A>(key);
-  const { defaultValue, workspaceValue } = config.inspect<A>(key)!;
-  if (value) {
-    const getTarget = () => {
-      if (workspaceValue && workspaceValue !== defaultValue) {
-        return ConfigurationTarget.Workspace;
-      } else {
-        return ConfigurationTarget.Global;
-      }
-    };
-    const target = getTarget();
-    return { value, target };
-  } else if (defaultValue) {
-    return {
-      value: defaultValue,
-      target: ConfigurationTarget.Global,
-    };
-  }
 }
