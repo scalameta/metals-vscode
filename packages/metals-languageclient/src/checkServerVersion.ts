@@ -1,6 +1,7 @@
-import { WorkspaceConfiguration } from "./interfaces/WorkspaceConfiguration";
-import { ConfigurationTarget } from "./interfaces/ConfigurationTarget";
 import * as semver from "semver";
+import { ConfigurationTarget } from "./interfaces/ConfigurationTarget";
+import { UserConfiguration } from "./interfaces/UserConfiguration";
+import { WorkspaceConfiguration } from "./interfaces/WorkspaceConfiguration";
 
 interface OnOutdatedParams {
   message: string;
@@ -16,7 +17,7 @@ interface UpdateConfigParams {
   configurationTarget: ConfigurationTarget;
 }
 
-const configSection = "serverVersion";
+const configSection = UserConfiguration.ServerVersion;
 
 interface CheckServerVersionParams {
   config: WorkspaceConfiguration;

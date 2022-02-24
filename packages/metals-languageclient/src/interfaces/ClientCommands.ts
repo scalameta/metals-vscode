@@ -2,7 +2,7 @@
  * These are all of the client commands that Metals supports. Note that not support
  * may vary based on the `InitializationSettings` the client sets.
  *
- *  - https://scalameta.org/metals/docs/editors/new-editor.html#metals-client-commands
+ *  - https://scalameta.org/metals/docs/integrations/new-editor#metals-client-commands
  */
 export const ClientCommands = {
   /**
