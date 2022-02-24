@@ -17,6 +17,7 @@ export function detectLaunchConfigurationChanges(
       "serverProperties",
       "javaHome",
       "customRepositories",
+      "coursierMirror",
       ...additionalRestartKeys,
     ];
     const shouldPromptRestart = promptRestartKeys.some((key) =>
