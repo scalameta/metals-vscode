@@ -1,5 +1,10 @@
 ## metals-languageclient changelog
 
+### v0.5.10 (2022/02/25 10:44 +00:00)
+- [ce3e31d](https://github.com/scalameta/metals-languageclient/commit/ce3e31d71d5deb411c646eb52b62d34638491f9f) Add UserConfiguration object for common properties (@tgodzik)
+- [71f08b3](https://github.com/scalameta/metals-languageclient/commit/71f08b373d9f875532c9ecb03fdbeeea2372590a) Add mirror env variable when set by the user (@tgodzik)
+- [12d8094](https://github.com/scalameta/metals-languageclient/commit/12d8094d3a74424ba04746bab22229449cc882b7) Release v0.5.9
+
 ### v0.5.9 (2022/02/21 09:15 +00:00)
 - [e608928](https://github.com/scalameta/metals-languageclient/commit/e6089284a9cb3d093294d3af568df230990d32d1) Change displayBuildTarget to listBuildTargets (@Arthurm1)
 - [a6b33b8](https://github.com/scalameta/metals-languageclient/commit/a6b33b87696b82bbe84bf715bec8021324aede48) Bump @types/node-fetch from 2.6.0 to 2.6.1 (@dependabot[bot])
@@ -482,8 +487,8 @@
 ### v0.1.15 (2020/02/04 07:17 +00:00)
 - [04fc84e](https://github.com/scalameta/metals-languageclient/commit/04fc84e55f889990a10083f83ea6f395fc7ee81b) v0.1.15 (@gabro)
 - [9a5fcf5](https://github.com/scalameta/metals-languageclient/commit/9a5fcf5757989832f522a8db585f2e71c64bc081) Use the same version of vscode-languageserver-protocol as coc.nvim (@gabro)
-- [e7144b4](https://github.com/scalameta/metals-languageclient/commit/e7144b4eeb9e153c5d7e060d04e2bf7c74d99883) v0.1.14 (@gabro)
 - [0dffea3](https://github.com/scalameta/metals-languageclient/commit/0dffea3660ce9969d946100c55c05ae9eeb8e0a3) Fix potentially undefined arrays (@gabro)
+- [e7144b4](https://github.com/scalameta/metals-languageclient/commit/e7144b4eeb9e153c5d7e060d04e2bf7c74d99883) v0.1.14 (@gabro)
 - [5b3aafc](https://github.com/scalameta/metals-languageclient/commit/5b3aafcf25f72a5b4269ef6568d372c2c34775e9) Bump @types/node from 13.5.3 to 13.7.0 (@dependabot-preview[bot])
 
 ### v0.1.13 (2020/02/01 09:20 +00:00)
