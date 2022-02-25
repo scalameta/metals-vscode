@@ -567,6 +567,40 @@ function launchMetals(
         );
       });
 
+      function displayBuildTarget(target: string): void {
+        const workspaceRoots = workspace.workspaceFolders;
+        if (workspaceRoots && workspaceRoots.length > 0) {
+          const uriStr = `metalsDecode:file:///${workspaceRoots[0].name}/${target}.metals-buildtarget`;
+          const uri = Uri.parse(uriStr);
+          workspace
+            .openTextDocument(uri)
+            .then((textDocument) => window.showTextDocument(textDocument));
+        }
+      }
+
+      registerCommand(`metals.target-info-display`, async (...args: any[]) => {
+        if (args.length > 0) {
+          // get build target name from treeview uri of the form "projects:file:/root/metals/.mtags/?id=mtags3!/_root_/"
+          const treeViewUri = args[0] as string;
+          const query = treeViewUri.split("/?id=");
+          if (query.length > 1) {
+            const buildTarget = query[1].split("!");
+            if (buildTarget.length > 0) {
+              displayBuildTarget(buildTarget[0]);
+            }
+          }
+        } else {
+          // pick from list of targets
+          const targets = await client.sendRequest(ExecuteCommandRequest.type, {
+            command: ServerCommands.ListBuildTargets,
+          });
+          const picked = await window.showQuickPick(targets);
+          if (picked) {
+            displayBuildTarget(picked);
+          }
+        }
+      });
+
       let channelOpen = false;
 
       registerCommand(ClientCommands.FocusDiagnostics, () =>
@@ -575,16 +609,6 @@ function launchMetals(
 
       registerCommand(ClientCommands.RunDoctor, () =>
         commands.executeCommand(ClientCommands.RunDoctor)
-      );
-
-      registerCommand(
-        `metals.${ServerCommands.DisplayTargetInfo}`,
-        (...args) => {
-          client.sendRequest(ExecuteCommandRequest.type, {
-            command: ServerCommands.DisplayTargetInfo,
-            arguments: args,
-          });
-        }
       );
 
       registerCommand(ClientCommands.ToggleLogs, () => {
