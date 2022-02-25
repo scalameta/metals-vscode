@@ -1,3 +1,4 @@
+import { UserConfiguration } from "./interfaces/UserConfiguration";
 import { Workspace } from "./interfaces/Workspace";
 
 interface PromptRestartParams {
@@ -13,10 +14,11 @@ export function detectLaunchConfigurationChanges(
 ): void {
   workspace.onDidChangeConfiguration((e) => {
     const promptRestartKeys = [
-      "serverVersion",
-      "serverProperties",
-      "javaHome",
-      "customRepositories",
+      UserConfiguration.ServerVersion,
+      UserConfiguration.ServerProperties,
+      UserConfiguration.JavaHome,
+      UserConfiguration.CustomRepositories,
+      UserConfiguration.CoursierMirror,
       ...additionalRestartKeys,
     ];
     const shouldPromptRestart = promptRestartKeys.some((key) =>

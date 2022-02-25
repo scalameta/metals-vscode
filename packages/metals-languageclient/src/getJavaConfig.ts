@@ -5,6 +5,7 @@ export interface JavaConfig {
   javaOptions: string[];
   javaPath: string;
   coursierPath: string;
+  coursierMirrorFilePath: string | undefined;
   extraEnv: {
     [k: string]: string | undefined;
   };
@@ -14,6 +15,7 @@ interface GetJavaConfigOptions {
   workspaceRoot: string | undefined;
   javaHome: string;
   extensionPath: string;
+  coursierMirrorFilePath: string | undefined;
   customRepositories: string[] | undefined;
 }
 
@@ -21,6 +23,7 @@ export function getJavaConfig({
   workspaceRoot,
   javaHome,
   extensionPath,
+  coursierMirrorFilePath,
   customRepositories = [],
 }: GetJavaConfigOptions): JavaConfig {
   const javaOptions = getJavaOptions(workspaceRoot);
@@ -28,6 +31,7 @@ export function getJavaConfig({
   const coursierPath = path.join(extensionPath, "./coursier");
   const extraEnv = {
     COURSIER_REPOSITORIES: customRepositories.join("|"),
+    COURSIER_MIRRORS: coursierMirrorFilePath,
     JAVA_HOME: javaHome,
   };
 
@@ -35,6 +39,7 @@ export function getJavaConfig({
     javaOptions,
     javaPath,
     coursierPath,
+    coursierMirrorFilePath,
     extraEnv,
   };
 }
