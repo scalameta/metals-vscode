@@ -188,7 +188,7 @@
         },
         "metals.coursierMirror": {
           "type": "string",
-          "markdownDescription": "Optional alternative repository to maven central if maven central is not available."
+          "markdownDescription": "Optional alternative repository to maven central if maven central is not available. For example: `https://jcenter.bintray.com`, which will be used to set to property described [here](https://get-coursier.io/blog/#mirrors)"
         },
         "metals.ammoniteJvmProperties": {
           "type": "array",
@@ -898,7 +898,7 @@
   },
   "dependencies": {
     "ansicolor": "^1.1.100",
-    "metals-languageclient": "0.5.9",
+    "metals-languageclient": "0.5.10",
     "promisify-child-process": "4.1.1",
     "vscode-languageclient": "7.0.0"
   },

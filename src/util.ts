@@ -49,7 +49,7 @@ export function metalsDir(target: ConfigurationTarget): string {
     const wsDir = workspace.workspaceFolders[0]?.uri.fsPath;
     return path.join(wsDir, ".metals");
   } else {
-    return path.join(os.homedir(), ".metals-data");
+    return path.join(os.homedir(), ".metals");
   }
 }
 

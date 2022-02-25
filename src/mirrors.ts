@@ -5,32 +5,27 @@ import { getConfigValue, metalsDir } from "./util";
 
 const mirrorProperty = "coursierMirror";
 
-export function getMirrorPath(
+/**
+ * @returns path to the mirror config file described in https://get-coursier.io/blog/#mirrors
+ */
+export function getCoursierMirrorPath(
   config: WorkspaceConfiguration
 ): string | undefined {
   const mirrorConfig = getConfigValue<string>(config, mirrorProperty);
 
   const value = mirrorConfig?.value.trim();
-  if (mirrorConfig && value && value.length > 0)
+  if (mirrorConfig && value && value.length > 0) {
     return writeMirrorFile(value, mirrorConfig.target);
-  else return;
+  }
 }
 
 function writeMirrorFile(mirrorString: string, target: ConfigurationTarget) {
   const dotMetalsDir = metalsDir(target);
   const file = path.join(dotMetalsDir, "mirror.properties");
-  let mirrorContents =
-    "metals.from=https://repo1.maven.org/maven2\n" +
-    `metals.to=${mirrorString}`;
-  if (!fs.existsSync(file)) {
-    fs.writeFileSync(file, mirrorContents);
-    return file;
-  } else {
-    let current = fs.readFileSync(file, {
-      encoding: "utf8",
-      flag: "r",
-    });
-    if (current != mirrorContents) fs.writeFileSync(file, mirrorContents);
-    return file;
-  }
+  const mirrorContents = [
+    "metals.from=https://repo1.maven.org/maven2",
+    `metals.to=${mirrorString}`,
+  ].join("\n");
+  fs.writeFileSync(file, mirrorContents);
+  return file;
 }
