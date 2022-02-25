@@ -1,5 +1,11 @@
 import * as path from "path";
-import { workspace, TextEditor, WorkspaceConfiguration } from "vscode";
+import os from "os";
+import {
+  workspace,
+  TextEditor,
+  WorkspaceConfiguration,
+  ConfigurationTarget,
+} from "vscode";
 import {
   ExecuteCommandRequest,
   TextDocumentPositionParams,
@@ -13,6 +19,39 @@ declare const sym: unique symbol;
 export type newtype<A, ID extends string> = A & {
   readonly [sym]: ID;
 };
+
+export function getConfigValue<A>(
+  config: WorkspaceConfiguration,
+  key: string
+): { value: A; target: ConfigurationTarget } | undefined {
+  const value = config.get<A>(key);
+  const { defaultValue, workspaceValue } = config.inspect<A>(key)!;
+  if (value) {
+    const getTarget = () => {
+      if (workspaceValue && workspaceValue !== defaultValue) {
+        return ConfigurationTarget.Workspace;
+      } else {
+        return ConfigurationTarget.Global;
+      }
+    };
+    const target = getTarget();
+    return { value, target };
+  } else if (defaultValue) {
+    return {
+      value: defaultValue,
+      target: ConfigurationTarget.Global,
+    };
+  }
+}
+
+export function metalsDir(target: ConfigurationTarget): string {
+  if (target == ConfigurationTarget.Workspace && workspace.workspaceFolders) {
+    const wsDir = workspace.workspaceFolders[0]?.uri.fsPath;
+    return path.join(wsDir, ".metals");
+  } else {
+    return path.join(os.homedir(), ".metals");
+  }
+}
 
 export function getTextDocumentPositionParams(
   editor: TextEditor

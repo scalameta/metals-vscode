@@ -186,6 +186,10 @@
           ],
           "markdownDescription": "Optional list of properties to pass along to the Metals server. By default, the environment variable `JAVA_OPTS` and `.jvmopts` file are respected. Each property needs to be a separate item.\n\nExample: `-Dhttps.proxyHost=…`, `-Dhttps.proxyPort=…` or `-Dmetals.statistics=all`"
         },
+        "metals.coursierMirror": {
+          "type": "string",
+          "markdownDescription": "Optional alternative repository to maven central if maven central is not available. For example: `https://jcenter.bintray.com`, which will be used to set to property described [here](https://get-coursier.io/blog/#mirrors)"
+        },
         "metals.ammoniteJvmProperties": {
           "type": "array",
           "items": {
@@ -894,7 +898,7 @@
   },
   "dependencies": {
     "ansicolor": "^1.1.100",
-    "metals-languageclient": "0.5.9",
+    "metals-languageclient": "0.5.10",
     "promisify-child-process": "4.1.1",
     "vscode-languageclient": "7.0.0"
   },
