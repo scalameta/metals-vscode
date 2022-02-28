@@ -10,6 +10,14 @@ export function toVscodeRange(range: Range): vscode.Range {
   );
 }
 
+export function testItemCollectionToArray(
+  testCollection: vscode.TestItemCollection
+): vscode.TestItem[] {
+  const tests: vscode.TestItem[] = [];
+  testCollection.forEach((test) => tests.push(test));
+  return tests;
+}
+
 /**
  * Return prefixes of fully qualified name.
  * includeSelf = false :

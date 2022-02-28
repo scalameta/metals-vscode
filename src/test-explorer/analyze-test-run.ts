@@ -7,7 +7,9 @@ import {
   TestName,
   TestRunActions,
   TestSuiteResult,
+  TestSuiteRun,
 } from "./types";
+import { testItemCollectionToArray } from "./util";
 
 /**
  * Analyze results from TestRun and pass inform Test Controller about them.
@@ -20,23 +22,29 @@ import {
  */
 export function analyzeTestRun(
   run: TestRunActions,
-  suites: vscode.TestItem[],
+  suites: TestSuiteRun[],
   testSuitesResults: TestSuiteResult[],
   teardown?: () => void
 ): void {
   const results = createResultsMap(testSuitesResults);
-  for (const testSuite of suites) {
-    const suiteName = testSuite.id as SuiteName;
+  for (const { suiteItem, testCases } of suites) {
+    const suiteName = suiteItem.id as SuiteName;
     const result = results.get(suiteName);
     if (result != null) {
+      // if suite run contains test cases (run was started for (single) test case)
+      if (testCases.length > 0) {
+        analyzeTestCases(run, result, testCases);
+      }
       // if test suite has children (test cases) do a more fine-grained analyze of results.
-      if (testSuite.children.size > 0) {
-        analyzeTestCases(run, result, testSuite);
+      // run was started for whole suite which has children (e.g. junit one)
+      else if (suiteItem.children.size > 0) {
+        const items = testItemCollectionToArray(suiteItem.children);
+        analyzeTestCases(run, result, items);
       } else {
-        analyzeTestSuite(run, result, testSuite);
+        analyzeTestSuite(run, result, suiteItem);
       }
     } else {
-      run.skipped?.(testSuite);
+      run.skipped?.(suiteItem);
     }
   }
   teardown?.();
@@ -61,19 +69,19 @@ function createResultsMap(
 function analyzeTestCases(
   run: TestRunActions,
   result: TestSuiteResult,
-  testSuite: vscode.TestItem
+  testCases: vscode.TestItem[]
 ) {
   const testCasesResults = createTestCasesMap(result);
-  testSuite.children.forEach((child) => {
-    const testCaseResult = testCasesResults.get(child.id as TestName);
+  testCases.forEach((test) => {
+    const testCaseResult = testCasesResults.get(test.id as TestName);
 
     if (testCaseResult?.kind === "passed") {
-      run.passed?.(child, testCaseResult.duration);
+      run.passed?.(test, testCaseResult.duration);
     } else if (testCaseResult?.kind === "failed") {
       const errorMsg = toTestMessage(testCaseResult.error);
-      run.failed?.(child, errorMsg, testCaseResult.duration);
+      run.failed?.(test, errorMsg, testCaseResult.duration);
     } else {
-      run.skipped?.(child);
+      run.skipped?.(test);
     }
   });
 }
