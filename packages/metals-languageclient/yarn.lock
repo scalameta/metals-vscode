@@ -556,11 +556,11 @@
     "@types/yargs-parser" "*"
 
 "@viperproject/locate-java-home@^1.1.5":
-  version "1.1.7"
-  resolved "https://registry.yarnpkg.com/@viperproject/locate-java-home/-/locate-java-home-1.1.7.tgz#9544f0db8ad57e4a3e8790c2000e8397dab8932e"
-  integrity sha512-wboCBiSBxkPNqe03sRiy6eXMu0RDQfxOVxRcxgA8e5GRcYVhhCjr4eiLYlBelObYmthUc0J9SjaabmioMbPN4Q==
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/@viperproject/locate-java-home/-/locate-java-home-1.1.8.tgz#dabb62e4df7ac75bea711fe37349d6b710f84c06"
+  integrity sha512-o4/rUQKk5L2+smWy6sUjrhRyUAWg2hjY/etyxKzWWWWXKDTgpNAljm4WOMcqFlhNLIIvEH2G/t1cuYkTWRYHpA==
   dependencies:
-    async "^3.2.2"
+    async "^3.2.3"
     semver "^7.3.5"
 
 abab@^2.0.0:
@@ -713,10 +713,10 @@ astral-regex@^1.0.0:
   resolved "https://registry.yarnpkg.com/astral-regex/-/astral-regex-1.0.0.tgz#6c8c3fb827dd43ee3918f27b82782ab7658a6fd9"
   integrity sha512-+Ryf6g3BKoRc7jfp7ad8tM4TtMiaWvbF/1/sQcZPkkS7ag3D5nMBCe2UfOTONtAkaG0tO0ij3C5Lwmf1EiyjHg==
 
-async@^3.2.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/async/-/async-3.2.2.tgz#2eb7671034bb2194d45d30e31e24ec7e7f9670cd"
-  integrity sha512-H0E+qZaDEfx/FY4t7iLRv1W2fFI6+pyCeTw1uN20AQPiwqwM6ojPxHxdLv4z8hi2DtnW9BOckSspLucW7pIE5g==
+async@^3.2.3:
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/async/-/async-3.2.3.tgz#ac53dafd3f4720ee9e8a160628f18ea91df196c9"
+  integrity sha512-spZRyzKL5l5BZQrr/6m/SqFdBN0q3OCI0f9rjfBzCMBIP4p75P620rR3gTmaksNOhmzgdxcaxdNfMy6anrbM0g==
 
 asynckit@^0.4.0:
   version "0.4.0"
