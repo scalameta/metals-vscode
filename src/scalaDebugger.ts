@@ -75,25 +75,9 @@ class ScalaMainConfigProvider implements vscode.DebugConfigurationProvider {
         path: editor.document.uri.toString(true),
         runType: RunType.RunOrTestFile,
       };
-      return vscode.commands
-        .executeCommand<DebugSession>(ServerCommands.DebugAdapterStart, args)
-        .then((response) => {
-          if (response === undefined) {
-            return;
-          }
-
-          const port = debugServerFromUri(response.uri).port;
-
-          const configuration: vscode.DebugConfiguration = {
-            type: configurationType,
-            name: response.name,
-            noDebug: false,
-            request: "launch",
-            debugServer: port, // note: MUST be a number. vscode magic - automatically connects to the server
-          };
-          commands.executeCommand("workbench.panel.repl.view.focus");
-          return configuration;
-        });
+      return start(false, args).then((_) => {
+        return debugConfiguration;
+      });
     } else {
       return debugConfiguration;
     }
