@@ -2,6 +2,83 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.13.0 (2022/03/08 16:38 +00:00)
+- [4a024b9](https://github.com/scalameta/metals-vscode/commit/4a024b992346f6ca4987f9e04ed6a559c5d415ee) Increase patch version for pre-release
+- [95506bf](https://github.com/scalameta/metals-vscode/commit/95506bf12a89297b7b662094f2a3637e3e33e491) Bump eslint-config-prettier from 8.4.0 to 8.5.0 (@dependabot[bot])
+- [3ee96d2](https://github.com/scalameta/metals-vscode/commit/3ee96d266def467575d680ba50971b8b6bcab3bd) Increase patch version for pre-release
+- [5286d7b](https://github.com/scalameta/metals-vscode/commit/5286d7bf01758e0fefcd9f351184d203b88108e1) Increase patch version for pre-release
+- [1485152](https://github.com/scalameta/metals-vscode/commit/14851529039b1ad91e1ce17aeb1f7ed998334b94) Refactor and change `.metals-data` to `.metals` (@tgodzik)
+- [9bb04f2](https://github.com/scalameta/metals-vscode/commit/9bb04f25132c435ad99cd4d5d244eec7e3f5c9a0) Add mirror setting to help with coursier set up (@tgodzik)
+- [721e089](https://github.com/scalameta/metals-vscode/commit/721e089b46130a6dde67fc0f84bf902a2ee3c557) Increase patch version for pre-release
+- [d53c4d2](https://github.com/scalameta/metals-vscode/commit/d53c4d2905dc1b84069d4765895df60ceedcc165) Change displayBuildTarget to listBuildTargets (@Arthurm1)
+- [3325609](https://github.com/scalameta/metals-vscode/commit/3325609583e6c8516033fa805f3f5948b63f20dd) Bump @types/node from 17.0.19 to 17.0.21 (@dependabot[bot])
+- [80f3c17](https://github.com/scalameta/metals-vscode/commit/80f3c177d68c79f23ecbc87c2d408a35c826957e) Bump @types/node from 17.0.18 to 17.0.19 (@dependabot[bot])
+- [6150af6](https://github.com/scalameta/metals-vscode/commit/6150af6dd4d2c611fc77293d3c95e2838c011068) Bump eslint-config-prettier from 8.3.0 to 8.4.0 (@dependabot[bot])
+- [ab75dd6](https://github.com/scalameta/metals-vscode/commit/ab75dd6ed8ef361fee72279d5028c41470beb470) Bump mocha from 9.2.0 to 9.2.1 (@dependabot[bot])
+- [4fb88f8](https://github.com/scalameta/metals-vscode/commit/4fb88f8fa6eacb89c6ce9bdc018b3cd7c2bf6f22) Increase patch version for pre-release
+- [c903295](https://github.com/scalameta/metals-vscode/commit/c9032950e608a1bb26a5ae4c1758ad9220c7b788) fix: use `||` instead of `??` (@kpodsiad)
+- [144627f](https://github.com/scalameta/metals-vscode/commit/144627f0a0e063300699fe503fd980edd3286247) Increase patch version for pre-release
+- [f145c0c](https://github.com/scalameta/metals-vscode/commit/f145c0c46da7f8d571ac243875d4ba37a8114d8b) suggestLatestUpgrade - enable by default for pre-release (@dos65)
+- [aeadb48](https://github.com/scalameta/metals-vscode/commit/aeadb48788538b343a0dabea44010f581d91f706) autoUpgrade - ask user (@dos65)
+- [0e2d324](https://github.com/scalameta/metals-vscode/commit/0e2d3242944c69351b4b719999a5c7c6765338ab) Increase patch version for pre-release
+- [33fb20b](https://github.com/scalameta/metals-vscode/commit/33fb20ba82a7985dbb3fbce17362fbbeffc812b1) Bump @types/node from 17.0.17 to 17.0.18 (@dependabot[bot])
+- [2cf250d](https://github.com/scalameta/metals-vscode/commit/2cf250d2c695348554acd96ff69688e1acfc8945) Increase patch version for pre-release
+- [534cc72](https://github.com/scalameta/metals-vscode/commit/534cc7252f0e36c73eea652d457cfe0f95a8aeda) Bump metals server to version with virtual docs (@tgodzik)
+- [f0568ae](https://github.com/scalameta/metals-vscode/commit/f0568ae30114e5dc0d24aab3274afed0cc9db1e4) open jar sources virtually (@Arthurm1)
+- [44120f6](https://github.com/scalameta/metals-vscode/commit/44120f62801c5e1b408acb366e2721f039bad5a7) Bump @types/node from 17.0.16 to 17.0.17 (@dependabot[bot])
+- [efa3dc3](https://github.com/scalameta/metals-vscode/commit/efa3dc3e6516a81f38321eb51f21844c0031cb4c) Increase patch version for pre-release
+- [d96d64b](https://github.com/scalameta/metals-vscode/commit/d96d64b16a39d9b336e422dca2758cf4533342ec) fix: fixes (@kpodsiad)
+- [fa91c07](https://github.com/scalameta/metals-vscode/commit/fa91c0794ea137bc6a3ea99f20e23b6e7fdfd4a7) refactor: simplify logic a little bit (@kpodsiad)
+- [65eece2](https://github.com/scalameta/metals-vscode/commit/65eece2ce95fc4e4046f34b99f7a81b09da30853) feature: add `autoLatestUpgrade` setting (@dos65)
+- [4f179ed](https://github.com/scalameta/metals-vscode/commit/4f179ed4357a49df646d34f4a1fe16c8b081ba95) Bump @types/node from 17.0.15 to 17.0.16 (@dependabot[bot])
+- [75c6857](https://github.com/scalameta/metals-vscode/commit/75c6857c7fe142d728b50f35ed0eb9095cfef835) Increase patch version for pre-release
+- [befdef4](https://github.com/scalameta/metals-vscode/commit/befdef465a2794b248ed799f92ed2382bdaab33d) Increase patch version for pre-release
+- [ed87ca0](https://github.com/scalameta/metals-vscode/commit/ed87ca0fe9377c2c942ce4113496e4075fd9dec4) Bump @types/node from 17.0.14 to 17.0.15 (@dependabot[bot])
+- [2b26871](https://github.com/scalameta/metals-vscode/commit/2b2687179ddc2e61d891867e2decc2be21a65ba8) Increase patch version for pre-release
+- [675c71b](https://github.com/scalameta/metals-vscode/commit/675c71bb4697861d4bda0f201d7c3b92ffbfbe58) Bump default version to the newest snapshot (@tgodzik)
+- [1104119](https://github.com/scalameta/metals-vscode/commit/110411961b612468d6068a67ae6dba7609cebc66) Increase patch version for pre-release
+- [dcc08d1](https://github.com/scalameta/metals-vscode/commit/dcc08d18f1846454304dfa6573fd3f02c9d86f19) Bump version manually (@tgodzik)
+- [0371446](https://github.com/scalameta/metals-vscode/commit/037144690b59ce1f5e9cedeba4e83c2b4b7d265a) Change mergify rule to 6 passing tests (@tgodzik)
+- [dd83f01](https://github.com/scalameta/metals-vscode/commit/dd83f01245fee855e86ca00a24a18859732710fd) Revert "Merge pull request #871 from scalameta/dependabot/npm_and_yarn/types/vscode-1.63.2" (@tgodzik)
+- [0add45e](https://github.com/scalameta/metals-vscode/commit/0add45ea6bc4071997b1d090816f00ddc1ae87e1) Bump @types/node from 17.0.13 to 17.0.14 (@dependabot[bot])
+- [445727f](https://github.com/scalameta/metals-vscode/commit/445727fc891a2e0ade03000a0dc134fa15b07c2e) Bump @types/vscode from 1.59.0 to 1.63.2 (@dependabot[bot])
+- [0661cd4](https://github.com/scalameta/metals-vscode/commit/0661cd4c3003fcc090976286d2fd9f06d82c8367) Bump vsce from 2.6.5 to 2.6.6 (@dependabot[bot])
+- [c993467](https://github.com/scalameta/metals-vscode/commit/c993467b3ae9809187f512b9d0c79ea74c9197aa) Increase patch version for pre-release
+- [9606eca](https://github.com/scalameta/metals-vscode/commit/9606eca55571c3d80f3b15e43eb3e893f4bdce17) Update supported Java versions (@tgodzik)
+- [2a7eaac](https://github.com/scalameta/metals-vscode/commit/2a7eaac3b201fccfe913cd5013383ec3df465912) Add disposables to subscriptions (@tgodzik)
+- [551bede](https://github.com/scalameta/metals-vscode/commit/551bede6aee18315ee4eabd34a6c3c52b5309d71) Add play framework configuration snippet (@tgodzik)
+- [a957437](https://github.com/scalameta/metals-vscode/commit/a957437f10d9d670c60a9d2326fa8de60028623d) Increase patch version for pre-release
+- [7837960](https://github.com/scalameta/metals-vscode/commit/783796011ab5396819fa246516ecdbc09605f72e) Support synthetic decorations in worksheets (@tgodzik)
+- [ad5dc58](https://github.com/scalameta/metals-vscode/commit/ad5dc589b60af6d9718d24a8e11763d579af84b5) Increase patch version for pre-release
+- [f12eb2f](https://github.com/scalameta/metals-vscode/commit/f12eb2f4bab5c88106e50567822a0f844a4aa880) Increase patch version for pre-release
+- [9237e57](https://github.com/scalameta/metals-vscode/commit/9237e5711d1c90126bc0b252df4b24a9ac7d87a6) Merge `Run tests in current file` and `Run main class` into one command (@tgodzik)
+- [779e64a](https://github.com/scalameta/metals-vscode/commit/779e64accae1b34dc3a96f8680578d4630ba58ed) Bump vsce from 2.6.3 to 2.6.5 (@dependabot[bot])
+- [40c369d](https://github.com/scalameta/metals-vscode/commit/40c369d7d3f6c51a1c4830fc2026dd9eefb95908) Bump @types/node from 17.0.12 to 17.0.13 (@dependabot[bot])
+- [b73d021](https://github.com/scalameta/metals-vscode/commit/b73d0211ee6ee8342bee09a30f79b7566f2e41ef) Increase patch version for pre-release
+- [d21b316](https://github.com/scalameta/metals-vscode/commit/d21b3161e6c247582635eb1b953c94680901dc5e) Increase patch version for pre-release
+- [11c3707](https://github.com/scalameta/metals-vscode/commit/11c3707b6a998c7afe9450b9f5286cd11cc608c4) Increase patch version for pre-release
+- [2790d0e](https://github.com/scalameta/metals-vscode/commit/2790d0e3564a53d966c757958582b94fe1720199) Downgrade dependencies to the last working version (@tgodzik)
+- [9ba0d66](https://github.com/scalameta/metals-vscode/commit/9ba0d66bfa5ff5b3eef65ded4a89715207531aed) Increase patch version for pre-release
+- [cd70b11](https://github.com/scalameta/metals-vscode/commit/cd70b118832f3f2a7f142a7ccb5ab4b185fde2f5) Downgrade types/node to ry to fix prerelease issues (@tgodzik)
+- [20f0fb1](https://github.com/scalameta/metals-vscode/commit/20f0fb124966fea755039d7333728a79ec423d96) Increase patch version for pre-release
+- [fb9210c](https://github.com/scalameta/metals-vscode/commit/fb9210c8595f968feec23ed4198757183af6529b) Increase patch version for pre-release
+- [3b16568](https://github.com/scalameta/metals-vscode/commit/3b16568771664b14a17486532ecfb965af89959e) Fix invoking focus on problems tab (@tgodzik)
+- [6d55869](https://github.com/scalameta/metals-vscode/commit/6d55869695db83c3eb9251f41289f2d37dc8ca76) Bump mocha from 9.1.4 to 9.2.0 (@dependabot[bot])
+- [11a5cf1](https://github.com/scalameta/metals-vscode/commit/11a5cf10e4d82c06611ac98122d237ec49d66aa9) Bump @types/node from 17.0.10 to 17.0.11 (@dependabot[bot])
+- [53c4e7a](https://github.com/scalameta/metals-vscode/commit/53c4e7aed0494f7d7a7c6ad4439f5a94c5519d9f) Bump typescript from 4.5.4 to 4.5.5 (@dependabot[bot])
+- [d99b528](https://github.com/scalameta/metals-vscode/commit/d99b5283d22d0c0d06b4eaf3b031caa2a2834b74) Increase patch version for pre-release
+- [163237c](https://github.com/scalameta/metals-vscode/commit/163237c54d19fda38a103a36ffc50f91ce6af5b1) Bump @vscode/test-electron from 2.1.0 to 2.1.1 (@dependabot[bot])
+- [bd5b4aa](https://github.com/scalameta/metals-vscode/commit/bd5b4aa8b8d77f5b696e4a3b1e292514806bed9a) Increase patch version for pre-release
+- [e07196b](https://github.com/scalameta/metals-vscode/commit/e07196b3e3885ce5ff8737d8326a9b02c0553cfd) Increase patch version for pre-release
+- [a2b66e3](https://github.com/scalameta/metals-vscode/commit/a2b66e3f041ad5652553987c945e25f70fc9a045) chore: switch from `extensionDependencies` to `extensionPack` [skip pre] (@kpodsiad)
+- [b9ca367](https://github.com/scalameta/metals-vscode/commit/b9ca367ae7b7cdd1271d7a64902edfb5359f3f87) Increase patch version for pre-release
+- [751f77b](https://github.com/scalameta/metals-vscode/commit/751f77b807f09ef1cc0762aeccef30df1e0033e8) Fix creating worksheets (@tgodzik)
+- [5c2e1c8](https://github.com/scalameta/metals-vscode/commit/5c2e1c8aedc7200134e62890c072cbf3785fa080) Increase patch version for pre-release
+- [afe0acb](https://github.com/scalameta/metals-vscode/commit/afe0acbeac35b0b45542e31a90ea8bee64580c6d) Bump @types/node from 17.0.9 to 17.0.10 (@dependabot[bot])
+- [029f6fd](https://github.com/scalameta/metals-vscode/commit/029f6fda25e2aa17bf16524991686e8482ae6fa5) Bump @types/node from 17.0.8 to 17.0.9 (@dependabot[bot])
+- [03cfecb](https://github.com/scalameta/metals-vscode/commit/03cfecb4592beb1603ff1d23bd0b79bff25c7d5d) Change GotoLocation to take location with additional otherWindow parameter (@tgodzik)
+- [f36e904](https://github.com/scalameta/metals-vscode/commit/f36e904f366119db34a838f0ec302800acb87b2f) v1.12.0
+
 ### v1.12.0 (2022/01/17 10:22 +00:00)
 - [d5d0c84](https://github.com/scalameta/metals-vscode/commit/d5d0c84f3fea24900d07e4eeb71d3e1f877358a4) Update Metals version to 0.11.1 (@tgodzik)
 - [82c4671](https://github.com/scalameta/metals-vscode/commit/82c467142df70e197fcc0449c0d100fa047b098d) Bump ts-jest from 27.1.2 to 27.1.3 (@dependabot[bot])
@@ -699,8 +776,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [e01bfeb](https://github.com/scalameta/metals-vscode/commit/e01bfeb403eb29cb2fef0a120468e9bb74870b09) Add support for `secondsElapsed` field in `metals/slowTask` request.
 - [6f9376d](https://github.com/scalameta/metals-vscode/commit/6f9376de70615df5715de9f8f75f202d80d740f2) Add support for a new "Decoration Protocol"
 - [7d8c268](https://github.com/scalameta/metals-vscode/commit/7d8c268b2359804bf81f980ac50c2d7226de08c9) 1.6.2
-
-### 1.6.2 (2019/10/31 17:23 +00:00)
 - [b532d77](https://github.com/scalameta/metals-vscode/commit/b532d775f1ea9be0aaf90ae6d00e6c3ddf3d356f) Remove test scaffolds (@gabro)
 - [b97ba9a](https://github.com/scalameta/metals-vscode/commit/b97ba9a961017b90df35ec2ca20673c0bf436414) Remove github-changes dependency (@gabro)
 - [44cbec6](https://github.com/scalameta/metals-vscode/commit/44cbec6ab8489bb7d285e61d2274261e3a9eae2c) Avoid spurious 'Unknown command' warning (@gabro)
