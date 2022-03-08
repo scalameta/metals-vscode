@@ -4,10 +4,10 @@ import {
   ExecuteCommandRequest,
   LanguageClient,
 } from "vscode-languageclient/node";
-import { addTestCases } from "./add-test-cases";
-import { addTestSuite } from "./add-test-suite";
-import { removeTestItem } from "./remove-test-item";
-import { runHandler } from "./test-run-handler";
+import { addTestCases } from "./addTestCases";
+import { addTestSuite } from "./addTestSuites";
+import { removeTestItem } from "./removeTestItem";
+import { runHandler } from "./testRunHandler";
 import { BuildTargetUpdate } from "./types";
 
 export function createTestManager(
