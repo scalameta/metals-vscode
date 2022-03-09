@@ -7,8 +7,8 @@ import {
   TestRunRequest,
 } from "vscode";
 import { debugServerFromUri, DebugSession } from "../scalaDebugger";
-import { analyzeTestRun } from "./analyze-test-run";
-import { testCache } from "./test-cache";
+import { analyzeTestRun } from "./analyzeTestRun";
+import { testCache } from "./testCache";
 import {
   DapEvent,
   ScalaTestSelection,

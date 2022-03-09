@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { testCache } from "./test-cache";
+import { testCache } from "./testCache";
 import { TargetName, TargetUri, TestItemMetadata, AddTestSuite } from "./types";
 import { prefixesOf, toVscodeRange } from "./util";
 

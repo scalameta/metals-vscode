@@ -1,12 +1,12 @@
 import * as assert from "assert";
 import * as vscode from "vscode";
-import { analyzeTestRun } from "../../../../test-explorer/analyze-test-run";
+import { analyzeTestRun } from "../../../../testExplorer/analyzeTestRun";
 import {
   SuiteName,
   TestName,
   TestRunActions,
   TestSuiteResult,
-} from "../../../../test-explorer/types";
+} from "../../../../testExplorer/types";
 
 const passed: TestSuiteResult[] = [
   {

@@ -4,7 +4,7 @@ import {
   AddTestSuite,
   ClassName,
   FullyQualifiedClassName,
-} from "../../../../test-explorer/types";
+} from "../../../../testExplorer/types";
 
 const defaultRange: Range = {
   start: { line: 1, character: 1 },

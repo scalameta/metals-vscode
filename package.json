@@ -868,7 +868,7 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "test": "ts-mocha src/test/unit/*.test.ts",
-    "test-extension": "rimraf out/ && tsc -p ./ && node out/test/extension/run-test.js",
+    "test-extension": "rimraf out/ && tsc -p ./ && node out/test/extension/runTest.js",
     "build": "vsce package --yarn",
     "vscode:publish": "vsce publish --yarn",
     "ovsx:publish": "ovsx publish",

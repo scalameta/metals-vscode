@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { testCache } from "./test-cache";
+import { testCache } from "./testCache";
 import { RemoveTestSuite, TargetName } from "./types";
 import { prefixesOf } from "./util";
 

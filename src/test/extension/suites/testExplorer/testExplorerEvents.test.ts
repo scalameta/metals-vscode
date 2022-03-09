@@ -1,8 +1,8 @@
 import assert from "assert";
 import * as vscode from "vscode";
-import { addTestCases } from "../../../../test-explorer/add-test-cases";
-import { addTestSuite } from "../../../../test-explorer/add-test-suite";
-import { removeTestItem } from "../../../../test-explorer/remove-test-item";
+import { addTestCases } from "../../../../testExplorer/addTestCases";
+import { addTestSuite } from "../../../../testExplorer/addTestSuites";
+import { removeTestItem } from "../../../../testExplorer/removeTestItem";
 import { foo, fooBar, fooTestCases, noPackage } from "./data";
 import { buildTarget, prettyPrint, randomString } from "./util";
 

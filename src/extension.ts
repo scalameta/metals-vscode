@@ -36,7 +36,7 @@ import {
   ExecuteCommandRequest,
   CancellationToken,
 } from "vscode-languageclient/node";
-import { LazyProgress } from "./lazy-progress";
+import { LazyProgress } from "./lazyProgress";
 import * as fs from "fs";
 import {
   getJavaHome,
@@ -68,7 +68,7 @@ import {
 import * as metalsLanguageClient from "metals-languageclient";
 import { startTreeView } from "./treeview";
 import * as scalaDebugger from "./scalaDebugger";
-import { DecorationsRangesDidChange } from "./decoration-protocol";
+import { DecorationsRangesDidChange } from "./decorationProtocol";
 import { clearTimeout } from "timers";
 import { increaseIndentPattern } from "./indentPattern";
 import { gotoLocation, WindowLocation } from "./goToLocation";
@@ -77,7 +77,7 @@ import {
   createFindInFilesTreeView,
   executeFindInFiles,
   startFindInFilesProvider,
-} from "./findinfiles";
+} from "./findInFiles";
 import * as ext from "./hoverExtension";
 import { decodeAndShowFile, MetalsFileProvider } from "./metalsContentProvider";
 import {
@@ -85,8 +85,8 @@ import {
   getTextDocumentPositionParams,
   getValueFromConfig,
 } from "./util";
-import { createTestManager } from "./test-explorer/test-manager";
-import { BuildTargetUpdate } from "./test-explorer/types";
+import { createTestManager } from "./testExplorer/testManager";
+import { BuildTargetUpdate } from "./testExplorer/types";
 import * as workbenchCommands from "./workbenchCommands";
 import { getServerVersion } from "./getServerVersion";
 import { getCoursierMirrorPath } from "./mirrors";
