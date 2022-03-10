@@ -1,3 +1,4 @@
+import * as semver from "semver";
 import { ChildProcessPromise, spawn } from "promisify-child-process";
 import { JavaConfig } from "./getJavaConfig";
 
@@ -16,10 +17,7 @@ export function fetchMetals({
     (p) => !p.startsWith("-agentlib")
   );
 
-  const serverDependency = serverVersion.includes(":")
-    ? serverVersion
-    : `org.scalameta:metals_2.12:${serverVersion}`;
-
+  const serverDependency = calcServerDependency(serverVersion);
   return spawn(
     javaPath,
     [
@@ -53,4 +51,11 @@ export function fetchMetals({
       stdio: ["ignore"], // Due to Issue: #219
     }
   );
+}
+
+export function calcServerDependency(serverVersion: string): string {
+  const binaryVersion = semver.gt(serverVersion, "0.11.2") ? "2.13" : "2.12";
+  return serverVersion.includes(":")
+    ? serverVersion
+    : `org.scalameta:metals_${binaryVersion}:${serverVersion}`;
 }
