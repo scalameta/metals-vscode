@@ -1,6 +1,6 @@
 {
   "name": "metals-languageclient",
-  "version": "v0.5.10",
+  "version": "v0.5.11",
   "description": "Language Client library for Node.js Metals clients",
   "main": "lib/index.js",
   "files": [
