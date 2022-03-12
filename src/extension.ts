@@ -1004,10 +1004,7 @@ function launchMetals(
         });
       });
 
-      let workspaceUri: undefined | Uri;
-      if (workspace.workspaceFolders) {
-        workspaceUri = workspace.workspaceFolders[0].uri;
-      }
+      const workspaceUri = workspace.workspaceFolders?.[0].uri;
       // NOTE: we offer a custom symbol search command to work around the limitations of the built-in one, see https://github.com/microsoft/vscode/issues/98125 for more details.
       registerCommand(`metals.symbol-search`, () =>
         openSymbolSearch(client, metalsFileProvider, workspaceUri)
