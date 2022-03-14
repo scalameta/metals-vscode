@@ -1,5 +1,8 @@
 ## metals-languageclient changelog
 
+### v0.5.12 (2022/03/14 10:23 +00:00)
+- [e69dd2d](https://github.com/scalameta/metals-languageclient/commit/e69dd2db142910c40d6499a10aa325e766f33458) Release v0.5.11
+
 ### v0.5.11 (2022/03/10 11:00 +00:00)
 - [f3791b9](https://github.com/scalameta/metals-languageclient/commit/f3791b9cc6b2e904b688ac2364036ec4661ffbdc) Release v0.5.10
 
