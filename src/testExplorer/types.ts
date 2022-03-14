@@ -133,15 +133,19 @@ export interface TestSuiteRun {
 export interface BuildTargetIdentifier {
   uri: TargetUri;
 }
-export interface ScalaTestSelection {
+
+export interface ScalaTestSuitesDebugRequest {
   /** The build target that contains the test classes. */
   target: BuildTargetIdentifier;
+  requestData: ScalaTestSuites;
+}
+export interface ScalaTestSuites {
   /** The fully qualified names of the test classes in this target and the tests in this test classes */
-  classes: ScalaTestSuiteSelection[];
+  suites: ScalaTestSuiteSelection[];
   /** The jvm options for the application. */
   jvmOptions: string[];
   /** The environment variables for the application. */
-  env?: Record<string, string>;
+  environmentVariables: string[];
 }
 
 export interface ScalaTestSuiteSelection {

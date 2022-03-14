@@ -11,7 +11,7 @@ import { analyzeTestRun } from "./analyzeTestRun";
 import { testCache } from "./testCache";
 import {
   DapEvent,
-  ScalaTestSelection,
+  ScalaTestSuitesDebugRequest,
   ScalaTestSuiteSelection,
   TargetUri,
   TestItemMetadata,
@@ -164,13 +164,15 @@ function createRunQueue(
  */
 async function createDebugSession(
   targetUri: TargetUri,
-  classes: ScalaTestSuiteSelection[]
+  suites: ScalaTestSuiteSelection[]
 ): Promise<DebugSession | undefined> {
-  const debugSessionParams: ScalaTestSelection = {
+  const debugSessionParams: ScalaTestSuitesDebugRequest = {
     target: { uri: targetUri },
-    classes,
-    jvmOptions: [],
-    env: {},
+    requestData: {
+      suites,
+      jvmOptions: [],
+      environmentVariables: [],
+    },
   };
   return vscode.commands.executeCommand<DebugSession>(
     ServerCommands.DebugAdapterStart,
