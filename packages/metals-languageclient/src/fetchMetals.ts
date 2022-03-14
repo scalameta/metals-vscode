@@ -54,7 +54,10 @@ export function fetchMetals({
 }
 
 export function calcServerDependency(serverVersion: string): string {
-  const binaryVersion = semver.gt(serverVersion, "0.11.2") ? "2.13" : "2.12";
+  const use213 =
+    semver.gt(serverVersion, "0.11.2") ||
+    (serverVersion.startsWith("0.11.2") && serverVersion.endsWith("SNAPSHOT"));
+  const binaryVersion = use213 ? "2.13" : "2.12";
   return serverVersion.includes(":")
     ? serverVersion
     : `org.scalameta:metals_${binaryVersion}:${serverVersion}`;
