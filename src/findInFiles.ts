@@ -5,16 +5,19 @@ import {
   OutputChannel,
   Position,
   Range,
+  Selection,
   TextEditorRevealType,
   TreeDataProvider,
   TreeItem,
   TreeItemCollapsibleState,
+  TreeItemLabel,
   TreeView,
   Uri,
   window,
   workspace,
 } from "vscode";
 import { LanguageClient, Location } from "vscode-languageclient/node";
+import { MetalsFileProvider } from "./metalsContentProvider";
 
 class TopLevel {
   constructor(
@@ -75,11 +78,15 @@ export function createFindInFilesTreeView(
           );
           const textEditor = await window.showTextDocument(textDocument);
           const range = positionInFile.location.range;
+          const start = new Position(range.start.line, range.start.character);
+          const end = new Position(range.end.line, range.end.character);
+          const selection = new Selection(end, start);
           const vscodeRange = new Range(
             new Position(range.start.line, range.start.character),
             new Position(range.end.line, range.end.character)
           );
           textEditor.revealRange(vscodeRange, TextEditorRevealType.InCenter);
+          textEditor.selection = selection;
           break;
         }
       }
@@ -94,6 +101,7 @@ export async function executeFindInFiles(
   client: LanguageClient,
   provider: FindInFilesProvider,
   view: TreeView<unknown>,
+  metalsFileProvider: MetalsFileProvider,
   outputChannel: OutputChannel
 ): Promise<void> {
   try {
@@ -135,7 +143,7 @@ export async function executeFindInFiles(
     );
 
     commands.executeCommand("setContext", "metals.showFindInFiles", true);
-    const newTopLevel = await toTopLevel(locations);
+    const newTopLevel = await toTopLevel(locations, metalsFileProvider);
 
     provider.update(newTopLevel);
 
@@ -151,7 +159,10 @@ export async function executeFindInFiles(
   }
 }
 
-async function toTopLevel(locations: Location[]): Promise<TopLevel[]> {
+async function toTopLevel(
+  locations: Location[],
+  metalsFileProvider: MetalsFileProvider
+): Promise<TopLevel[]> {
   const locationsByFile = new Map<string, Location[]>();
 
   for (const loc of locations) {
@@ -162,17 +173,26 @@ async function toTopLevel(locations: Location[]): Promise<TopLevel[]> {
   return await Promise.all(
     Array.from(locationsByFile, async ([filePath, locations]) => {
       const uri: Uri = Uri.parse(filePath);
-
-      const readData = await workspace.fs.readFile(uri);
-      const fileContent = Buffer.from(readData).toString("utf8");
-      const lines = fileContent.split(/\r?\n/);
-
-      const newPositions = locations.reduce((arr, location) => {
-        const line = lines[location.range.start.line];
-        const newPosition = new PositionInFile(location, uri, line.trimStart());
-        return [...arr, newPosition];
-      }, [] as PositionInFile[]);
-      return new TopLevel(newPositions, uri);
+      const getFileContent = async () => {
+        if (uri.scheme == "jar") {
+          return await metalsFileProvider.provideTextDocumentContent(uri);
+        } else {
+          const readData = await workspace.fs.readFile(uri);
+          return Buffer.from(readData).toString("utf8");
+        }
+      };
+      const fileContent = await getFileContent();
+      if (fileContent) {
+        const lines = fileContent.split(/\r?\n/);
+        const newPositions = locations.reduce((arr, location) => {
+          const line = lines[location.range.start.line];
+          const newPosition = new PositionInFile(location, uri, line);
+          return [...arr, newPosition];
+        }, [] as PositionInFile[]);
+        return new TopLevel(newPositions, uri);
+      } else {
+        return new TopLevel([] as PositionInFile[], uri);
+      }
     })
   );
 }
@@ -196,11 +216,23 @@ class FindInFilesProvider implements TreeDataProvider<Node> {
       }
       case "PositionInFile": {
         const start = element.location.range.start;
+        const end = element.location.range.end;
         const line = start.line;
+        const startColumn = start.character;
         const fileName = element.uri.fsPath.split("/").pop();
-        const shortDescription = fileName + ":" + (line + 1);
+        const shortDescription =
+          fileName + ":" + (line + 1) + ":" + (startColumn + 1);
+        const trimmedLabel = element.label;
+        const trimmedStartCol =
+          startColumn + trimmedLabel.length - element.label.length;
+        const trimmedEndCol =
+          end.character + trimmedLabel.length - element.label.length;
+        const highlightedLabel: TreeItemLabel = {
+          label: trimmedLabel,
+          highlights: [[trimmedStartCol, trimmedEndCol]],
+        };
         const positionResult: TreeItem = {
-          label: element.label,
+          label: highlightedLabel,
           description: shortDescription,
           resourceUri: element.uri,
         };
