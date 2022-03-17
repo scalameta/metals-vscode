@@ -4,6 +4,7 @@ import {
   SymbolInformation,
   CancellationTokenSource,
   SymbolKind,
+  Uri,
 } from "vscode";
 import { LanguageClient, Location } from "vscode-languageclient/node";
 import { gotoLocation, WindowLocation } from "./goToLocation";
@@ -12,13 +13,20 @@ import { MetalsFileProvider } from "./metalsContentProvider";
 class SymbolItem implements QuickPickItem {
   label: string;
   description?: string | undefined;
+  detail?: string | undefined;
   alwaysShow?: boolean | undefined;
   location: Location;
 
-  constructor(si: SymbolInformation) {
+  constructor(si: SymbolInformation, workspace: Uri | undefined) {
     const icon = symbolKindIcon(si.kind);
     this.label = `$(symbol-${icon}) ${si.name}`;
     this.description = si.containerName;
+    if (workspace) {
+      const path = Uri.parse(si.location.uri.toString()).path;
+      if (this.label.indexOf("Add ';' to search library dependencies") < 0) {
+        this.detail = path.replace(workspace.path, "");
+      }
+    }
     this.alwaysShow = true;
     this.location = Location.create(
       si.location.uri.toString(),
@@ -29,7 +37,8 @@ class SymbolItem implements QuickPickItem {
 
 export function openSymbolSearch(
   client: LanguageClient,
-  metalsFileProvider: MetalsFileProvider
+  metalsFileProvider: MetalsFileProvider,
+  workspace: Uri | undefined
 ): void {
   const inputBox = window.createQuickPick<SymbolItem>();
   inputBox.placeholder =
@@ -63,7 +72,7 @@ export function openSymbolSearch(
       )
       .then((v) => {
         const symbols = v as SymbolInformation[];
-        const items = symbols.map((si) => new SymbolItem(si));
+        const items = symbols.map((si) => new SymbolItem(si, workspace));
         inputBox.items = items;
       });
   });
