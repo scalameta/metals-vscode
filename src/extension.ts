@@ -966,6 +966,7 @@ function launchMetals(
           client,
           findInFilesProvider,
           findInFilesView,
+          metalsFileProvider,
           outputChannel
         )
       );
