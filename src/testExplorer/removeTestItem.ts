@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import { testCache } from "./testCache";
 import { RemoveTestSuite, TargetName } from "./types";
 import { prefixesOf } from "./util";
 
@@ -20,7 +19,6 @@ export function removeTestItem(
       if (child) {
         removeTestItemLoop(child, restOfIds);
         if (child.children.size === 0) {
-          testCache.deleteMetadata(child);
           parent.children.delete(child.id);
         }
       }
@@ -34,7 +32,6 @@ export function removeTestItem(
     const testIds = prefixesOf(event.fullyQualifiedClassName);
     removeTestItemLoop(buildTargetItem, testIds);
     if (buildTargetItem.children.size === 0) {
-      testCache.deleteMetadata(buildTargetItem);
       testController.items.delete(buildTargetItem.id);
     }
   }

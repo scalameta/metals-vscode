@@ -7,6 +7,10 @@ import {
   TestRunActions,
   TestSuiteResult,
 } from "../../../../testExplorer/types";
+import { refineTestItem } from "../../../../testExplorer/util";
+import { buildTarget } from "./util";
+
+const [targetName, targetUri] = buildTarget("app", "");
 
 const passed: TestSuiteResult[] = [
   {
@@ -83,7 +87,14 @@ suite("Analyze tests results", () => {
   test("suite passed", () => {
     const [action, results] = getRunActions();
     const testItem = testController.createTestItem("TestSuite", "TestSuite");
-    analyzeTestRun(action, [{ suiteItem: testItem, testCases: [] }], passed);
+    const refined = refineTestItem(
+      testItem,
+      "suite",
+      targetUri,
+      targetName,
+      testItem
+    );
+    analyzeTestRun(action, [refined], passed);
     arrayEqual(results.failed, []);
     arrayEqual(results.skipped, []);
     arrayEqual(results.passed, [{ id: "TestSuite", duration: 100 }]);
@@ -94,8 +105,15 @@ suite("Analyze tests results", () => {
   test("suite failed", () => {
     const [action, results] = getRunActions();
     const testItem = testController.createTestItem("TestSuite", "TestSuite");
+    const refined = refineTestItem(
+      testItem,
+      "suite",
+      targetUri,
+      targetName,
+      testItem
+    );
 
-    analyzeTestRun(action, [{ suiteItem: testItem, testCases: [] }], failed);
+    analyzeTestRun(action, [refined], failed);
     arrayEqual(results.failed, [
       { id: "TestSuite", duration: 100, msg: [{ message: "Error" }] },
     ]);
@@ -106,13 +124,23 @@ suite("Analyze tests results", () => {
   test("suite with testcases", () => {
     const [action, results] = getRunActions();
     const testItem = testController.createTestItem("TestSuite", "TestSuite");
+    const refined = refineTestItem(
+      testItem,
+      "suite",
+      targetUri,
+      targetName,
+      testItem
+    );
+    const child1 = testController.createTestItem("TestSuite.test1", "test1");
+    const child2 = testController.createTestItem("TestSuite.test2", "test2");
+    const child3 = testController.createTestItem("TestSuite.test3", "test3");
     testItem.children.replace([
-      testController.createTestItem("TestSuite.test1", "test1"),
-      testController.createTestItem("TestSuite.test2", "test2"),
-      testController.createTestItem("TestSuite.test3", "test3"),
+      refineTestItem(child1, "testcase", targetUri, targetName, refined),
+      refineTestItem(child2, "testcase", targetUri, targetName, refined),
+      refineTestItem(child3, "testcase", targetUri, targetName, refined),
     ]);
 
-    analyzeTestRun(action, [{ suiteItem: testItem, testCases: [] }], failed);
+    analyzeTestRun(action, [refined], failed);
     arrayEqual(results.failed, [
       {
         id: "TestSuite.test1",
@@ -127,18 +155,30 @@ suite("Analyze tests results", () => {
   test("testcase", () => {
     const [action, results] = getRunActions();
     const testItem = testController.createTestItem("TestSuite", "TestSuite");
-    const child = testController.createTestItem("TestSuite.test1", "test1");
-    [
-      child,
-      testController.createTestItem("TestSuite.test2", "test2"),
-      testController.createTestItem("TestSuite.test3", "test3"),
-    ].forEach((c) => testItem.children.add(c));
-
-    analyzeTestRun(
-      action,
-      [{ suiteItem: testItem, testCases: [child] }],
-      failed
+    const refined = refineTestItem(
+      testItem,
+      "suite",
+      targetUri,
+      targetName,
+      testItem
     );
+    const child1 = testController.createTestItem("TestSuite.test1", "test1");
+    const child2 = testController.createTestItem("TestSuite.test2", "test2");
+    const child3 = testController.createTestItem("TestSuite.test3", "test3");
+    const refinedChild = refineTestItem(
+      child1,
+      "testcase",
+      targetUri,
+      targetName,
+      refined
+    );
+    [
+      refinedChild,
+      refineTestItem(child2, "testcase", targetUri, targetName, refined),
+      refineTestItem(child3, "testcase", targetUri, targetName, refined),
+    ].forEach((c) => refined.children.add(c));
+
+    analyzeTestRun(action, [refinedChild], failed);
     arrayEqual(results.failed, [
       {
         id: "TestSuite.test1",
