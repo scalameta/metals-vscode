@@ -33,7 +33,7 @@ export function addTestSuite(
         const parts = currentId.split(".");
         const label = parts[parts.length - 1];
         const packageNode = testController.createTestItem(currentId, label);
-        refineTestItem(packageNode, "package", targetUri, targetName, parent);
+        refineTestItem("package", packageNode, targetUri, targetName, parent);
         parent.children.add(packageNode);
         addTestSuiteLoop(packageNode, restOfIds);
       }
@@ -47,7 +47,7 @@ export function addTestSuite(
         className,
         parsedUri
       );
-      refineTestItem(testItem, "suite", targetUri, targetName, parent);
+      refineTestItem("suite", testItem, targetUri, targetName, parent);
       // if canResolveChildren is true then test item is shown as expandable in the Test Explorer view
       testItem.canResolveChildren = event.canResolveChildren;
       testItem.range = parsedRange;
@@ -74,7 +74,7 @@ function getOrCreateBuildTargetItem(
   }
 
   const createdNode = testController.createTestItem(targetName, targetName);
-  refineTestItem(createdNode, "project", targetUri, targetName);
+  refineTestItem("project", createdNode, targetUri, targetName);
   testController.items.add(createdNode);
 
   return createdNode;

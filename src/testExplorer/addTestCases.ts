@@ -35,7 +35,7 @@ export function addTestCases(
         const parsedRange = toVscodeRange(location.range);
         const id = `${parent.id}.${name}`;
         const testItem = testController.createTestItem(id, name, parsedUri);
-        refineTestItem(testItem, "testcase", targetUri, targetName, parent);
+        refineTestItem("testcase", testItem, targetUri, targetName, parent);
         testItem.range = parsedRange;
         parent.children.add(testItem);
       }

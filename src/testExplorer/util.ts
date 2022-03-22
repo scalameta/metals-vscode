@@ -11,18 +11,27 @@ import {
   TestCaseMetalsTestItem,
 } from "./types";
 
+// https://www.typescriptlang.org/docs/handbook/2/functions.html#function-overloads
+
 // prettier-ignore
-export function refineTestItem(test: vscode.TestItem, kind: "project", targetUri: TargetUri, targetName: TargetName): ProjectMetalsTestItem;
+export function refineTestItem(kind: "project",  test: vscode.TestItem, targetUri: TargetUri, targetName: TargetName): ProjectMetalsTestItem;
 // prettier-ignore
-export function refineTestItem(test: vscode.TestItem, kind: "package", targetUri: TargetUri, targetName: TargetName, parent: vscode.TestItem): PackageMetalsTestItem;
+export function refineTestItem(kind: "package",  test: vscode.TestItem, targetUri: TargetUri, targetName: TargetName, parent: vscode.TestItem): PackageMetalsTestItem;
 // prettier-ignore
-export function refineTestItem(test: vscode.TestItem, kind: "suite", targetUri: TargetUri, targetName: TargetName, parent: vscode.TestItem): SuiteMetalsTestItem;
+export function refineTestItem(kind: "suite",    test: vscode.TestItem, targetUri: TargetUri, targetName: TargetName, parent: vscode.TestItem): SuiteMetalsTestItem;
 // prettier-ignore
-export function refineTestItem(test: vscode.TestItem, kind: "testcase", targetUri: TargetUri, targetName: TargetName, parent: vscode.TestItem): TestCaseMetalsTestItem;
-// prettier-ignore
+export function refineTestItem(kind: "testcase", test: vscode.TestItem, targetUri: TargetUri, targetName: TargetName, parent: vscode.TestItem): TestCaseMetalsTestItem;
+/**
+ * Refine vscode.TestItem by extending it with additional metadata needed for test runs.
+ * In order to handle all 4 cases with minimal boilerplate and casting reduced to the minimum this function is overloaded
+ * for all 4 cases. Thanks to the overloading we can achieve mediocre type safety:
+ * - project kind doesn't need parent
+ * - return types are narrowed down
+ * while, at the same time, we are doing casting.
+ */
 export function refineTestItem(
-  test: vscode.TestItem,
   kind: MetalsTestItemKind,
+  test: vscode.TestItem,
   targetUri: TargetUri,
   targetName: TargetName,
   parent?: vscode.TestItem
@@ -32,7 +41,7 @@ export function refineTestItem(
   cast._metalsTargetName = targetName;
   cast._metalsTargetUri = targetUri;
   if (kind !== "project") {
-    cast._metalsParent = parent as MetalsTestItem | undefined
+    cast._metalsParent = parent as MetalsTestItem | undefined;
   }
   return cast;
 }
