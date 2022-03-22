@@ -27,7 +27,7 @@ export function refineTestItem(
   targetName: TargetName,
   parent?: vscode.TestItem
 ): MetalsTestItem {
-  const casted = test as MetalsTestItem;
+  const cast = test as MetalsTestItem;
   casted._metalsKind = kind;
   casted._metalsTargetName = targetName;
   casted._metalsTargetUri = targetUri;
