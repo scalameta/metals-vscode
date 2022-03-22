@@ -28,6 +28,7 @@ import {
   ProviderResult,
   Hover,
   TextDocument,
+  FileSystemProvider,
 } from "vscode";
 import {
   LanguageClient,
@@ -90,7 +91,7 @@ import { BuildTargetUpdate } from "./testExplorer/types";
 import * as workbenchCommands from "./workbenchCommands";
 import { getServerVersion } from "./getServerVersion";
 import { getCoursierMirrorPath } from "./mirrors";
-
+import MetalsFileSystemProvider from "./metalsFileSystemProvider";
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
 const downloadJava = "Download Java";
@@ -228,7 +229,7 @@ function fetchAndLaunchMetals(
   if (dottyIde.enabled) {
     outputChannel.appendLine(
       `Metals will not start since Dotty is enabled for this workspace. ` +
-        `To enable Metals, remove the file ${dottyIde.path} and run 'Reload window'`
+      `To enable Metals, remove the file ${dottyIde.path} and run 'Reload window'`
     );
     return;
   }
@@ -441,6 +442,15 @@ function launchMetals(
     );
   }
 
+  function registerFileSystemProvider(
+    scheme: string,
+    provider: FileSystemProvider
+  ) {
+    context.subscriptions.push(
+      workspace.registerFileSystemProvider(scheme, provider, { isCaseSensitive: true, isReadonly: true })
+    );
+  }
+
   function registerTextDocumentContentProvider(
     scheme: string,
     provider: TextDocumentContentProvider
@@ -453,7 +463,6 @@ function launchMetals(
   const metalsFileProvider = new MetalsFileProvider(client);
 
   registerTextDocumentContentProvider("metalsDecode", metalsFileProvider);
-  registerTextDocumentContentProvider("jar", metalsFileProvider);
 
   registerCommand("metals.show-cfr", async (uri: Uri) => {
     await decodeAndShowFile(client, metalsFileProvider, uri, "cfr");
@@ -727,6 +736,19 @@ function launchMetals(
                   const panel = getDoctorPanel(isReload);
                   panel.webview.html = html;
                 }
+              }
+              break;
+            }
+            case "metals-create-library-filesystem": {
+              const uri = params.arguments && params.arguments[0];
+              if (typeof uri === "string") {
+                const librariesURI = Uri.parse(uri)
+                // filesystem is persistent across VSCode sessions so may already exist
+                if (!workspace.getWorkspaceFolder(librariesURI))
+                  workspace.updateWorkspaceFolders(1, 0, { uri: librariesURI, name: "Metals - Libraries" });
+
+                const metalsFileSystemProvider = new MetalsFileSystemProvider(client, outputChannel);
+                registerFileSystemProvider(librariesURI.scheme, metalsFileSystemProvider);
               }
               break;
             }

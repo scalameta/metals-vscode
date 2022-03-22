@@ -47,12 +47,12 @@
     "onCommand:metals.new-scala-project",
     "onDebugResolve:scala",
     "onLanguage:scala",
-    "workspaceContains:build.sbt",
-    "workspaceContains:build.sc",
-    "workspaceContains:project/build.properties",
-    "workspaceContains:src/main/scala",
-    "workspaceContains:*/src/main/scala",
-    "workspaceContains:*/*/src/main/scala"
+    "!onFileSystem:jar && workspaceContains:build.sbt",
+    "!onFileSystem:jar && workspaceContains:build.sc",
+    "!onFileSystem:jar && workspaceContains:project/build.properties",
+    "!onFileSystem:jar && workspaceContains:src/main/scala",
+    "!onFileSystem:jar && workspaceContains:*/src/main/scala",
+    "!onFileSystem:jar && workspaceContains:*/*/src/main/scala"
   ],
   "contributes": {
     "languages": [
