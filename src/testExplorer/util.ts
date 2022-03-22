@@ -28,13 +28,13 @@ export function refineTestItem(
   parent?: vscode.TestItem
 ): MetalsTestItem {
   const cast = test as MetalsTestItem;
-  casted._metalsKind = kind;
-  casted._metalsTargetName = targetName;
-  casted._metalsTargetUri = targetUri;
+  cast._metalsKind = kind;
+  cast._metalsTargetName = targetName;
+  cast._metalsTargetUri = targetUri;
   if (kind !== "project") {
-    casted._metalsParent = parent as MetalsTestItem | undefined
+    cast._metalsParent = parent as MetalsTestItem | undefined
   }
-  return casted;
+  return cast;
 }
 
 export function toVscodeRange(range: Range): vscode.Range {
