@@ -5,3 +5,7 @@ updates:
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    ignore:
+      # Ignore node-fetch v3 (pure ESM package), see: https://github.com/scalameta/metals-languageclient/pull/405#issuecomment-1075375822
+      - dependency-name: "node-fetch"
+        versions: ["3.x"]
