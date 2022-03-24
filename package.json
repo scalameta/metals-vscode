@@ -247,6 +247,13 @@
           "type": "string",
           "markdownDescription": "This version will be used for the Bloop build tool plugin, for any supported build tool,while importing in Metals as well as for running the embedded server"
         },
+        "metals.bloopJvmProperties": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "markdownDescription": "Optional list of JVM properties to pass along to the Bloop server. Each property needs to be a separate item.\n\nExample: `-Xmx1G` or `-Xms100M`"
+        },
         "metals.bloopSbtAlreadyInstalled": {
           "type": "boolean",
           "markdownDescription": "If true, Metals will not generate a `project/metals.sbt` file under the assumption that sbt-bloop is already manually installed in the sbt build. Build import will fail with a 'not valid command bloopInstall' error in case Bloop is not manually installed in the build when using this option."
