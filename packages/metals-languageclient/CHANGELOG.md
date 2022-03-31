@@ -1,9 +1,15 @@
 ## metals-languageclient changelog
 
+### v0.5.14 (2022/03/31 13:35 +00:00)
+- [c508f1e](https://github.com/scalameta/metals-languageclient/commit/c508f1ed81cad7237a82ed7319750b5705631529) Ignore dependabot to upgrade node-fetch to v3 (@tanishiking)
+- [ecb9d48](https://github.com/scalameta/metals-languageclient/commit/ecb9d48ab06210e3a21f32a9afc4d5996d2a83b1) Bump @types/node from 17.0.21 to 17.0.22 (@dependabot[bot])
+- [615f90a](https://github.com/scalameta/metals-languageclient/commit/615f90a57892ec7bad0ce1b7b23bd2e4141bfec0) Release v0.5.12
+
 ### v0.5.12 (2022/03/14 10:23 +00:00)
 - [e69dd2d](https://github.com/scalameta/metals-languageclient/commit/e69dd2db142910c40d6499a10aa325e766f33458) Release v0.5.11
 
 ### v0.5.11 (2022/03/10 11:00 +00:00)
+- [cb04bdc](https://github.com/scalameta/metals-languageclient/commit/cb04bdc323be1a8f35f33132c99cdbcf97db87cb) Bump node-fetch from 2.6.1 to 2.6.7 (@dependabot[bot])
 - [f3791b9](https://github.com/scalameta/metals-languageclient/commit/f3791b9cc6b2e904b688ac2364036ec4661ffbdc) Release v0.5.10
 
 ### v0.5.10 (2022/02/25 10:44 +00:00)
