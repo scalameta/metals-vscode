@@ -18,7 +18,12 @@ const doctorNotification =
 
 export class DoctorProvider implements Disposable {
   doctor: WebviewPanel | undefined;
-  isVisible = false;
+  /**
+   * Although in protocol there is `visible`, currently in vscode, we are cheating a little bit.
+   * We treat doctor to be visible if webview is opened, no matter if it is focused or not.
+   * We should take focus into account when doctor caching mechanism will be implemented on the server.
+   */
+  isOpened = false;
 
   constructor(private client: LanguageClient) {}
 
@@ -34,11 +39,11 @@ export class DoctorProvider implements Disposable {
         ViewColumn.Active,
         { enableCommandUris: true }
       );
-      this.isVisible = true;
+      this.isOpened = true;
 
       this.doctor.onDidDispose(() => {
         this.client.sendNotification(doctorNotification, { visible: false });
-        this.isVisible = false;
+        this.isOpened = false;
         this.doctor = undefined;
       });
     } else if (!isReload) {
@@ -63,6 +68,6 @@ export class DoctorProvider implements Disposable {
     await this.client.sendRequest(ExecuteCommandRequest.type, {
       command: ServerCommands.DoctorRun,
     });
-    this.isVisible = true;
+    this.isOpened = true;
   }
 }
