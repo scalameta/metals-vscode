@@ -34,4 +34,5 @@ export interface MetalsInitializationOptions {
   openNewWindowProvider?: boolean;
   copyWorksheetOutputProvider?: boolean;
   commandInHtmlFormat?: "vscode" | "sublime";
+  doctorVisibilityProvider?: boolean;
 }
