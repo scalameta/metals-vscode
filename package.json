@@ -9,7 +9,7 @@
     "ide",
     "scalameta"
   ],
-  "version": "1.13.8",
+  "version": "1.13.9",
   "publisher": "scalameta",
   "contributors": [
     {
@@ -173,7 +173,7 @@
       "properties": {
         "metals.serverVersion": {
           "type": "string",
-          "default": "0.11.2+123-b44dc8c0-SNAPSHOT",
+          "default": "0.11.2+125-ed5fb2f2-SNAPSHOT",
           "markdownDescription": "The version of the Metals server artifact. Requires reloading the window.  \n\n**VS Code extension version is guaranteed to work only with the default version, change if you know what you're doing**"
         },
         "metals.serverProperties": {
