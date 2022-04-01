@@ -2,14 +2,14 @@ import { ansicolor } from "ansicolor";
 import * as vscode from "vscode";
 import {
   Failed,
+  RunnableMetalsTestItem,
   SingleTestResult,
   SuiteName,
   TestName,
   TestRunActions,
   TestSuiteResult,
-  TestSuiteRun,
 } from "./types";
-import { testItemCollectionToArray } from "./util";
+import { gatherTestItems } from "./util";
 
 /**
  * Analyze results from TestRun and pass inform Test Controller about them.
@@ -22,29 +22,33 @@ import { testItemCollectionToArray } from "./util";
  */
 export function analyzeTestRun(
   run: TestRunActions,
-  suites: TestSuiteRun[],
+  tests: RunnableMetalsTestItem[],
   testSuitesResults: TestSuiteResult[],
   teardown?: () => void
 ): void {
   const results = createResultsMap(testSuitesResults);
-  for (const { suiteItem, testCases } of suites) {
-    const suiteName = suiteItem.id as SuiteName;
+  for (const test of tests) {
+    const kind = test._metalsKind;
+    const suiteName =
+      kind === "suite"
+        ? (test.id as SuiteName)
+        : (test._metalsParent.id as SuiteName);
     const result = results.get(suiteName);
     if (result != null) {
       // if suite run contains test cases (run was started for (single) test case)
-      if (testCases.length > 0) {
-        analyzeTestCases(run, result, testCases);
+      if (kind === "testcase") {
+        analyzeTestCases(run, result, [test]);
       }
       // if test suite has children (test cases) do a more fine-grained analyze of results.
       // run was started for whole suite which has children (e.g. junit one)
-      else if (suiteItem.children.size > 0) {
-        const items = testItemCollectionToArray(suiteItem.children);
-        analyzeTestCases(run, result, items);
+      else if (test.children.size > 0) {
+        const items = gatherTestItems(test.children);
+        analyzeTestCases(run, result, items, test);
       } else {
-        analyzeTestSuite(run, result, suiteItem);
+        analyzeTestSuite(run, result, test);
       }
     } else {
-      run.skipped?.(suiteItem);
+      run.skipped?.(test);
     }
   }
   teardown?.();
@@ -69,11 +73,13 @@ function createResultsMap(
 function analyzeTestCases(
   run: TestRunActions,
   result: TestSuiteResult,
-  testCases: vscode.TestItem[]
+  testCases: vscode.TestItem[],
+  parent?: vscode.TestItem
 ) {
   const testCasesResults = createTestCasesMap(result);
   testCases.forEach((test) => {
-    const testCaseResult = testCasesResults.get(test.id as TestName);
+    const name = test.id as TestName;
+    const testCaseResult = testCasesResults.get(name);
 
     if (testCaseResult?.kind === "passed") {
       run.passed?.(test, testCaseResult.duration);
@@ -84,6 +90,17 @@ function analyzeTestCases(
       run.skipped?.(test);
     }
   });
+
+  if (parent) {
+    const tests = new Set(testCases.map((t) => t.id as TestName));
+    const failed = Array.from(testCasesResults.values())
+      .filter((result) => !tests.has(result.testName))
+      .filter(isFailed);
+    if (failed.length > 0) {
+      const msg = extractErrorMessages(failed);
+      run.failed?.(parent, msg, result.duration);
+    }
+  }
 }
 
 /**

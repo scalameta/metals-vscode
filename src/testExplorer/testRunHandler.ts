@@ -8,19 +8,25 @@ import {
 } from "vscode";
 import { debugServerFromUri, DebugSession } from "../scalaDebugger";
 import { analyzeTestRun } from "./analyzeTestRun";
-import { testCache } from "./testCache";
 import {
   DapEvent,
+  MetalsTestItem,
+  RunnableMetalsTestItem,
   ScalaTestSuitesDebugRequest,
   ScalaTestSuiteSelection,
   TargetUri,
-  TestItemMetadata,
-  TestSuiteRun,
+  TestSuiteResult,
 } from "./types";
+import { gatherTestItems } from "./util";
 
 // this id is used to mark DAP sessions created by TestController
 // thanks to that debug tracker knows which requests it should track and gather results
 export const testRunnerId = "scala-dap-test-runner";
+
+/**
+ * Stores results from executed test suites.
+ */
+const suiteResults = new Map<string, TestSuiteResult[]>();
 
 /**
  * Register tracker which tracks all DAP sessions which are started with @constant {testRunnerId} kind.
@@ -31,13 +37,13 @@ vscode.debug.registerDebugAdapterTrackerFactory("scala", {
   createDebugAdapterTracker(session) {
     if (session.configuration.kind === testRunnerId) {
       return {
-        onWillStartSession: () => testCache.setEmptySuiteResultsFor(session.id),
+        onWillStartSession: () => suiteResults.set(session.id, []),
         onDidSendMessage: (msg: DapEvent) => {
           if (
             msg.event === "testResult" &&
             msg.body.category === "testResult"
           ) {
-            testCache.addSuiteResult(session.id, msg.body.data);
+            suiteResults.get(session.id)?.push(msg.body.data);
           }
         },
       };
@@ -59,43 +65,62 @@ export async function runHandler(
   token: CancellationToken
 ): Promise<void> {
   const run = testController.createTestRun(request);
-  const queue = createRunQueue(request);
+  const includes = new Set((request.include as MetalsTestItem[]) ?? []);
+  const excludes = new Set((request.exclude as MetalsTestItem[]) ?? []);
+  const queue: RunnableMetalsTestItem[] = [];
 
-  for (const { test, data } of queue) {
-    if (token.isCancellationRequested) {
-      run.skipped(test);
-    } else if (data.kind === "testcase" && test.parent) {
-      await runDebugSession(run, noDebug, data.targetUri, {
-        root: test.parent,
-        suites: [{ suiteItem: test.parent, testCases: [test] }],
-      });
-    } else {
-      const suitesItems = testCache.getTestItemChildren(test);
-      await runDebugSession(run, noDebug, data.targetUri, {
-        root: test,
-        suites: suitesItems.map((suite) => ({
-          suiteItem: suite,
-          testCases: [],
-        })),
-      });
+  /**
+   * Loop through all included tests in request and add them to our queue if they are not excluded explicitly
+   */
+  function createRunQueue(tests: Iterable<MetalsTestItem>): void {
+    for (const test of tests) {
+      if (!excludes.has(test)) {
+        const kind = test._metalsKind;
+        if (kind === "project" || kind === "package") {
+          createRunQueue(gatherTestItems(test.children));
+        } else if (kind === "suite") {
+          run.started(test);
+          queue.push(test);
+          gatherTestItems(test.children).forEach((t) => run.started(t));
+        } else if (kind === "testcase") {
+          runParent(test);
+          queue.push(test);
+        }
+      }
     }
   }
+
+  function runParent(test: vscode.TestItem | undefined): void {
+    if (test) {
+      runParent(test.parent);
+      run.started(test);
+    }
+  }
+
+  createRunQueue(includes);
+
+  const testSuiteSelection: ScalaTestSuiteSelection[] = queue.map((test) => {
+    const kind = test._metalsKind;
+    if (kind === "suite") {
+      return {
+        className: test.id,
+        tests: [],
+      };
+    } else {
+      return {
+        className: test._metalsParent.id,
+        tests: [test.label],
+      };
+    }
+  });
+
+  if (!token.isCancellationRequested && queue.length > 0) {
+    const targetUri = queue[0]._metalsTargetUri;
+    await runDebugSession(run, noDebug, targetUri, testSuiteSelection, queue);
+  }
+
   run.end();
   afterFinished();
-}
-
-/**
- *  User can start 3 different kind of test runs:
- * - run a whole build target/package
- * - run a whole test suite
- * - run a single test case
- * This interface describes all these runs and allows to process them in unified way.
- * @param root test item which was clicked by the user, can be test case/suite/package
- * @param suites suites which are included in this run
- */
-export interface RunParams {
-  root: vscode.TestItem;
-  suites: TestSuiteRun[];
 }
 
 /**
@@ -105,21 +130,11 @@ async function runDebugSession(
   run: vscode.TestRun,
   noDebug: boolean,
   targetUri: TargetUri,
-  runParams: RunParams
+  testSuiteSelection: ScalaTestSuiteSelection[],
+  tests: RunnableMetalsTestItem[]
 ): Promise<void> {
-  const { root, suites } = runParams;
   try {
-    suites.forEach((suite) => {
-      suite.suiteItem.children.forEach((child) => run.started(child));
-      run.started(suite.suiteItem);
-    });
     await commands.executeCommand("workbench.action.files.save");
-    const testSuiteSelection: ScalaTestSuiteSelection[] = runParams.suites.map(
-      (suite) => ({
-        className: suite.suiteItem.id,
-        tests: suite.testCases.map((test) => test.label),
-      })
-    );
     const session = await createDebugSession(targetUri, testSuiteSelection);
     if (!session) {
       return;
@@ -127,35 +142,12 @@ async function runDebugSession(
     const wasStarted = await startDebugging(session, noDebug);
     if (!wasStarted) {
       vscode.window.showErrorMessage("Debug session not started");
-      run.failed(root, { message: "Debug session not started" });
       return;
     }
-    await analyzeResults(run, suites);
+    await analyzeResults(run, tests);
   } catch (error) {
     console.error(error);
   }
-}
-
-/**
- * Loop through all included tests in request and add them to our queue if they are not excluded explicitly
- */
-function createRunQueue(
-  request: vscode.TestRunRequest
-): { test: vscode.TestItem; data: TestItemMetadata }[] {
-  const queue: { test: vscode.TestItem; data: TestItemMetadata }[] = [];
-
-  if (request.include) {
-    const excludes = new Set(request.exclude ?? []);
-    for (const test of request.include) {
-      if (!excludes.has(test)) {
-        const testData = testCache.getMetadata(test);
-        if (testData != null) {
-          queue.push({ test, data: testData });
-        }
-      }
-    }
-  }
-  return queue;
 }
 
 /**
@@ -204,20 +196,24 @@ async function startDebugging(session: DebugSession, noDebug: boolean) {
  * Retrieves test suite results for current debus session gathered by DAP tracker and passes
  * them to the analyzer function. After analysis ends, results are cleaned.
  */
-async function analyzeResults(run: vscode.TestRun, suites: TestSuiteRun[]) {
+async function analyzeResults(
+  run: vscode.TestRun,
+  tests: RunnableMetalsTestItem[]
+) {
   return new Promise<void>((resolve) => {
     const disposable = vscode.debug.onDidTerminateDebugSession(
       (session: vscode.DebugSession) => {
-        const testSuitesResult = testCache.getSuiteResultsFor(session.id) ?? [];
+        const testSuitesResult = suiteResults.get(session.id) ?? [];
 
         // disposes current subscription and removes data from result map
         const teardown = () => {
           disposable.dispose();
-          testCache.clearSuiteResultsFor(session.id);
+          suiteResults.delete(session.id);
         };
 
         // analyze current TestRun
-        analyzeTestRun(run, suites, testSuitesResult, teardown);
+        analyzeTestRun(run, tests, testSuitesResult, teardown);
+        run.end();
         return resolve();
       }
     );

@@ -154,3 +154,40 @@ export interface ScalaTestSuiteSelection {
   /** The selected tests to run. */
   tests: string[];
 }
+
+export type MetalsTestItemKind = "project" | "package" | "suite" | "testcase";
+
+type BaseMetalsTestItem = vscode.TestItem & {
+  _metalsKind: MetalsTestItemKind;
+  _metalsTargetName: TargetName;
+  _metalsTargetUri: TargetUri;
+  _metalsParent?: MetalsTestItem;
+};
+export interface ProjectMetalsTestItem extends BaseMetalsTestItem {
+  _metalsKind: "project";
+}
+
+export interface PackageMetalsTestItem extends BaseMetalsTestItem {
+  _metalsKind: "package";
+  _metalsParent: ProjectMetalsTestItem | PackageMetalsTestItem;
+}
+
+export interface SuiteMetalsTestItem extends BaseMetalsTestItem {
+  _metalsKind: "suite";
+  _metalsParent: ProjectMetalsTestItem | PackageMetalsTestItem;
+}
+
+export interface TestCaseMetalsTestItem extends BaseMetalsTestItem {
+  _metalsKind: "testcase";
+  _metalsParent: SuiteMetalsTestItem;
+}
+
+export type MetalsTestItem =
+  | ProjectMetalsTestItem
+  | PackageMetalsTestItem
+  | SuiteMetalsTestItem
+  | TestCaseMetalsTestItem;
+
+export type RunnableMetalsTestItem =
+  | SuiteMetalsTestItem
+  | TestCaseMetalsTestItem;
