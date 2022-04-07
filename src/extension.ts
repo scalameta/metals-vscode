@@ -278,7 +278,7 @@ function fetchAndLaunchMetals(
       }
       const msg = (() => {
         const proxy =
-          `See https://scalameta.org/metals/docs/editors/vscode.html#http-proxy for instructions ` +
+          `See https://scalameta.org/metals/docs/editors/vscode/#http-proxy for instructions ` +
           `if you are using an HTTP proxy.`;
         if (process.env.FLATPAK_SANDBOX_DIR) {
           return (
