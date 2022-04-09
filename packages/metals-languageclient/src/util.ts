@@ -1,5 +1,5 @@
 import { TaskEither } from "fp-ts/lib/TaskEither";
-import { pipe } from "fp-ts/lib/pipeable";
+import { pipe } from "fp-ts/lib/function";
 import * as E from "fp-ts/lib/Either";
 
 export function toPromise<E, A>(te: TaskEither<E, A>): Promise<A> {
