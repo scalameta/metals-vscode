@@ -10,3 +10,4 @@ vsc-extension-quickstart.md
 .mergify.yml
 .eslintrc.js
 .prettierignore
+.update-version.js
