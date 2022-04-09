@@ -11,3 +11,4 @@ vsc-extension-quickstart.md
 .eslintrc.js
 .prettierignore
 .update-version.js
+node_modules/
