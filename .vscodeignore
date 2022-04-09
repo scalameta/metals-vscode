@@ -1,14 +1,12 @@
 .vscode/**
 .vscode-test/**
 out/test/**
-out/testExplorer/**
 out/**/*.map
 src/**
 .gitignore
 tsconfig.json
 vsc-extension-quickstart.md
 .github
-node_modules
 .mergify.yml
 .eslintrc.js
 .prettierignore
