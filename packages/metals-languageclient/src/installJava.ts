@@ -11,7 +11,7 @@ import { TranscodeEncoding } from "buffer";
 
 const defaultJabbaVersion = "0.11.2";
 
-type JavaVersion = "adopt@1.8" | "adopt@1.11";
+type JavaVersion = "adopt@1.8" | "adopt@1.11" | "openjdk@1.17";
 
 interface InstallJavaOptions {
   javaVersion: JavaVersion;
