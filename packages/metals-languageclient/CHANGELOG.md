@@ -1,5 +1,11 @@
 ## metals-languageclient changelog
 
+### v0.5.15 (2022/04/15 09:15 +00:00)
+- [9af9425](https://github.com/scalameta/metals-languageclient/commit/9af94259663a7e4889ec1eb97327b99e533a3669) Bump @types/node from 17.0.23 to 17.0.24 (@dependabot[bot])
+- [d3eeefa](https://github.com/scalameta/metals-languageclient/commit/d3eeefadaea4b2037840313be21e289f89cb065a) Bump fp-ts from 2.11.9 to 2.11.10 (@dependabot[bot])
+- [35fa039](https://github.com/scalameta/metals-languageclient/commit/35fa039991937f7143c9b0e5725da7e8f8fb1f8f) refactor: use `function.pipe` instead of `pipeable.pipe` (@yoshinorin)
+- [f8c0b28](https://github.com/scalameta/metals-languageclient/commit/f8c0b283d22fbbcdc11e02b3809fb09d1bc0e669) Release v0.5.14
+
 ### v0.5.14 (2022/03/31 13:35 +00:00)
 - [c508f1e](https://github.com/scalameta/metals-languageclient/commit/c508f1ed81cad7237a82ed7319750b5705631529) Ignore dependabot to upgrade node-fetch to v3 (@tanishiking)
 - [ecb9d48](https://github.com/scalameta/metals-languageclient/commit/ecb9d48ab06210e3a21f32a9afc4d5996d2a83b1) Bump @types/node from 17.0.21 to 17.0.22 (@dependabot[bot])
@@ -499,8 +505,8 @@
 ### v0.1.15 (2020/02/04 07:17 +00:00)
 - [04fc84e](https://github.com/scalameta/metals-languageclient/commit/04fc84e55f889990a10083f83ea6f395fc7ee81b) v0.1.15 (@gabro)
 - [9a5fcf5](https://github.com/scalameta/metals-languageclient/commit/9a5fcf5757989832f522a8db585f2e71c64bc081) Use the same version of vscode-languageserver-protocol as coc.nvim (@gabro)
-- [e7144b4](https://github.com/scalameta/metals-languageclient/commit/e7144b4eeb9e153c5d7e060d04e2bf7c74d99883) v0.1.14 (@gabro)
 - [0dffea3](https://github.com/scalameta/metals-languageclient/commit/0dffea3660ce9969d946100c55c05ae9eeb8e0a3) Fix potentially undefined arrays (@gabro)
+- [e7144b4](https://github.com/scalameta/metals-languageclient/commit/e7144b4eeb9e153c5d7e060d04e2bf7c74d99883) v0.1.14 (@gabro)
 - [5b3aafc](https://github.com/scalameta/metals-languageclient/commit/5b3aafcf25f72a5b4269ef6568d372c2c34775e9) Bump @types/node from 13.5.3 to 13.7.0 (@dependabot-preview[bot])
 
 ### v0.1.13 (2020/02/01 09:20 +00:00)
