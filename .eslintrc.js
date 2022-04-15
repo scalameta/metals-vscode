@@ -16,6 +16,8 @@ module.exports = {
           "warn",
           { ignoreRestArgs: true },
         ],
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": ["warn"],
         "guard-for-in": "error",
         "no-var": "error",
         curly: "error",
