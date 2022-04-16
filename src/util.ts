@@ -25,7 +25,9 @@ export function getConfigValue<A>(
   key: string
 ): { value: A; target: ConfigurationTarget } | undefined {
   const value = config.get<A>(key);
+  /* eslint-disable @typescript-eslint/no-non-null-assertion */
   const { defaultValue, workspaceValue } = config.inspect<A>(key)!;
+  /* eslint-enable @typescript-eslint/no-non-null-assertion */
   if (value) {
     const getTarget = () => {
       if (workspaceValue && workspaceValue !== defaultValue) {
