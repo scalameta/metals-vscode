@@ -18,6 +18,7 @@ module.exports = {
         ],
         "no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars": ["error"],
+        "@typescript-eslint/no-non-null-assertion": "error",
         "guard-for-in": "error",
         "no-var": "error",
         curly: "error",
