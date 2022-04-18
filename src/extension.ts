@@ -79,7 +79,11 @@ import {
   startFindInFilesProvider,
 } from "./findInFiles";
 import * as ext from "./hoverExtension";
-import { decodeAndShowFile, MetalsFileProvider } from "./metalsContentProvider";
+import {
+  decodeAndShowFile,
+  DecodeExtension,
+  MetalsFileProvider,
+} from "./metalsContentProvider";
 import {
   getJavaHomeFromConfig,
   getTextDocumentPositionParams,
@@ -458,48 +462,20 @@ function launchMetals(
   registerTextDocumentContentProvider("metalsDecode", metalsFileProvider);
   registerTextDocumentContentProvider("jar", metalsFileProvider);
 
-  registerCommand("metals.show-cfr", async (uri: Uri) => {
-    await decodeAndShowFile(client, metalsFileProvider, uri, "cfr");
-  });
-
-  registerCommand("metals.show-javap-verbose", async (uri: Uri) => {
-    await decodeAndShowFile(client, metalsFileProvider, uri, "javap-verbose");
-  });
-
-  registerCommand("metals.show-javap", async (uri: Uri) => {
-    await decodeAndShowFile(client, metalsFileProvider, uri, "javap");
-  });
-
-  registerCommand("metals.show-semanticdb-compact", async (uri: Uri) => {
-    await decodeAndShowFile(
-      client,
-      metalsFileProvider,
-      uri,
-      "semanticdb-compact"
-    );
-  });
-
-  registerCommand("metals.show-semanticdb-detailed", async (uri: Uri) => {
-    await decodeAndShowFile(
-      client,
-      metalsFileProvider,
-      uri,
-      "semanticdb-detailed"
-    );
-  });
-
-  registerCommand("metals.show-semanticdb-proto", async (uri: Uri) => {
-    await decodeAndShowFile(
-      client,
-      metalsFileProvider,
-      uri,
-      "semanticdb-proto"
-    );
-  });
-
-  registerCommand("metals.show-tasty", async (uri: Uri) => {
-    await decodeAndShowFile(client, metalsFileProvider, uri, "tasty-decoded");
-  });
+  const decodeCommands: [string, DecodeExtension][] = [
+    ["cfr", "cfr"],
+    ["javap-verbose", "javap-verbose"],
+    ["javap", "javap"],
+    ["semanticdb-compact", "semanticdb-compact"],
+    ["semanticdb-detailed", "semanticdb-detailed"],
+    ["semanticdb-proto", "semanticdb-proto"],
+    ["tasty", "tasty-decoded"],
+  ];
+  decodeCommands.forEach((command) =>
+    registerCommand(`metals.show-${command[0]}`, async (uri: Uri) => {
+      await decodeAndShowFile(client, metalsFileProvider, uri, command[1]);
+    })
+  );
 
   registerCommand(
     "metals.restartServer",
