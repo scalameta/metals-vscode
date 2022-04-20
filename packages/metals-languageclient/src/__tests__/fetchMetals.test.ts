@@ -30,6 +30,8 @@ describe("fetchMetals", () => {
       expect(calcServerDependency("0.11.2+32-536ff4b1-SNAPSHOT")).toBe(
         expectedDep("2.13", "0.11.2+32-536ff4b1-SNAPSHOT")
       );
+      const customVersion = "com.acme:metals_1.2.3:3.2.1-foobar";
+      expect(calcServerDependency(customVersion)).toBe(customVersion);
     });
   });
 });
