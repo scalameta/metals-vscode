@@ -249,6 +249,7 @@
         },
         "metals.bloopJvmProperties": {
           "type": "array",
+          "scope": "machine-overridable",
           "items": {
             "type": "string"
           },
