@@ -97,6 +97,7 @@ const openSettingsAction = "Open settings";
 const downloadJava = "Download Java";
 const installJava8Action = "Install Java (JDK 8)";
 const installJava11Action = "Install Java (JDK 11)";
+const installJava17Action = "Install Java (JDK 17)";
 let treeViews: MetalsTreeViews | undefined;
 let currentClient: LanguageClient | undefined;
 
@@ -144,8 +145,8 @@ export function deactivate(): Thenable<void> | undefined {
 
 function showMissingJavaMessage(): Thenable<void> {
   const message =
-    "Unable to find a Java 8 or Java 11 installation on this computer. " +
-    "To fix this problem, update the 'metals.javaHome' setting to point to a Java 8 or Java 11 home directory " +
+    "Unable to find a Java 8, Java 11 or Java 17 installation on this computer. " +
+    "To fix this problem, update the 'metals.javaHome' setting to point to a Java 8, Java 11 or Java 17 home directory " +
     "or select a version to install automatically";
 
   outputChannel.appendLine(message);
@@ -155,7 +156,8 @@ function showMissingJavaMessage(): Thenable<void> {
       message,
       openSettingsAction,
       installJava8Action,
-      installJava11Action
+      installJava11Action,
+      installJava17Action,
     )
     .then(chooseJavaToInstall);
 }
@@ -163,16 +165,20 @@ function showMissingJavaMessage(): Thenable<void> {
 function showInstallJavaMessage(): Thenable<void> {
   const message =
     "Which version would you like to install?" +
-    "Currently supported are JDK 8 and JDK 11: ";
+    "Currently supported are JDK 8, JDK 11 or JDK 17: ";
 
   outputChannel.appendLine(message);
 
   return window
     .showInformationMessage(
       message,
+      {
+        modal: true,
+      },
       openSettingsAction,
       installJava8Action,
-      installJava11Action
+      installJava11Action,
+      installJava17Action
     )
     .then(chooseJavaToInstall);
 }
@@ -206,6 +212,20 @@ function chooseJavaToInstall(choice: string | undefined) {
         },
         () =>
           installJava({ javaVersion: "adopt@1.11", outputChannel }).then(
+            updateJavaConfig
+          )
+      );
+      break;
+    }
+    case installJava17Action: {
+      window.withProgress(
+        {
+          location: ProgressLocation.Notification,
+          title: `Installing Java (JDK 17), please wait...`,
+          cancellable: true,
+        },
+        () =>
+          installJava({ javaVersion: "openjdk@1.17", outputChannel }).then(
             updateJavaConfig
           )
       );
