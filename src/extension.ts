@@ -157,7 +157,7 @@ function showMissingJavaMessage(): Thenable<void> {
       openSettingsAction,
       installJava8Action,
       installJava11Action,
-      installJava17Action,
+      installJava17Action
     )
     .then(chooseJavaToInstall);
 }
