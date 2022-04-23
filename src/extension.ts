@@ -28,6 +28,7 @@ import {
   ProviderResult,
   Hover,
   TextDocument,
+  FileSystemProvider,
 } from "vscode";
 import {
   LanguageClient,
@@ -78,7 +79,11 @@ import {
   startFindInFilesProvider,
 } from "./findInFiles";
 import * as ext from "./hoverExtension";
-import { decodeAndShowFile, MetalsFileProvider } from "./metalsContentProvider";
+import {
+  decodeAndShowFile,
+  DecodeExtension,
+  MetalsFileProvider,
+} from "./metalsContentProvider";
 import {
   getJavaHomeFromConfig,
   getTextDocumentPositionParams,
@@ -91,6 +96,7 @@ import { getServerVersion } from "./getServerVersion";
 import { getCoursierMirrorPath } from "./mirrors";
 import { DoctorProvider } from "./doctor";
 import { showReleaseNotes } from "./releaseNotesProvider";
+import MetalsFileSystemProvider from "./metalsFileSystemProvider";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -98,6 +104,8 @@ const openSettingsAction = "Open settings";
 const downloadJava = "Download Java";
 const installJava11Action = "Install Java (JDK 11)";
 const installJava17Action = "Install Java (JDK 17)";
+
+const librariesURI = Uri.parse("metalsfs:/metalsLibraries");
 
 let treeViews: MetalsTreeViews | undefined;
 let currentClient: LanguageClient | undefined;
@@ -358,6 +366,7 @@ function launchMetals(
     icons: "vscode",
     inputBoxProvider: true,
     isVirtualDocumentSupported: true,
+    isLibraryFileSystemSupported: true,
     openFilesOnRenameProvider: true,
     openNewWindowProvider: true,
     quickPickProvider: true,
@@ -373,8 +382,8 @@ function launchMetals(
     documentSelector: [
       { scheme: "file", language: "scala" },
       { scheme: "file", language: "java" },
-      { scheme: "jar", language: "scala" },
-      { scheme: "jar", language: "java" },
+      { scheme: "metalsfs", language: "scala" },
+      { scheme: "metalsfs", language: "java" },
     ],
     synchronize: {
       configurationSection: "metals",
@@ -449,6 +458,18 @@ function launchMetals(
     );
   }
 
+  function registerFileSystemProvider(
+    scheme: string,
+    provider: FileSystemProvider
+  ) {
+    context.subscriptions.push(
+      workspace.registerFileSystemProvider(scheme, provider, {
+        isCaseSensitive: true,
+        isReadonly: true,
+      })
+    );
+  }
+
   function registerTextDocumentContentProvider(
     scheme: string,
     provider: TextDocumentContentProvider
@@ -459,52 +480,26 @@ function launchMetals(
   }
 
   const metalsFileProvider = new MetalsFileProvider(client);
-
   registerTextDocumentContentProvider("metalsDecode", metalsFileProvider);
-  registerTextDocumentContentProvider("jar", metalsFileProvider);
 
-  registerCommand("metals.show-cfr", async (uri: Uri) => {
-    await decodeAndShowFile(client, metalsFileProvider, uri, "cfr");
-  });
+  registerCommand("metals.show-libraries-folder", async () =>
+    addLibrariesFolder()
+  );
 
-  registerCommand("metals.show-javap-verbose", async (uri: Uri) => {
-    await decodeAndShowFile(client, metalsFileProvider, uri, "javap-verbose");
-  });
-
-  registerCommand("metals.show-javap", async (uri: Uri) => {
-    await decodeAndShowFile(client, metalsFileProvider, uri, "javap");
-  });
-
-  registerCommand("metals.show-semanticdb-compact", async (uri: Uri) => {
-    await decodeAndShowFile(
-      client,
-      metalsFileProvider,
-      uri,
-      "semanticdb-compact"
-    );
-  });
-
-  registerCommand("metals.show-semanticdb-detailed", async (uri: Uri) => {
-    await decodeAndShowFile(
-      client,
-      metalsFileProvider,
-      uri,
-      "semanticdb-detailed"
-    );
-  });
-
-  registerCommand("metals.show-semanticdb-proto", async (uri: Uri) => {
-    await decodeAndShowFile(
-      client,
-      metalsFileProvider,
-      uri,
-      "semanticdb-proto"
-    );
-  });
-
-  registerCommand("metals.show-tasty", async (uri: Uri) => {
-    await decodeAndShowFile(client, metalsFileProvider, uri, "tasty-decoded");
-  });
+  const decodeCommands: [string, DecodeExtension][] = [
+    ["cfr", "cfr"],
+    ["javap-verbose", "javap-verbose"],
+    ["javap", "javap"],
+    ["semanticdb-compact", "semanticdb-compact"],
+    ["semanticdb-detailed", "semanticdb-detailed"],
+    ["semanticdb-proto", "semanticdb-proto"],
+    ["tasty", "tasty-decoded"],
+  ];
+  decodeCommands.forEach((command) =>
+    registerCommand(`metals.show-${command[0]}`, async (uri: Uri) => {
+      await decodeAndShowFile(client, metalsFileProvider, uri, command[1]);
+    })
+  );
 
   registerCommand(
     "metals.restartServer",
@@ -658,7 +653,7 @@ function launchMetals(
         codeLensRefresher
       );
       languages.registerCodeLensProvider(
-        { scheme: "jar", language: "scala" },
+        { scheme: "metalsfs", language: "scala" },
         codeLensRefresher
       );
 
@@ -725,6 +720,19 @@ function launchMetals(
             case ClientCommands.ReloadDoctor:
               doctorProvider.reloadOrRefreshDoctor(params);
               break;
+            case "metals-library-filesystem-ready": {
+              const metalsFileSystemProvider = new MetalsFileSystemProvider(
+                client,
+                librariesURI
+              );
+              registerFileSystemProvider(
+                librariesURI.scheme,
+                metalsFileSystemProvider
+              );
+
+              metalsFileSystemProvider.reinitialiseURI(librariesURI);
+              break;
+            }
             case ClientCommands.FocusDiagnostics:
               commands.executeCommand(ClientCommands.FocusDiagnostics);
               break;
@@ -898,7 +906,7 @@ function launchMetals(
       registerCommand("metals.reveal-active-file", () => {
         if (treeViews) {
           const editor = window.visibleTextEditors.find((e) =>
-            isSupportedLanguage(e.document.languageId)
+            isSupportedDocument(e.document)
           );
           if (editor) {
             const params = getTextDocumentPositionParams(editor);
@@ -975,7 +983,6 @@ function launchMetals(
           client,
           findInFilesProvider,
           findInFilesView,
-          metalsFileProvider,
           outputChannel
         )
       );
@@ -1021,7 +1028,7 @@ function launchMetals(
       );
 
       window.onDidChangeActiveTextEditor((editor) => {
-        if (editor && isSupportedLanguage(editor.document.languageId)) {
+        if (editor && isSupportedDocument(editor.document)) {
           client.sendNotification(
             MetalsDidFocus.type,
             editor.document.uri.toString()
@@ -1277,14 +1284,52 @@ function detectLaunchConfigurationChanges() {
   );
 }
 
-function isSupportedLanguage(languageId: TextDocument["languageId"]): boolean {
-  switch (languageId) {
-    case "scala":
-    case "sc":
-    case "java":
-      return true;
-    default:
-      return false;
+function isSupportedDocument(textDocument: TextDocument): boolean {
+  return (
+    ["metalsfs", "file"].includes(textDocument.uri.scheme) &&
+    ["scala", "sc", "java"].includes(textDocument.languageId)
+  );
+}
+
+function addLibrariesFolder() {
+  const libraryFolderName = "Metals - Libraries";
+
+  // filesystem can be persistent across VSCode sessions so may already exist
+  const newLibraryFolder = {
+    uri: librariesURI,
+    name: libraryFolderName,
+  };
+  const folderByUri = workspace.getWorkspaceFolder(librariesURI);
+  if (folderByUri && folderByUri.name != libraryFolderName) {
+    // wrong name on libraries folder
+    workspace.updateWorkspaceFolders(folderByUri.index, 1, newLibraryFolder);
+  } else {
+    const folderByName = workspace.workspaceFolders?.find(
+      (folder) => folder.name == libraryFolderName
+    );
+    if (folderByName && folderByName.uri.toString != librariesURI.toString) {
+      if (folderByUri) {
+        // too many libraries folders
+        workspace.updateWorkspaceFolders(folderByName.index, 1);
+      } else {
+        // wrong root on libraries folder
+        workspace.updateWorkspaceFolders(
+          folderByName.index,
+          1,
+          newLibraryFolder
+        );
+      }
+    } else if (!folderByUri) {
+      // missing libraries folder
+      const workspaceCount = workspace.workspaceFolders?.length;
+      if (workspaceCount) {
+        workspace.updateWorkspaceFolders(
+          workspaceCount,
+          null,
+          newLibraryFolder
+        );
+      }
+    }
   }
 }
 

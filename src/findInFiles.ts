@@ -17,7 +17,6 @@ import {
   workspace,
 } from "vscode";
 import { LanguageClient, Location } from "vscode-languageclient/node";
-import { MetalsFileProvider } from "./metalsContentProvider";
 
 class TopLevel {
   constructor(
@@ -101,7 +100,6 @@ export async function executeFindInFiles(
   client: LanguageClient,
   provider: FindInFilesProvider,
   view: TreeView<unknown>,
-  metalsFileProvider: MetalsFileProvider,
   outputChannel: OutputChannel
 ): Promise<void> {
   try {
@@ -143,7 +141,7 @@ export async function executeFindInFiles(
     );
 
     commands.executeCommand("setContext", "metals.showFindInFiles", true);
-    const newTopLevel = await toTopLevel(locations, metalsFileProvider);
+    const newTopLevel = await toTopLevel(locations);
 
     provider.update(newTopLevel);
 
@@ -159,10 +157,7 @@ export async function executeFindInFiles(
   }
 }
 
-async function toTopLevel(
-  locations: Location[],
-  metalsFileProvider: MetalsFileProvider
-): Promise<TopLevel[]> {
+async function toTopLevel(locations: Location[]): Promise<TopLevel[]> {
   const locationsByFile = new Map<string, Location[]>();
 
   for (const loc of locations) {
@@ -174,12 +169,8 @@ async function toTopLevel(
     Array.from(locationsByFile, async ([filePath, locations]) => {
       const uri: Uri = Uri.parse(filePath);
       const getFileContent = async () => {
-        if (uri.scheme == "jar") {
-          return await metalsFileProvider.provideTextDocumentContent(uri);
-        } else {
-          const readData = await workspace.fs.readFile(uri);
-          return Buffer.from(readData).toString("utf8");
-        }
+        const readData = await workspace.fs.readFile(uri);
+        return Buffer.from(readData).toString("utf8");
       };
       const fileContent = await getFileContent();
       if (fileContent) {
