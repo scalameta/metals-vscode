@@ -66,14 +66,10 @@ function serverVersionInfo(config: WorkspaceConfiguration): {
   configurationTarget: ConfigurationTarget;
 } {
   const computedVersion = config.get<string>(configSection)!;
-  const { defaultValue, globalValue, workspaceValue } =
-    config.inspect<string>(configSection)!;
+  const { defaultValue, globalValue } = config.inspect<string>(configSection)!;
   const configurationTarget = (() => {
     if (globalValue && globalValue !== defaultValue) {
       return ConfigurationTarget.Global;
-    }
-    if (workspaceValue && workspaceValue !== defaultValue) {
-      return ConfigurationTarget.Workspace;
     }
     return ConfigurationTarget.Workspace;
   })();
