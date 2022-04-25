@@ -173,7 +173,7 @@
       "properties": {
         "metals.serverVersion": {
           "type": "string",
-          "default": "0.11.2+125-ed5fb2f2-SNAPSHOT",
+          "default": "0.11.2+239-96dbeac5-SNAPSHOT",
           "markdownDescription": "The version of the Metals server artifact. Requires reloading the window.  \n\n**VS Code extension version is guaranteed to work only with the default version, change if you know what you're doing**"
         },
         "metals.serverProperties": {
@@ -246,6 +246,14 @@
         "metals.bloopVersion": {
           "type": "string",
           "markdownDescription": "This version will be used for the Bloop build tool plugin, for any supported build tool,while importing in Metals as well as for running the embedded server"
+        },
+        "metals.bloopJvmProperties": {
+          "type": "array",
+          "scope": "machine-overridable",
+          "items": {
+            "type": "string"
+          },
+          "markdownDescription": "Optional list of JVM properties to pass along to the Bloop server. Each property needs to be a separate item.\n\nExample: `-Xmx1G` or `-Xms100M`"
         },
         "metals.bloopSbtAlreadyInstalled": {
           "type": "boolean",
