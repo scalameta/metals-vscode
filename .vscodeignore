@@ -6,3 +6,8 @@ src/**
 .gitignore
 tsconfig.json
 vsc-extension-quickstart.md
+.github
+.mergify.yml
+.eslintrc.js
+.prettierignore
+.update-version.js

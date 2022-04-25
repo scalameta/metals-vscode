@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
-import { testCache } from "./testCache";
-import { TargetName, TargetUri, AddTestCases, TestItemMetadata } from "./types";
-import { prefixesOf, toVscodeRange } from "./util";
+import { AddTestCases, TargetName, TargetUri } from "./types";
+import { prefixesOf, refineTestItem, toVscodeRange } from "./util";
 
 /**
  * Add test cases to the given test suite.
@@ -30,20 +29,14 @@ export function addTestCases(
         );
       }
     } else {
-      parent.children.forEach((c) => testCache.deleteMetadata(c));
       parent.children.replace([]);
       for (const { location, name } of event.testCases) {
         const parsedUri = vscode.Uri.parse(location.uri);
         const parsedRange = toVscodeRange(location.range);
         const id = `${parent.id}.${name}`;
         const testItem = testController.createTestItem(id, name, parsedUri);
+        refineTestItem("testcase", testItem, targetUri, targetName, parent);
         testItem.range = parsedRange;
-        const data: TestItemMetadata = {
-          kind: "testcase",
-          targetName,
-          targetUri,
-        };
-        testCache.setMetadata(testItem, data);
         parent.children.add(testItem);
       }
     }

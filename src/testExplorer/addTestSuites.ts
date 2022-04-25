@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
-import { testCache } from "./testCache";
-import { TargetName, TargetUri, TestItemMetadata, AddTestSuite } from "./types";
-import { prefixesOf, toVscodeRange } from "./util";
+import { AddTestSuite, TargetName, TargetUri } from "./types";
+import { prefixesOf, refineTestItem, toVscodeRange } from "./util";
 
 /**
  * Add test suite to the Test Explorer.
@@ -34,14 +33,8 @@ export function addTestSuite(
         const parts = currentId.split(".");
         const label = parts[parts.length - 1];
         const packageNode = testController.createTestItem(currentId, label);
+        refineTestItem("package", packageNode, targetUri, targetName, parent);
         parent.children.add(packageNode);
-
-        const data: TestItemMetadata = {
-          kind: "package",
-          targetName,
-          targetUri,
-        };
-        testCache.setMetadata(packageNode, data);
         addTestSuiteLoop(packageNode, restOfIds);
       }
     } else {
@@ -54,15 +47,10 @@ export function addTestSuite(
         className,
         parsedUri
       );
+      refineTestItem("suite", testItem, targetUri, targetName, parent);
       // if canResolveChildren is true then test item is shown as expandable in the Test Explorer view
       testItem.canResolveChildren = event.canResolveChildren;
       testItem.range = parsedRange;
-      const data: TestItemMetadata = {
-        kind: "suite",
-        targetName,
-        targetUri,
-      };
-      testCache.setMetadata(testItem, data);
       parent.children.add(testItem);
     }
   }
@@ -86,14 +74,8 @@ function getOrCreateBuildTargetItem(
   }
 
   const createdNode = testController.createTestItem(targetName, targetName);
+  refineTestItem("project", createdNode, targetUri, targetName);
   testController.items.add(createdNode);
-
-  const data: TestItemMetadata = {
-    kind: "project",
-    targetName,
-    targetUri,
-  };
-  testCache.setMetadata(createdNode, data);
 
   return createdNode;
 }

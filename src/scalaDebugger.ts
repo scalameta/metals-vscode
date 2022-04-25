@@ -75,7 +75,7 @@ class ScalaMainConfigProvider implements vscode.DebugConfigurationProvider {
         path: editor.document.uri.toString(true),
         runType: RunType.RunOrTestFile,
       };
-      return start(false, args).then((_) => {
+      return start(false, args).then(() => {
         return debugConfiguration;
       });
     } else {

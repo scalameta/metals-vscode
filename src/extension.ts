@@ -90,6 +90,7 @@ import { BuildTargetUpdate } from "./testExplorer/types";
 import * as workbenchCommands from "./workbenchCommands";
 import { getServerVersion } from "./getServerVersion";
 import { getCoursierMirrorPath } from "./mirrors";
+import { DoctorProvider } from "./doctor";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -237,6 +238,7 @@ function fetchAndLaunchMetals(
 
   outputChannel.appendLine(`Metals version: ${serverVersion}`);
 
+  /* eslint-disable @typescript-eslint/no-non-null-assertion */
   const serverProperties = config.get<string[]>("serverProperties")!;
   const customRepositories = config.get<string[]>("customRepositories")!;
   /* eslint-enable @typescript-eslint/no-non-null-assertion */
@@ -276,7 +278,7 @@ function fetchAndLaunchMetals(
       }
       const msg = (() => {
         const proxy =
-          `See https://scalameta.org/metals/docs/editors/vscode.html#http-proxy for instructions ` +
+          `See https://scalameta.org/metals/docs/editors/vscode/#http-proxy for instructions ` +
           `if you are using an HTTP proxy.`;
         if (process.env.FLATPAK_SANDBOX_DIR) {
           return (
@@ -359,6 +361,7 @@ function launchMetals(
     treeViewProvider: true,
     testExplorerProvider: true,
     commandInHtmlFormat: "vscode",
+    doctorVisibilityProvider: true,
   };
 
   const clientOptions: LanguageClientOptions = {
@@ -512,26 +515,8 @@ function launchMetals(
 
   return client.onReady().then(
     () => {
-      let doctor: WebviewPanel | undefined;
+      const doctorProvider = new DoctorProvider(client);
       let stacktrace: WebviewPanel | undefined;
-
-      function getDoctorPanel(isReload: boolean): WebviewPanel {
-        if (!doctor) {
-          doctor = window.createWebviewPanel(
-            "metals-doctor",
-            "Metals Doctor",
-            ViewColumn.Active,
-            { enableCommandUris: true }
-          );
-          context.subscriptions.push(doctor);
-          doctor.onDidDispose(() => {
-            doctor = undefined;
-          });
-        } else if (!isReload) {
-          doctor.reveal();
-        }
-        return doctor;
-      }
 
       function getStacktracePanel(): WebviewPanel {
         if (!stacktrace) {
@@ -558,7 +543,6 @@ function launchMetals(
         ServerCommands.GenerateBspConfig,
         ServerCommands.BspSwitch,
         ServerCommands.SourcesScan,
-        ServerCommands.DoctorRun,
         ServerCommands.CascadeCompile,
         ServerCommands.CleanCompile,
         ServerCommands.CancelCompilation,
@@ -568,6 +552,10 @@ function launchMetals(
         registerCommand("metals." + command, async () =>
           client.sendRequest(ExecuteCommandRequest.type, { command: command })
         );
+      });
+
+      registerCommand(`metals.${ServerCommands.DoctorRun}`, async () => {
+        await doctorProvider.runDoctor();
       });
 
       function displayBuildTarget(target: string): void {
@@ -718,18 +706,9 @@ function launchMetals(
               break;
             }
             case ClientCommands.RunDoctor:
-            case ClientCommands.ReloadDoctor: {
-              const isRun = params.command === ClientCommands.RunDoctor;
-              const isReload = params.command === ClientCommands.ReloadDoctor;
-              if (isRun || (doctor && isReload)) {
-                const html = params.arguments && params.arguments[0];
-                if (typeof html === "string") {
-                  const panel = getDoctorPanel(isReload);
-                  panel.webview.html = html;
-                }
-              }
+            case ClientCommands.ReloadDoctor:
+              doctorProvider.reloadOrRefreshDoctor(params);
               break;
-            }
             case ClientCommands.FocusDiagnostics:
               commands.executeCommand(ClientCommands.FocusDiagnostics);
               break;
