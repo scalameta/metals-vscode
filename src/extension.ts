@@ -146,8 +146,8 @@ export function deactivate(): Thenable<void> | undefined {
 
 function showMissingJavaMessage(): Thenable<void> {
   const message =
-    "Unable to find a Java 8, Java 11 or Java 17 installation on this computer. " +
-    "To fix this problem, update the 'metals.javaHome' setting to point to a Java 8, Java 11 or Java 17 home directory " +
+    "Unable to find a Java 11 or Java 17 installation on this computer. " +
+    "To fix this problem, update the 'metals.javaHome' setting to point to a Java 11 or Java 17 home directory " +
     "or select a version to install automatically";
 
   outputChannel.appendLine(message);
@@ -165,7 +165,7 @@ function showMissingJavaMessage(): Thenable<void> {
 function showInstallJavaMessage(): Thenable<void> {
   const message =
     "Which version would you like to install?" +
-    "Currently supported are JDK 8, JDK 11 or JDK 17: ";
+    "Currently supported are JDK 11 or JDK 17: ";
 
   outputChannel.appendLine(message);
 
