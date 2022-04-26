@@ -94,10 +94,11 @@ import { DoctorProvider } from "./doctor";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
+
 const downloadJava = "Download Java";
-const installJava8Action = "Install Java (JDK 8)";
 const installJava11Action = "Install Java (JDK 11)";
 const installJava17Action = "Install Java (JDK 17)";
+
 let treeViews: MetalsTreeViews | undefined;
 let currentClient: LanguageClient | undefined;
 
@@ -155,7 +156,6 @@ function showMissingJavaMessage(): Thenable<void> {
     .showErrorMessage(
       message,
       openSettingsAction,
-      installJava8Action,
       installJava11Action,
       installJava17Action
     )
@@ -176,7 +176,6 @@ function showInstallJavaMessage(): Thenable<void> {
         modal: true,
       },
       openSettingsAction,
-      installJava8Action,
       installJava11Action,
       installJava17Action
     )
@@ -187,20 +186,6 @@ function chooseJavaToInstall(choice: string | undefined) {
   switch (choice) {
     case openSettingsAction: {
       commands.executeCommand(workbenchCommands.openSettings);
-      break;
-    }
-    case installJava8Action: {
-      window.withProgress(
-        {
-          location: ProgressLocation.Notification,
-          title: `Installing Java (JDK 8), please wait...`,
-          cancellable: true,
-        },
-        () =>
-          installJava({ javaVersion: "adopt@1.8", outputChannel }).then(
-            updateJavaConfig
-          )
-      );
       break;
     }
     case installJava11Action: {
