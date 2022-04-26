@@ -2,6 +2,32 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.14.0 (2022/04/26 14:05 +00:00)
+- [ad05cc5](https://github.com/scalameta/metals-vscode/commit/ad05cc56a82e1d777e4fbd22eee6610ea67b6e4e) Increase patch version for pre-release
+- [3f6545b](https://github.com/scalameta/metals-vscode/commit/3f6545bd2dba74e81b95aae51f71cca398c0e465) Increase patch version for pre-release
+- [182aa96](https://github.com/scalameta/metals-vscode/commit/182aa96bd8f00b6e25078299f2228ce6e3334ff6) Increase patch version for pre-release
+- [5009d3c](https://github.com/scalameta/metals-vscode/commit/5009d3c125420e4e4e1372a8d2a6cd37e6f56536) Increase patch version for pre-release
+- [8ab8b56](https://github.com/scalameta/metals-vscode/commit/8ab8b56a32d903585c7e3a3de918a3c429e1db04) Increase patch version for pre-release
+- [c9ddb11](https://github.com/scalameta/metals-vscode/commit/c9ddb115a6932f701486a8a4f987cbf6ee64e521) build(deps-dev): bump @types/node from 17.0.23 to 17.0.24 (@dependabot[bot])
+- [be00d89](https://github.com/scalameta/metals-vscode/commit/be00d899d9572607f53000e2f25b2dbcb164b56e) build(deps-dev): bump glob from 7.2.0 to 8.0.1 (@dependabot[bot])
+- [363cf18](https://github.com/scalameta/metals-vscode/commit/363cf18af008d000242397fa0b1c63bb2ad62df5) Increase patch version for pre-release
+- [d561518](https://github.com/scalameta/metals-vscode/commit/d561518e838de870d7505cc4aef030207cfb5751) Increase patch version for pre-release
+- [e3bc4a8](https://github.com/scalameta/metals-vscode/commit/e3bc4a8e97011e7ff95ed045d1694f9827ae82f9) Increase patch version for pre-release
+- [72f16e6](https://github.com/scalameta/metals-vscode/commit/72f16e6b0f0b6ca4ce66a0d6697f34716597c1e6) Increase patch version for pre-release
+- [96e0969](https://github.com/scalameta/metals-vscode/commit/96e0969892e6d12aa4e84d607083c546b0c3fcec) Increase patch version for pre-release
+- [c0776d0](https://github.com/scalameta/metals-vscode/commit/c0776d0de1ee364b87ee1c2b20790a4730c67f52) Bump @types/node from 17.0.22 to 17.0.23 (@dependabot[bot])
+- [abd3538](https://github.com/scalameta/metals-vscode/commit/abd3538ceda5ef228da4bc675cd69e9f0ced4d68) Bump @types/node from 17.0.21 to 17.0.22 (@dependabot[bot])
+- [2eeb6f1](https://github.com/scalameta/metals-vscode/commit/2eeb6f1e096e7cbb8757688f4de2138ad497aadc) Increase patch version for pre-release
+- [1e0726d](https://github.com/scalameta/metals-vscode/commit/1e0726d5e24e8f6dc53025b1762b018f100cf4b9) Fix search text in virtual jars and add highlighting (@Arthurm1)
+- [7edae89](https://github.com/scalameta/metals-vscode/commit/7edae898203b8eed37abb3f80465107dcd13aee9) Increase patch version for pre-release
+- [a40aaad](https://github.com/scalameta/metals-vscode/commit/a40aaadbaf2e3b237e5e42ffe3fd2400e1419e55) Increase patch version for pre-release
+- [492d9de](https://github.com/scalameta/metals-vscode/commit/492d9de8480aa9c230523a4c6eca67ba1fc94af3) Update Scala versions lsit (@tgodzik)
+- [d09f118](https://github.com/scalameta/metals-vscode/commit/d09f118d7cba2e826f5ba52d8ee2c6dd6622b6e6) Increase patch version for pre-release
+- [305f664](https://github.com/scalameta/metals-vscode/commit/305f6648981b39e578dc2657d8ff99d149309491) Increase patch version for pre-release
+- [aaf0c94](https://github.com/scalameta/metals-vscode/commit/aaf0c947a9217242827621987fc43f6c6b8e4461) Increase patch version for pre-release
+- [9020f0d](https://github.com/scalameta/metals-vscode/commit/9020f0d9808b45c0adba601dae5558d1f4dd8aad) Bump language server version to fix issues with wrong binary metals version (@tgodzik)
+- [0f59578](https://github.com/scalameta/metals-vscode/commit/0f595784a9497ea5e2da2026311de61190c75dc5) v1.13.0
+
 ### v1.13.0 (2022/03/08 16:38 +00:00)
 - [4a024b9](https://github.com/scalameta/metals-vscode/commit/4a024b992346f6ca4987f9e04ed6a559c5d415ee) Increase patch version for pre-release
 - [95506bf](https://github.com/scalameta/metals-vscode/commit/95506bf12a89297b7b662094f2a3637e3e33e491) Bump eslint-config-prettier from 8.4.0 to 8.5.0 (@dependabot[bot])
@@ -752,8 +778,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 ### 1.7.2 (2020/01/14 09:11 +00:00)
 - [02fcb1c](https://github.com/scalameta/metals-vscode/commit/02fcb1c19149e1a332320b2c3b1b0907ba91b626) update table in readme (@ckipp01)
 - [d931cca](https://github.com/scalameta/metals-vscode/commit/d931cca8a457aef6a696378bce9ce692d2f7a5e4) 1.7.1
-
-### 1.7.1 (2020/01/13 17:38 +00:00)
 - [4a5e6e9](https://github.com/scalameta/metals-vscode/commit/4a5e6e9d5156e732ea11fb17283c539ee78e9cbd) Fix inverted meaning of run/debug commands (@mzarnowski)
 - [f4659b5](https://github.com/scalameta/metals-vscode/commit/f4659b5d84ac7a86e1bb7d4185cab5e1a8fd98b3) v1.7.0
 
