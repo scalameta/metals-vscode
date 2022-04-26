@@ -247,6 +247,11 @@
           "type": "string",
           "markdownDescription": "This version will be used for the Bloop build tool plugin, for any supported build tool,while importing in Metals as well as for running the embedded server"
         },
+        "metals.bloopJavaHome": {
+          "type": "string",
+          "scope": "machine-overridable",
+          "markdownDescription": "This lets you specify a different JavaHome for Bloop than than that of Metal, which is the default one."
+        },
         "metals.bloopJvmProperties": {
           "type": "array",
           "scope": "machine-overridable",
