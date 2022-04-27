@@ -2,6 +2,13 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.15.0 (2022/04/27 09:20 +00:00)
+- [f55de2c](https://github.com/scalameta/metals-vscode/commit/f55de2c0a73e8ceb348d15a6aac0db78ccb69431) Increase patch version for pre-release
+
+### v1.14.1 (2022/04/27 09:16 +00:00)
+- [e36b8dd](https://github.com/scalameta/metals-vscode/commit/e36b8dd2e87f52cbe71292999549ad13bbead6fc) release: 0.11.4 (@dos65)
+- [33f8cc4](https://github.com/scalameta/metals-vscode/commit/33f8cc4a86f2aaef7fca98edb43345abc83bba83) v1.14.0
+
 ### v1.14.0 (2022/04/26 14:05 +00:00)
 - [ad05cc5](https://github.com/scalameta/metals-vscode/commit/ad05cc56a82e1d777e4fbd22eee6610ea67b6e4e) Increase patch version for pre-release
 - [3f6545b](https://github.com/scalameta/metals-vscode/commit/3f6545bd2dba74e81b95aae51f71cca398c0e465) Increase patch version for pre-release
@@ -774,8 +781,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [fe923d0](https://github.com/scalameta/metals-vscode/commit/fe923d01aa562eea477845edcdf6904b5ad0c502) Use getJavaHome from metals-languageclient (@gabro)
 - [46a9c67](https://github.com/scalameta/metals-vscode/commit/46a9c67a6b31a0b6431450851e8bcaeb622b2b22) v1.7.2 (@gabro)
 - [4f1676b](https://github.com/scalameta/metals-vscode/commit/4f1676b91f3955375f1c2a1701c0022326fb2e4c) Pass user's environment to metals server process (@jodersky)
-
-### 1.7.2 (2020/01/14 09:11 +00:00)
 - [02fcb1c](https://github.com/scalameta/metals-vscode/commit/02fcb1c19149e1a332320b2c3b1b0907ba91b626) update table in readme (@ckipp01)
 - [d931cca](https://github.com/scalameta/metals-vscode/commit/d931cca8a457aef6a696378bce9ce692d2f7a5e4) 1.7.1
 - [4a5e6e9](https://github.com/scalameta/metals-vscode/commit/4a5e6e9d5156e732ea11fb17283c539ee78e9cbd) Fix inverted meaning of run/debug commands (@mzarnowski)
