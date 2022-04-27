@@ -9,7 +9,7 @@ import * as workbenchCommands from "./workbenchCommands";
 import http from "https";
 import path from "path";
 import fs from "fs";
-import { getConfigValue, metalsDir } from "./util";
+import { getConfigValue, metalsDir } from "./util/utils";
 
 const serverVersionSection = "serverVersion";
 const suggestLatestUpgrade = "suggestLatestUpgrade";

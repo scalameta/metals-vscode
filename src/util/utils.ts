@@ -5,6 +5,7 @@ import {
   TextEditor,
   WorkspaceConfiguration,
   ConfigurationTarget,
+  TextDocument,
 } from "vscode";
 import {
   ExecuteCommandRequest,
@@ -19,6 +20,10 @@ declare const sym: unique symbol;
 export type newtype<A, ID extends string> = A & {
   readonly [sym]: ID;
 };
+
+export function getMetalsConfig(): WorkspaceConfiguration {
+  return workspace.getConfiguration("metals");
+}
 
 export function getConfigValue<A>(
   config: WorkspaceConfiguration,
@@ -90,9 +95,8 @@ export function getValueFromConfig<T>(
 }
 
 export function getJavaHomeFromConfig(): string | undefined {
-  const javaHomePath = workspace
-    .getConfiguration("metals")
-    .get<string>("javaHome");
+  const config = getMetalsConfig();
+  const javaHomePath = getValueFromConfig(config, "javaHome", "");
   if (javaHomePath?.trim() && !path.isAbsolute(javaHomePath)) {
     const pathSegments = [
       workspace.workspaceFolders?.[0]?.uri.fsPath,
@@ -102,4 +106,34 @@ export function getJavaHomeFromConfig(): string | undefined {
   } else {
     return javaHomePath;
   }
+}
+
+export function updateJavaConfig(javaHome: string) {
+  const config = getMetalsConfig();
+  const configProperty = config.inspect<Record<string, string>>("javaHome");
+  if (configProperty?.workspaceValue != undefined) {
+    config.update("javaHome", javaHome, false);
+  } else {
+    config.update("javaHome", javaHome, true);
+  }
+}
+
+export function isSupportedLanguage(
+  languageId: TextDocument["languageId"]
+): boolean {
+  switch (languageId) {
+    case "scala":
+    case "sc":
+    case "java":
+      return true;
+    default:
+      return false;
+  }
+}
+
+export function toggleBooleanWorkspaceSetting(setting: string) {
+  const config = getMetalsConfig();
+  const configProperty = config.inspect<boolean>(setting);
+  const currentValues = configProperty?.workspaceValue ?? false;
+  config.update(setting, !currentValues, ConfigurationTarget.Workspace);
 }

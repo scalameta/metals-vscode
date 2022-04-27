@@ -10,7 +10,6 @@ import {
   EventEmitter,
   StatusBarAlignment,
   ProgressLocation,
-  IndentAction,
   languages,
   WebviewPanel,
   ViewColumn,
@@ -70,7 +69,6 @@ import { startTreeView } from "./treeview";
 import * as scalaDebugger from "./scalaDebugger";
 import { DecorationsRangesDidChange } from "./decorationProtocol";
 import { clearTimeout } from "timers";
-import { increaseIndentPattern } from "./indentPattern";
 import { gotoLocation, WindowLocation } from "./goToLocation";
 import { openSymbolSearch } from "./openSymbolSearch";
 import {
@@ -82,15 +80,20 @@ import * as ext from "./hoverExtension";
 import { decodeAndShowFile, MetalsFileProvider } from "./metalsContentProvider";
 import {
   getJavaHomeFromConfig,
+  getMetalsConfig,
   getTextDocumentPositionParams,
   getValueFromConfig,
-} from "./util";
+  isSupportedLanguage,
+  toggleBooleanWorkspaceSetting,
+  updateJavaConfig,
+} from "./util/utils";
 import { createTestManager } from "./testExplorer/testManager";
 import { BuildTargetUpdate } from "./testExplorer/types";
 import * as workbenchCommands from "./workbenchCommands";
 import { getServerVersion } from "./getServerVersion";
 import { getCoursierMirrorPath } from "./mirrors";
 import { DoctorProvider } from "./doctor";
+import { enableScaladocIndentation } from "./util/indentation";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -114,7 +117,7 @@ const decorationType: TextEditorDecorationType =
     rangeBehavior: DecorationRangeBehavior.OpenClosed,
   });
 
-const config = workspace.getConfiguration("metals");
+const config = getMetalsConfig();
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const serverVersion = getServerVersion(config);
@@ -243,10 +246,16 @@ function fetchAndLaunchMetals(
 
   outputChannel.appendLine(`Metals version: ${serverVersion}`);
 
-  /* eslint-disable @typescript-eslint/no-non-null-assertion */
-  const serverProperties = config.get<string[]>("serverProperties")!;
-  const customRepositories = config.get<string[]>("customRepositories")!;
-  /* eslint-enable @typescript-eslint/no-non-null-assertion */
+  const serverProperties = getValueFromConfig<string[]>(
+    config,
+    "serverProperties",
+    []
+  );
+  const customRepositories = getValueFromConfig<string[]>(
+    config,
+    "customRepositories",
+    []
+  );
 
   const coursierMirror = getCoursierMirrorPath(config);
   const javaConfig = getJavaConfig({
@@ -312,16 +321,6 @@ function fetchAndLaunchMetals(
         });
     }
   );
-}
-
-function updateJavaConfig(javaHome: string) {
-  const config = workspace.getConfiguration("metals");
-  const configProperty = config.inspect<Record<string, string>>("javaHome");
-  if (configProperty?.workspaceValue != undefined) {
-    config.update("javaHome", javaHome, false);
-  } else {
-    config.update("javaHome", javaHome, true);
-  }
 }
 
 function launchMetals(
@@ -1174,70 +1173,6 @@ function readableSeconds(totalSeconds: number): string {
   }
 }
 
-function enableScaladocIndentation() {
-  // Adapted from:
-  // https://github.com/Microsoft/vscode/blob/9d611d4dfd5a4a101b5201b8c9e21af97f06e7a7/extensions/typescript/src/typescriptMain.ts#L186
-  languages.setLanguageConfiguration("scala", {
-    indentationRules: {
-      // ^(.*\*/)?\s*\}.*$
-      decreaseIndentPattern: /^(.*\*\/)?\s*\}.*$/,
-      // ^.*\{[^}"']*$
-      increaseIndentPattern: /^.*\{[^}"']*$/,
-    },
-    wordPattern:
-      /(-?\d*\.\d\w*)|([^\`\~\!\@\#\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\?\s]+)/g,
-    onEnterRules: [
-      {
-        // e.g. /** | */
-        beforeText: /^\s*\/\*\*(?!\/)([^\*]|\*(?!\/))*$/,
-        afterText: /^\s*\*\/$/,
-        action: { indentAction: IndentAction.IndentOutdent, appendText: " * " },
-      },
-      {
-        // indent in places with optional braces
-        beforeText: increaseIndentPattern(),
-        action: { indentAction: IndentAction.Indent },
-      },
-      {
-        // stop vscode from indenting automatically to last known indentation
-        beforeText: /^\s*/,
-        /* we still want {} to be nicely split with two new lines into
-         *{
-         *  |
-         *}
-         */
-        afterText: /[^\]\}\)]+/,
-        action: { indentAction: IndentAction.None },
-      },
-      {
-        // e.g. /** ...|
-        beforeText: /^\s*\/\*\*(?!\/)([^\*]|\*(?!\/))*$/,
-        action: { indentAction: IndentAction.None, appendText: " * " },
-      },
-      {
-        // e.g.  * ...| Javadoc style
-        beforeText: /^(\t|(\ \ ))*\ \*(\ ([^\*]|\*(?!\/))*)?$/,
-        action: { indentAction: IndentAction.None, appendText: "* " },
-      },
-      {
-        // e.g.  * ...| Scaladoc style
-        beforeText: /^(\t|(\ \ ))*\*(\ ([^\*]|\*(?!\/))*)?$/,
-        action: { indentAction: IndentAction.None, appendText: "* " },
-      },
-      {
-        // e.g.  */|
-        beforeText: /^(\t|(\ \ ))*\ \*\/\s*$/,
-        action: { indentAction: IndentAction.None, removeText: 1 },
-      },
-      {
-        // e.g.  *-----*/|
-        beforeText: /^(\t|(\ \ ))*\ \*[^/]*\*\/\s*$/,
-        action: { indentAction: IndentAction.None, removeText: 1 },
-      },
-    ],
-  });
-}
-
 function detectLaunchConfigurationChanges() {
   metalsLanguageClient.detectLaunchConfigurationChanges(
     workspace,
@@ -1250,17 +1185,6 @@ function detectLaunchConfigurationChanges() {
           }
         })
   );
-}
-
-function isSupportedLanguage(languageId: TextDocument["languageId"]): boolean {
-  switch (languageId) {
-    case "scala":
-    case "sc":
-    case "java":
-      return true;
-    default:
-      return false;
-  }
 }
 
 // NOTE(gabro): we would normally use the `configurationDefaults` contribution point in the
@@ -1309,11 +1233,4 @@ function configureSettingsDefaults() {
     },
     ConfigurationTarget.Workspace
   );
-}
-
-function toggleBooleanWorkspaceSetting(setting: string) {
-  const config = workspace.getConfiguration("metals");
-  const configProperty = config.inspect<boolean>(setting);
-  const currentValues = configProperty?.workspaceValue ?? false;
-  config.update(setting, !currentValues, ConfigurationTarget.Workspace);
 }
