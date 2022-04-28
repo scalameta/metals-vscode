@@ -2,6 +2,11 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.16.0 (2022/04/28 17:23 +00:00)
+- [1ccc590](https://github.com/scalameta/metals-vscode/commit/1ccc59006bb03714b9d2d9115d7a1c668a351c34) Increase patch version for pre-release
+- [41ccdf4](https://github.com/scalameta/metals-vscode/commit/41ccdf432cb7b367a50ef7b0ecdcf92f68b5bf89) release: 0.11.5 (@dos65)
+- [c1d4ed5](https://github.com/scalameta/metals-vscode/commit/c1d4ed55bd21124168ea17dc79e16adbe842fe20) v1.15.0
+
 ### v1.15.0 (2022/04/27 09:20 +00:00)
 - [f55de2c](https://github.com/scalameta/metals-vscode/commit/f55de2c0a73e8ceb348d15a6aac0db78ccb69431) Increase patch version for pre-release
 
@@ -1139,8 +1144,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [7828399](https://github.com/scalameta/metals-vscode/commit/78283999c8da531421b20cadebeed7219ce65344) Address review feedback (@laughedelic)
 - [0f8fc22](https://github.com/scalameta/metals-vscode/commit/0f8fc22270ed18166ccbbb26f667581c218793d4) Remove sbt.enabled setting, don't autoconnect (@laughedelic)
 - [5309b57](https://github.com/scalameta/metals-vscode/commit/5309b57840a0039abbf62b0529dac440b1a4da69) Add a setting to control whether diagnostics from sbt are forwarded (@laughedelic)
-
-### v0.1.0-M1 (2018/04/05 18:49 +00:00)
 - [0b4d8a9](https://github.com/scalameta/metals-vscode/commit/0b4d8a97e94ba171b05e2b536011205f4564b1bf) Remove download-coursier script and commit coursier binary (@gabro)
 - [3c84c3b](https://github.com/scalameta/metals-vscode/commit/3c84c3bd270360ef0dc0a4a3e7c39aaacec02b45) Remove metals.scalafmt.onSave option from VSCode extension (@gabro)
 - [4d1aa01](https://github.com/scalameta/metals-vscode/commit/4d1aa01a8f9b6f0561be1ac81706b180fafd2142) Move to .metals/buildinfo/<project-name>/<config>.properties (@olafurpg)
