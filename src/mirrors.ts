@@ -21,6 +21,9 @@ export function getCoursierMirrorPath(
 
 function writeMirrorFile(mirrorString: string, target: ConfigurationTarget) {
   const dotMetalsDir = metalsDir(target);
+  if (!fs.existsSync(dotMetalsDir)) {
+    fs.mkdirSync(dotMetalsDir);
+  }
   const file = path.join(dotMetalsDir, "mirror.properties");
   const mirrorContents = [
     "metals.from=https://repo1.maven.org/maven2",
