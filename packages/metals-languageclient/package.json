@@ -36,6 +36,6 @@
     "promisify-child-process": "^4.0.0",
     "semver": "^7.1.1",
     "shell-quote": "^1.7.2",
-    "vscode-languageserver-protocol": "3.16.0"
+    "vscode-languageserver-protocol": "3.17.1"
   }
 }
