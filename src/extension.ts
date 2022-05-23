@@ -41,7 +41,6 @@ import * as fs from "fs";
 import {
   getJavaHome,
   restartServer,
-  checkDottyIde,
   getJavaConfig,
   fetchMetals,
   JavaConfig,
@@ -227,14 +226,6 @@ function fetchAndLaunchMetals(
   if (!workspace.workspaceFolders) {
     outputChannel.appendLine(
       `Metals will not start because you've opened a single file and not a project directory.`
-    );
-    return;
-  }
-  const dottyIde = checkDottyIde(workspace.workspaceFolders[0]?.uri.fsPath);
-  if (dottyIde.enabled) {
-    outputChannel.appendLine(
-      `Metals will not start since Dotty is enabled for this workspace. ` +
-        `To enable Metals, remove the file ${dottyIde.path} and run 'Reload window'`
     );
     return;
   }
