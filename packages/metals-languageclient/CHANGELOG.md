@@ -1,5 +1,15 @@
 ## metals-languageclient changelog
 
+### v0.5.16 (2022/06/06 08:59 +00:00)
+- [2ab6cd5](https://github.com/scalameta/metals-languageclient/commit/2ab6cd5012dd9f232516154065fd5e1ac932a04c) Update node version of release workflow (@tanishiking)
+- [de7352f](https://github.com/scalameta/metals-languageclient/commit/de7352fee9be285cdaf1e8f87e4745d83dccd3d1) refactor: Remove unused abstract members from LanguageClient (@tanishiking)
+- [a5f0bcd](https://github.com/scalameta/metals-languageclient/commit/a5f0bcdfc7c4dddf66e5bd6a7620f8a7029052b3) chore(deps): bump vscode-languageserver-protocol from 3.16.0 to 3.17.1 (@dependabot[bot])
+- [993373c](https://github.com/scalameta/metals-languageclient/commit/993373cfb3185200eda7f53091d339ccdcb675b0) chore(deps-dev): bump @types/jest from 27.4.1 to 27.5.0 (@dependabot[bot])
+- [0ce2014](https://github.com/scalameta/metals-languageclient/commit/0ce201438f461a2d79584ae3bd3b08c15703b649) chore(deps): bump fp-ts from 2.12.0 to 2.12.1 (@dependabot[bot])
+- [3e382f8](https://github.com/scalameta/metals-languageclient/commit/3e382f8d437d5f4a6265aef5b92e5ce2d6affe2d) refactor: delete unnecessary `if` condition (@yoshinorin)
+- [0c375f9](https://github.com/scalameta/metals-languageclient/commit/0c375f9e0acc610b27dc0a379957e648be262d9c) Support custom Metals server version again (@Duhemm)
+- [dee3d1b](https://github.com/scalameta/metals-languageclient/commit/dee3d1b6ee7096a7489a427b28e36e8ccf0e565d) Release v0.5.15
+
 ### v0.5.15 (2022/04/15 09:15 +00:00)
 - [9af9425](https://github.com/scalameta/metals-languageclient/commit/9af94259663a7e4889ec1eb97327b99e533a3669) Bump @types/node from 17.0.23 to 17.0.24 (@dependabot[bot])
 - [d3eeefa](https://github.com/scalameta/metals-languageclient/commit/d3eeefadaea4b2037840313be21e289f89cb065a) Bump fp-ts from 2.11.9 to 2.11.10 (@dependabot[bot])
@@ -39,7 +49,7 @@
 - [bb1f72b](https://github.com/scalameta/metals-languageclient/commit/bb1f72be365b51bb52d15727ef4b1733e1122f47) Bump @types/node from 17.0.9 to 17.0.10 (@dependabot[bot])
 - [72a42c5](https://github.com/scalameta/metals-languageclient/commit/72a42c51b9ec3b87eb0ebe692b17b21cfc3adb66) Bump @types/node from 17.0.8 to 17.0.9 (@dependabot[bot])
 - [aa37308](https://github.com/scalameta/metals-languageclient/commit/aa37308ff021877a4d2e1628428a14d128571baf) Bump fp-ts from 2.11.7 to 2.11.8 (@dependabot[bot])
-- [da8d971](https://github.com/scalameta/metals-languageclient/commit/da8d9714b56c6c882562ce97dac7cd92731528c1) chore: use newest setup node gh action (@kpodsiad)
+- [da8d971](https://github.com/scalameta/metals-languageclient/commit/da8d9714b56c6c882562ce97dac7cd92731528c1) chore: use newest setup node gh action
 - [286a550](https://github.com/scalameta/metals-languageclient/commit/286a550c74da6da520d8e2c241b0ae8e2fefa846) Release v0.5.7
 
 ### v0.5.7 (2022/01/16 16:44 +00:00)
@@ -66,8 +76,8 @@
 
 ### v0.5.5 (2021/12/08 07:46 +00:00)
 - [00033ee](https://github.com/scalameta/metals-languageclient/commit/00033eeb1e827a73946941f2d5d5847e50913e78) Bump @types/node from 16.11.11 to 16.11.12 (@dependabot[bot])
-- [c591b57](https://github.com/scalameta/metals-languageclient/commit/c591b575e767c5be0affc0d4ae536a4fcaf2164a) Add test ui kind datatype (@kpodsiad)
-- [38af94b](https://github.com/scalameta/metals-languageclient/commit/38af94b3f4e08fd02efacfdc23f9435b2d2c8288) Add testExplorerProvider option (@kpodsiad)
+- [c591b57](https://github.com/scalameta/metals-languageclient/commit/c591b575e767c5be0affc0d4ae536a4fcaf2164a) Add test ui kind datatype
+- [38af94b](https://github.com/scalameta/metals-languageclient/commit/38af94b3f4e08fd02efacfdc23f9435b2d2c8288) Add testExplorerProvider option
 - [5ada56b](https://github.com/scalameta/metals-languageclient/commit/5ada56bc84b1e4399891d91d8c8704741f18b42f) Bump prettier from 2.5.0 to 2.5.1 (@dependabot[bot])
 - [82e4b70](https://github.com/scalameta/metals-languageclient/commit/82e4b702317f6305601d486d4e4bd79d9251a326) Release v0.5.4
 
