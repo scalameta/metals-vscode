@@ -90,6 +90,7 @@ import * as workbenchCommands from "./workbenchCommands";
 import { getServerVersion } from "./getServerVersion";
 import { getCoursierMirrorPath } from "./mirrors";
 import { DoctorProvider } from "./doctor";
+import { showReleaseNotesIfNeeded } from "./releaseNotesProvider";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -130,7 +131,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
       commands.executeCommand("setContext", "metals:enabled", true);
       try {
         const javaHome = await getJavaHome(getJavaHomeFromConfig());
-        return fetchAndLaunchMetals(context, javaHome, serverVersion);
+        await fetchAndLaunchMetals(context, javaHome, serverVersion);
+        await showReleaseNotesIfNeeded(context, serverVersion, outputChannel);
       } catch (err) {
         outputChannel.appendLine(`${err}`);
         showMissingJavaMessage();
