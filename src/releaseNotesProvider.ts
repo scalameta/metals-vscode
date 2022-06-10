@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 import * as semver from "semver";
 import { Remarkable } from "remarkable";
 import { fetchFrom } from "./util";
+import { Either, makeLeft, makeRight } from "./types";
 
 const versionKey = "metals-server-version";
 
@@ -16,11 +17,15 @@ export async function showReleaseNotesIfNeeded(
   outputChannel: vscode.OutputChannel
 ) {
   try {
-    context.globalState.update(versionKey, "0.11.5");
-    await showReleaseNotes(context, serverVersion);
+    // context.globalState.update(versionKey, "0.11.5");
+    const result = await showReleaseNotes(context, serverVersion);
+    if (result.kind === "left") {
+      const msg = `Release notes was not shown: ${result.value}`;
+      outputChannel.appendLine(msg);
+    }
   } catch (error) {
     outputChannel.appendLine(
-      `Couldn't show release notes for Metals ${serverVersion}`
+      `Error, couldn't show release notes for Metals ${serverVersion}`
     );
     outputChannel.appendLine(`${error}`);
   }
@@ -29,16 +34,29 @@ export async function showReleaseNotesIfNeeded(
 async function showReleaseNotes(
   context: ExtensionContext,
   currentVersion: string
-): Promise<void> {
+): Promise<Either<string, void>> {
   const state = context.globalState;
 
-  const version = getVersion();
-  if (isNotRemote() && version) {
-    const releaseNotesUrl = await getMarkdownLink(version);
-    if (releaseNotesUrl) {
-      await showPanel(version, releaseNotesUrl);
-    }
+  if (isRemote()) {
+    const msg = "is remote environment";
+    return makeLeft(msg);
   }
+
+  const version = getVersion();
+
+  if (version.kind === "left") {
+    return version;
+  }
+
+  const releaseNotesUrl = await getMarkdownLink(version.value);
+  if (!releaseNotesUrl) {
+    const msg = `can't obtain release notes' url for ${version.value}`;
+    return makeLeft(msg);
+  }
+
+  // actual logic starts here
+  await showPanel(version.value, releaseNotesUrl);
+  return makeRight(undefined);
 
   async function showPanel(version: string, releaseNotesUrl: string) {
     const panel = vscode.window.createWebviewPanel(
@@ -68,42 +86,49 @@ async function showReleaseNotes(
    * Don't show panel for remote environment because it installs extension on every time.
    * TODO: what about wsl?
    */
-  function isNotRemote(): boolean {
-    const isNotRemote = env.remoteName == null;
+  function isRemote(): boolean {
+    const isRemote = env.remoteName != null;
     // const isWsl = env.remoteName === "wsl";
-    return isNotRemote;
+    return isRemote;
   }
 
   /**
    *  Return version for which release notes should be displayed
-   *  or
-   *  undefined if notes shouldn't be displayed
    */
-  function getVersion(): string | undefined {
+  function getVersion(): Either<string, string> {
     const previousVersion: string | undefined = state.get(versionKey);
-    // strip version to 'major.minor.patch'
+    // strip version to
+    // in theory semver.clean can return null, but we're almost sure that currentVersion is well defined
     const cleanVersion = semver.clean(currentVersion);
-    if (cleanVersion) {
-      if (previousVersion) {
-        const compare = semver.compare(cleanVersion, previousVersion);
-        const diff = semver.diff(cleanVersion, previousVersion);
 
-        // take into account only major, minor and patch, ignore snapshot releases
-        const isNewerVersion =
-          compare === 1 &&
-          (diff === "major" || diff === "minor" || diff === "patch");
-
-        return isNewerVersion ? cleanVersion : undefined;
-      }
-
-      // if there was no previous version then show release notes for current cleaned version
-      return currentVersion;
+    if (cleanVersion == null) {
+      const msg = `can't transform ${currentVersion} to 'major.minor.patch'`;
+      return makeLeft(msg);
     }
+
+    if (!previousVersion) {
+      // if there was no previous version then show release notes for current cleaned version
+      return makeRight(currentVersion);
+    }
+
+    const compare = semver.compare(cleanVersion, previousVersion);
+    const diff = semver.diff(cleanVersion, previousVersion);
+
+    // take into account only major, minor and patch, ignore snapshot releases
+    const isNewerVersion =
+      compare === 1 &&
+      (diff === "major" || diff === "minor" || diff === "patch");
+
+    return isNewerVersion
+      ? makeRight(cleanVersion)
+      : makeLeft("do not show release notes for an older version");
   }
 }
 
 /**
- * Translate server version to link to the markdown file with release notes
+ * Translate server version to link to the markdown file with release notes.
+ * @param version clean version in major.minor.patch form
+ * If version has release notes return link to them, if not return nothing.
  */
 async function getMarkdownLink(version: string): Promise<string | undefined> {
   const releaseInfoUrl = `https://api.github.com/repos/scalameta/metals/releases/tags/v${version}`;
