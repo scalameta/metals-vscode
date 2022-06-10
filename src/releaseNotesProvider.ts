@@ -2,15 +2,9 @@ import { env, ExtensionContext } from "vscode";
 import * as vscode from "vscode";
 import * as semver from "semver";
 import { Remarkable } from "remarkable";
-import http from "https";
+import { fetchFrom } from "./util";
 
 const versionKey = "metals-server-version";
-
-// prettier-ignore
-const releaseNotesMarkdownUrl: Record<string, string> = {
-  "0.11.5": "https://raw.githubusercontent.com/scalameta/metals/main/website/blog/2022-04-28-aluminium.md",
-  "0.11.6": "https://raw.githubusercontent.com/scalameta/metals/main/website/blog/2022-06-03-aluminium.md",
-};
 
 /**
  * Show release notes if possible, swallow errors since its not a crucial feature.
@@ -22,6 +16,7 @@ export async function showReleaseNotesIfNeeded(
   outputChannel: vscode.OutputChannel
 ) {
   try {
+    context.globalState.update(versionKey, "0.11.5");
     await showReleaseNotes(context, serverVersion);
   } catch (error) {
     outputChannel.appendLine(
@@ -38,38 +33,35 @@ async function showReleaseNotes(
   const state = context.globalState;
 
   const version = getVersion();
-  const releaseNotesUrl = version
-    ? releaseNotesMarkdownUrl[version]
-    : undefined;
-  if (isNotRemote() && version && releaseNotesUrl) {
-    await showPanel(version, releaseNotesUrl);
+  if (isNotRemote() && version) {
+    const releaseNotesUrl = await getMarkdownLink(version);
+    if (releaseNotesUrl) {
+      await showPanel(version, releaseNotesUrl);
+    }
   }
 
   async function showPanel(version: string, releaseNotesUrl: string) {
-    const releaseNotes = await getReleaseNotesMarkdown(releaseNotesUrl);
+    const panel = vscode.window.createWebviewPanel(
+      `scalameta.metals.whatsNew`,
+      `Metals ${version} release notes`,
+      vscode.ViewColumn.One
+    );
 
-    if (typeof releaseNotes === "string") {
-      const panel = vscode.window.createWebviewPanel(
-        `scalameta.metals.whatsNew`,
-        `Metals ${version} release notes`,
-        vscode.ViewColumn.One
-      );
+    const releaseNotes = await getReleaseNotesMarkdown(
+      releaseNotesUrl,
+      context.extensionUri,
+      (uri) => panel.webview.asWebviewUri(uri)
+    );
 
-      panel.webview.html = releaseNotes;
-      panel.reveal();
+    panel.webview.html = releaseNotes;
+    panel.reveal();
 
-      // set wrong value for local development
-      // const newVersion = "0.11.5";
+    // Update current device's latest server version when there's no value or it was a older one.
+    // Then sync this value across other devices.
+    state.update(versionKey, version);
+    state.setKeysForSync([versionKey]);
 
-      const newVersion = version;
-
-      // Update current device's latest server version when there's no value or it was a older one.
-      // Then sync this value across other devices.
-      state.update(versionKey, newVersion);
-      state.setKeysForSync([versionKey]);
-
-      context.subscriptions.push(panel);
-    }
+    context.subscriptions.push(panel);
   }
 
   /**
@@ -110,19 +102,36 @@ async function showReleaseNotes(
   }
 }
 
-async function getReleaseNotesMarkdown(
-  releaseNotesUrl: string
-): Promise<string | { error: unknown }> {
-  const ps = new Promise<string>((resolve, reject) => {
-    http.get(releaseNotesUrl, (resp) => {
-      let body = "";
-      resp.on("data", (chunk) => (body += chunk));
-      resp.on("end", () => resolve(body));
-      resp.on("error", (e) => reject(e));
-    });
-  });
+/**
+ * Translate server version to link to the markdown file with release notes
+ */
+async function getMarkdownLink(version: string): Promise<string | undefined> {
+  const releaseInfoUrl = `https://api.github.com/repos/scalameta/metals/releases/tags/v${version}`;
+  const options = {
+    headers: {
+      "User-Agent": "metals",
+    },
+  };
+  const info = await fetchFrom(releaseInfoUrl, options);
+  const body = (JSON.parse(info)["body"] as string) ?? "";
+  // matches (2022)/(06)/(03)/(aluminium)
+  const matchResult = body.match(
+    new RegExp("(\\d\\d\\d\\d)/(\\d\\d)/(\\d\\d)/(\\w+)")
+  );
+  if (matchResult?.length === 5) {
+    const [, ...tail] = matchResult;
+    const name = tail.join("-");
+    const url = `https://raw.githubusercontent.com/scalameta/metals/main/website/blog/${name}.md`;
+    return url;
+  }
+}
 
-  const text = await ps;
+async function getReleaseNotesMarkdown(
+  releaseNotesUrl: string,
+  extensionUri: vscode.Uri,
+  cssUriConverter: (_: vscode.Uri) => vscode.Uri
+): Promise<string> {
+  const text = await fetchFrom(releaseNotesUrl);
   // every release notes starts with that
   const beginning = "We're happy to announce the release of";
   const notesStartIdx = text.indexOf(beginning);
@@ -142,7 +151,22 @@ async function getReleaseNotesMarkdown(
   const md = new Remarkable({ html: true });
   const renderedNotes = md.render(releaseNotes);
 
-  const notes = getHtmlContent(renderedNotes, author, title, authorUrl);
+  const stylesPathMainPath = vscode.Uri.joinPath(
+    extensionUri,
+    "media",
+    "styles.css"
+  );
+
+  // // Uri to load styles into webview
+  const stylesMainUri = cssUriConverter(stylesPathMainPath);
+
+  const notes = getHtmlContent(
+    renderedNotes,
+    author,
+    title,
+    authorUrl,
+    stylesMainUri
+  );
   return notes;
 }
 
@@ -150,7 +174,8 @@ function getHtmlContent(
   renderedNotes: string,
   author: string,
   title: string,
-  authorURL: string
+  authorURL: string,
+  stylesUri: vscode.Uri
 ): string {
   return `
   <!DOCTYPE html>
@@ -158,6 +183,7 @@ function getHtmlContent(
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="${stylesUri}" rel="stylesheet">
   </head>
   <body>
     <h1>${title}</h1>
