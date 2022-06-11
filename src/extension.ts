@@ -509,9 +509,7 @@ function launchMetals(
     )
   );
 
-  context.subscriptions.push(client.start());
-
-  return client.onReady().then(
+  return client.start().then(
     () => {
       const doctorProvider = new DoctorProvider(client);
       let stacktrace: WebviewPanel | undefined;

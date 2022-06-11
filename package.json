@@ -9,7 +9,7 @@
     "ide",
     "scalameta"
   ],
-  "version": "1.17.1",
+  "version": "1.17.2",
   "publisher": "scalameta",
   "contributors": [
     {
@@ -893,8 +893,8 @@
     "@types/remarkable": "^2.0.3",
     "@types/semver": "^7.3.9",
     "@types/vscode": "1.59.0",
-    "@typescript-eslint/eslint-plugin": "^5.27.0",
-    "@typescript-eslint/parser": "^5.27.0",
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "@typescript-eslint/parser": "^5.27.1",
     "@vscode/test-electron": "^2.1.3",
     "eslint": "^8.17.0",
     "eslint-config-prettier": "^8.5.0",
@@ -902,7 +902,7 @@
     "glob": "^8.0.3",
     "mkdirp": "1.0.4",
     "mocha": "^10.0.0",
-    "ovsx": "0.3.0",
+    "ovsx": "0.5.1",
     "prettier": "2.6.2",
     "remarkable": "^2.0.1",
     "rimraf": "^3.0.2",
@@ -912,10 +912,10 @@
   },
   "dependencies": {
     "ansicolor": "^1.1.100",
-    "metals-languageclient": "0.5.15",
+    "metals-languageclient": "0.5.16",
     "promisify-child-process": "4.1.1",
     "semver": "^7.3.7",
-    "vscode-languageclient": "7.0.0"
+    "vscode-languageclient": "8.0.1"
   },
   "extensionPack": [
     "scala-lang.scala"
