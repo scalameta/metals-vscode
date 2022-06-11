@@ -784,6 +784,13 @@ function launchMetals(
         }
       );
 
+      registerTextEditorCommand(`metals.scalafix-run`, (editor) => {
+        client.sendRequest(ExecuteCommandRequest.type, {
+          command: "scalafix-run",
+          arguments: [getTextDocumentPositionParams(editor)],
+        });
+      });
+
       registerTextEditorCommand(
         `metals.${ServerCommands.SuperMethodHierarchy}`,
         (editor) => {
