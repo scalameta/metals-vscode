@@ -228,6 +228,12 @@ async function getReleaseNotesMarkdown(
     <p>
       Showing Metals' release notes embedded in vscode is an experimental feature, in case of any issues report them at 
       <a href="https://github.com/scalameta/metals-vscode">https://github.com/scalameta/metals-vscode</a>.
+      <br/>
+      <br/>
+      Original blogpost can be viewed at 
+      <a href="https://scalameta.org/metals/blog/" target="_blank" itemprop="url">
+      <span itemprop="name">Metals blog</span>
+      </a>.
     </p>
     <hr>
     <p>
