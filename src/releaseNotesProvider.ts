@@ -37,26 +37,26 @@ async function showReleaseNotes(
 ): Promise<Either<string, void>> {
   const state = context.globalState;
 
-  if (isRemote()) {
-    const msg = "is remote environment";
-    return makeLeft(msg);
+  const remote = isRemote();
+  if (remote.kind === "left") {
+    return remote;
   }
 
   const version = getVersion();
-
   if (version.kind === "left") {
     return version;
   }
 
   const releaseNotesUrl = await getMarkdownLink(version.value);
-  if (!releaseNotesUrl) {
-    const msg = `can't obtain release notes' url for ${version.value}`;
-    return makeLeft(msg);
+  if (releaseNotesUrl.kind === "left") {
+    return releaseNotesUrl;
   }
 
   // actual logic starts here
-  await showPanel(version.value, releaseNotesUrl);
+  await showPanel(version.value, releaseNotesUrl.value);
   return makeRight(undefined);
+
+  // below are helper functions
 
   async function showPanel(version: string, releaseNotesUrl: string) {
     const panel = vscode.window.createWebviewPanel(
@@ -67,7 +67,7 @@ async function showReleaseNotes(
 
     const releaseNotes = await getReleaseNotesMarkdown(
       releaseNotesUrl,
-      context.extensionUri,
+      context,
       (uri) => panel.webview.asWebviewUri(uri)
     );
 
@@ -86,10 +86,11 @@ async function showReleaseNotes(
    * Don't show panel for remote environment because it installs extension on every time.
    * TODO: what about wsl?
    */
-  function isRemote(): boolean {
-    const isRemote = env.remoteName != null;
+  function isRemote(): Either<string, void> {
     // const isWsl = env.remoteName === "wsl";
-    return isRemote;
+    return env.remoteName == null
+      ? makeRight(undefined)
+      : makeLeft(`is a remote environment ${env.remoteName}`);
   }
 
   /**
@@ -129,32 +130,59 @@ async function showReleaseNotes(
  * Translate server version to link to the markdown file with release notes.
  * @param version clean version in major.minor.patch form
  * If version has release notes return link to them, if not return nothing.
+ * Sample link to which we're doing request https://api.github.com/repos/scalameta/metals/releases/tags/v0.11.6.
+ * From such JSON obtain body property which contains link to the blogpost, but what's more important,
+ * contains can be converted to name of markdown file with release notes.
  */
-async function getMarkdownLink(version: string): Promise<string | undefined> {
+async function getMarkdownLink(
+  version: string
+): Promise<Either<string, string>> {
   const releaseInfoUrl = `https://api.github.com/repos/scalameta/metals/releases/tags/v${version}`;
   const options = {
     headers: {
       "User-Agent": "metals",
     },
   };
-  const info = await fetchFrom(releaseInfoUrl, options);
-  const body = (JSON.parse(info)["body"] as string) ?? "";
-  // matches (2022)/(06)/(03)/(aluminium)
+  const stringifiedContent = await fetchFrom(releaseInfoUrl, options);
+  const body = JSON.parse(stringifiedContent)["body"] as string;
+
+  if (!body) {
+    const msg = `can't obtain content of ${releaseInfoUrl}`;
+    return makeLeft(msg);
+  }
+
+  // matches (2022)/(06)/(03)/(aluminium) via capture groups
   const matchResult = body.match(
     new RegExp("(\\d\\d\\d\\d)/(\\d\\d)/(\\d\\d)/(\\w+)")
   );
+  // whole expression + 4 capture groups = 5 entries
   if (matchResult?.length === 5) {
-    const [, ...tail] = matchResult;
+    // omit first entry
+    const [_, ...tail] = matchResult;
     const name = tail.join("-");
     const url = `https://raw.githubusercontent.com/scalameta/metals/main/website/blog/${name}.md`;
-    return url;
+    return makeRight(url);
+  } else {
+    const msg = `can't obtain markdown file name for ${version} from ${body}`;
+    return makeLeft(msg);
   }
 }
 
+/**
+ *
+ * @param releaseNotesUrl Url which server markdown with release notes
+ * @param context Extension context
+ * @param asWebviewUri
+ * Webviews cannot directly load resources from the workspace or local
+ * file system using file: uris. The asWebviewUri function takes a local
+ * file: uri and converts it into a uri that can be used inside of a webview
+ * to load the same resource.
+ * proxy to webview.asWebviewUri
+ */
 async function getReleaseNotesMarkdown(
   releaseNotesUrl: string,
-  extensionUri: vscode.Uri,
-  cssUriConverter: (_: vscode.Uri) => vscode.Uri
+  context: ExtensionContext,
+  asWebviewUri: (_: vscode.Uri) => vscode.Uri
 ): Promise<string> {
   const text = await fetchFrom(releaseNotesUrl);
   // every release notes starts with that
@@ -176,32 +204,15 @@ async function getReleaseNotesMarkdown(
   const md = new Remarkable({ html: true });
   const renderedNotes = md.render(releaseNotes);
 
+  // Uri with additional styles for webview
   const stylesPathMainPath = vscode.Uri.joinPath(
-    extensionUri,
+    context.extensionUri,
     "media",
     "styles.css"
   );
+  // need to transform Uri
+  const stylesUri = asWebviewUri(stylesPathMainPath);
 
-  // // Uri to load styles into webview
-  const stylesMainUri = cssUriConverter(stylesPathMainPath);
-
-  const notes = getHtmlContent(
-    renderedNotes,
-    author,
-    title,
-    authorUrl,
-    stylesMainUri
-  );
-  return notes;
-}
-
-function getHtmlContent(
-  renderedNotes: string,
-  author: string,
-  title: string,
-  authorURL: string,
-  stylesUri: vscode.Uri
-): string {
   return `
   <!DOCTYPE html>
   <html lang="en" style="height: 100%; width: 100%;">
@@ -219,7 +230,7 @@ function getHtmlContent(
     </p>
     <hr>
     <p>
-      <a href="${authorURL}" target="_blank" itemprop="url">
+      <a href="${authorUrl}" target="_blank" itemprop="url">
         <span itemprop="name">${author}</span>
       </a>
     </p>
