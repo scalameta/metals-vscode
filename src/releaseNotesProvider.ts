@@ -36,6 +36,7 @@ async function showReleaseNotes(
   currentVersion: string
 ): Promise<Either<string, void>> {
   const state = context.globalState;
+  state.update(versionKey, "0.11.5");
 
   const remote = isRemote();
   if (remote.kind === "left") {
