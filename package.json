@@ -9,7 +9,7 @@
     "ide",
     "scalameta"
   ],
-  "version": "1.17.2",
+  "version": "1.17.6",
   "publisher": "scalameta",
   "contributors": [
     {
@@ -876,10 +876,11 @@
   "scripts": {
     "vscode:prepublish": "yarn compile",
     "compile": "tsc -p ./",
+    "clean": "rimraf out/",
     "watch": "tsc -watch -p ./",
     "test": "ts-mocha src/test/unit/*.test.ts",
     "test-extension": "rimraf out/ && tsc -p ./ && node out/test/extension/runTest.js",
-    "build": "vsce package --yarn",
+    "build": "yarn clean && vsce package --yarn",
     "vscode:publish": "vsce publish --yarn",
     "ovsx:publish": "ovsx publish",
     "lint": "eslint . --ext .ts --fix && yarn format",
@@ -904,7 +905,6 @@
     "mocha": "^10.0.0",
     "ovsx": "0.5.1",
     "prettier": "2.6.2",
-    "remarkable": "^2.0.1",
     "rimraf": "^3.0.2",
     "ts-mocha": "^10.0.0",
     "typescript": "4.7.3",
@@ -915,6 +915,7 @@
     "metals-languageclient": "0.5.16",
     "promisify-child-process": "4.1.1",
     "semver": "^7.3.7",
+    "remarkable": "^2.0.1",
     "vscode-languageclient": "8.0.1"
   },
   "extensionPack": [

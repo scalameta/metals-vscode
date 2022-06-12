@@ -88,8 +88,7 @@ async function showReleaseNotes(
    * TODO: what about wsl?
    */
   function isRemote(): Either<string, void> {
-    // const isWsl = env.remoteName === "wsl";
-    return env.remoteName == null
+    return env.remoteName == null || env.remoteName !== "wsl"
       ? makeRight(undefined)
       : makeLeft(`is a remote environment ${env.remoteName}`);
   }
