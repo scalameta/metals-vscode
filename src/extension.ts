@@ -527,7 +527,7 @@ function launchMetals(
       )
   );
 
-  return client.start().then(
+  return client.onReady().then(
     () => {
       const doctorProvider = new DoctorProvider(client);
       let stacktrace: WebviewPanel | undefined;
