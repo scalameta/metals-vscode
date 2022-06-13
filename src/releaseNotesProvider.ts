@@ -23,7 +23,6 @@ export async function showReleaseNotes(
   outputChannel: vscode.OutputChannel
 ) {
   try {
-    // context.globalState.update(versionKey, "0.11.5");
     const result = await showReleaseNotesImpl(calledOn, context, serverVersion);
     if (result.kind === "left") {
       const msg = `Release notes was not shown: ${result.value}`;
