@@ -11,7 +11,6 @@ import {
   TextDocumentPositionParams,
 } from "vscode-languageclient";
 import { LanguageClient } from "vscode-languageclient/node";
-import http from "https";
 
 declare const sym: unique symbol;
 /**
@@ -103,19 +102,4 @@ export function getJavaHomeFromConfig(): string | undefined {
   } else {
     return javaHomePath;
   }
-}
-
-export async function fetchFrom(
-  url: string,
-  options?: http.RequestOptions
-): Promise<string> {
-  const promise = new Promise<string>((resolve, reject) => {
-    http.get(url, options || {}, (resp) => {
-      let body = "";
-      resp.on("data", (chunk) => (body += chunk));
-      resp.on("end", () => resolve(body));
-      resp.on("error", (e) => reject(e));
-    });
-  });
-  return await promise;
 }
