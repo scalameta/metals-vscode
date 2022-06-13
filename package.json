@@ -408,6 +408,11 @@
         "title": "Run doctor"
       },
       {
+        "command": "metals.show-release-notes",
+        "category": "Metals",
+        "title": "Show release notes"
+      },
+      {
         "command": "metals.show-tasty",
         "category": "Metals",
         "title": "Show decoded TASTy"
@@ -639,6 +644,10 @@
         },
         {
           "command": "metals.doctor-run",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.show-release-notes",
           "when": "metals:enabled"
         },
         {

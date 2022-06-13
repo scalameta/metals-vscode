@@ -6,19 +6,25 @@ import { fetchFrom } from "./util";
 import { Either, makeLeft, makeRight } from "./types";
 
 const versionKey = "metals-server-version";
+type CalledOn = "onExtensionStart" | "onUserDemand";
 
 /**
  * Show release notes if possible, swallow errors since its not a crucial feature.
  * Treats snapshot versions like 0.11.6+67-926ec9a3-SNAPSHOT as a 0.11.6.
+ *
+ * @param calledOn determines when this function was called.
+ * For 'onExtensionStart' case show release notes only once (first time).
+ * For 'onUserDemand' show extension notes no matter if it's another time.
  */
-export async function showReleaseNotesIfNeeded(
+export async function showReleaseNotes(
+  calledOn: CalledOn,
   context: ExtensionContext,
   serverVersion: string,
   outputChannel: vscode.OutputChannel
 ) {
   try {
     // context.globalState.update(versionKey, "0.11.5");
-    const result = await showReleaseNotes(context, serverVersion);
+    const result = await showReleaseNotesImpl(calledOn, context, serverVersion);
     if (result.kind === "left") {
       const msg = `Release notes was not shown: ${result.value}`;
       outputChannel.appendLine(msg);
@@ -31,19 +37,19 @@ export async function showReleaseNotesIfNeeded(
   }
 }
 
-async function showReleaseNotes(
+async function showReleaseNotesImpl(
+  calledOn: CalledOn,
   context: ExtensionContext,
   currentVersion: string
 ): Promise<Either<string, void>> {
   const state = context.globalState;
-  state.update(versionKey, "0.11.5");
 
   const remote = isRemote();
   if (remote.kind === "left") {
     return remote;
   }
 
-  const version = getVersion();
+  const version = getVersion(calledOn);
   if (version.kind === "left") {
     return version;
   }
@@ -96,7 +102,7 @@ async function showReleaseNotes(
   /**
    *  Return version for which release notes should be displayed
    */
-  function getVersion(): Either<string, string> {
+  function getVersion(calledOn: CalledOn): Either<string, string> {
     const previousVersion: string | undefined = state.get(versionKey);
     // strip version to
     // in theory semver.clean can return null, but we're almost sure that currentVersion is well defined
@@ -107,8 +113,9 @@ async function showReleaseNotes(
       return makeLeft(msg);
     }
 
-    if (!previousVersion) {
-      // if there was no previous version then show release notes for current cleaned version
+    // if there was no previous version or user explicitly wants to read release notes
+    // show release notes for current cleaned version
+    if (!previousVersion || calledOn === "onUserDemand") {
       return makeRight(currentVersion);
     }
 
