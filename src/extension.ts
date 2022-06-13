@@ -90,6 +90,7 @@ import * as workbenchCommands from "./workbenchCommands";
 import { getServerVersion } from "./getServerVersion";
 import { getCoursierMirrorPath } from "./mirrors";
 import { DoctorProvider } from "./doctor";
+import { showReleaseNotes } from "./releaseNotesProvider";
 
 const outputChannel = window.createOutputChannel("Metals");
 const openSettingsAction = "Open settings";
@@ -130,7 +131,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
       commands.executeCommand("setContext", "metals:enabled", true);
       try {
         const javaHome = await getJavaHome(getJavaHomeFromConfig());
-        return fetchAndLaunchMetals(context, javaHome, serverVersion);
+        await fetchAndLaunchMetals(context, javaHome, serverVersion);
+        await showReleaseNotes(
+          "onExtensionStart",
+          context,
+          serverVersion,
+          outputChannel
+        );
       } catch (err) {
         outputChannel.appendLine(`${err}`);
         showMissingJavaMessage();
@@ -262,7 +269,8 @@ function fetchAndLaunchMetals(
         context,
         classpath,
         serverProperties,
-        javaConfig
+        javaConfig,
+        serverVersion
       );
     },
     (reason) => {
@@ -320,7 +328,8 @@ function launchMetals(
   context: ExtensionContext,
   metalsClasspath: string,
   serverProperties: string[],
-  javaConfig: JavaConfig
+  javaConfig: JavaConfig,
+  serverVersion: string
 ) {
   // Make editing Scala docstrings slightly nicer.
   enableScaladocIndentation();
@@ -507,7 +516,16 @@ function launchMetals(
     )
   );
 
-  context.subscriptions.push(client.start());
+  registerCommand(
+    "metals.show-release-notes",
+    async () =>
+      await showReleaseNotes(
+        "onUserDemand",
+        context,
+        serverVersion,
+        outputChannel
+      )
+  );
 
   return client.onReady().then(
     () => {
