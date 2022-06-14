@@ -527,6 +527,8 @@ function launchMetals(
       )
   );
 
+  context.subscriptions.push(client.start());
+
   return client.onReady().then(
     () => {
       const doctorProvider = new DoctorProvider(client);
