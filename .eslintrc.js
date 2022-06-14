@@ -17,7 +17,10 @@ module.exports = {
           { ignoreRestArgs: true },
         ],
         "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars": ["error"],
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          { varsIgnorePattern: "_" },
+        ],
         "@typescript-eslint/no-non-null-assertion": "error",
         "guard-for-in": "error",
         "no-var": "error",
