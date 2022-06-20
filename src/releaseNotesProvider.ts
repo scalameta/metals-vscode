@@ -115,7 +115,7 @@ async function showReleaseNotesImpl(
     // if there was no previous version or user explicitly wants to read release notes
     // show release notes for current cleaned version
     if (!previousVersion || calledOn === "onUserDemand") {
-      return makeRight(currentVersion);
+      return makeRight(cleanVersion);
     }
 
     const compare = semver.compare(cleanVersion, previousVersion);
