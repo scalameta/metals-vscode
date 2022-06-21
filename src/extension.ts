@@ -872,6 +872,13 @@ function launchMetals(
         });
       });
 
+      registerCommand(`metals.reset-notifications`, (args = []) => {
+        client.sendRequest(ExecuteCommandRequest.type, {
+          command: "reset-notifications",
+          arguments: args,
+        });
+      });
+
       registerCommand(`metals.${ServerCommands.Goto}`, (args) => {
         client.sendRequest(ExecuteCommandRequest.type, {
           command: ServerCommands.Goto,
