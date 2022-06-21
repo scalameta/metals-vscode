@@ -926,7 +926,7 @@
     "@types/remarkable": "^2.0.3",
     "@types/semver": "^7.3.10",
     "@types/vscode": "1.59.0",
-    "@typescript-eslint/eslint-plugin": "^5.28.0",
+    "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
     "@vscode/test-electron": "^2.1.4",
     "eslint": "^8.18.0",
