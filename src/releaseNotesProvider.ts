@@ -43,14 +43,14 @@ async function showReleaseNotesImpl(
 ): Promise<Either<string, void>> {
   const state = context.globalState;
 
-  const remote = isRemote();
-  if (remote.kind === "left") {
-    return remote;
-  }
-
-  const version = getVersion(calledOn);
+  const version = getVersion();
   if (version.kind === "left") {
     return version;
+  }
+
+  const remote = isRemote();
+  if (calledOn === "onExtensionStart" && remote.kind === "left") {
+    return remote;
   }
 
   const releaseNotesUrl = await getMarkdownLink(version.value);
@@ -89,8 +89,9 @@ async function showReleaseNotesImpl(
   }
 
   /**
-   * Don't show panel for remote environment because it installs extension on every time.
-   * TODO: what about wsl?
+   * Show panel:
+   * - for wsl
+   * - when it's not a remote env
    */
   function isRemote(): Either<string, void> {
     return env.remoteName == null || env.remoteName === "wsl"
@@ -101,7 +102,7 @@ async function showReleaseNotesImpl(
   /**
    *  Return version for which release notes should be displayed
    */
-  function getVersion(calledOn: CalledOn): Either<string, string> {
+  function getVersion(): Either<string, string> {
     const previousVersion: string | undefined = state.get(versionKey);
     // strip version to
     // in theory semver.clean can return null, but we're almost sure that currentVersion is well defined
@@ -128,7 +129,9 @@ async function showReleaseNotesImpl(
 
     return isNewerVersion
       ? makeRight(cleanVersion)
-      : makeLeft("do not show release notes for an older version");
+      : makeLeft(
+          `do not show release notes for an older or same version, previous version: ${previousVersion}, current version: ${currentVersion}`
+        );
   }
 }
 
@@ -231,7 +234,7 @@ async function getReleaseNotesMarkdown(
     <h1>${title}</h1>
     <hr>
     <p>
-      Showing Metals' release notes embedded in vscode is an experimental feature, in case of any issues report them at 
+      Showing Metals' release notes embedded in VS Code is an experimental feature, in case of any issues report them at 
       <a href="https://github.com/scalameta/metals-vscode">https://github.com/scalameta/metals-vscode</a>.
       <br/>
       <br/>
