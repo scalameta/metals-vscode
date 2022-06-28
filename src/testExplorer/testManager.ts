@@ -9,6 +9,7 @@ import { addTestSuite } from "./addTestSuites";
 import { removeTestItem } from "./removeTestItem";
 import { runHandler } from "./testRunHandler";
 import { BuildTargetUpdate } from "./types";
+import { updateTestSuiteLocation } from "./updateTestSuiteLocation";
 
 export function createTestManager(
   client: LanguageClient,
@@ -87,6 +88,8 @@ class TestManager {
           removeTestItem(this.testController, targetName, event);
         } else if (event.kind === "addSuite") {
           addTestSuite(this.testController, targetName, targetUri, event);
+        } else if (event.kind === "updateSuiteLocation") {
+          updateTestSuiteLocation(this.testController, targetName, event);
         } else if (event.kind === "addTestCases") {
           addTestCases(this.testController, targetName, targetUri, event);
         }
