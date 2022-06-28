@@ -130,7 +130,7 @@ async function showReleaseNotesImpl(
     return isNewerVersion
       ? makeRight(cleanVersion)
       : makeLeft(
-          `do not show release notes for an older or same version, previous version: ${previousVersion}, current version: ${currentVersion}`
+          `not showing release notes since they've already been seen for your current version`
         );
   }
 }
