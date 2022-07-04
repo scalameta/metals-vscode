@@ -28,35 +28,35 @@ The following table shows the status of various features.
 ## Requirements
 
 **Java 8, 11, 17 provided by OpenJDK or Oracle**. Eclipse OpenJ9 is not
-supported, please make sure the `JAVA_HOME` environment variable
-points to a valid Java 8, 11 or 17 installation.
+supported, please make sure the `JAVA_HOME` environment variable points to a
+valid Java 8, 11 or 17 installation.
 
-**macOS, Linux or Windows**. Metals is developed on many operating systems and 
+**macOS, Linux or Windows**. Metals is developed on many operating systems and
 every PR is tested on Ubuntu, Windows and MacOS.
 
 **Scala 2.13, 2.12, 2.11 and Scala 3**. Metals supports these Scala versions:
 
-- **Scala 2.13**:
-  2.13.8, 2.13.7, 2.13.6, 2.13.5, 2.13.4, 2.13.3, 2.13.2, 2.13.1
+- **Scala 2.13**: 2.13.8, 2.13.7, 2.13.6, 2.13.5, 2.13.4, 2.13.3, 2.13.2, 2.13.1
 
-- **Scala 2.12**:
-  2.12.15, 2.12.14, 2.12.13, 2.12.12, 2.12.11, 2.12.10, 2.12.9, 2.12.8
+- **Scala 2.12**: 2.12.16, 2.12.15, 2.12.14, 2.12.13, 2.12.12, 2.12.11, 2.12.10,
+  2.12.9, 2.12.8
 
-- **Scala 2.11**:
-  2.11.12
+- **Scala 2.11**: 2.11.12
 
-- **Scala 3**:
-  3.1.3-RC4, 3.1.3-RC3, 3.1.3-RC2, 3.1.2, 3.1.1, 3.1.0, 3.0.2, 3.0.1, 3.0.0
+- **Scala 3**: 3.2.0-RC1, 3.1.3, 3.1.2, 3.1.1, 3.1.0, 3.0.2, 3.0.1, 3.0.0
 
-Note that 2.11.x support is deprecated and it will be removed in future releases.
-It's recommended to upgrade to Scala 2.12 or Scala 2.13
+Note that 2.11.x support is deprecated and it will be removed in future
+releases. It's recommended to upgrade to Scala 2.12 or Scala 2.13
 
 ## Installation
 
 Install the Metals extension from the
-[Marketplace](https://marketplace.visualstudio.com/items?itemName=scalameta.metals).
-
+[Marketplace](https://marketplace.visualstudio.com/items?itemName=scalameta.metals)
+by clicking on this badge
 [![Install Metals extension](https://img.shields.io/badge/metals-vscode-blue.png)](vscode:extension/scalameta.metals)
+or via the VS Code editor:
+
+![install stable version](https://imgur.com/Qew0fNH.png)
 
 > Make sure to disable the extensions
 > [Scala Language Server](https://marketplace.visualstudio.com/items?itemName=dragos.scala-lsp)
@@ -73,6 +73,15 @@ Next, open a directory containing your Scala code. The extension activates when
 the main directory contains `build.sbt` or `build.sc` file, a Scala file is
 opened, which includes `*.sbt`, `*.scala` and `*.sc` file, or a standard Scala
 directory structure `src/main/scala` is detected.
+
+It is also possible to opt in to install the pre-release version and try out the
+latest cutting edge features from Metals server. Apart from new features,
+pre-release versions also include many bugfixes. It's encouraged to use them
+with [SNAPSHOT](#SNAPSHOT) releases of Metals server. Using pre-release versions
+may result in less stable experience and it is not indented for beginners.
+Pre-release versions follow `major.minor.PATCH` versioning.
+
+![Install the pre-release extension](https://imgur.com/CzOTleE.png)
 
 ## Importing a build
 
@@ -348,7 +357,7 @@ guide them. In the end users should end up with something like this:
       "name": "Launch Test",
       // full name of the class to run
       "testClass": "com.example.Test"
-    }
+    },
     // Attach debugger when running via:
     // `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=localhost:5005`
     {
@@ -503,15 +512,6 @@ project's modules. From this panel it's possible to
 - navigate to test's definition.
 
 ![test-explorer](https://i.imgur.com/Z3VtS0O.gif)
-
-Work on Test Explorer is still on progress and feature has known limitations:
-
-- at the very beginning not all tests may be discovered. Triggering compilation
-  (modify and save file) should solve issue.
-- single test cases can't be discovered and run (coming soon)
-- detecting suites in cross projects is inconsistent, see
-  [this issue](https://github.com/scalameta/metals/issues/3503).
-- Features on JVM may work differently than on JS and Native platforms.
 
 If you encounter an error, create an
 [issue](https://github.com/scalameta/metals/issues).
