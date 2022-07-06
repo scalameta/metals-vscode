@@ -29,7 +29,11 @@ export interface BuildTargetUpdate {
   targetUri: TargetUri;
   events: TestExplorerEvent[];
 }
-export type TestExplorerEvent = RemoveTestSuite | AddTestSuite | AddTestCases;
+export type TestExplorerEvent =
+  | RemoveTestSuite
+  | AddTestSuite
+  | UpdateSuiteLocation
+  | AddTestCases;
 
 interface BaseTestExplorerEvent {
   fullyQualifiedClassName: FullyQualifiedClassName;
@@ -44,6 +48,11 @@ export interface AddTestSuite extends BaseTestExplorerEvent {
   symbol: string;
   location: Location;
   canResolveChildren: boolean;
+}
+
+export interface UpdateSuiteLocation extends BaseTestExplorerEvent {
+  kind: "updateSuiteLocation";
+  location: Location;
 }
 
 export interface AddTestCases extends BaseTestExplorerEvent {
