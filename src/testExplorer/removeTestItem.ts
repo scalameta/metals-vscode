@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { RemoveTestSuite, TargetName } from "./types";
-import { prefixesOf } from "./util";
+import { prefixesOf, TestItemPath } from "./util";
 
 export function removeTestItem(
   testController: vscode.TestController,
@@ -11,13 +11,12 @@ export function removeTestItem(
 
   function removeTestItemLoop(
     parent: vscode.TestItem,
-    parentsIds: string[]
+    testPrefix: TestItemPath | null
   ): void {
-    if (parentsIds.length > 0) {
-      const [currentId, ...restOfIds] = parentsIds;
-      const child = parent.children.get(currentId);
+    if (testPrefix) {
+      const child = parent.children.get(testPrefix.id);
       if (child) {
-        removeTestItemLoop(child, restOfIds);
+        removeTestItemLoop(child, testPrefix.next());
         if (child.children.size === 0) {
           parent.children.delete(child.id);
         }
@@ -29,8 +28,8 @@ export function removeTestItem(
 
   const buildTargetItem = testController.items.get(targetName);
   if (buildTargetItem) {
-    const testIds = prefixesOf(event.fullyQualifiedClassName);
-    removeTestItemLoop(buildTargetItem, testIds);
+    const testPath = prefixesOf(event.fullyQualifiedClassName);
+    removeTestItemLoop(buildTargetItem, testPath);
     if (buildTargetItem.children.size === 0) {
       testController.items.delete(buildTargetItem.id);
     }

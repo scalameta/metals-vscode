@@ -1,6 +1,11 @@
 import * as vscode from "vscode";
 import { AddTestSuite, TargetName, TargetUri } from "./types";
-import { prefixesOf, refineTestItem, toVscodeRange } from "./util";
+import {
+  prefixesOf,
+  refineTestItem,
+  TestItemPath,
+  toVscodeRange,
+} from "./util";
 
 /**
  * Add test suite to the Test Explorer.
@@ -23,19 +28,20 @@ export function addTestSuite(
     targetUri
   );
 
-  function addTestSuiteLoop(parent: vscode.TestItem, testPath: string[]) {
-    if (testPath.length > 0) {
-      const [currentId, ...restOfIds] = testPath;
-      const child = parent.children.get(currentId);
+  function addTestSuiteLoop(
+    parent: vscode.TestItem,
+    testPrefix: TestItemPath | null
+  ) {
+    if (testPrefix) {
+      const child = parent.children.get(testPrefix.id);
       if (child) {
-        addTestSuiteLoop(child, restOfIds);
+        addTestSuiteLoop(child, testPrefix.next());
       } else {
-        const parts = currentId.split(".");
-        const label = parts[parts.length - 1];
-        const packageNode = testController.createTestItem(currentId, label);
+        const { id, label } = testPrefix;
+        const packageNode = testController.createTestItem(id, label);
         refineTestItem("package", packageNode, targetUri, targetName, parent);
         parent.children.add(packageNode);
-        addTestSuiteLoop(packageNode, restOfIds);
+        addTestSuiteLoop(packageNode, testPrefix.next());
       }
     } else {
       const { className, location, fullyQualifiedClassName } = event;
