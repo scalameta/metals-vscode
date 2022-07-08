@@ -1,11 +1,6 @@
 import { ServerCommands } from "metals-languageclient";
 import * as vscode from "vscode";
-import {
-  CancellationToken,
-  commands,
-  TestController,
-  TestRunRequest,
-} from "vscode";
+import { CancellationToken, TestController, TestRunRequest } from "vscode";
 import { debugServerFromUri, DebugSession } from "../scalaDebugger";
 import { analyzeTestRun } from "./analyzeTestRun";
 import {
@@ -114,13 +109,15 @@ export async function runHandler(
     }
   });
 
-  if (!token.isCancellationRequested && queue.length > 0) {
-    const targetUri = queue[0]._metalsTargetUri;
-    await runDebugSession(run, noDebug, targetUri, testSuiteSelection, queue);
+  try {
+    if (!token.isCancellationRequested && queue.length > 0) {
+      const targetUri = queue[0]._metalsTargetUri;
+      await runDebugSession(run, noDebug, targetUri, testSuiteSelection, queue);
+    }
+  } finally {
+    run.end();
+    afterFinished();
   }
-
-  run.end();
-  afterFinished();
 }
 
 /**
@@ -133,21 +130,16 @@ async function runDebugSession(
   testSuiteSelection: ScalaTestSuiteSelection[],
   tests: RunnableMetalsTestItem[]
 ): Promise<void> {
-  try {
-    await commands.executeCommand("workbench.action.files.save");
-    const session = await createDebugSession(targetUri, testSuiteSelection);
-    if (!session) {
-      return;
-    }
-    const wasStarted = await startDebugging(session, noDebug);
-    if (!wasStarted) {
-      vscode.window.showErrorMessage("Debug session not started");
-      return;
-    }
-    await analyzeResults(run, tests);
-  } catch (error) {
-    console.error(error);
+  const session = await createDebugSession(targetUri, testSuiteSelection);
+  if (!session) {
+    return;
   }
+  const wasStarted = await startDebugging(session, noDebug);
+  if (!wasStarted) {
+    vscode.window.showErrorMessage("Debug session not started");
+    return;
+  }
+  await analyzeResults(run, tests);
 }
 
 /**
