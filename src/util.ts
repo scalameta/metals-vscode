@@ -109,8 +109,9 @@ export async function fetchFrom(
   url: string,
   options?: http.RequestOptions
 ): Promise<string> {
+  const requestOptions: http.RequestOptions = { ...options, timeout: 5000 };
   const promise = new Promise<string>((resolve, reject) => {
-    http.get(url, options || {}, (resp) => {
+    http.get(url, requestOptions, (resp) => {
       let body = "";
       resp.on("data", (chunk) => (body += chunk));
       resp.on("end", () => resolve(body));
