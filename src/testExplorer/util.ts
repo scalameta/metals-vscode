@@ -95,8 +95,10 @@ export function prefixesOf(
   fullyQualifiedName: FullyQualifiedClassName,
   includeSelf = false
 ): TestItemPath | null {
-  const splitted = fullyQualifiedName.split(".");
-  const parts = includeSelf ? splitted : splitted.slice(0, splitted.length - 1);
+  const partitioned = fullyQualifiedName.split(".");
+  const parts = includeSelf
+    ? partitioned
+    : partitioned.slice(0, partitioned.length - 1);
   const prefixes: string[] = [];
   for (const part of parts) {
     const lastOpt = prefixes[prefixes.length - 1];
