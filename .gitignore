@@ -4,3 +4,7 @@ node_modules
 *.vsix
 yarn-error.log
 .metals/
+
+# sourcegraph
+index.scip
+dump.lsif
