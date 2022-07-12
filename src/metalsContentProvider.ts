@@ -45,7 +45,7 @@ export class MetalsFileProvider implements TextDocumentContentProvider {
   }
 }
 
-type DecodeExtension =
+export type DecodeExtension =
   | "cfr"
   | "javap"
   | "javap-verbose"
