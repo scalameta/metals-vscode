@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { Range } from "vscode-languageclient/node";
 import {
+  FullyQualifiedClassName,
   MetalsTestItem,
   MetalsTestItemKind,
   PackageMetalsTestItem,
@@ -23,7 +24,7 @@ export function refineTestItem(kind: "suite",    test: vscode.TestItem, targetUr
 export function refineTestItem(kind: "testcase", test: vscode.TestItem, targetUri: TargetUri, targetName: TargetName, parent: vscode.TestItem): TestCaseMetalsTestItem;
 /**
  * Refine vscode.TestItem by extending it with additional metadata needed for test runs.
- * In order to handle all 4 cases with minimal boilerplate and casting reduced to the minimum this function is overloaded
+ * In order to handle all 4 cases with minimal boilerplate and casting reduced to the minimum as this function is overloaded
  * for all 4 cases. Thanks to the overloading we can achieve mediocre type safety:
  * - project kind doesn't need parent
  * - return types are narrowed down
@@ -64,19 +65,62 @@ export function gatherTestItems(
 }
 
 /**
- * Return prefixes of fully qualified name.
+ * @member id - fully qualified name of testItem
+ * @member label - last part of fully qualified name
+ * @member next - returns next prefix, if it exists.
+ * If fully qualified named was traversed (last part was reached) returns null
+ *
+ * next calls for 'a.b.c.d.TestSuite' will yield
+ * - {id: a, label: a}
+ * - {id: a.b, label: b}
+ * - {id: a.b.c, label: c}
+ * - {id: a.b.c.d, label: d}
+ * - {id: a.b.c.d.TestSuite, label: TestSuite} (if prefixesOf was called with includeSelf = true)
+ * - null
+ */
+export interface TestItemPath {
+  readonly id: string;
+  readonly label: string;
+  readonly next: () => TestItemPath | null;
+}
+
+/**
+ * Generate prefixes of fully qualified name for test items
  * includeSelf = false :
  * 'a.b.c.d.TestSuite' -> ['a', 'a.b', 'a.b.c', 'a.b.c.d']
  * includeSelf = true :
  * 'a.b.c.d.TestSuite' -> ['a', 'a.b', 'a.b.c', 'a.b.c.d', 'a.b.c.d.TestSuite']
  */
-export function prefixesOf(str: string, includeSelf = false): string[] {
-  const parts = str.split(".");
-  const prefixes = parts
-    .map((_, idx) => {
-      const joined = parts.slice(0, idx).join(".");
-      return joined;
-    })
-    .filter((p) => p.length > 0);
-  return includeSelf ? [...prefixes, str] : prefixes;
+export function prefixesOf(
+  fullyQualifiedName: FullyQualifiedClassName,
+  includeSelf = false
+): TestItemPath | null {
+  const partitioned = fullyQualifiedName.split(".");
+  const parts = includeSelf
+    ? partitioned
+    : partitioned.slice(0, partitioned.length - 1);
+  const prefixes: string[] = [];
+  for (const part of parts) {
+    const lastOpt = prefixes[prefixes.length - 1];
+    const prefix = lastOpt ? `${lastOpt}.${part}` : part;
+    prefixes.push(prefix);
+  }
+
+  function makeTestPrefix(
+    idx: number,
+    parts: string[],
+    prefixes: string[]
+  ): TestItemPath | null {
+    if (prefixes[idx] != null) {
+      return {
+        id: prefixes[idx],
+        label: parts[idx],
+        next: () => makeTestPrefix(idx + 1, parts, prefixes),
+      };
+    } else {
+      return null;
+    }
+  }
+
+  return makeTestPrefix(0, parts, prefixes);
 }

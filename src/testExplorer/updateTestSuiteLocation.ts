@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { TargetName, UpdateSuiteLocation } from "./types";
-import { prefixesOf, toVscodeRange } from "./util";
+import { prefixesOf, TestItemPath, toVscodeRange } from "./util";
 
 /**
  *
@@ -16,13 +16,12 @@ export function updateTestSuiteLocation(
 ): void {
   function updateTestSuiteLocationLoop(
     parent: vscode.TestItem,
-    testPath: string[]
+    testPrefix: TestItemPath | null
   ): void {
-    if (testPath.length > 0) {
-      const [currentId, ...restOfIds] = testPath;
-      const child = parent.children.get(currentId);
+    if (testPrefix) {
+      const child = parent.children.get(testPrefix.id);
       if (child) {
-        updateTestSuiteLocationLoop(child, restOfIds);
+        updateTestSuiteLocationLoop(child, testPrefix.next());
       } else {
         console.error(
           "Cannot find test item for " + event.fullyQualifiedClassName
