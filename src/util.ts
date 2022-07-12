@@ -111,12 +111,17 @@ export async function fetchFrom(
 ): Promise<string> {
   const requestOptions: http.RequestOptions = { timeout: 5000, ...options };
   const promise = new Promise<string>((resolve, reject) => {
-    http.get(url, requestOptions, (resp) => {
-      let body = "";
-      resp.on("data", (chunk) => (body += chunk));
-      resp.on("end", () => resolve(body));
-      resp.on("error", (e) => reject(e));
-    });
+    http
+      .get(url, requestOptions, (resp) => {
+        let body = "";
+        resp.on("data", (chunk) => (body += chunk));
+        resp.on("end", () => resolve(body));
+        resp.on("error", (e) => reject(e));
+      })
+      .on("error", (e) => reject(e))
+      .on("timeout", () =>
+        reject(`Timeout occured during get request at ${url}`)
+      );
   });
   return await promise;
 }
