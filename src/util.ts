@@ -109,7 +109,7 @@ export async function fetchFrom(
   url: string,
   options?: http.RequestOptions
 ): Promise<string> {
-  const requestOptions: http.RequestOptions = { ...options, timeout: 5000 };
+  const requestOptions: http.RequestOptions = { timeout: 5000, ...options };
   const promise = new Promise<string>((resolve, reject) => {
     http.get(url, requestOptions, (resp) => {
       let body = "";
