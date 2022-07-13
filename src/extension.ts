@@ -46,7 +46,6 @@ import {
   JavaConfig,
   getServerOptions,
   downloadProgress,
-  installJava,
   ClientCommands,
   MetalsTreeViews,
   MetalsTreeViewReveal,
@@ -91,13 +90,14 @@ import { getServerVersion } from "./getServerVersion";
 import { getCoursierMirrorPath } from "./mirrors";
 import { DoctorProvider } from "./doctor";
 import { showReleaseNotes } from "./releaseNotesProvider";
+import {
+  showInstallJavaAction,
+  showMissingJavaAction,
+} from "./installJavaAction";
+import { openSettingsAction } from "./consts";
 
 const outputChannel = window.createOutputChannel("Metals");
-const openSettingsAction = "Open settings";
-
 const downloadJava = "Download Java";
-const installJava11Action = "Install Java (JDK 11)";
-const installJava17Action = "Install Java (JDK 17)";
 
 let treeViews: MetalsTreeViews | undefined;
 let currentClient: LanguageClient | undefined;
@@ -134,7 +134,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
         await fetchAndLaunchMetals(context, javaHome, serverVersion);
       } catch (err) {
         outputChannel.appendLine(`${err}`);
-        showMissingJavaMessage();
+        showMissingJavaAction(outputChannel);
       }
     }
   );
@@ -149,81 +149,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
 export function deactivate(): Thenable<void> | undefined {
   return currentClient?.stop();
-}
-
-function showMissingJavaMessage(): Thenable<void> {
-  const message =
-    "Unable to find a Java 11 or Java 17 installation on this computer. " +
-    "To fix this problem, update the 'metals.javaHome' setting to point to a Java 11 or Java 17 home directory " +
-    "or select a version to install automatically";
-
-  outputChannel.appendLine(message);
-
-  return window
-    .showErrorMessage(
-      message,
-      openSettingsAction,
-      installJava11Action,
-      installJava17Action
-    )
-    .then(chooseJavaToInstall);
-}
-
-function showInstallJavaMessage(): Thenable<void> {
-  const message =
-    "Which version would you like to install?" +
-    "Currently supported are JDK 11 or JDK 17: ";
-
-  outputChannel.appendLine(message);
-
-  return window
-    .showInformationMessage(
-      message,
-      {
-        modal: true,
-      },
-      openSettingsAction,
-      installJava11Action,
-      installJava17Action
-    )
-    .then(chooseJavaToInstall);
-}
-
-function chooseJavaToInstall(choice: string | undefined) {
-  switch (choice) {
-    case openSettingsAction: {
-      commands.executeCommand(workbenchCommands.openSettings);
-      break;
-    }
-    case installJava11Action: {
-      window.withProgress(
-        {
-          location: ProgressLocation.Notification,
-          title: `Installing Java (JDK 11), please wait...`,
-          cancellable: true,
-        },
-        () =>
-          installJava({ javaVersion: "adopt@1.11", outputChannel }).then(
-            updateJavaConfig
-          )
-      );
-      break;
-    }
-    case installJava17Action: {
-      window.withProgress(
-        {
-          location: ProgressLocation.Notification,
-          title: `Installing Java (JDK 17), please wait...`,
-          cancellable: true,
-        },
-        () =>
-          installJava({ javaVersion: "openjdk@1.17", outputChannel }).then(
-            updateJavaConfig
-          )
-      );
-      break;
-    }
-  }
 }
 
 function fetchAndLaunchMetals(
@@ -307,21 +232,11 @@ function fetchAndLaunchMetals(
           if (choice === openSettingsAction) {
             commands.executeCommand(workbenchCommands.openSettings);
           } else if (choice === downloadJava) {
-            showInstallJavaMessage();
+            showInstallJavaAction(outputChannel);
           }
         });
     }
   );
-}
-
-function updateJavaConfig(javaHome: string) {
-  const config = workspace.getConfiguration("metals");
-  const configProperty = config.inspect<Record<string, string>>("javaHome");
-  if (configProperty?.workspaceValue != undefined) {
-    config.update("javaHome", javaHome, false);
-  } else {
-    config.update("javaHome", javaHome, true);
-  }
 }
 
 function launchMetals(
