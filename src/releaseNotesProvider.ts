@@ -21,7 +21,7 @@ export async function showReleaseNotes(
   context: ExtensionContext,
   serverVersion: string,
   outputChannel: vscode.OutputChannel
-) {
+): Promise<void> {
   try {
     const result = await showReleaseNotesImpl(calledOn, context, serverVersion);
     if (result.kind === "left") {

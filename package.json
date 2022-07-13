@@ -9,7 +9,7 @@
     "ide",
     "scalameta"
   ],
-  "version": "1.18.2",
+  "version": "1.18.5",
   "publisher": "scalameta",
   "contributors": [
     {
@@ -931,14 +931,15 @@
     "format-check": "prettier --check '**/*.{ts,js,json,yml}'"
   },
   "devDependencies": {
+    "@sourcegraph/scip-typescript": "^0.2.7",
     "@types/glob": "^7.2.0",
     "@types/mocha": "^9.1.1",
     "@types/node": "18.0.3",
     "@types/remarkable": "^2.0.3",
     "@types/semver": "^7.3.10",
     "@types/vscode": "1.59.0",
-    "@typescript-eslint/eslint-plugin": "^5.30.5",
-    "@typescript-eslint/parser": "^5.30.5",
+    "@typescript-eslint/eslint-plugin": "^5.30.6",
+    "@typescript-eslint/parser": "^5.30.6",
     "@vscode/test-electron": "^2.1.5",
     "eslint": "^8.19.0",
     "eslint-config-prettier": "^8.5.0",

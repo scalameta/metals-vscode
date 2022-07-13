@@ -1,6 +1,11 @@
 import * as vscode from "vscode";
 import { AddTestCases, TargetName, TargetUri } from "./types";
-import { prefixesOf, refineTestItem, toVscodeRange } from "./util";
+import {
+  prefixesOf,
+  refineTestItem,
+  TestItemPath,
+  toVscodeRange,
+} from "./util";
 
 /**
  * Add test cases to the given test suite.
@@ -16,13 +21,14 @@ export function addTestCases(
   targetUri: TargetUri,
   event: AddTestCases
 ): void {
-  //
-  function addTestCasesLoop(parent: vscode.TestItem, testPath: string[]): void {
-    if (testPath.length > 0) {
-      const [currentId, ...restOfIds] = testPath;
-      const child = parent.children.get(currentId);
+  function addTestCasesLoop(
+    parent: vscode.TestItem,
+    testPrefix: TestItemPath | null
+  ): void {
+    if (testPrefix) {
+      const child = parent.children.get(testPrefix.id);
       if (child) {
-        addTestCasesLoop(child, restOfIds);
+        addTestCasesLoop(child, testPrefix.next());
       } else {
         console.error(
           "Cannot find test item for " + event.fullyQualifiedClassName

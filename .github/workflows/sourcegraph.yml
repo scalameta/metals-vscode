@@ -1,0 +1,27 @@
+name: Sourcegraph
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  lsif:
+    runs-on: ubuntu-latest
+    name: "Upload SCIP"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+      - run: yarn install
+      - name: index
+        run: yarn run scip-typescript index
+      - name: src lsif upload
+        run: |
+          mkdir -p bin
+          curl -L https://sourcegraph.com/.api/src-cli/src_linux_amd64 -o bin/src
+          chmod +x bin/src
+          ./bin/src lsif upload -trace=3 -ignore-upload-failure -github-token $GITHUB_TOKEN
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

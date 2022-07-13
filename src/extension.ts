@@ -121,7 +121,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   detectLaunchConfigurationChanges();
   configureSettingsDefaults();
 
-  return window.withProgress(
+  await window.withProgress(
     {
       location: ProgressLocation.Window,
       title: `Starting Metals server...`,
@@ -132,18 +132,18 @@ export async function activate(context: ExtensionContext): Promise<void> {
       try {
         const javaHome = await getJavaHome(getJavaHomeFromConfig());
         await fetchAndLaunchMetals(context, javaHome, serverVersion);
-        await showReleaseNotes(
-          "onExtensionStart",
-          context,
-          serverVersion,
-          outputChannel
-        );
-        outputChannel.appendLine("Metals extension started successfully");
       } catch (err) {
         outputChannel.appendLine(`${err}`);
         showMissingJavaAction(outputChannel);
       }
     }
+  );
+
+  await showReleaseNotes(
+    "onExtensionStart",
+    context,
+    serverVersion,
+    outputChannel
   );
 }
 
