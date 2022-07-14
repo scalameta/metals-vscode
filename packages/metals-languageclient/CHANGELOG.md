@@ -1,5 +1,17 @@
 ## metals-languageclient changelog
 
+### v0.5.17 (2022/07/14 07:15 +00:00)
+- [3556451](https://github.com/scalameta/metals-languageclient/commit/35564517c4fb25b860d898099337574037af0f10) chore(deps-dev): bump @types/node from 18.0.3 to 18.0.4 (@dependabot[bot])
+- [bd9687e](https://github.com/scalameta/metals-languageclient/commit/bd9687eb772d7575ffc47eedf19eb7fa6e727432) chore(deps): bump vscode-languageserver-protocol from 3.17.1 to 3.17.2 (@dependabot[bot])
+- [44fa976](https://github.com/scalameta/metals-languageclient/commit/44fa9761db8ba6d1af6383ab665e9ab5a173f5e9) chore(deps-dev): bump @types/node from 18.0.2 to 18.0.3 (@dependabot[bot])
+- [f3bd236](https://github.com/scalameta/metals-languageclient/commit/f3bd23648fa4682e2ec22f03dee59d8039196d39) chore(deps-dev): bump @types/node from 18.0.1 to 18.0.2 (@dependabot[bot])
+- [1fcaf40](https://github.com/scalameta/metals-languageclient/commit/1fcaf40e43a58f30e0b3425d37bf90e8370238f6) chore(deps-dev): bump @types/node from 18.0.0 to 18.0.1 (@dependabot[bot])
+- [3b663b3](https://github.com/scalameta/metals-languageclient/commit/3b663b3830d32e2936979bb56afe6d1e8c94198f) chore(deps-dev): bump @types/semver from 7.3.9 to 7.3.10 (@dependabot[bot])
+- [9140c95](https://github.com/scalameta/metals-languageclient/commit/9140c956ef34aa25d6f571e162b72289d713cb73) chore(deps-dev): bump prettier from 2.7.0 to 2.7.1 (@dependabot[bot])
+- [10f1e61](https://github.com/scalameta/metals-languageclient/commit/10f1e619ab22cd722ae55b8b1155912954d6e220) chore(deps-dev): bump @types/node from 17.0.27 to 18.0.0 (@dependabot[bot])
+- [4240bc9](https://github.com/scalameta/metals-languageclient/commit/4240bc98af84f941f2454a48f191fa98ec8d4ff5) chore(deps-dev): bump prettier from 2.6.2 to 2.7.0 (@dependabot[bot])
+- [4176c66](https://github.com/scalameta/metals-languageclient/commit/4176c66e550c297de583b1a35065f48cb2afe108) Release v0.5.16
+
 ### v0.5.16 (2022/06/06 08:59 +00:00)
 - [2ab6cd5](https://github.com/scalameta/metals-languageclient/commit/2ab6cd5012dd9f232516154065fd5e1ac932a04c) Update node version of release workflow (@tanishiking)
 - [de7352f](https://github.com/scalameta/metals-languageclient/commit/de7352fee9be285cdaf1e8f87e4745d83dccd3d1) refactor: Remove unused abstract members from LanguageClient (@tanishiking)
