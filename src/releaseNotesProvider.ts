@@ -1,9 +1,13 @@
 import { env, ExtensionContext } from "vscode";
+
+import * as E from "fp-ts/Either";
+import * as TE from "fp-ts/TaskEither";
+import { pipe } from "fp-ts/function";
+
 import * as vscode from "vscode";
 import * as semver from "semver";
 import { Remarkable } from "remarkable";
 import { fetchFrom } from "./util";
-import { Either, makeLeft, makeRight } from "./types";
 
 const versionKey = "metals-server-version";
 type CalledOn = "onExtensionStart" | "onUserDemand";
@@ -23,11 +27,19 @@ export async function showReleaseNotes(
   outputChannel: vscode.OutputChannel
 ): Promise<void> {
   try {
-    const result = await showReleaseNotesImpl(calledOn, context, serverVersion);
-    if (result.kind === "left") {
-      const msg = `Release notes was not shown: ${result.value}`;
-      outputChannel.appendLine(msg);
-    }
+    const result = await showReleaseNotesImpl(
+      calledOn,
+      context,
+      serverVersion
+    )();
+    E.match(
+      (left: string) => {
+        const msg = `Release notes was not shown: ${left}`;
+        outputChannel.appendLine(msg);
+      },
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
+      (_right) => {}
+    )(result);
   } catch (error) {
     outputChannel.appendLine(
       `Error, couldn't show release notes for Metals ${serverVersion}`
@@ -36,35 +48,34 @@ export async function showReleaseNotes(
   }
 }
 
-async function showReleaseNotesImpl(
+function showReleaseNotesImpl(
   calledOn: CalledOn,
   context: ExtensionContext,
   currentVersion: string
-): Promise<Either<string, void>> {
+): TE.TaskEither<string, void> {
   const state = context.globalState;
 
-  const version = getVersion();
-  if (version.kind === "left") {
-    return version;
-  }
+  return pipe(
+    TE.fromEither(validateEnvironment(calledOn)),
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    TE.chain((_) => TE.fromEither(getVersion())),
+    TE.chain((v: string) => {
+      return pipe(
+        getMarkdownLink(v),
+        TE.chain((link: string) =>
+          TE.tryCatch(
+            () => showPanel(v, link),
+            (reason) => String(reason)
+          )
+        )
+      );
+    })
+  );
 
-  const remote = isRemote();
-  if (calledOn === "onExtensionStart" && remote.kind === "left") {
-    return remote;
-  }
-
-  const releaseNotesUrl = await getMarkdownLink(version.value);
-  if (releaseNotesUrl.kind === "left") {
-    return releaseNotesUrl;
-  }
-
-  // actual logic starts here
-  await showPanel(version.value, releaseNotesUrl.value);
-  return makeRight(undefined);
-
-  // below are helper functions
-
-  async function showPanel(version: string, releaseNotesUrl: string) {
+  async function showPanel(
+    version: string,
+    releaseNotesUrl: string
+  ): Promise<void> {
     const panel = vscode.window.createWebviewPanel(
       `scalameta.metals.whatsNew`,
       `Metals ${version} release notes`,
@@ -93,16 +104,17 @@ async function showReleaseNotesImpl(
    * - for wsl
    * - when it's not a remote env
    */
-  function isRemote(): Either<string, void> {
-    return env.remoteName == null || env.remoteName === "wsl"
-      ? makeRight(undefined)
-      : makeLeft(`is a remote environment ${env.remoteName}`);
+  function validateEnvironment(calledOn: CalledOn): E.Either<string, void> {
+    const isRemote = env.remoteName == null || env.remoteName === "wsl";
+    return calledOn === "onExtensionStart" && !isRemote
+      ? E.left(`is a remote environment ${env.remoteName}`)
+      : E.right(undefined);
   }
 
   /**
    *  Return version for which release notes should be displayed
    */
-  function getVersion(): Either<string, string> {
+  function getVersion(): E.Either<string, string> {
     const previousVersion: string | undefined = state.get(versionKey);
     // strip version to
     // in theory semver.clean can return null, but we're almost sure that currentVersion is well defined
@@ -110,13 +122,13 @@ async function showReleaseNotesImpl(
 
     if (cleanVersion == null) {
       const msg = `can't transform ${currentVersion} to 'major.minor.patch'`;
-      return makeLeft(msg);
+      return E.left(msg);
     }
 
     // if there was no previous version or user explicitly wants to read release notes
     // show release notes for current cleaned version
     if (!previousVersion || calledOn === "onUserDemand") {
-      return makeRight(cleanVersion);
+      return E.right(cleanVersion);
     }
 
     const compare = semver.compare(cleanVersion, previousVersion);
@@ -128,8 +140,8 @@ async function showReleaseNotesImpl(
       (diff === "major" || diff === "minor" || diff === "patch");
 
     return isNewerVersion
-      ? makeRight(cleanVersion)
-      : makeLeft(
+      ? E.right(cleanVersion)
+      : E.left(
           `not showing release notes since they've already been seen for your current version`
         );
   }
@@ -143,38 +155,50 @@ async function showReleaseNotesImpl(
  * From such JSON obtain body property which contains link to the blogpost, but what's more important,
  * contains can be converted to name of markdown file with release notes.
  */
-async function getMarkdownLink(
-  version: string
-): Promise<Either<string, string>> {
+function getMarkdownLink(version: string): TE.TaskEither<string, string> {
   const releaseInfoUrl = `https://api.github.com/repos/scalameta/metals/releases/tags/v${version}`;
   const options = {
     headers: {
       "User-Agent": "metals",
     },
   };
-  const stringifiedContent = await fetchFrom(releaseInfoUrl, options);
-  const body = JSON.parse(stringifiedContent)["body"] as string;
 
-  if (!body) {
-    const msg = `can't obtain content of ${releaseInfoUrl}`;
-    return makeLeft(msg);
-  }
-
-  // matches (2022)/(06)/(03)/(aluminium) via capture groups
-  const matchResult = body.match(
-    new RegExp("(\\d\\d\\d\\d)/(\\d\\d)/(\\d\\d)/(\\w+)")
+  return pipe(
+    TE.tryCatch(
+      () => fetchFrom(releaseInfoUrl, options),
+      (reason) => String(reason)
+    ),
+    TE.chain((content: string) =>
+      TE.fromEither(
+        E.tryCatch(
+          () => JSON.parse(content)["body"] as string,
+          (reason) => String(reason)
+        )
+      )
+    ),
+    TE.chain((body: string) =>
+      !body
+        ? TE.left(`can't obtain content of ${releaseInfoUrl}`)
+        : TE.right<string, string>(body)
+    ),
+    TE.chain((body: string) => {
+      // matches (2022)/(06)/(03)/(aluminium) via capture groups
+      const matchResult = body.match(
+        new RegExp("(\\d\\d\\d\\d)/(\\d\\d)/(\\d\\d)/(\\w+)")
+      );
+      // whole expression + 4 capture groups = 5 entries
+      if (matchResult?.length === 5) {
+        // omit first entry
+        const [_, ...tail] = matchResult;
+        const name = tail.join("-");
+        const url = `https://raw.githubusercontent.com/scalameta/metals/main/website/blog/${name}.md`;
+        return TE.right(url);
+      } else {
+        const msg = `can't obtain markdown file name for ${version} from ${body}`;
+        return TE.left(msg);
+      }
+    })
   );
-  // whole expression + 4 capture groups = 5 entries
-  if (matchResult?.length === 5) {
-    // omit first entry
-    const [_, ...tail] = matchResult;
-    const name = tail.join("-");
-    const url = `https://raw.githubusercontent.com/scalameta/metals/main/website/blog/${name}.md`;
-    return makeRight(url);
-  } else {
-    const msg = `can't obtain markdown file name for ${version} from ${body}`;
-    return makeLeft(msg);
-  }
 }
 
 /**
