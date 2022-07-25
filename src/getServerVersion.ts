@@ -1,34 +1,39 @@
 import {
   commands,
   ConfigurationTarget,
+  ExtensionContext,
   window,
   WorkspaceConfiguration,
 } from "vscode";
 import * as metalsLanguageClient from "metals-languageclient";
 import * as workbenchCommands from "./workbenchCommands";
 import http from "https";
-import path from "path";
-import fs from "fs";
-import { getConfigValue, metalsDir } from "./util";
+import { getConfigValue } from "./util";
 
 const serverVersionSection = "serverVersion";
 const suggestLatestUpgrade = "suggestLatestUpgrade";
-const versionDatesFileName = "versions-meta.json";
 
-export function getServerVersion(config: WorkspaceConfiguration): string {
+const currentVersionKey = "currentVersion";
+const lastUpdatedAtKey = "lastUpdatedAt";
+
+export function getServerVersion(
+  config: WorkspaceConfiguration,
+  context: ExtensionContext
+): string {
   /* eslint-disable @typescript-eslint/no-non-null-assertion */
   const serverVersionConfig = config.get<string>(serverVersionSection);
   const defaultServerVersion =
     config.inspect<string>(serverVersionSection)!.defaultValue!;
   const serverVersion = serverVersionConfig?.trim() || defaultServerVersion;
 
-  validateCurrentVersion(serverVersion, config);
+  validateCurrentVersion(serverVersion, config, context);
   return serverVersion;
 }
 
 async function validateCurrentVersion(
   serverVersion: string,
-  config: WorkspaceConfiguration
+  config: WorkspaceConfiguration,
+  context: ExtensionContext
 ): Promise<void> {
   const suggestUpgradeSetting = getConfigValue<boolean>(
     config,
@@ -37,7 +42,11 @@ async function validateCurrentVersion(
 
   const checkForUpdate = async () => {
     if (suggestUpgradeSetting?.value) {
-      return needCheckForUpdates(serverVersion, suggestUpgradeSetting.target);
+      return needCheckForUpdates(
+        serverVersion,
+        suggestUpgradeSetting.target,
+        context
+      );
     } else {
       return false;
     }
@@ -59,10 +68,14 @@ async function validateCurrentVersion(
               nextVersion,
               suggestUpgradeSetting.target
             );
-            saveVersionDate(nextVersion, suggestUpgradeSetting.target);
+            saveVersionDate(nextVersion, suggestUpgradeSetting.target, context);
           } else if (result == ignoreChoice) {
             // extend the current version expiration date
-            saveVersionDate(serverVersion, suggestUpgradeSetting.target);
+            saveVersionDate(
+              serverVersion,
+              suggestUpgradeSetting.target,
+              context
+            );
           }
         });
     }
@@ -88,44 +101,44 @@ async function fetchLatest(): Promise<string> {
   return sorted[sorted.length - 1];
 }
 
-/* The logic is the following:
-    - if version was set more than a day ago - update is needed
-    - if version is seen in a first time (user changed version in config by it self) - the update will be delayed for a day
+/**
+ * The logic is the following:
+ *  - if version was set more than a day ago - update is needed
+ *  - if version is seen in a first time (user changed version in config by it self) - the update will be delayed for a day
  */
 async function needCheckForUpdates(
   currentVersion: string,
-  target: ConfigurationTarget
+  target: ConfigurationTarget,
+  context: ExtensionContext
 ): Promise<boolean> {
-  const file = path.join(metalsDir(target), versionDatesFileName);
+  const state =
+    target === ConfigurationTarget.Global
+      ? context.globalState
+      : context.workspaceState;
+  const prevVersion = state.get<string>(currentVersionKey);
+  const lastUpdated = state.get<string>(lastUpdatedAtKey);
 
-  const records: Record<string, string> = (() => {
-    if (!fs.existsSync(file)) {
-      return {};
-    } else {
-      const data = fs.readFileSync(file, { encoding: "utf8", flag: "r" });
-      return JSON.parse(data);
-    }
-  })();
-
-  if (records[currentVersion]) {
-    return records[currentVersion] != todayString();
-  } else {
-    saveVersionDate(currentVersion, target);
+  const today = todayString();
+  if (prevVersion !== currentVersion) {
+    saveVersionDate(currentVersion, target, context);
     return false;
+  } else {
+    return lastUpdated !== today;
   }
 }
 
-function saveVersionDate(version: string, target: ConfigurationTarget): void {
-  const datesValue: Record<string, string> = {};
-  datesValue[version] = todayString();
-  const dir = metalsDir(target);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-  fs.writeFileSync(
-    path.join(dir, versionDatesFileName),
-    JSON.stringify(datesValue)
-  );
+function saveVersionDate(
+  version: string,
+  target: ConfigurationTarget,
+  context: ExtensionContext
+): void {
+  const state =
+    target === ConfigurationTarget.Global
+      ? context.globalState
+      : context.workspaceState;
+
+  state.update(currentVersionKey, version);
+  state.update(lastUpdatedAtKey, todayString());
 }
 
 function warnIfIsOutdated(config: WorkspaceConfiguration): void {
