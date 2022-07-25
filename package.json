@@ -340,6 +340,10 @@
           "type": "string",
           "markdownDescription": "Optional Eclipse format profile to use."
         },
+        "metals.scalaCliLauncher": {
+          "type": "string",
+          "markdownDescription": "Optional path to Scala CLI launcher to use."
+        },
         "metals.suggestLatestUpgrade": {
           "type": "boolean",
           "default": false,
@@ -521,6 +525,16 @@
         "command": "metals.ammonite-stop",
         "category": "Metals",
         "title": "Stop Ammonite build server"
+      },
+      {
+        "command": "metals.scala-cli-start",
+        "category": "Metals",
+        "title": "Start Scala CLI BSP server"
+      },
+      {
+        "command": "metals.scala-cli-stop",
+        "category": "Metals",
+        "title": "Stop Scala CLI BSP server"
       },
       {
         "command": "metals.toggle-implicit-conversions-and-classes",
@@ -722,6 +736,14 @@
         },
         {
           "command": "metals.ammonite-stop",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.scala-cli-start",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.scala-cli-stop",
           "when": "metals:enabled"
         }
       ],
