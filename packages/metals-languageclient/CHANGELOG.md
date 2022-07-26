@@ -1,5 +1,13 @@
 ## metals-languageclient changelog
 
+### v0.5.18 (2022/07/26 10:26 +00:00)
+- [82b5aa9](https://github.com/scalameta/metals-languageclient/commit/82b5aa9518c78ea6f420ce1a9c23a9a057b5d00a) chore(deps-dev): bump @types/node from 18.6.0 to 18.6.1 (@dependabot[bot])
+- [6114a1d](https://github.com/scalameta/metals-languageclient/commit/6114a1d3e71e99e71d3ddaa287337145b3a09f96) chore(deps): bump fp-ts from 2.12.1 to 2.12.2 (@dependabot[bot])
+- [c41c44c](https://github.com/scalameta/metals-languageclient/commit/c41c44c1abfafc888f3dd2268e353d449ae8bd85) Add Scala CLI related commands (@alexarchambault)
+- [f759a89](https://github.com/scalameta/metals-languageclient/commit/f759a890b275bc46f713863e1c38a8c927257d02) chore(deps-dev): bump @types/node from 18.0.6 to 18.6.0 (@dependabot[bot])
+- [a25357d](https://github.com/scalameta/metals-languageclient/commit/a25357d7e8bccd724464125c6b70ad8f53c38f4a) chore(deps-dev): bump @types/node from 18.0.4 to 18.0.6 (@dependabot[bot])
+- [1387436](https://github.com/scalameta/metals-languageclient/commit/1387436da940366e83b577889defefba8b8ac472) Release v0.5.17
+
 ### v0.5.17 (2022/07/14 07:15 +00:00)
 - [3556451](https://github.com/scalameta/metals-languageclient/commit/35564517c4fb25b860d898099337574037af0f10) chore(deps-dev): bump @types/node from 18.0.3 to 18.0.4 (@dependabot[bot])
 - [bd9687e](https://github.com/scalameta/metals-languageclient/commit/bd9687eb772d7575ffc47eedf19eb7fa6e727432) chore(deps): bump vscode-languageserver-protocol from 3.17.1 to 3.17.2 (@dependabot[bot])
