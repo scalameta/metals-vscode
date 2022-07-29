@@ -52,10 +52,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@sourcegraph/scip-typescript@^0.2.7":
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/@sourcegraph/scip-typescript/-/scip-typescript-0.2.7.tgz#9ffeca7fd94ff30cc4276b50986849a70ed62946"
-  integrity sha512-+3JMxZR6H7i5g5OscgZm22GVmSoZ4K/Ue4G1gMFDmkMogVHvL++VWmJLHypZ8ibAqA7ho3BOVBdtGW9rz8po+g==
+"@sourcegraph/scip-typescript@^0.2.8":
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/@sourcegraph/scip-typescript/-/scip-typescript-0.2.8.tgz#c77374797d0065706218e47845e7a598802c64e3"
+  integrity sha512-w4KMHzgM9n1FCobXwqVqCUlJ4+JjvsavVBhXcjAD55WI5r/0SKpW3M/R168fcdrO1io4X/mMgWAftG4e2HHqEA==
   dependencies:
     commander "^9.2.0"
     google-protobuf "^3.20.0"
