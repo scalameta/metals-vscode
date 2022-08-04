@@ -574,7 +574,7 @@
         "key": "ctrl+t",
         "mac": "cmd+t",
         "command": "metals.symbol-search",
-        "when": "editorLangId == scala"
+        "when": "editorLangId == scala || editorLangId == java || editorLangId == sbt || editorLangId == sc"
       },
       {
         "key": "ctrl+alt+shift+o",
