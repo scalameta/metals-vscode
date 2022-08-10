@@ -2,6 +2,50 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.19.0 (2022/08/10 04:23 +00:00)
+- [b74c69b](https://github.com/scalameta/metals-vscode/commit/b74c69b617114434afecc3f9d45471139ea60648) Increase patch version for pre-release
+- [30e1b87](https://github.com/scalameta/metals-vscode/commit/30e1b873466ab23dde6df5adc242a94d5fee9c1d) release: Bump server version to 0.11.8 (@tanishiking)
+- [76223aa](https://github.com/scalameta/metals-vscode/commit/76223aa74eabe8f39edcb0bf865a2b18d077abf6) build(deps-dev): bump @typescript-eslint/eslint-plugin (@dependabot[bot])
+- [fcd1aba](https://github.com/scalameta/metals-vscode/commit/fcd1abaa2246312e2a9ca1946eac2c7b80e7b6c4) build(deps-dev): bump @typescript-eslint/parser from 5.32.0 to 5.33.0 (@dependabot[bot])
+- [3e2ecb5](https://github.com/scalameta/metals-vscode/commit/3e2ecb5a5514f8162722993fb661804d9a63f758) build(deps-dev): bump @types/node from 18.6.4 to 18.6.5 (@dependabot[bot])
+- [3cf623f](https://github.com/scalameta/metals-vscode/commit/3cf623f8d3af51f2262132d38a1fafdf0885c02b) build(deps-dev): bump @types/node from 18.6.3 to 18.6.4 (@dependabot[bot])
+- [3bc3de1](https://github.com/scalameta/metals-vscode/commit/3bc3de1c75d86e31b9dcedefd5c38ab2877a0bd1) Increase patch version for pre-release
+- [40b7416](https://github.com/scalameta/metals-vscode/commit/40b7416c1cf47a99a99a9dbc7bffad60b2231f6d) build(deps-dev): bump @typescript-eslint/parser from 5.31.0 to 5.32.0 (@dependabot[bot])
+- [4f1cb7b](https://github.com/scalameta/metals-vscode/commit/4f1cb7b65654b5d08f0fe3429be2833c2b00d8f0) build(deps-dev): bump eslint from 8.20.0 to 8.21.0 (@dependabot[bot])
+- [1ca4b81](https://github.com/scalameta/metals-vscode/commit/1ca4b81b95733e08902060da259d194f3ddefe7e) build(deps-dev): bump @typescript-eslint/eslint-plugin (@dependabot[bot])
+- [42cd68a](https://github.com/scalameta/metals-vscode/commit/42cd68a3cc4e38ad032b73199fcbd5990b0a451e) build(deps-dev): bump @types/node from 18.6.2 to 18.6.3 (@dependabot[bot])
+- [311e62b](https://github.com/scalameta/metals-vscode/commit/311e62b4772b833d976ba1f02c433e82b60c9575) build(deps-dev): bump @sourcegraph/scip-typescript from 0.2.7 to 0.2.8 (@dependabot[bot])
+- [548ddc0](https://github.com/scalameta/metals-vscode/commit/548ddc00f1eda26ac52b378cfea62f14c922440e) build(deps-dev): bump @types/node from 18.6.1 to 18.6.2 (@dependabot[bot])
+- [995b2ad](https://github.com/scalameta/metals-vscode/commit/995b2ade2a937964af45e551779364ac2235662b) build(deps): bump metals-languageclient from 0.5.17 to 0.5.18 (@dependabot[bot])
+- [3eb51e3](https://github.com/scalameta/metals-vscode/commit/3eb51e3e52a041b8a7a98322c2d0f5165618618a) build(deps-dev): bump @typescript-eslint/parser from 5.30.7 to 5.31.0 (@dependabot[bot])
+- [934905b](https://github.com/scalameta/metals-vscode/commit/934905b23c9d2cf8f23638332a1d977a0ce9c9ce) build(deps-dev): bump @types/node from 18.6.0 to 18.6.1 (@dependabot[bot])
+- [a461039](https://github.com/scalameta/metals-vscode/commit/a4610394b6edce40ff7b3afb98390d80a0f43f43) build(deps-dev): bump @typescript-eslint/eslint-plugin (@dependabot[bot])
+- [bb51c4a](https://github.com/scalameta/metals-vscode/commit/bb51c4a1e153a67958454fa208b8bdb81357a17f) build(deps-dev): bump @types/node from 18.0.6 to 18.6.0 (@dependabot[bot])
+- [1c2cd4f](https://github.com/scalameta/metals-vscode/commit/1c2cd4f4eed4828b0a952c696cf43e58f981c027) build(deps-dev): bump eslint-plugin-mocha from 10.0.5 to 10.1.0 (@dependabot[bot])
+- [6078d68](https://github.com/scalameta/metals-vscode/commit/6078d6895c28486504b179a29b123fdf21607fd2) build(deps-dev): bump vsce from 2.9.3 to 2.10.0 (@dependabot[bot])
+- [e12a280](https://github.com/scalameta/metals-vscode/commit/e12a2800aa256a11b2c6850edd005ac3b108bd92) build(deps-dev): bump @typescript-eslint/parser from 5.30.6 to 5.30.7 (@dependabot[bot])
+- [16700ab](https://github.com/scalameta/metals-vscode/commit/16700abafb63f8c272b692257dc0a8a4cc2e05a1) build(deps-dev): bump @typescript-eslint/eslint-plugin (@dependabot[bot])
+- [e727a29](https://github.com/scalameta/metals-vscode/commit/e727a29d3b888cebad4169ca311693a2ebec08b5) build(deps-dev): bump @types/node from 18.0.4 to 18.0.6 (@dependabot[bot])
+- [4f2cef5](https://github.com/scalameta/metals-vscode/commit/4f2cef546fef7b8f6bafdf1a47a5855eaeee1b18) build(deps-dev): bump vsce from 2.9.2 to 2.9.3 (@dependabot[bot])
+- [6844889](https://github.com/scalameta/metals-vscode/commit/68448899ff08e877dddc8608f3b79cefec1d10d8) build(deps-dev): bump eslint from 8.19.0 to 8.20.0 (@dependabot[bot])
+- [4b07397](https://github.com/scalameta/metals-vscode/commit/4b07397588932984abac765b2940af331c465046) Increase patch version for pre-release
+- [4fe39fd](https://github.com/scalameta/metals-vscode/commit/4fe39fdee7373df11d2359ea5fd5a0c6f58fc3e1) Bump metals-languageclient to 0.5.17 and vscode-languageclient to 8.0.2 (@tanishiking)
+- [3efaeda](https://github.com/scalameta/metals-vscode/commit/3efaeda45432f3ad09b40a401bc6fee71b753d9c) build(deps-dev): bump @types/node from 18.0.3 to 18.0.4 (@dependabot[bot])
+- [ad64c05](https://github.com/scalameta/metals-vscode/commit/ad64c0542d4bba7b70d363054aafa7bebc6ab8ee) Increase patch version for pre-release
+- [a542fa7](https://github.com/scalameta/metals-vscode/commit/a542fa771b3ea2a807a5d819c8538d0d814df3de) Increase patch version for pre-release
+- [a32ae82](https://github.com/scalameta/metals-vscode/commit/a32ae82fb58da4574fd3b46352ee63668427381a) Increase patch version for pre-release
+- [2cda3f0](https://github.com/scalameta/metals-vscode/commit/2cda3f03fd748cd4684ca139df8bae17295d02af) Increase patch version for pre-release
+- [27f32b6](https://github.com/scalameta/metals-vscode/commit/27f32b6359a7a8bea454d72fa02c9f14ec7f8d95) refactor: Support sourcegraph scip index (@tanishiking)
+- [cc25ad9](https://github.com/scalameta/metals-vscode/commit/cc25ad9fd166e16bab2722a754eb01c9d8a3ab1b) build(deps-dev): bump @typescript-eslint/parser from 5.30.5 to 5.30.6 (@dependabot[bot])
+- [a4b6068](https://github.com/scalameta/metals-vscode/commit/a4b6068350fc9c2547e28ea0e8f01472a3c25e7f) build(deps-dev): bump @typescript-eslint/eslint-plugin (@dependabot[bot])
+- [fe8dd34](https://github.com/scalameta/metals-vscode/commit/fe8dd34555a013554ee3fdeccfb5996126a51a37) Increase patch version for pre-release
+- [17badf2](https://github.com/scalameta/metals-vscode/commit/17badf2328c9551f7219b497a565594c41296434) build(deps-dev): bump @types/node from 18.0.2 to 18.0.3 (@dependabot[bot])
+- [53b3ba9](https://github.com/scalameta/metals-vscode/commit/53b3ba94daa6a7d5308ce1244fcf7c103a6f7202) Increase patch version for pre-release
+- [4ac5bf3](https://github.com/scalameta/metals-vscode/commit/4ac5bf3c0284e109846702586ee9de834ff255d0) build(deps-dev): bump @types/node from 18.0.1 to 18.0.2 (@dependabot[bot])
+- [a252654](https://github.com/scalameta/metals-vscode/commit/a252654c78db42ea2d9e23ae2a76561cea1e5056) build(deps-dev): bump @typescript-eslint/parser from 5.30.4 to 5.30.5 (@dependabot[bot])
+- [9efadfb](https://github.com/scalameta/metals-vscode/commit/9efadfb78239ed7e10c6ad5d6239060f9caecbe7) build(deps-dev): bump @typescript-eslint/eslint-plugin (@dependabot[bot])
+- [55254c5](https://github.com/scalameta/metals-vscode/commit/55254c5227b07607fc75ed3c15ea0e4f569e8e39) v1.18.0
+
 ### v1.18.0 (2022/07/04 17:04 +00:00)
 - [cbcd8d3](https://github.com/scalameta/metals-vscode/commit/cbcd8d37481c30f430c2853632f9fc47d5dd11f3) Increase patch version for pre-release
 - [d10fafc](https://github.com/scalameta/metals-vscode/commit/d10fafc6632af6996093c788d20c1988d5bdc574) release: Bump server version to 0.11.7 (@tgodzik)
@@ -1200,7 +1244,7 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [d6f4136](https://github.com/scalameta/metals-vscode/commit/d6f4136468e18a1601cd09c74fc675e7c8aa685d) Update docs for editor clients (@olafurpg)
 - [6154566](https://github.com/scalameta/metals-vscode/commit/615456640256247f19c1731f47bcd7984675d8da) Update VS Code plugin metadata (@olafurpg)
 
-### v0.2.0 (2018/11/28 16:27 +00:00)
+### v0.2.1 (2018/11/29 11:15 +00:00)
 - [4261a6c](https://github.com/scalameta/metals-vscode/commit/4261a6ca3e92c2510c9d75832cfb81bc683b18dc) Make Java version configurable in VS Code (@olafurpg)
 - [4711cc3](https://github.com/scalameta/metals-vscode/commit/4711cc350274634bf7a1c12e055a93d4806a6e71) Furter refinements (@olafurpg)
 - [8930f76](https://github.com/scalameta/metals-vscode/commit/8930f76e2fae1a10ed2135b525696c3f701e6bb3) Fix tests on Windows and address review feedback (@olafurpg)
