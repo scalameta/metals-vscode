@@ -28,25 +28,28 @@ The following table shows the status of various features.
 ## Requirements
 
 **Java 8, 11, 17 provided by OpenJDK or Oracle**. Eclipse OpenJ9 is not
-supported, please make sure the `JAVA_HOME` environment variable points to a
-valid Java 8, 11 or 17 installation.
+supported, please make sure the `JAVA_HOME` environment variable
+points to a valid Java 8, 11 or 17 installation.
 
-**macOS, Linux or Windows**. Metals is developed on many operating systems and
+**macOS, Linux or Windows**. Metals is developed on many operating systems and 
 every PR is tested on Ubuntu, Windows and MacOS.
 
 **Scala 2.13, 2.12, 2.11 and Scala 3**. Metals supports these Scala versions:
 
-- **Scala 2.13**: 2.13.8, 2.13.7, 2.13.6, 2.13.5, 2.13.4, 2.13.3, 2.13.2, 2.13.1
+ - **Scala 2.13**:
+   2.13.8, 2.13.7, 2.13.6, 2.13.5, 2.13.4, 2.13.3, 2.13.2, 2.13.1
 
-- **Scala 2.12**: 2.12.16, 2.12.15, 2.12.14, 2.12.13, 2.12.12, 2.12.11, 2.12.10,
-  2.12.9, 2.12.8
+ - **Scala 2.12**:
+   2.12.16, 2.12.15, 2.12.14, 2.12.13, 2.12.12, 2.12.11, 2.12.10, 2.12.9, 2.12.8
 
-- **Scala 2.11**: 2.11.12
+ - **Scala 2.11**:
+   2.11.12
 
-- **Scala 3**: 3.2.0-RC1, 3.1.3, 3.1.2, 3.1.1, 3.1.0, 3.0.2, 3.0.1, 3.0.0
+ - **Scala 3**:
+   3.2.0-RC3, 3.2.0-RC2, 3.2.0-RC1, 3.1.3, 3.1.2, 3.1.1, 3.1.0, 3.0.2, 3.0.1, 3.0.0
 
-Note that 2.11.x support is deprecated and it will be removed in future
-releases. It's recommended to upgrade to Scala 2.12 or Scala 2.13
+Note that 2.11.x support is deprecated and it will be removed in future releases.
+It's recommended to upgrade to Scala 2.12 or Scala 2.13
 
 ## Installation
 
