@@ -255,6 +255,10 @@
           "type": "string",
           "markdownDescription": "This version will be used for the Bloop build tool plugin, for any supported build tool,while importing in Metals as well as for running the embedded server"
         },
+        "metals.almondVersion": {
+          "type": "string",
+          "markdownDescription": "Almond (almond.sh) is the scala lanuage server for Juypter notebooks. If you want a specific version of it, enter that version here - otherwise we'll get the latest release for you \n Example: `0.13.0`"
+        },
         "metals.bloopJvmProperties": {
           "type": "array",
           "scope": "machine-overridable",
@@ -516,6 +520,11 @@
         "command": "metals.ammonite-start",
         "category": "Metals",
         "title": "Start Ammonite build server"
+      },
+      {
+        "command": "metals.setup-notebook",
+        "category": "Metals",
+        "title": "Setup a juypter notebook (almond) kernel for this project"
       },
       {
         "command": "metals.ammonite-stop",
