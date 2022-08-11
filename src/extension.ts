@@ -562,6 +562,7 @@ function launchMetals(
         ServerCommands.CascadeCompile,
         ServerCommands.CleanCompile,
         ServerCommands.CancelCompilation,
+        "setup-notebook",
         ServerCommands.AmmoniteStart,
         ServerCommands.AmmoniteStop,
       ].forEach((command) => {
