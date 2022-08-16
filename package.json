@@ -9,7 +9,7 @@
     "ide",
     "scalameta"
   ],
-  "version": "1.18.7",
+  "version": "1.19.2",
   "publisher": "scalameta",
   "contributors": [
     {
@@ -321,6 +321,8 @@
             "2.12.9",
             "2.12.8",
             "2.11.12",
+            "3.2.0-RC3",
+            "3.2.0-RC2",
             "3.2.0-RC1",
             "3.1.3",
             "3.1.2",
@@ -588,7 +590,7 @@
         "key": "ctrl+t",
         "mac": "cmd+t",
         "command": "metals.symbol-search",
-        "when": "editorLangId == scala"
+        "when": "editorLangId == scala || editorLangId == java || editorLangId == sbt || editorLangId == sc"
       },
       {
         "key": "ctrl+alt+shift+o",
@@ -953,17 +955,17 @@
     "format-check": "prettier --check '**/*.{ts,js,json,yml}'"
   },
   "devDependencies": {
-    "@sourcegraph/scip-typescript": "^0.2.7",
+    "@sourcegraph/scip-typescript": "^0.2.8",
     "@types/glob": "^7.2.0",
     "@types/mocha": "^9.1.1",
-    "@types/node": "18.6.1",
+    "@types/node": "18.7.5",
     "@types/remarkable": "^2.0.3",
-    "@types/semver": "^7.3.10",
+    "@types/semver": "^7.3.12",
     "@types/vscode": "1.59.0",
-    "@typescript-eslint/eslint-plugin": "^5.31.0",
-    "@typescript-eslint/parser": "^5.31.0",
+    "@typescript-eslint/eslint-plugin": "^5.33.1",
+    "@typescript-eslint/parser": "^5.33.1",
     "@vscode/test-electron": "^2.1.5",
-    "eslint": "^8.20.0",
+    "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-mocha": "^10.1.0",
     "glob": "^8.0.3",
