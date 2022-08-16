@@ -1,9 +1,13 @@
 pull_request_rules:
-  - name: CI passes and is @types package from dependabot
+  - name: CI passes and is dev-dependency package from dependabot
     conditions:
-      - "#status-success=6"
+      - check-success=Test
+      - check-success=Extension test
+      - check-success=Build
+      - check-success=Prettier
+      - check-success=Eslint
       - author~=^dependabot(|-preview)\[bot\]$
-      - title~=^Bump @types/(\w+) from .*$
+      - title~=^build\(deps-dev\).*$
       - base=main
     actions:
       merge:
