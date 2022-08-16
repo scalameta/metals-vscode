@@ -478,6 +478,8 @@ function launchMetals(
         ServerCommands.CancelCompilation,
         ServerCommands.AmmoniteStart,
         ServerCommands.AmmoniteStop,
+        ServerCommands.ScalaCliStart,
+        ServerCommands.ScalaCliStop,
       ].forEach((command) => {
         registerCommand("metals." + command, async () =>
           client.sendRequest(ExecuteCommandRequest.type, { command: command })

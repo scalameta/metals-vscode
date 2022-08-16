@@ -173,7 +173,7 @@
       "properties": {
         "metals.serverVersion": {
           "type": "string",
-          "default": "0.11.8",
+          "default": "0.11.8+25-04b682be-SNAPSHOT",
           "markdownDescription": "The version of the Metals server artifact. Requires reloading the window.  \n\n**VS Code extension version is guaranteed to work only with the default version, change if you know what you're doing**"
         },
         "metals.serverProperties": {
@@ -341,6 +341,10 @@
         "metals.javaFormat.eclipseProfile": {
           "type": "string",
           "markdownDescription": "Optional Eclipse format profile to use."
+        },
+        "metals.scalaCliLauncher": {
+          "type": "string",
+          "markdownDescription": "Optional path to Scala CLI launcher to use."
         },
         "metals.suggestLatestUpgrade": {
           "type": "boolean",
@@ -523,6 +527,16 @@
         "command": "metals.ammonite-stop",
         "category": "Metals",
         "title": "Stop Ammonite build server"
+      },
+      {
+        "command": "metals.scala-cli-start",
+        "category": "Metals",
+        "title": "Start Scala CLI BSP server"
+      },
+      {
+        "command": "metals.scala-cli-stop",
+        "category": "Metals",
+        "title": "Stop Scala CLI BSP server"
       },
       {
         "command": "metals.toggle-implicit-conversions-and-classes",
@@ -724,6 +738,14 @@
         },
         {
           "command": "metals.ammonite-stop",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.scala-cli-start",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.scala-cli-stop",
           "when": "metals:enabled"
         }
       ],
