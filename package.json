@@ -173,7 +173,7 @@
       "properties": {
         "metals.serverVersion": {
           "type": "string",
-          "default": "0.11.7+19-1405f4de-SNAPSHOT",
+          "default": "0.11.8+25-04b682be-SNAPSHOT",
           "markdownDescription": "The version of the Metals server artifact. Requires reloading the window.  \n\n**VS Code extension version is guaranteed to work only with the default version, change if you know what you're doing**"
         },
         "metals.serverProperties": {
