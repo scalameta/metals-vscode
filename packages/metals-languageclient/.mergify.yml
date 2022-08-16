@@ -1,10 +1,14 @@
 pull_request_rules:
-  - name: CI passes and is @types package from dependabot
+  - name: CI passes and is dev-dependency package from dependabot
     conditions:
-      - "#status-success>=5"
+      - check-success=Test (ubuntu-latest)
+      - check-success=Test (windows-latest)
+      - check-success=Test (macos-latest)
+      - check-success=Prettier
+      - check-success=Typecheck
       - author~=^dependabot(|-preview)\[bot\]$
-      - title~=^Bump @types/(\w+) from .*$
-      - base=master
+      - title~=^chore\(deps-dev\).*$
+      - base=main
     actions:
       merge:
         method: merge
