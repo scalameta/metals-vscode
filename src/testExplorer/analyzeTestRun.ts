@@ -37,7 +37,7 @@ export function analyzeTestRun(
     if (result != null) {
       // if suite run contains test cases (run was started for (single) test case)
       if (kind === "testcase") {
-        analyzeTestCases(run, result, [test]);
+        analyzeTestCases(run, result, [test], test.parent);
       }
       // if test suite has children (test cases) do a more fine-grained analyze of results.
       // run was started for whole suite which has children (e.g. junit one)
@@ -76,7 +76,8 @@ function analyzeTestCases(
   testCases: vscode.TestItem[],
   parent?: vscode.TestItem
 ) {
-  const testCasesResults = createTestCasesMap(result);
+  const parentName = parent?.id || "";
+  const testCasesResults = createTestCasesMap(result, parentName);
   testCases.forEach((test) => {
     const name = test.id as TestName;
     const testCaseResult = testCasesResults.get(name);
@@ -105,12 +106,23 @@ function analyzeTestCases(
 
 /**
  * Transforms suite result into mapping between test case name and its result.
+ *
+ * @param parentName test cases are prefixed with parent (suite) name.
+ * However, some test frameworks like scalatest send results which are not prefixed, other like munit send prefixed results, etc.
+ * To unify handling, make sure that all results starts with given parentName.
  */
 function createTestCasesMap(
-  testSuiteResult: TestSuiteResult
+  testSuiteResult: TestSuiteResult,
+  parentName: string
 ): Map<TestName, SingleTestResult> {
   const tuples: [TestName, SingleTestResult][] = testSuiteResult.tests.map(
-    (test) => [test.testName, test]
+    (test) => {
+      const name = test.testName.startsWith(parentName)
+        ? test.testName
+        : `${parentName}.${test.testName}`;
+
+      return [name as TestName, test];
+    }
   );
   const testCasesResult = new Map(tuples);
   return testCasesResult;
