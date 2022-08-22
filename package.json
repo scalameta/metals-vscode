@@ -60,19 +60,31 @@
         "id": "javap-verbose",
         "extensions": [
           ".javap-verbose"
-        ]
+        ],
+        "icon": {
+          "dark": "icons/file_type_java.svg",
+          "light": "icons/file_type_java.svg"
+        }
       },
       {
         "id": "javap",
         "extensions": [
           ".javap"
-        ]
+        ],
+        "icon": {
+          "dark": "icons/file_type_java.svg",
+          "light": "icons/file_type_java.svg"
+        }
       },
       {
         "id": "java",
         "extensions": [
           ".cfr"
-        ]
+        ],
+        "icon": {
+          "dark": "icons/file_type_java.svg",
+          "light": "icons/file_type_java.svg"
+        }
       },
       {
         "id": "tasty",
@@ -82,13 +94,34 @@
         ],
         "extensions": [
           ".tasty-decoded"
-        ]
+        ],
+        "icon": {
+          "dark": "icons/file_type_scala.svg",
+          "light": "icons/file_type_scala.svg"
+        }
       },
       {
         "id": "buildtarget",
         "extensions": [
           ".metals-buildtarget"
-        ]
+        ],
+        "icon": {
+          "dark": "icons/book-dark.svg",
+          "light": "icons/book-light.svg"
+        }
+      },
+      {
+        "id": "semanticdb",
+        "extensions": [
+          ".semanticdb",
+          ".semanticdb-detailed",
+          ".semanticdb-compact",
+          ".semanticdb-proto"
+        ],
+        "icon": {
+          "dark": "icons/scalameta-logo.png",
+          "light": "icons/scalameta-logo.png"
+        }
       }
     ],
     "grammars": [
