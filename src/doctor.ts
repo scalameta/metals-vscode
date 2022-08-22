@@ -1,5 +1,12 @@
 import { ClientCommands, ServerCommands } from "metals-languageclient";
-import { ViewColumn, WebviewPanel, window } from "vscode";
+import path from "path";
+import {
+  ExtensionContext,
+  Uri,
+  ViewColumn,
+  WebviewPanel,
+  window,
+} from "vscode";
 import {
   Disposable,
   ExecuteCommandParams,
@@ -24,8 +31,11 @@ export class DoctorProvider implements Disposable {
    * We should take focus into account when doctor caching mechanism will be implemented on the server.
    */
   isOpened = false;
-
-  constructor(private client: LanguageClient) {}
+  // private extensionContext: ExtensionContext | undefined;
+  constructor(
+    private client: LanguageClient,
+    private context: ExtensionContext
+  ) {}
 
   dispose(): void {
     this.doctor?.dispose();
@@ -38,6 +48,9 @@ export class DoctorProvider implements Disposable {
         "Metals Doctor",
         ViewColumn.Active,
         { enableCommandUris: true }
+      );
+      this.doctor.iconPath = Uri.file(
+        path.join(this.context.extensionPath, "icons", "doctor.svg")
       );
       this.isOpened = true;
 

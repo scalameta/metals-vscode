@@ -445,7 +445,7 @@ function launchMetals(
 
   return client.start().then(
     () => {
-      const doctorProvider = new DoctorProvider(client);
+      const doctorProvider = new DoctorProvider(client, context);
       let stacktrace: WebviewPanel | undefined;
 
       function getStacktracePanel(): WebviewPanel {
@@ -456,6 +456,14 @@ function launchMetals(
             ViewColumn.Beside,
             { enableCommandUris: true }
           );
+          stacktrace.iconPath = {
+            light: Uri.file(
+              path.join(context.extensionPath, "icons", "exception-light.svg")
+            ),
+            dark: Uri.file(
+              path.join(context.extensionPath, "icons", "exception-dark.svg")
+            ),
+          };
           context.subscriptions.push(stacktrace);
           stacktrace.onDidDispose(() => {
             stacktrace = undefined;
