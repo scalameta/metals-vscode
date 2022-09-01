@@ -978,6 +978,7 @@
     "compile": "tsc -p ./",
     "clean": "rimraf out/",
     "watch": "tsc -watch -p ./",
+    "test-unit": "ts-mocha src/*.test.ts",
     "test": "ts-mocha src/test/unit/*.test.ts",
     "test-extension": "rimraf out/ && tsc -p ./ && node out/test/extension/runTest.js",
     "build": "yarn clean && vsce package --yarn",
@@ -994,6 +995,7 @@
     "@types/node": "18.7.14",
     "@types/remarkable": "^2.0.3",
     "@types/semver": "^7.3.12",
+    "@types/sinon": "^10.0.13",
     "@types/vscode": "1.59.0",
     "@typescript-eslint/eslint-plugin": "^5.36.1",
     "@typescript-eslint/parser": "^5.36.1",
@@ -1007,6 +1009,7 @@
     "ovsx": "0.5.1",
     "prettier": "2.7.1",
     "rimraf": "^3.0.2",
+    "sinon": "^14.0.0",
     "ts-mocha": "^10.0.0",
     "typescript": "4.8.2",
     "vsce": "2.11.0"

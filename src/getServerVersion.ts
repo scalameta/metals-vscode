@@ -1,20 +1,20 @@
 import {
   commands,
-  ConfigurationTarget,
   ExtensionContext,
   window,
   WorkspaceConfiguration,
+  ConfigurationTarget as VConfigurationTarget,
 } from "vscode";
 import * as metalsLanguageClient from "metals-languageclient";
 import * as workbenchCommands from "./workbenchCommands";
 import http from "https";
 import { getConfigValue } from "./util";
+import { DefaultCheckForUpdateRepo } from "./repository/CheckForUpdateRepo";
+import { needCheckForUpdates } from "./service/checkForUpdate";
+import { ConfigurationTarget } from "./ConfigurationTarget";
 
 const serverVersionSection = "serverVersion";
 const suggestLatestUpgrade = "suggestLatestUpgrade";
-
-const currentVersionKey = "currentVersion";
-const lastUpdatedAtKey = "lastUpdatedAt";
 
 export function getServerVersion(
   config: WorkspaceConfiguration,
@@ -40,12 +40,15 @@ async function validateCurrentVersion(
     suggestLatestUpgrade
   );
 
+  const checkForUpdateRepo = new DefaultCheckForUpdateRepo(context);
+
   const checkForUpdate = async () => {
     if (suggestUpgradeSetting?.value) {
       return needCheckForUpdates(
         serverVersion,
-        suggestUpgradeSetting.target,
-        context
+        todayString(),
+        fromVSCode(suggestUpgradeSetting.target),
+        checkForUpdateRepo
       );
     } else {
       return false;
@@ -68,13 +71,17 @@ async function validateCurrentVersion(
               nextVersion,
               suggestUpgradeSetting.target
             );
-            saveVersionDate(nextVersion, suggestUpgradeSetting.target, context);
+            checkForUpdateRepo.saveLastUpdated(
+              nextVersion,
+              todayString(),
+              fromVSCode(suggestUpgradeSetting.target)
+            );
           } else if (result == ignoreChoice) {
             // extend the current version expiration date
-            saveVersionDate(
+            checkForUpdateRepo.saveLastUpdated(
               serverVersion,
-              suggestUpgradeSetting.target,
-              context
+              todayString(),
+              fromVSCode(suggestUpgradeSetting.target)
             );
           }
         });
@@ -99,46 +106,6 @@ async function fetchLatest(): Promise<string> {
   const json = JSON.parse(text);
   const sorted = [json["release"], json["snapshot"]].sort();
   return sorted[sorted.length - 1];
-}
-
-/**
- * The logic is the following:
- *  - if version was set more than a day ago - update is needed
- *  - if version is seen in a first time (user changed version in config by it self) - the update will be delayed for a day
- */
-async function needCheckForUpdates(
-  currentVersion: string,
-  target: ConfigurationTarget,
-  context: ExtensionContext
-): Promise<boolean> {
-  const state =
-    target === ConfigurationTarget.Global
-      ? context.globalState
-      : context.workspaceState;
-  const prevVersion = state.get<string>(currentVersionKey);
-  const lastUpdated = state.get<string>(lastUpdatedAtKey);
-
-  const today = todayString();
-  if (prevVersion !== currentVersion) {
-    saveVersionDate(currentVersion, target, context);
-    return false;
-  } else {
-    return lastUpdated !== today;
-  }
-}
-
-function saveVersionDate(
-  version: string,
-  target: ConfigurationTarget,
-  context: ExtensionContext
-): void {
-  const state =
-    target === ConfigurationTarget.Global
-      ? context.globalState
-      : context.workspaceState;
-
-  state.update(currentVersionKey, version);
-  state.update(lastUpdatedAtKey, todayString());
 }
 
 function warnIfIsOutdated(config: WorkspaceConfiguration): void {
@@ -175,10 +142,24 @@ function warnIfIsOutdated(config: WorkspaceConfiguration): void {
   });
 }
 
-function todayString(): string {
+/**
+ * @returns YYYY-MM-DD in a local date
+ */
+export function todayString(): string {
   const date = new Date();
   const year = date.getFullYear().toString();
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const day = date.getDate().toString().padStart(2, "0");
   return [year, month, day].join("-");
+}
+
+function fromVSCode(target: VConfigurationTarget): ConfigurationTarget {
+  switch (target) {
+    case VConfigurationTarget.Global:
+      return ConfigurationTarget.Global;
+    case VConfigurationTarget.Workspace:
+      return ConfigurationTarget.Workspace;
+    case VConfigurationTarget.WorkspaceFolder:
+      return ConfigurationTarget.Workspace;
+  }
 }
