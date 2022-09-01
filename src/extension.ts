@@ -117,7 +117,7 @@ const decorationType: TextEditorDecorationType =
 const config = workspace.getConfiguration("metals");
 
 export async function activate(context: ExtensionContext): Promise<void> {
-  const serverVersion = getServerVersion(config);
+  const serverVersion = getServerVersion(config, context);
   detectLaunchConfigurationChanges();
   configureSettingsDefaults();
 
