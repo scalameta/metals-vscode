@@ -1,8 +1,8 @@
-import assert from "assert";
 import { ConfigurationTarget } from "../../ConfigurationTarget";
 import { needCheckForUpdates } from "../../service/checkForUpdate";
 import { CheckForUpdateRepo } from "../../repository/CheckForUpdateRepo";
 import sinon from "sinon";
+import { expect } from "chai";
 
 class MockRepo implements CheckForUpdateRepo {
   constructor(private prevVersion?: string, private lastUpdatedAt?: string) {}
@@ -36,8 +36,12 @@ describe("needCheckForUpdates", () => {
       ConfigurationTarget.Global,
       repo
     );
-    assert(actual === false);
-    assert(spy.calledWith(currentVersion, today, ConfigurationTarget.Global));
+    expect(actual).false;
+    expect(spy.getCall(0).args).to.eql([
+      currentVersion,
+      today,
+      ConfigurationTarget.Global,
+    ]);
   });
 
   it("should false if currentVersion was seen for the first time / save current versions", async () => {
@@ -52,8 +56,12 @@ describe("needCheckForUpdates", () => {
       ConfigurationTarget.Global,
       repo
     );
-    assert(actual === false);
-    assert(spy.calledWith(currentVersion, today, ConfigurationTarget.Global));
+    expect(actual).false;
+    expect(spy.getCall(0).args).to.eql([
+      currentVersion,
+      today,
+      ConfigurationTarget.Global,
+    ]);
   });
 
   it("should false if currentVersion is set today", async () => {
@@ -67,8 +75,8 @@ describe("needCheckForUpdates", () => {
       ConfigurationTarget.Global,
       repo
     );
-    assert(actual === false);
-    assert(spy.notCalled);
+    expect(actual).false;
+    expect(spy.notCalled).true;
   });
 
   it("should true if currentVersion is set more than a day ago", async () => {
@@ -83,7 +91,7 @@ describe("needCheckForUpdates", () => {
       ConfigurationTarget.Global,
       repo
     );
-    assert(actual === true);
-    assert(spy.notCalled);
+    expect(actual).true;
+    expect(spy.notCalled).true;
   });
 });

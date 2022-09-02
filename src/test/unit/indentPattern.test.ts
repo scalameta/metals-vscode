@@ -1,8 +1,8 @@
-import assert from "assert";
+import { expect } from "chai";
 import { increaseIndentPattern } from "../../indentPattern";
 
 function checkIndent(indentPattern: RegExp, result: boolean) {
-  return (text: string) => assert(indentPattern.test(text) === result);
+  return (text: string) => expect(indentPattern.test(text)).to.equal(result);
 }
 
 function checkFunctions(indentPattern: RegExp) {

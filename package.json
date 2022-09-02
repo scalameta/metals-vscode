@@ -978,7 +978,6 @@
     "compile": "tsc -p ./",
     "clean": "rimraf out/",
     "watch": "tsc -watch -p ./",
-    "test-unit": "ts-mocha src/*.test.ts",
     "test": "ts-mocha src/test/unit/*.test.ts",
     "test-extension": "rimraf out/ && tsc -p ./ && node out/test/extension/runTest.js",
     "build": "yarn clean && vsce package --yarn",
@@ -990,6 +989,7 @@
   },
   "devDependencies": {
     "@sourcegraph/scip-typescript": "^0.2.9",
+    "@types/chai": "^4.3.3",
     "@types/glob": "^8.0.0",
     "@types/mocha": "^9.1.1",
     "@types/node": "18.7.14",
@@ -1000,6 +1000,7 @@
     "@typescript-eslint/eslint-plugin": "^5.36.1",
     "@typescript-eslint/parser": "^5.36.1",
     "@vscode/test-electron": "^2.1.5",
+    "chai": "^4.3.6",
     "eslint": "^8.23.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-mocha": "^10.1.0",
