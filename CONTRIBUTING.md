@@ -50,8 +50,17 @@ Code and under "More Actions..." choose to "Install from VSIX...". Then open a
 
 ## Testing
 
-The extension currently has no tests. When you are happy with the functionality
-of your change, feel free to open a PR without tests.
+```sh
+# run unit all tests
+$ yarn run test
+
+# run unit tests that matched with the given regex
+# e.g. `yarn run test -g needCheckForUpdates`
+$ yarn run test -g <test name regex>
+
+# run integration tests
+$ yarn run test-extension
+```
 
 ## Formatting
 
