@@ -19,7 +19,11 @@ module.exports = {
         "no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars": [
           "error",
-          { varsIgnorePattern: "_" },
+          {
+            argsIgnorePattern: "^_",
+            varsIgnorePattern: "^_",
+            caughtErrorsIgnorePattern: "^_",
+          },
         ],
         "@typescript-eslint/no-non-null-assertion": "error",
         "guard-for-in": "error",
