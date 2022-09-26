@@ -1,0 +1,37 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "semanticdb",
+  "scopeName": "source.semanticdb",
+  "extensions": [".semanticdb-detailed", ".semanticdb-compact"],
+  "patterns": [
+    {
+      "include": "#general"
+    }
+  ],
+  "repository": {
+    "general": {
+      "patterns": [
+        {
+          "comment": "For recognizing ranges and the following right or left arrow",
+          "match": "(\\[[0-9]+:[0-9]+\\.\\.[0-9]+:[0-9]+\\))\\s+(=>|<=)",
+          "captures": {
+            "1": { "name": "comment.line" },
+            "2": { "name": "constant.language.semanticdb" }
+          }
+        },
+        {
+          "comment": "For recognizing symbol and the following right or left arrow",
+          "match": "^(\\w[^=\n]*)(=>|<=)(.*)$",
+          "captures": {
+            "1": { "name": "entity.name.type.semanticdb" },
+            "2": { "name": "constant.language.semanticdb" }
+          }
+        },
+        {
+          "name": "entity.name.import.semanticdb",
+          "match": "(Summary|Symbols|Occurrences|Synthetics):"
+        }
+      ]
+    }
+  }
+}
