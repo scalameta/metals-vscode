@@ -67,6 +67,13 @@
         }
       },
       {
+        "id": "semanticdb",
+        "extensions": [
+          ".semanticdb-detailed",
+          ".semanticdb-compact"
+        ]
+      },
+      {
         "id": "javap",
         "extensions": [
           ".javap"
@@ -144,6 +151,11 @@
         "language": "buildtarget",
         "scopeName": "source.buildtarget",
         "path": "./syntaxes/buildtarget.json"
+      },
+      {
+        "language": "semanticdb",
+        "scopeName": "source.semanticdb",
+        "path": "./syntaxes/semanticdb.json"
       }
     ],
     "configurationDefaults": {
