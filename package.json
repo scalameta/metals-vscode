@@ -1004,7 +1004,7 @@
     "@types/chai": "^4.3.3",
     "@types/glob": "^8.0.0",
     "@types/mocha": "^9.1.1",
-    "@types/node": "18.7.21",
+    "@types/node": "18.7.23",
     "@types/remarkable": "^2.0.3",
     "@types/semver": "^7.3.12",
     "@types/sinon": "^10.0.13",
