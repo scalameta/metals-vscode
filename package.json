@@ -1032,7 +1032,7 @@
     "metals-languageclient": "0.5.18",
     "promisify-child-process": "4.1.1",
     "remarkable": "^2.0.1",
-    "semver": "^7.3.7",
+    "semver": "^7.3.8",
     "vscode-languageclient": "8.0.2"
   },
   "extensionPack": [
