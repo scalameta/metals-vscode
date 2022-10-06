@@ -1,6 +1,7 @@
 import { env, ExtensionContext } from "vscode";
 import * as vscode from "vscode";
 import * as semver from "semver";
+import path from "path";
 import { Remarkable } from "remarkable";
 import { fetchFrom } from "./util";
 import { Either, makeLeft, makeRight } from "./types";
@@ -69,6 +70,10 @@ async function showReleaseNotesImpl(
       `scalameta.metals.whatsNew`,
       `Metals ${version} release notes`,
       vscode.ViewColumn.One
+    );
+
+    panel.iconPath = vscode.Uri.file(
+      path.join(context.extensionPath, "icons", "scalameta-logo.png")
     );
 
     const releaseNotes = await getReleaseNotesMarkdown(
