@@ -2,9 +2,9 @@ import { env, ExtensionContext } from "vscode";
 import * as vscode from "vscode";
 import * as semver from "semver";
 import path from "path";
-import { Remarkable } from "remarkable";
 import { fetchFrom } from "./util";
 import { Either, makeLeft, makeRight } from "./types";
+import { marked } from "marked";
 
 const versionKey = "metals-server-version";
 type CalledOn = "onExtensionStart" | "onUserDemand";
@@ -214,9 +214,7 @@ async function getReleaseNotesMarkdown(
   const author = metadata[0].slice("author: ".length);
   const title = metadata[1].slice("title: ".length);
   const authorUrl = metadata[2].slice("authorURL: ".length);
-
-  const md = new Remarkable({ html: true });
-  const renderedNotes = md.render(releaseNotes);
+  const renderedNotes = marked.parse(releaseNotes);
 
   // Uri with additional styles for webview
   const stylesPathMainPath = vscode.Uri.joinPath(
