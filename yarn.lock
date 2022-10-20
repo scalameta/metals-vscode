@@ -85,10 +85,10 @@
   resolved "https://registry.yarnpkg.com/@sinonjs/text-encoding/-/text-encoding-0.7.2.tgz#5981a8db18b56ba38ef0efb7d995b12aa7b51918"
   integrity sha512-sXXKG+uL9IrKqViTtao2Ws6dy0znu9sOaP1di/jKGW1M6VssO8vlpXCQcpZ+jisQ1tTFAC5Jo/EOzFbggBagFQ==
 
-"@sourcegraph/scip-typescript@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@sourcegraph/scip-typescript/-/scip-typescript-0.3.0.tgz#56514431affef35b90d0084ee1ee1cf9d7d008e7"
-  integrity sha512-DWkc6M7pKouXOhfpnKjJY+LDb3DjPJgAvIbLiQDgmwhvCMO4YZz6IXtVF9lcsx4BVUWNnUMAGU/2k2/2CgZUrQ==
+"@sourcegraph/scip-typescript@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@sourcegraph/scip-typescript/-/scip-typescript-0.3.1.tgz#b8c3f7547661de79816e9b3407457187f28cee67"
+  integrity sha512-93tAdW3HwCGFqZZ9tlMPCQ65w6FkDGf4xaHHpvdMUi9PgpGs73S8ZWic0WyrQkdkLI5BUXIEOpadnNXxzQB4jg==
   dependencies:
     commander "^9.2.0"
     google-protobuf "^3.20.0"
