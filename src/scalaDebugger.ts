@@ -6,6 +6,10 @@ import {
   WorkspaceFolder,
   DebugAdapterDescriptor,
   DebugConfigurationProviderTriggerKind,
+  workspace,
+  tasks,
+  Task,
+  ShellExecution,
 } from "vscode";
 import {
   DebugDiscoveryParams,
@@ -13,6 +17,7 @@ import {
   ServerCommands,
 } from "metals-languageclient";
 import { BuildTargetIdentifier, FullyQualifiedClassName } from "./types";
+import { ScalaRunMain } from "./testExplorer/types";
 
 const configurationType = "scala";
 
@@ -57,6 +62,33 @@ export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
   ];
 }
 
+function isScalaRunMain(object: any): object is ScalaRunMain {
+  return object.dataKind === "scala-main-class";
+}
+
+function runMain(main: ScalaRunMain): Thenable<boolean> {
+  if (workspace.workspaceFolders) {
+    const initialObj: { [key: string]: string } = {};
+    const env = main.data.environmentVariables.reduce((obj, e) => {
+      const split = e.split("=");
+      const key = split[0];
+      return (obj[key] = split[1]), obj;
+    }, initialObj);
+    return tasks
+      .executeTask(
+        new Task(
+          { type: "scala", task: "run" },
+          workspace.workspaceFolders[0],
+          "Scala run",
+          "Metals",
+          new ShellExecution(main.data.shellCommand, { env: env })
+        )
+      )
+      .then((_a) => true);
+  }
+  return Promise.resolve(false);
+}
+
 export async function start(
   noDebug: boolean,
   debugParams: DebugDiscoveryParams | ScalaCodeLensesParams
@@ -98,7 +130,7 @@ class ScalaMainConfigProvider implements vscode.DebugConfigurationProvider {
         path: editor.document.uri.toString(true),
         runType: RunType.RunOrTestFile,
       };
-      await start(false, args);
+      await start(debugConfiguration.noDebug, args);
       return debugConfiguration;
     } else {
       return debugConfiguration;

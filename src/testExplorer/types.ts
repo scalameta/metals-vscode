@@ -139,6 +139,22 @@ export interface TestSuiteRun {
   testCases: vscode.TestItem[];
 }
 
+export interface BuildTargetIdentifier {
+  uri: TargetUri;
+}
+
+export interface ScalaMainData {
+  class: string;
+  arguments: string[];
+  jvmOptions: string[];
+  environmentVariables: string[];
+  shellCommand: string;
+}
+export interface ScalaRunMain {
+  data: ScalaMainData;
+  dataKind: "scala-main-class";
+  targets: BuildTargetIdentifier[];
+}
 export interface ScalaTestSuitesDebugRequest {
   /** The build target that contains the test classes. */
   target: BuildTargetIdentifier;
