@@ -1006,7 +1006,7 @@
     "@types/glob": "^8.0.0",
     "@types/marked": "^4.0.7",
     "@types/mocha": "^10.0.0",
-    "@types/node": "18.11.4",
+    "@types/node": "18.11.5",
     "@types/semver": "^7.3.12",
     "@types/sinon": "^10.0.13",
     "@types/vscode": "1.59.0",
