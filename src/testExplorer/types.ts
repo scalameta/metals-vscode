@@ -143,28 +143,30 @@ export interface BuildTargetIdentifier {
   uri: TargetUri;
 }
 
-export interface ScalaMainData {
-  kind: undefined | string;
+export interface OldScalaMainData {
   class: string;
   arguments: string[];
   jvmOptions: string[];
   environmentVariables: string[];
+  shellCommand: undefined | string;
 }
 
-export interface ExtendedScalaMainData extends ScalaMainData {
-  kind: "scala-main-class";
+export interface ExtendedScalaMainData extends OldScalaMainData {
   shellCommand: string;
 }
-export interface OldScalaRunMain {
+
+export type ScalaMainData = OldScalaMainData | ExtendedScalaMainData;
+
+interface BaseScalaRunMain {
   data: ScalaMainData;
   dataKind: "scala-main-class";
   targets: BuildTargetIdentifier[];
 }
-
-export interface ExtendedScalaRunMain {
+export interface OldScalaRunMain extends BaseScalaRunMain {
+  data: OldScalaMainData;
+}
+export interface ExtendedScalaRunMain extends BaseScalaRunMain {
   data: ExtendedScalaMainData;
-  dataKind: "scala-main-class";
-  targets: BuildTargetIdentifier[];
 }
 
 export type ScalaRunMain = OldScalaRunMain | ExtendedScalaRunMain;
