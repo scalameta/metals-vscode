@@ -84,7 +84,7 @@ import {
   getValueFromConfig,
 } from "./util";
 import { createTestManager } from "./testExplorer/testManager";
-import { BuildTargetUpdate } from "./testExplorer/types";
+import { BuildTargetUpdate, ScalaRunMain } from "./testExplorer/types";
 import * as workbenchCommands from "./workbenchCommands";
 import { getServerVersion } from "./getServerVersion";
 import { getCoursierMirrorPath } from "./mirrors";

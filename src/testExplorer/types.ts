@@ -144,17 +144,30 @@ export interface BuildTargetIdentifier {
 }
 
 export interface ScalaMainData {
+  kind: undefined | string;
   class: string;
   arguments: string[];
   jvmOptions: string[];
   environmentVariables: string[];
+}
+
+export interface ExtendedScalaMainData extends ScalaMainData {
+  kind: "scala-main-class";
   shellCommand: string;
 }
-export interface ScalaRunMain {
+export interface OldScalaRunMain {
   data: ScalaMainData;
   dataKind: "scala-main-class";
   targets: BuildTargetIdentifier[];
 }
+
+export interface ExtendedScalaRunMain {
+  data: ExtendedScalaMainData;
+  dataKind: "scala-main-class";
+  targets: BuildTargetIdentifier[];
+}
+
+export type ScalaRunMain = OldScalaRunMain | ExtendedScalaRunMain;
 export interface ScalaTestSuitesDebugRequest {
   /** The build target that contains the test classes. */
   target: BuildTargetIdentifier;
