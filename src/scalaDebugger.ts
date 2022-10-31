@@ -3,7 +3,6 @@ import {
   commands,
   DebugConfiguration,
   Disposable,
-  ProviderResult,
   WorkspaceFolder,
   DebugAdapterDescriptor,
   DebugConfigurationProviderTriggerKind,
@@ -13,8 +12,35 @@ import {
   RunType,
   ServerCommands,
 } from "metals-languageclient";
+import { BuildTargetIdentifier, FullyQualifiedClassName } from "./types";
 
 const configurationType = "scala";
+
+export interface ScalaMainData {
+  class: string;
+  arguments: string[];
+  jvmOptions: string[];
+  environmentVariables: string[];
+}
+
+export interface ScalaRunMain {
+  data: ScalaMainData;
+  dataKind: "scala-main-class";
+  targets: BuildTargetIdentifier[];
+}
+
+export interface ScalaTestSuites {
+  data: FullyQualifiedClassName[];
+  dataKind: "scala-test-suites";
+  targets: BuildTargetIdentifier[];
+}
+
+export type ScalaCodeLensesParams = ScalaRunMain | ScalaTestSuites;
+
+export interface DebugSession {
+  name: string;
+  uri: string;
+}
 
 export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
   outputChannel.appendLine("Initializing Scala Debugger");
@@ -33,40 +59,37 @@ export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
 
 export async function start(
   noDebug: boolean,
-  ...parameters: any[]
+  debugParams: DebugDiscoveryParams | ScalaCodeLensesParams
 ): Promise<boolean> {
-  return commands
-    .executeCommand("workbench.action.files.save")
-    .then(() =>
-      vscode.commands.executeCommand<DebugSession>(
-        ServerCommands.DebugAdapterStart,
-        ...parameters
-      )
-    )
-    .then((response) => {
-      if (response === undefined) {
-        return false;
-      }
+  await commands.executeCommand("workbench.action.files.save");
 
-      const port = debugServerFromUri(response.uri).port;
+  const response = await vscode.commands.executeCommand<DebugSession>(
+    ServerCommands.DebugAdapterStart,
+    debugParams
+  );
 
-      const configuration: vscode.DebugConfiguration = {
-        type: configurationType,
-        name: response.name,
-        noDebug: noDebug,
-        request: "launch",
-        debugServer: port, // note: MUST be a number. vscode magic - automatically connects to the server
-      };
-      commands.executeCommand("workbench.panel.repl.view.focus");
-      return vscode.debug.startDebugging(undefined, configuration);
-    });
+  if (response === undefined) {
+    return false;
+  }
+
+  const port = debugServerFromUri(response.uri).port;
+
+  const configuration: vscode.DebugConfiguration = {
+    type: configurationType,
+    name: response.name,
+    noDebug: noDebug,
+    request: "launch",
+    debugServer: port, // note: MUST be a number. vscode magic - automatically connects to the server
+  };
+  commands.executeCommand("workbench.panel.repl.view.focus");
+  return vscode.debug.startDebugging(undefined, configuration);
 }
 
 class ScalaMainConfigProvider implements vscode.DebugConfigurationProvider {
-  resolveDebugConfiguration(
+  async resolveDebugConfiguration(
     _folder: WorkspaceFolder | undefined,
     debugConfiguration: DebugConfiguration
-  ): ProviderResult<DebugConfiguration> {
+  ): Promise<DebugConfiguration | null> {
     const editor = vscode.window.activeTextEditor;
     // debugConfiguration.type is undefined if there are no configurations
     // we are running whatever is in the file
@@ -75,9 +98,8 @@ class ScalaMainConfigProvider implements vscode.DebugConfigurationProvider {
         path: editor.document.uri.toString(true),
         runType: RunType.RunOrTestFile,
       };
-      return start(false, args).then(() => {
-        return debugConfiguration;
-      });
+      await start(false, args);
+      return debugConfiguration;
     } else {
       return debugConfiguration;
     }
@@ -85,25 +107,24 @@ class ScalaMainConfigProvider implements vscode.DebugConfigurationProvider {
 }
 
 class ScalaDebugServerFactory implements vscode.DebugAdapterDescriptorFactory {
-  createDebugAdapterDescriptor(
+  async createDebugAdapterDescriptor(
     session: vscode.DebugSession
-  ): ProviderResult<DebugAdapterDescriptor> {
+  ): Promise<DebugAdapterDescriptor | null> {
     if (
       session.configuration.mainClass !== undefined ||
       session.configuration.testClass !== undefined ||
       session.configuration.hostName !== undefined
     ) {
-      return vscode.commands
-        .executeCommand<DebugSession>(
-          ServerCommands.DebugAdapterStart,
-          session.configuration
-        )
-        .then((debugSession) => {
-          if (debugSession === undefined) {
-            return null;
-          }
-          return debugServerFromUri(debugSession.uri);
-        });
+      const debugSession = await vscode.commands.executeCommand<DebugSession>(
+        ServerCommands.DebugAdapterStart,
+        session.configuration
+      );
+
+      if (debugSession === undefined) {
+        return null;
+      } else {
+        return debugServerFromUri(debugSession.uri);
+      }
     }
     return null;
   }
@@ -115,9 +136,4 @@ export function debugServerFromUri(uri: string): vscode.DebugAdapterServer {
   const host = segments[0];
   const port = parseInt(segments[segments.length - 1]);
   return new vscode.DebugAdapterServer(port, host);
-}
-
-export interface DebugSession {
-  name: string;
-  uri: string;
 }
