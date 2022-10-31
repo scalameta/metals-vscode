@@ -1,14 +1,14 @@
 import * as vscode from "vscode";
 import { Location } from "vscode-languageclient/node";
+import {
+  BuildTargetIdentifier,
+  FullyQualifiedClassName,
+  TargetUri,
+} from "../types";
 import { newtype } from "../util";
 
 export type TargetName = newtype<string, "targetName">;
-export type TargetUri = newtype<string, "targetUri">;
 export type ClassName = newtype<string, "className">;
-export type FullyQualifiedClassName = newtype<
-  string,
-  "fullyQualifiedClassName"
->;
 export type TestName = newtype<string, "testName">;
 export type SuiteName = newtype<string, "suiteName">;
 
@@ -137,10 +137,6 @@ export interface TestRunActions {
 export interface TestSuiteRun {
   suiteItem: vscode.TestItem;
   testCases: vscode.TestItem[];
-}
-
-export interface BuildTargetIdentifier {
-  uri: TargetUri;
 }
 
 export interface ScalaTestSuitesDebugRequest {

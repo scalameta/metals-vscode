@@ -2,6 +2,7 @@ import { ServerCommands } from "metals-languageclient";
 import * as vscode from "vscode";
 import { CancellationToken, TestController, TestRunRequest } from "vscode";
 import { debugServerFromUri, DebugSession } from "../scalaDebugger";
+import { TargetUri } from "../types";
 import { analyzeTestRun } from "./analyzeTestRun";
 import {
   DapEvent,
@@ -9,7 +10,6 @@ import {
   RunnableMetalsTestItem,
   ScalaTestSuitesDebugRequest,
   ScalaTestSuiteSelection,
-  TargetUri,
   TestSuiteResult,
 } from "./types";
 import { gatherTestItems } from "./util";
