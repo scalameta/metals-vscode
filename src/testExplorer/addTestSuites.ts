@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
-import { AddTestSuite, TargetName, TargetUri } from "./types";
+import { TargetUri } from "../types";
+import { AddTestSuite, TargetName } from "./types";
 import {
   prefixesOf,
   refineTestItem,

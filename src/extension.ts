@@ -95,6 +95,7 @@ import {
   showMissingJavaAction,
 } from "./installJavaAction";
 import { openSettingsAction } from "./consts";
+import { ScalaCodeLensesParams } from "./scalaDebugger";
 
 const outputChannel = window.createOutputChannel("Metals");
 const downloadJava = "Download Java";
@@ -552,21 +553,27 @@ function launchMetals(
         }
       });
 
-      registerCommand(ClientCommands.StartDebugSession, (...args: any[]) => {
-        scalaDebugger.start(false, ...args).then((wasStarted) => {
-          if (!wasStarted) {
-            window.showErrorMessage("Debug session not started");
-          }
-        });
-      });
+      registerCommand(
+        ClientCommands.StartDebugSession,
+        (param: ScalaCodeLensesParams) => {
+          scalaDebugger.start(false, param).then((wasStarted) => {
+            if (!wasStarted) {
+              window.showErrorMessage("Debug session not started");
+            }
+          });
+        }
+      );
 
-      registerCommand(ClientCommands.StartRunSession, (...args: any[]) => {
-        scalaDebugger.start(true, ...args).then((wasStarted) => {
-          if (!wasStarted) {
-            window.showErrorMessage("Run session not started");
-          }
-        });
-      });
+      registerCommand(
+        ClientCommands.StartRunSession,
+        (param: ScalaCodeLensesParams) => {
+          scalaDebugger.start(true, param).then((wasStarted) => {
+            if (!wasStarted) {
+              window.showErrorMessage("Run session not started");
+            }
+          });
+        }
+      );
 
       // should be the compilation of a currently opened file
       // but some race conditions may apply

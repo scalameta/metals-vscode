@@ -3,8 +3,8 @@ import {
   AddTestCases,
   AddTestSuite,
   ClassName,
-  FullyQualifiedClassName,
 } from "../../../../testExplorer/types";
+import { FullyQualifiedClassName } from "../../../../types";
 
 const defaultRange: Range = {
   start: { line: 1, character: 1 },

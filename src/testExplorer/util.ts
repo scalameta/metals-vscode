@@ -1,14 +1,13 @@
 import * as vscode from "vscode";
 import { Range } from "vscode-languageclient/node";
+import { FullyQualifiedClassName, TargetUri } from "../types";
 import {
-  FullyQualifiedClassName,
   MetalsTestItem,
   MetalsTestItemKind,
   PackageMetalsTestItem,
   ProjectMetalsTestItem,
   SuiteMetalsTestItem,
   TargetName,
-  TargetUri,
   TestCaseMetalsTestItem,
 } from "./types";
 

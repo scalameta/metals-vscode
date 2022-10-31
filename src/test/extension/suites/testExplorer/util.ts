@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
-import { TargetName, TargetUri } from "../../../../testExplorer/types";
+import { TargetName } from "../../../../testExplorer/types";
+import { TargetUri } from "../../../../types";
 
 export function randomString(): string {
   return Math.random().toString(36).substring(2, 15);
