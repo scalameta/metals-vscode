@@ -16,28 +16,13 @@ import {
   RunType,
   ServerCommands,
 } from "metals-languageclient";
-import { ExtendedScalaRunMain, ScalaRunMain } from "./testExplorer/types";
+import {
+  ExtendedScalaRunMain,
+  ScalaRunMain,
+  ScalaTestSuites,
+} from "./testExplorer/types";
 
 const configurationType = "scala";
-
-export interface ScalaMainData {
-  class: string;
-  arguments: string[];
-  jvmOptions: string[];
-  environmentVariables: string[];
-}
-
-export interface ScalaRunMain {
-  data: ScalaMainData;
-  dataKind: "scala-main-class";
-  targets: BuildTargetIdentifier[];
-}
-
-export interface ScalaTestSuites {
-  data: FullyQualifiedClassName[];
-  dataKind: "scala-test-suites";
-  targets: BuildTargetIdentifier[];
-}
 
 export type ScalaCodeLensesParams = ScalaRunMain | ScalaTestSuites;
 
@@ -61,10 +46,16 @@ export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
   ];
 }
 
+function isScalaRunMain(
+  lenses: DebugDiscoveryParams | ScalaCodeLensesParams
+): lenses is ScalaRunMain {
+  return Object.prototype.hasOwnProperty.call(lenses, "data");
+}
+
 function isExtendedScalaRunMain(
-  runMain: ScalaCodeLensesParams
+  runMain: DebugDiscoveryParams | ScalaCodeLensesParams
 ): runMain is ExtendedScalaRunMain {
-  return runMain?.data?.shellCommand === "scala-main-class";
+  return isScalaRunMain(runMain) && runMain.data.shellCommand != undefined;
 }
 
 async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
@@ -95,7 +86,6 @@ export async function start(
   noDebug: boolean,
   debugParams: DebugDiscoveryParams | ScalaCodeLensesParams
 ): Promise<boolean> {
-  await commands.executeCommand("workbench.action.files.save");
   if (noDebug && isExtendedScalaRunMain(debugParams)) {
     return runMain(debugParams);
   } else {
@@ -107,6 +97,7 @@ export async function debug(
   noDebug: boolean,
   debugParams: DebugDiscoveryParams | ScalaCodeLensesParams
 ): Promise<boolean> {
+  await commands.executeCommand("workbench.action.files.save");
   const response = await vscode.commands.executeCommand<DebugSession>(
     ServerCommands.DebugAdapterStart,
     debugParams

@@ -139,10 +139,6 @@ export interface TestSuiteRun {
   testCases: vscode.TestItem[];
 }
 
-export interface BuildTargetIdentifier {
-  uri: TargetUri;
-}
-
 export interface OldScalaMainData {
   class: string;
   arguments: string[];
