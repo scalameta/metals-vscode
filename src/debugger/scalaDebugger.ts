@@ -18,13 +18,11 @@ import {
 } from "metals-languageclient";
 import {
   ExtendedScalaRunMain,
+  ScalaCodeLensesParams,
   ScalaRunMain,
-  ScalaTestSuites,
-} from "./testExplorer/types";
+} from "./types";
 
 const configurationType = "scala";
-
-export type ScalaCodeLensesParams = ScalaRunMain | ScalaTestSuites;
 
 export interface DebugSession {
   name: string;

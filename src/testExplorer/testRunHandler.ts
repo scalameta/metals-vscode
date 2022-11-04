@@ -1,15 +1,17 @@
 import { ServerCommands } from "metals-languageclient";
 import * as vscode from "vscode";
 import { CancellationToken, TestController, TestRunRequest } from "vscode";
-import { debugServerFromUri, DebugSession } from "../scalaDebugger";
+import { debugServerFromUri, DebugSession } from "../debugger/scalaDebugger";
+import {
+  ScalaTestSuitesDebugRequest,
+  ScalaTestSuiteSelection,
+} from "../debugger/types";
 import { TargetUri } from "../types";
 import { analyzeTestRun } from "./analyzeTestRun";
 import {
   DapEvent,
   MetalsTestItem,
   RunnableMetalsTestItem,
-  ScalaTestSuitesDebugRequest,
-  ScalaTestSuiteSelection,
   TestSuiteResult,
 } from "./types";
 import { gatherTestItems } from "./util";
