@@ -1,10 +1,6 @@
 import * as vscode from "vscode";
 import { Location } from "vscode-languageclient/node";
-import {
-  BuildTargetIdentifier,
-  FullyQualifiedClassName,
-  TargetUri,
-} from "../types";
+import { FullyQualifiedClassName, TargetUri } from "../types";
 import { newtype } from "../util";
 
 export type TargetName = newtype<string, "targetName">;
@@ -137,27 +133,6 @@ export interface TestRunActions {
 export interface TestSuiteRun {
   suiteItem: vscode.TestItem;
   testCases: vscode.TestItem[];
-}
-
-export interface ScalaTestSuitesDebugRequest {
-  /** The build target that contains the test classes. */
-  target: BuildTargetIdentifier;
-  requestData: ScalaTestSuites;
-}
-export interface ScalaTestSuites {
-  /** The fully qualified names of the test classes in this target and the tests in this test classes */
-  suites: ScalaTestSuiteSelection[];
-  /** The jvm options for the application. */
-  jvmOptions: string[];
-  /** The environment variables for the application. */
-  environmentVariables: string[];
-}
-
-export interface ScalaTestSuiteSelection {
-  /** The test class to run. */
-  className: string;
-  /** The selected tests to run. */
-  tests: string[];
 }
 
 export type MetalsTestItemKind = "project" | "package" | "suite" | "testcase";

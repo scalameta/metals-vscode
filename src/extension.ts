@@ -65,7 +65,7 @@ import {
 } from "metals-languageclient";
 import * as metalsLanguageClient from "metals-languageclient";
 import { startTreeView } from "./treeview";
-import * as scalaDebugger from "./scalaDebugger";
+import * as scalaDebugger from "./debugger/scalaDebugger";
 import { DecorationsRangesDidChange } from "./decorationProtocol";
 import { clearTimeout } from "timers";
 import { increaseIndentPattern } from "./indentPattern";
@@ -95,7 +95,7 @@ import {
   showMissingJavaAction,
 } from "./installJavaAction";
 import { openSettingsAction } from "./consts";
-import { ScalaCodeLensesParams } from "./scalaDebugger";
+import { ScalaCodeLensesParams } from "./debugger/types";
 
 const outputChannel = window.createOutputChannel("Metals");
 const downloadJava = "Download Java";
@@ -708,7 +708,7 @@ function launchMetals(
           path: editor.document.uri.toString(true),
           runType: RunType.RunOrTestFile,
         };
-        scalaDebugger.start(true, args).then((wasStarted) => {
+        scalaDebugger.startDiscovery(true, args).then((wasStarted) => {
           if (!wasStarted) {
             window.showErrorMessage("Debug session not started");
           }
@@ -720,7 +720,7 @@ function launchMetals(
           path: editor.document.uri.toString(true),
           runType: RunType.TestTarget,
         };
-        scalaDebugger.start(true, args).then((wasStarted) => {
+        scalaDebugger.startDiscovery(true, args).then((wasStarted) => {
           if (!wasStarted) {
             window.showErrorMessage("Debug session not started");
           }

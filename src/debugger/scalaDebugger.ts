@@ -6,36 +6,19 @@ import {
   WorkspaceFolder,
   DebugAdapterDescriptor,
   DebugConfigurationProviderTriggerKind,
+  workspace,
+  tasks,
+  Task,
+  ShellExecution,
 } from "vscode";
 import {
   DebugDiscoveryParams,
   RunType,
   ServerCommands,
 } from "metals-languageclient";
-import { BuildTargetIdentifier, FullyQualifiedClassName } from "./types";
+import { ExtendedScalaRunMain, ScalaCodeLensesParams } from "./types";
 
 const configurationType = "scala";
-
-export interface ScalaMainData {
-  class: string;
-  arguments: string[];
-  jvmOptions: string[];
-  environmentVariables: string[];
-}
-
-export interface ScalaRunMain {
-  data: ScalaMainData;
-  dataKind: "scala-main-class";
-  targets: BuildTargetIdentifier[];
-}
-
-export interface ScalaTestSuites {
-  data: FullyQualifiedClassName[];
-  dataKind: "scala-test-suites";
-  targets: BuildTargetIdentifier[];
-}
-
-export type ScalaCodeLensesParams = ScalaRunMain | ScalaTestSuites;
 
 export interface DebugSession {
   name: string;
@@ -57,12 +40,62 @@ export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
   ];
 }
 
+function isExtendedScalaRunMain(
+  runMain: ScalaCodeLensesParams
+): runMain is ExtendedScalaRunMain {
+  return (
+    runMain.dataKind === "scala-main-class" &&
+    runMain.data.shellCommand != undefined
+  );
+}
+
+async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
+  if (workspace.workspaceFolders) {
+    const env = main.data.environmentVariables.reduce<Record<string, string>>(
+      (acc, envKeyValue) => {
+        const [key, value] = envKeyValue.split("=");
+        return { ...acc, [key]: value };
+      },
+      {}
+    );
+
+    const task = new Task(
+      { type: "scala", task: "run" },
+      workspace.workspaceFolders[0],
+      "Scala run",
+      "Metals",
+      new ShellExecution(main.data.shellCommand, { env })
+    );
+
+    await tasks.executeTask(task);
+    return true;
+  }
+  return Promise.resolve(false);
+}
+
+export async function startDiscovery(
+  noDebug: boolean,
+  debugParams: DebugDiscoveryParams
+): Promise<boolean> {
+  return debug(noDebug, debugParams);
+}
+
 export async function start(
+  noDebug: boolean,
+  debugParams: ScalaCodeLensesParams
+): Promise<boolean> {
+  if (noDebug && isExtendedScalaRunMain(debugParams)) {
+    return runMain(debugParams);
+  } else {
+    return debug(noDebug, debugParams);
+  }
+}
+
+async function debug(
   noDebug: boolean,
   debugParams: DebugDiscoveryParams | ScalaCodeLensesParams
 ): Promise<boolean> {
   await commands.executeCommand("workbench.action.files.save");
-
   const response = await vscode.commands.executeCommand<DebugSession>(
     ServerCommands.DebugAdapterStart,
     debugParams
@@ -98,7 +131,7 @@ class ScalaMainConfigProvider implements vscode.DebugConfigurationProvider {
         path: editor.document.uri.toString(true),
         runType: RunType.RunOrTestFile,
       };
-      await start(false, args);
+      await startDiscovery(debugConfiguration.noDebug, args);
       return debugConfiguration;
     } else {
       return debugConfiguration;
