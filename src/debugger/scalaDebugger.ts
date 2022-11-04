@@ -16,11 +16,7 @@ import {
   RunType,
   ServerCommands,
 } from "metals-languageclient";
-import {
-  ExtendedScalaRunMain,
-  ScalaCodeLensesParams,
-  ScalaRunMain,
-} from "./types";
+import { ExtendedScalaRunMain, ScalaCodeLensesParams } from "./types";
 
 const configurationType = "scala";
 
@@ -44,16 +40,13 @@ export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
   ];
 }
 
-function isScalaRunMain(
-  lenses: DebugDiscoveryParams | ScalaCodeLensesParams
-): lenses is ScalaRunMain {
-  return Object.prototype.hasOwnProperty.call(lenses, "data");
-}
-
 function isExtendedScalaRunMain(
-  runMain: DebugDiscoveryParams | ScalaCodeLensesParams
+  runMain: ScalaCodeLensesParams
 ): runMain is ExtendedScalaRunMain {
-  return isScalaRunMain(runMain) && runMain.data.shellCommand != undefined;
+  return (
+    runMain.dataKind === "scala-main-class" &&
+    runMain.data.shellCommand != undefined
+  );
 }
 
 async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
@@ -80,9 +73,16 @@ async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
   return Promise.resolve(false);
 }
 
+export async function startDiscovery(
+  noDebug: boolean,
+  debugParams: DebugDiscoveryParams
+): Promise<boolean> {
+  return debug(noDebug, debugParams);
+}
+
 export async function start(
   noDebug: boolean,
-  debugParams: DebugDiscoveryParams | ScalaCodeLensesParams
+  debugParams: ScalaCodeLensesParams
 ): Promise<boolean> {
   if (noDebug && isExtendedScalaRunMain(debugParams)) {
     return runMain(debugParams);
@@ -91,7 +91,7 @@ export async function start(
   }
 }
 
-export async function debug(
+async function debug(
   noDebug: boolean,
   debugParams: DebugDiscoveryParams | ScalaCodeLensesParams
 ): Promise<boolean> {
@@ -131,7 +131,7 @@ class ScalaMainConfigProvider implements vscode.DebugConfigurationProvider {
         path: editor.document.uri.toString(true),
         runType: RunType.RunOrTestFile,
       };
-      await start(debugConfiguration.noDebug, args);
+      await startDiscovery(debugConfiguration.noDebug, args);
       return debugConfiguration;
     } else {
       return debugConfiguration;

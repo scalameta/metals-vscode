@@ -1,4 +1,4 @@
-import { BuildTargetIdentifier } from "../types";
+import { BuildTargetIdentifier, FullyQualifiedClassName } from "../types";
 
 export interface OldScalaMainData {
   class: string;
@@ -48,4 +48,18 @@ export interface ScalaTestSuiteSelection {
   tests: string[];
 }
 
-export type ScalaCodeLensesParams = ScalaRunMain | ScalaTestSuites;
+interface ScalaRunTestSuites {
+  data: FullyQualifiedClassName[];
+  dataKind: "scala-test-suite";
+  targets: BuildTargetIdentifier[];
+}
+
+interface ScalaRunTestSuitesSelection {
+  data: ScalaTestSuites[];
+  dataKind: "scala-test-suites-selection";
+  targets: BuildTargetIdentifier[];
+}
+
+type ScalaRunTests = ScalaRunTestSuites | ScalaRunTestSuitesSelection;
+
+export type ScalaCodeLensesParams = ScalaRunMain | ScalaRunTests;

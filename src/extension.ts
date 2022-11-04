@@ -708,7 +708,7 @@ function launchMetals(
           path: editor.document.uri.toString(true),
           runType: RunType.RunOrTestFile,
         };
-        scalaDebugger.start(true, args).then((wasStarted) => {
+        scalaDebugger.startDiscovery(true, args).then((wasStarted) => {
           if (!wasStarted) {
             window.showErrorMessage("Debug session not started");
           }
@@ -720,7 +720,7 @@ function launchMetals(
           path: editor.document.uri.toString(true),
           runType: RunType.TestTarget,
         };
-        scalaDebugger.start(true, args).then((wasStarted) => {
+        scalaDebugger.startDiscovery(true, args).then((wasStarted) => {
           if (!wasStarted) {
             window.showErrorMessage("Debug session not started");
           }
