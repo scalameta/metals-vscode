@@ -1002,7 +1002,7 @@
   },
   "devDependencies": {
     "@sourcegraph/scip-typescript": "^0.3.1",
-    "@types/chai": "^4.3.3",
+    "@types/chai": "^4.3.4",
     "@types/glob": "^8.0.0",
     "@types/marked": "^4.0.7",
     "@types/mocha": "^10.0.0",
@@ -1013,7 +1013,7 @@
     "@typescript-eslint/eslint-plugin": "^5.42.0",
     "@typescript-eslint/parser": "^5.42.0",
     "@vscode/test-electron": "^2.2.0",
-    "chai": "^4.3.6",
+    "chai": "^4.3.7",
     "eslint": "^8.27.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-mocha": "^10.1.0",
