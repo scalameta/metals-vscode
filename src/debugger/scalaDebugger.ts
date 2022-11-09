@@ -17,6 +17,7 @@ import {
   ServerCommands,
 } from "metals-languageclient";
 import { ExtendedScalaRunMain, ScalaCodeLensesParams } from "./types";
+import { platform } from "os";
 
 const configurationType = "scala";
 
@@ -49,6 +50,16 @@ function isExtendedScalaRunMain(
   );
 }
 
+function shellOptions(
+  env: Record<string, string>
+): vscode.ShellExecutionOptions {
+  if (platform() == "win32") {
+    return { executable: "cmd.exe", shellArgs: ["/c"], env };
+  } else {
+    return { env };
+  }
+}
+
 async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
   if (workspace.workspaceFolders) {
     const env = main.data.environmentVariables.reduce<Record<string, string>>(
@@ -64,7 +75,7 @@ async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
       workspace.workspaceFolders[0],
       "Scala run",
       "Metals",
-      new ShellExecution(main.data.shellCommand, { env })
+      new ShellExecution(main.data.shellCommand, shellOptions(env))
     );
 
     await tasks.executeTask(task);
