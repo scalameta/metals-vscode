@@ -17,6 +17,7 @@ import {
   ServerCommands,
 } from "metals-languageclient";
 import { ExtendedScalaRunMain, ScalaCodeLensesParams } from "./types";
+import { platform } from "os";
 
 const configurationType = "scala";
 
@@ -49,9 +50,25 @@ function isExtendedScalaRunMain(
   );
 }
 
+/**
+ * Return platform specific options for task.
+ *
+ * By default, task will use whatever shell user has defined as a default one.
+ * However, for Windows tasks seems to not work properly with Powershell,
+ * that's why we want to explicitly specify executable as plain old cmd
+ */
+function platformSpecificOptions(): vscode.ShellExecutionOptions {
+  if (platform() == "win32") {
+    return { executable: "cmd.exe", shellArgs: ["/c"] };
+  } else {
+    return {};
+  }
+}
+
 async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
+  const { environmentVariables, shellCommand } = main.data;
   if (workspace.workspaceFolders) {
-    const env = main.data.environmentVariables.reduce<Record<string, string>>(
+    const env = environmentVariables.reduce<Record<string, string>>(
       (acc, envKeyValue) => {
         const [key, value] = envKeyValue.split("=");
         return { ...acc, [key]: value };
@@ -59,12 +76,13 @@ async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
       {}
     );
 
+    const shellOptions = { ...platformSpecificOptions(), env };
     const task = new Task(
       { type: "scala", task: "run" },
       workspace.workspaceFolders[0],
       "Scala run",
       "Metals",
-      new ShellExecution(main.data.shellCommand, { env })
+      new ShellExecution(shellCommand, shellOptions)
     );
 
     await tasks.executeTask(task);
