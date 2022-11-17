@@ -99,16 +99,16 @@
   resolved "https://registry.yarnpkg.com/@sinonjs/text-encoding/-/text-encoding-0.7.2.tgz#5981a8db18b56ba38ef0efb7d995b12aa7b51918"
   integrity sha512-sXXKG+uL9IrKqViTtao2Ws6dy0znu9sOaP1di/jKGW1M6VssO8vlpXCQcpZ+jisQ1tTFAC5Jo/EOzFbggBagFQ==
 
-"@sourcegraph/scip-typescript@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@sourcegraph/scip-typescript/-/scip-typescript-0.3.1.tgz#b8c3f7547661de79816e9b3407457187f28cee67"
-  integrity sha512-93tAdW3HwCGFqZZ9tlMPCQ65w6FkDGf4xaHHpvdMUi9PgpGs73S8ZWic0WyrQkdkLI5BUXIEOpadnNXxzQB4jg==
+"@sourcegraph/scip-typescript@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@sourcegraph/scip-typescript/-/scip-typescript-0.3.2.tgz#bb1951649c87a9d4b7070d6183c309b777e87c57"
+  integrity sha512-w2bQxLWbUTuLzcIRYbyeq0BMPGB0FtaGe+Hifek6EVb4DiQ2tBBCFfnk3HipS9Vt597vQEGO6pYeuW5u1ggiRQ==
   dependencies:
     commander "^9.2.0"
-    google-protobuf "^3.20.0"
+    google-protobuf "^3.20.1"
     pretty-ms "^7.0.1"
     progress "^2.0.3"
-    typescript "^4.5.4"
+    typescript "^4.8.4"
 
 "@tootallnate/once@1":
   version "1.1.2"
@@ -1192,10 +1192,10 @@ globby@^11.1.0:
     merge2 "^1.4.1"
     slash "^3.0.0"
 
-google-protobuf@^3.20.0:
-  version "3.20.1"
-  resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.20.1.tgz#1b255c2b59bcda7c399df46c65206aa3c7a0ce8b"
-  integrity sha512-XMf1+O32FjYIV3CYu6Tuh5PNbfNEU5Xu22X+Xkdb/DUexFlCzhvv7d5Iirm4AOwn8lv4al1YvIhzGrg2j9Zfzw==
+google-protobuf@^3.20.1:
+  version "3.21.2"
+  resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.21.2.tgz#4580a2bea8bbb291ee579d1fefb14d6fa3070ea4"
+  integrity sha512-3MSOYFO5U9mPGikIYCzK0SaThypfGgS6bHqrUGXG3DPHCrb+txNqeEcns1W0lkGfk0rCyNXm7xB9rMxnCiZOoA==
 
 graceful-fs@^4.1.2, graceful-fs@^4.2.2:
   version "4.2.9"
@@ -2346,7 +2346,7 @@ typed-rest-client@^1.8.4:
     tunnel "0.0.6"
     underscore "^1.12.1"
 
-typescript@4.9.3, typescript@^4.5.4:
+typescript@4.9.3, typescript@^4.8.4:
   version "4.9.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.3.tgz#3aea307c1746b8c384435d8ac36b8a2e580d85db"
   integrity sha512-CIfGzTelbKNEnLpLdGFgdyKhG23CKdKgQPOBc+OUNrkJ2vr+KSzsSV5kq5iWhEQbok+quxgGzrAtGWCyU7tHnA==
