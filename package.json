@@ -1030,7 +1030,7 @@
   },
   "dependencies": {
     "ansicolor": "^1.1.100",
-    "marked": "^4.2.2",
+    "marked": "^4.2.3",
     "metals-languageclient": "0.5.18",
     "promisify-child-process": "4.1.1",
     "semver": "^7.3.8",
