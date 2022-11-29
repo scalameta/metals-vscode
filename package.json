@@ -50,6 +50,8 @@
     "workspaceContains:build.sbt",
     "workspaceContains:build.sc",
     "workspaceContains:project/build.properties",
+    "workspaceContains:project.scala",
+    "workspaceContains:.scala-build",
     "workspaceContains:src/main/scala",
     "workspaceContains:*/src/main/scala",
     "workspaceContains:*/*/src/main/scala"
