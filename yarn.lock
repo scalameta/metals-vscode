@@ -1738,17 +1738,17 @@ optionator@^0.9.1:
     type-check "^0.4.0"
     word-wrap "^1.2.3"
 
-ovsx@0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/ovsx/-/ovsx-0.5.2.tgz#174c887746811adae131c9c31363a4756cb5cd9e"
-  integrity sha512-UbLultRCk46WddeA0Cly4hoRhzBJUiLgbIEViXlgOvV54LbsppClDkMLoCevUUBHoiNdMX2NuiSgURAEXgCZdw==
+ovsx@0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/ovsx/-/ovsx-0.6.0.tgz#99f309eb28843decec77e01473112312b2202a0f"
+  integrity sha512-E9NvikCLJjv9Ssf04ozSTRi9VXZK0kLgiN59cgO7M/Zt9zyVVf//kNWseZai3OC7SjpvsNK5kzC9s+6iS7jCxA==
   dependencies:
     commander "^6.1.0"
     follow-redirects "^1.14.6"
     is-ci "^2.0.0"
     leven "^3.1.0"
     tmp "^0.2.1"
-    vsce "^2.6.3"
+    vsce "2.7.0"
 
 p-limit@^3.0.2:
   version "3.1.0"
@@ -2394,10 +2394,36 @@ util-deprecate@^1.0.1, util-deprecate@~1.0.1:
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=
 
-vsce@2.14.0, vsce@^2.6.3:
+vsce@2.14.0:
   version "2.14.0"
   resolved "https://registry.yarnpkg.com/vsce/-/vsce-2.14.0.tgz#f264c427f52cb6c1b1ba2e5f8a84063a034f2438"
   integrity sha512-LH0j++sHjcFNT++SYcJ86Zyw49GvyoTRfzYJGmaCgfzTyL7MyMhZeVEnj9K9qKh/m1N3/sdWWNxP+PFS/AvWiA==
+  dependencies:
+    azure-devops-node-api "^11.0.1"
+    chalk "^2.4.2"
+    cheerio "^1.0.0-rc.9"
+    commander "^6.1.0"
+    glob "^7.0.6"
+    hosted-git-info "^4.0.2"
+    keytar "^7.7.0"
+    leven "^3.1.0"
+    markdown-it "^12.3.2"
+    mime "^1.3.4"
+    minimatch "^3.0.3"
+    parse-semver "^1.1.1"
+    read "^1.0.7"
+    semver "^5.1.0"
+    tmp "^0.2.1"
+    typed-rest-client "^1.8.4"
+    url-join "^4.0.1"
+    xml2js "^0.4.23"
+    yauzl "^2.3.1"
+    yazl "^2.2.2"
+
+vsce@2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/vsce/-/vsce-2.7.0.tgz#7be8deebd1e673b996238d608e7f7324c98744ed"
+  integrity sha512-CKU34wrQlbKDeJCRBkd1a8iwF9EvNxcYMg9hAUH6AxFGR6Wo2IKWwt3cJIcusHxx6XdjDHWlfAS/fJN30uvVnA==
   dependencies:
     azure-devops-node-api "^11.0.1"
     chalk "^2.4.2"
