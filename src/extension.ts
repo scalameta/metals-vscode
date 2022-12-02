@@ -28,6 +28,7 @@ import {
   ProviderResult,
   Hover,
   TextDocument,
+  tests,
 } from "vscode";
 import {
   LanguageClient,
@@ -600,7 +601,7 @@ function launchMetals(
           "Test Explorer"
         );
 
-      const istTestManagerDisabled = getTestUI() === "Code Lenses";
+      const istTestManagerDisabled = !tests || getTestUI() === "Code Lenses";
       const testManager = createTestManager(client, istTestManagerDisabled);
 
       const disableTestExplorer = workspace.onDidChangeConfiguration(() => {
