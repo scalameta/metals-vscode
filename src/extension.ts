@@ -28,6 +28,7 @@ import {
   ProviderResult,
   Hover,
   TextDocument,
+  tests as vscodeTextExplorer,
 } from "vscode";
 import {
   LanguageClient,
@@ -600,7 +601,10 @@ function launchMetals(
           "Test Explorer"
         );
 
-      const istTestManagerDisabled = getTestUI() === "Code Lenses";
+      // vscodeTextExplorer can be undefined e.g. for eclipse theia,
+      // see https://github.com/scalameta/metals-vscode/discussions/1244
+      const istTestManagerDisabled =
+        !vscodeTextExplorer || getTestUI() === "Code Lenses";
       const testManager = createTestManager(client, istTestManagerDisabled);
 
       const disableTestExplorer = workspace.onDidChangeConfiguration(() => {
