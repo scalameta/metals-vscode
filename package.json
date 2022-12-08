@@ -1033,7 +1033,7 @@
   },
   "dependencies": {
     "ansicolor": "^1.1.100",
-    "marked": "^4.2.3",
+    "marked": "^4.2.4",
     "metals-languageclient": "0.5.18",
     "promisify-child-process": "4.1.1",
     "semver": "^7.3.8",
