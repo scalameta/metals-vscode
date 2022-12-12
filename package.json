@@ -1007,7 +1007,7 @@
     "@sourcegraph/scip-typescript": "^0.3.3",
     "@types/chai": "^4.3.4",
     "@types/glob": "^8.0.0",
-    "@types/marked": "^4.0.7",
+    "@types/marked": "^4.0.8",
     "@types/mocha": "^10.0.1",
     "@types/node": "18.11.12",
     "@types/semver": "^7.3.13",
