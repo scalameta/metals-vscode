@@ -29,6 +29,8 @@ import {
   Hover,
   TextDocument,
   tests as vscodeTextExplorer,
+  CompletionItem,
+  CompletionList,
 } from "vscode";
 import {
   LanguageClient,
@@ -301,6 +303,28 @@ function launchMetals(
     outputChannel: outputChannel,
     initializationOptions,
     middleware: {
+      provideCompletionItem: async (
+        document,
+        position,
+        context,
+        token,
+        next
+      ) => {
+        const list = await next(document, position, context, token);
+        if (Array.isArray(list)) {
+          return list;
+        } else if (list) {
+          // workaround for https://github.com/scalameta/metals/issues/4756
+          // original vscode issue https://github.com/microsoft/vscode/issues/155738
+          if (list.isIncomplete && list.items.length == 0) {
+            // this item won't be rendered by vscode
+            const item = new CompletionItem("type more!!");
+            return new CompletionList([item], true);
+          } else {
+            return list;
+          }
+        }
+      },
       provideHover: hoverLinksMiddlewareHook,
     },
     markdown: {
