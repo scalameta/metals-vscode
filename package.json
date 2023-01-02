@@ -220,7 +220,7 @@
       "properties": {
         "metals.serverVersion": {
           "type": "string",
-          "default": "0.11.9+120-c8475f05-SNAPSHOT",
+          "default": "0.11.10",
           "markdownDescription": "The version of the Metals server artifact. Requires reloading the window.  \n\n**VS Code extension version is guaranteed to work only with the default version, change if you know what you're doing**"
         },
         "metals.serverProperties": {
@@ -351,6 +351,7 @@
           "default": "automatic",
           "enum": [
             "automatic",
+            "2.13.10",
             "2.13.9",
             "2.13.8",
             "2.13.7",
@@ -371,7 +372,7 @@
             "2.12.9",
             "2.12.8",
             "2.11.12",
-            "3.2.1-RC2",
+            "3.2.1",
             "3.2.0",
             "3.1.3",
             "3.1.2",
