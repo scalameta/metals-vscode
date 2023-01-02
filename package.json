@@ -1017,7 +1017,7 @@
     "@typescript-eslint/parser": "^5.47.1",
     "@vscode/test-electron": "^2.2.1",
     "chai": "^4.3.7",
-    "eslint": "^8.30.0",
+    "eslint": "^8.31.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-mocha": "^10.1.0",
     "glob": "^8.0.3",
