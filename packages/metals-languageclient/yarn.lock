@@ -556,9 +556,9 @@
     "@types/yargs-parser" "*"
 
 "@viperproject/locate-java-home@^1.1.5":
-  version "1.1.9"
-  resolved "https://registry.yarnpkg.com/@viperproject/locate-java-home/-/locate-java-home-1.1.9.tgz#d41c32d07fbbf2d4fa5922ffad1dc92fa66dfc19"
-  integrity sha512-pl+V4OiYhCxDajtyd6lnlE6yxqJp+aTrd7LhnzLyg7W6NwKLigFhcbo3hZP/wDVTTDTgsdPSLiyZFo+OQIyINg==
+  version "1.1.10"
+  resolved "https://registry.yarnpkg.com/@viperproject/locate-java-home/-/locate-java-home-1.1.10.tgz#af0acbc31e1654e040f0be5faa3bf542fabc515c"
+  integrity sha512-ASWBTxMjrAq+djUCR+kklvsfgP3fkprh99B1J8Ru5sOlyKiYipE7hD4gB/dadwBE4kk53EirhcdCvw6jUGGxpA==
   dependencies:
     async "^3.2.3"
     semver "^7.3.5"
