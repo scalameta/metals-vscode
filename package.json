@@ -220,7 +220,7 @@
       "properties": {
         "metals.serverVersion": {
           "type": "string",
-          "default": "0.11.10",
+          "default": "0.11.10+21-a3a44da3-SNAPSHOT",
           "markdownDescription": "The version of the Metals server artifact. Requires reloading the window.  \n\n**VS Code extension version is guaranteed to work only with the default version, change if you know what you're doing**"
         },
         "metals.serverProperties": {
@@ -336,6 +336,11 @@
           "type": "boolean",
           "default": false,
           "markdownDescription": "When this option is enabled, when user pastes any snippet into a Scala file, Metals will try to adjust the indentation to that of the current cursor."
+        },
+        "metals.enableSemanticHighlighting": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "When this option is enabled, Metals will provide semantic tokens for clients that support it. The feature is still experimental and does not work for all sources."
         },
         "metals.testUserInterface": {
           "type": "string",
