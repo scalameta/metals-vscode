@@ -1764,10 +1764,10 @@ optionator@^0.9.1:
     type-check "^0.4.0"
     word-wrap "^1.2.3"
 
-ovsx@0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/ovsx/-/ovsx-0.7.1.tgz#021970005d4e25dcd19287ec82296416f7aff715"
-  integrity sha512-+izXZcujPH+Amq0vGPl0JTeG3m4z9Lfjh0X2DsCoe6ora1eFp+Y3VoJJfngTGWfK01cBxQumqDZvb6psICtuDA==
+ovsx@0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/ovsx/-/ovsx-0.8.0.tgz#e41dffaa8b6230a684e041c1cfe00d5f5b31344d"
+  integrity sha512-W1U7lgBIbhSB1DcqyGKeenKzmwWYY78SkWd+BUKKyLyqN6w39Uekdr0PKAM7dyBGb0JLtLE7d86A1jJVn8bEng==
   dependencies:
     "@vscode/vsce" "^2.15.0"
     commander "^6.1.0"
