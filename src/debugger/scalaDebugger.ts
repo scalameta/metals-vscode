@@ -95,7 +95,26 @@ export async function startDiscovery(
   noDebug: boolean,
   debugParams: DebugDiscoveryParams
 ): Promise<boolean> {
-  return debug(noDebug, debugParams);
+  if (
+    noDebug &&
+    debugParams.runType != RunType.TestFile &&
+    debugParams.runType != RunType.TestTarget
+  ) {
+    return vscode.commands
+      .executeCommand<ScalaCodeLensesParams>(
+        "discover-jvm-run-command",
+        debugParams
+      )
+      .then((response) => {
+        if (response && isExtendedScalaRunMain(response)) {
+          return runMain(response);
+        } else {
+          return debug(noDebug, debugParams);
+        }
+      });
+  } else {
+    return debug(noDebug, debugParams);
+  }
 }
 
 export async function start(
