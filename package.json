@@ -1021,7 +1021,7 @@
     "@types/vscode": "1.59.0",
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
-    "@vscode/test-electron": "^2.2.2",
+    "@vscode/test-electron": "^2.2.3",
     "chai": "^4.3.7",
     "eslint": "^8.33.0",
     "eslint-config-prettier": "^8.6.0",
