@@ -549,6 +549,11 @@
         "title": "Create Worksheet"
       },
       {
+        "command": "metals.open-new-github-issue",
+        "category": "Metals",
+        "title": "Open new github issue"
+      },
+      {
         "command": "metals.super-method-hierarchy",
         "category": "Metals",
         "title": "Reveal super method hierachy"
