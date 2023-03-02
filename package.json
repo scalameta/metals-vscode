@@ -1026,7 +1026,7 @@
     "eslint": "^8.35.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-mocha": "^10.1.0",
-    "glob": "^8.1.0",
+    "glob": "^9.1.2",
     "mkdirp": "2.1.4",
     "mocha": "^10.2.0",
     "ovsx": "0.8.0",
