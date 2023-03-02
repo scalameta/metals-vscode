@@ -37,15 +37,15 @@ every PR is tested on Ubuntu, Windows and MacOS.
 **Scala 2.13, 2.12, 2.11 and Scala 3**. Metals supports these Scala versions:
 
 - **Scala 2.13**: 2.13.10, 2.13.9, 2.13.8, 2.13.7, 2.13.6, 2.13.5, 2.13.4,
-  2.13.3, 2.13.2, 2.13.1
+  2.13.3
 
 - **Scala 2.12**: 2.12.17, 2.12.16, 2.12.15, 2.12.14, 2.12.13, 2.12.12, 2.12.11,
-  2.12.10, 2.12.9
+  2.12.10
 
 - **Scala 2.11**: 2.11.12
 
-- **Scala 3**: 3.2.2-RC2, 3.2.2-RC1, 3.2.1, 3.2.0, 3.1.3, 3.1.2, 3.1.1, 3.1.0,
-  3.0.2, 3.0.1, 3.0.0
+- **Scala 3**: 3.3.0-RC3, 3.3.0-RC2, 3.2.2, 3.2.1, 3.2.0, 3.1.3, 3.1.2, 3.1.1,
+  3.1.0, 3.0.2
 
 Note that 2.11.x support is deprecated and it will be removed in future
 releases. It's recommended to upgrade to Scala 2.12 or Scala 2.13
@@ -554,6 +554,14 @@ project's modules. From this panel it's possible to
 - navigate to test's definition.
 
 ![test-explorer](https://i.imgur.com/Z3VtS0O.gif)
+
+NOTE: While Metals detects test suites for most of existing testing frameworks,
+support for recognizing individual tests is more limited. Metals supports the
+current set of test frameworks when it comes to individual test discovery:
+
+- Junit
+- MUnit
+- Scalatest
 
 If you encounter an error, create an
 [issue](https://github.com/scalameta/metals/issues).
