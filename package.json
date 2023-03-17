@@ -1016,7 +1016,7 @@
     "format-check": "prettier --check **/*.{ts,js,json,yml}"
   },
   "devDependencies": {
-    "@sourcegraph/scip-typescript": "^0.3.6",
+    "@sourcegraph/scip-typescript": "^0.3.7",
     "@types/chai": "^4.3.4",
     "@types/glob": "^8.1.0",
     "@types/marked": "^4.0.8",
