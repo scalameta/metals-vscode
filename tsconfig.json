@@ -2,17 +2,14 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es2015",
-    "outDir": "out",
     "lib": ["es2018"],
     "sourceMap": true,
-    "rootDir": "src",
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
-  },
-  "exclude": ["node_modules", ".vscode-test", "src/test/unit"]
+    "skipLibCheck": true,
+  }
 }
