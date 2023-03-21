@@ -38,7 +38,9 @@ jobs:
         with:
           node-version: "16"
       - run: |
-          cd packages/metals-vscode
+          cd packages/metals-languageclient
+          yarn install && yarn build
+          cd ../metals-vscode
           yarn install
       - name: Run extension tests
         run: |
@@ -56,11 +58,10 @@ jobs:
         with:
           node-version: "16"
       - run: |
-          cd packages/metals-vscode
-          yarn install
-      - run: |
-          cd packages/metals-vscode
-          yarn build
+          cd packages/metals-languageclient
+          yarn install && yarn build
+          cd ../metals-vscode
+          yarn install && yarn build
 
   prettier:
     name: Prettier
@@ -103,12 +104,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
       - run: |
-          cd packages/metals-vscode
-          yarn install
+          cd packages/metals-languageclient
+          yarn install && yarn build
           cd ../metals-languageclient
-          yarn install
-      - run: |
-          cd packages/metals-vscode
-          yarn tsc
-          cd ../metals-languageclient
-          yarn tsc
+          yarn install && yarn tsc
