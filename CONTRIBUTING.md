@@ -18,7 +18,9 @@ First, clone the repo and install the project dependencies.
 
 ```
 git clone https://github.com/scalameta/metals-vscode.git
-cd metals-vscode
+cd packages/metals-languageclient
+yarn install && yarn build
+cd ../metals-vscode
 yarn install
 code .
 ```
