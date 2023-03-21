@@ -8,7 +8,11 @@ on:
 jobs:
   test:
     name: Test
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -17,8 +21,12 @@ jobs:
       - run: |
           cd packages/metals-vscode
           yarn install
+          cd ../metals-languageclient
+          yarn install
       - run: |
           cd packages/metals-vscode
+          yarn test
+          cd ../metals-languageclient
           yarn test
 
   extension-test:
@@ -30,7 +38,9 @@ jobs:
         with:
           node-version: "16"
       - run: |
-          cd packages/metals-vscode
+          cd packages/metals-languageclient
+          yarn install && yarn build
+          cd ../metals-vscode
           yarn install
       - name: Run extension tests
         run: |
@@ -48,11 +58,10 @@ jobs:
         with:
           node-version: "16"
       - run: |
-          cd packages/metals-vscode
-          yarn install
-      - run: |
-          cd packages/metals-vscode
-          yarn build
+          cd packages/metals-languageclient
+          yarn install && yarn build
+          cd ../metals-vscode
+          yarn install && yarn build
 
   prettier:
     name: Prettier
@@ -65,8 +74,12 @@ jobs:
       - run: |
           cd packages/metals-vscode
           yarn install
+          cd ../metals-languageclient
+          yarn install
       - run: |
           cd packages/metals-vscode
+          yarn format-check
+          cd ../metals-languageclient
           yarn format-check
 
   eslint:
@@ -83,3 +96,15 @@ jobs:
       - run: |
           cd packages/metals-vscode
           yarn eslint .
+
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - run: |
+          cd packages/metals-languageclient
+          yarn install && yarn build
+          cd ../metals-languageclient
+          yarn install && yarn tsc

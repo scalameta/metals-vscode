@@ -14,7 +14,8 @@
     "prepublish": "rm -rf lib && tsc",
     "test": "jest",
     "format": "prettier --write '**/*.{ts,js,json,yml}'",
-    "format-check": "prettier --check '**/*.{ts,js,json,yml}'"
+    "format-check": "prettier --check '**/*.{ts,js,json,yml}'",
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/jest": "^27.0.0",
