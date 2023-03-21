@@ -14,8 +14,12 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "16"
-      - run: yarn install
-      - run: yarn test
+      - run: |
+          cd packages/metals-vscode
+          yarn install
+      - run: |
+          cd packages/metals-vscode
+          yarn test
 
   extension-test:
     name: Extension test
@@ -25,9 +29,13 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "16"
-      - run: yarn install
+      - run: |
+          cd packages/metals-vscode
+          yarn install
       - name: Run extension tests
-        run: xvfb-run -a yarn test-extension
+        run: |
+          cd packages/metals-vscode
+          xvfb-run -a yarn test-extension
         # In headless Linux CI machines xvfb is required to run VS Code
         # https://code.visualstudio.com/api/working-with-extensions/continuous-integration#github-actions
 
@@ -39,8 +47,12 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "16"
-      - run: yarn install
-      - run: yarn build
+      - run: |
+          cd packages/metals-vscode
+          yarn install
+      - run: |
+          cd packages/metals-vscode
+          yarn build
 
   prettier:
     name: Prettier
@@ -50,8 +62,12 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "16"
-      - run: yarn install
-      - run: yarn format-check
+      - run: |
+          cd packages/metals-vscode
+          yarn install
+      - run: |
+          cd packages/metals-vscode
+          yarn format-check
 
   eslint:
     name: Eslint
@@ -61,5 +77,9 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "16"
-      - run: yarn install
-      - run: yarn eslint .
+      - run: |
+          cd packages/metals-vscode
+          yarn install
+      - run: |
+          cd packages/metals-vscode
+          yarn eslint .
