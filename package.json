@@ -1030,7 +1030,7 @@
     "@vscode/test-electron": "^2.3.0",
     "chai": "^4.3.7",
     "eslint": "^8.36.0",
-    "eslint-config-prettier": "^8.7.0",
+    "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-mocha": "^10.1.0",
     "glob": "^9.3.0",
     "mkdirp": "2.1.5",
