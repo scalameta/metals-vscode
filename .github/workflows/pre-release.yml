@@ -35,7 +35,9 @@ jobs:
       # but we don't want to force normal users to update, modify it
       - name: Update required vs code version
         run: |
-          cd packages/metals-vscode
+          cd packages/metals-languageclient
+          yarn install && yarn build
+          cd ../metals-vscode
           node ./update-version.js
           yarn install
       - name: Publish pre-release version to Visual Studio Marketplace
