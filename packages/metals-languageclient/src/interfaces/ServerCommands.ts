@@ -110,6 +110,11 @@ export const ServerCommands = {
    * only if more than one result is found.
    */
   SuperMethodHierarchy: "super-method-hierarchy",
+  /**
+   * Zip all the reports from the `.metals/.reports` into a `.metals/reports.zip`.
+   * This zipped file can be added to a GitHub issue to help with debugging.
+   */
+  ZipReports: "zip-reports",
 } as const;
 
 type ServerCommands = typeof ServerCommands;
