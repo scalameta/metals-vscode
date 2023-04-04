@@ -485,6 +485,11 @@
         "title": "Zip reports"
       },
       {
+        "command": "metals.reset-workspace",
+        "category": "Metals",
+        "title": "Clear caches and reimport project"
+      },
+      {
         "command": "metals.show-release-notes",
         "category": "Metals",
         "title": "Show release notes"
@@ -756,6 +761,10 @@
         },
         {
           "command": "metals.zip-reports",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.reset-workspace",
           "when": "metals:enabled"
         },
         {

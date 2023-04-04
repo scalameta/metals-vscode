@@ -498,6 +498,7 @@ function launchMetals(
         ServerCommands.ScalaCliStart,
         ServerCommands.ScalaCliStop,
         ServerCommands.ZipReports,
+        ServerCommands.ResetWorkspace,
         "open-new-github-issue",
       ].forEach((command) => {
         registerCommand("metals." + command, async () =>

@@ -115,6 +115,10 @@ export const ServerCommands = {
    * This zipped file can be added to a GitHub issue to help with debugging.
    */
   ZipReports: "zip-reports",
+  /**
+   * Delete all directories in .bloop and restart the Bloop server.
+   */
+  ResetWorkspace: "reset-workspace",
 } as const;
 
 type ServerCommands = typeof ServerCommands;
