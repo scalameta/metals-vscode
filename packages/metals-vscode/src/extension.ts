@@ -183,62 +183,69 @@ function fetchAndLaunchMetals(
     extensionPath: context.extensionPath,
   });
 
-  const fetchProcess = fetchMetals({
-    serverVersion,
-    serverProperties,
-    javaConfig,
-  });
+  const fetchProcess = fetchMetals(
+    {
+      serverVersion,
+      serverProperties,
+      javaConfig,
+    },
+    outputChannel
+  );
 
   const title = `Downloading Metals v${serverVersion}`;
-  return trackDownloadProgress(title, outputChannel, fetchProcess).then(
-    (classpath) => {
-      return launchMetals(
-        outputChannel,
-        context,
-        classpath,
-        serverProperties,
-        javaConfig,
-        serverVersion
-      );
-    },
-    (reason) => {
-      if (reason instanceof Error) {
-        outputChannel.appendLine(
-          "Downloading Metals failed with the following:"
+  return fetchProcess
+    .then((childProcess) => {
+      return trackDownloadProgress(title, outputChannel, childProcess.promise);
+    })
+    .then(
+      (classpath) => {
+        return launchMetals(
+          outputChannel,
+          context,
+          classpath,
+          serverProperties,
+          javaConfig,
+          serverVersion
         );
-        outputChannel.appendLine(reason.message);
-      }
-      const msg = (() => {
-        const proxy =
-          `See https://scalameta.org/metals/docs/editors/vscode/#http-proxy for instructions ` +
-          `if you are using an HTTP proxy.`;
-        if (process.env.FLATPAK_SANDBOX_DIR) {
-          return (
-            `Failed to download Metals. It seems you are running Visual Studio Code inside the ` +
-            `Flatpak sandbox, which is known to interfere with the download of Metals. ` +
-            `Please, try running Visual Studio Code without Flatpak.`
+      },
+      (reason) => {
+        if (reason instanceof Error) {
+          outputChannel.appendLine(
+            "Downloading Metals failed with the following:"
           );
-        } else {
-          return (
-            `Failed to download Metals, make sure you have an internet connection, ` +
-            `the Metals version '${serverVersion}' is correct and the Java Home '${javaHome}' is valid. ` +
-            `You can configure the Metals version and Java Home in the settings.` +
-            proxy
-          );
+          outputChannel.appendLine(reason.message);
         }
-      })();
-      outputChannel.show();
-      window
-        .showErrorMessage(msg, openSettingsAction, downloadJava)
-        .then((choice) => {
-          if (choice === openSettingsAction) {
-            commands.executeCommand(workbenchCommands.openSettings);
-          } else if (choice === downloadJava) {
-            showInstallJavaAction(outputChannel);
+        const msg = (() => {
+          const proxy =
+            `See https://scalameta.org/metals/docs/editors/vscode/#http-proxy for instructions ` +
+            `if you are using an HTTP proxy.`;
+          if (process.env.FLATPAK_SANDBOX_DIR) {
+            return (
+              `Failed to download Metals. It seems you are running Visual Studio Code inside the ` +
+              `Flatpak sandbox, which is known to interfere with the download of Metals. ` +
+              `Please, try running Visual Studio Code without Flatpak.`
+            );
+          } else {
+            return (
+              `Failed to download Metals, make sure you have an internet connection, ` +
+              `the Metals version '${serverVersion}' is correct and the Java Home '${javaHome}' is valid. ` +
+              `You can configure the Metals version and Java Home in the settings.` +
+              proxy
+            );
           }
-        });
-    }
-  );
+        })();
+        outputChannel.show();
+        window
+          .showErrorMessage(msg, openSettingsAction, downloadJava)
+          .then((choice) => {
+            if (choice === openSettingsAction) {
+              commands.executeCommand(workbenchCommands.openSettings);
+            } else if (choice === downloadJava) {
+              showInstallJavaAction(outputChannel);
+            }
+          });
+      }
+    );
 }
 
 function launchMetals(

@@ -7,10 +7,11 @@
       "type": "extensionHost",
       "request": "launch",
       "runtimeExecutable": "${execPath}",
-      "args": ["--extensionDevelopmentPath=${workspaceRoot}"],
-      "stopOnEntry": false,
+      "args": [
+        "--extensionDevelopmentPath=${workspaceRoot}/packages/metals-vscode"
+      ],
       "sourceMaps": true,
-      "outFiles": ["${workspaceRoot}/out/**/*.js"],
+      "outFiles": ["${workspaceRoot}/packages/metals-vscode/out/**/*.js"],
       "preLaunchTask": "npm: watch"
     }
   ]
