@@ -110,11 +110,15 @@ export async function validateCoursier(
         (isWindows && p.endsWith(path.sep + "cs.exe"))
     );
   if (possibleCoursier) {
-    const coursierVersion = await spawn(possibleCoursier, ["version"]);
-    if (coursierVersion.code !== 0) {
+    try {
+      const coursierVersion = await spawn(possibleCoursier, ["version"]);
+      if (coursierVersion.code !== 0) {
+        return undefined;
+      } else {
+        return possibleCoursier;
+      }
+    } catch (e) {
       return undefined;
-    } else {
-      return possibleCoursier;
     }
   }
 }
