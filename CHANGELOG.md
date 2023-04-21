@@ -2,7 +2,10 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
-### v1.23.0 (2023/04/21 15:36 +00:00)
+### v1.23.0 (2023/04/21 16:00 +00:00)
+- [c06c784](https://github.com/scalameta/metals-vscode/commit/c06c784346348a5b99ff4511b0d1cc817b8bb813) Increase patch version for pre-release
+- [a776405](https://github.com/scalameta/metals-vscode/commit/a776405edd5ee7ac2c6de1760cba3bd8f2723d48) bugfix: Make release properly build language-server package (@tgodzik)
+- [f61cdb5](https://github.com/scalameta/metals-vscode/commit/f61cdb5ea9710e2edb9796a00dc3a6225764d8a2) v1.23.0
 - [080adbc](https://github.com/scalameta/metals-vscode/commit/080adbc991ff28cc8c255d4f225b24656c2961b9) Increase patch version for pre-release
 - [7924dc6](https://github.com/scalameta/metals-vscode/commit/7924dc6e69b49ccacc475bc1c242990587e52a86) chore: changes for metals release 0.11.12 (@kasiaMarek)
 - [b1f0a22](https://github.com/scalameta/metals-vscode/commit/b1f0a228818485881147f0aecda19b39a877b25f) Increase patch version for pre-release
