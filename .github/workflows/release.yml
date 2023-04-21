@@ -20,7 +20,9 @@ jobs:
         id: get_version
         run: echo ::set-output name=NEW_VERSION::${GITHUB_REF#refs/tags/v}
       - run: |
-          cd packages/metals-vscode
+          cd packages/metals-languageclient
+          yarn install && yarn build
+          cd ../metals-vscode
           yarn install
       - run: |
           cd packages/metals-vscode
@@ -37,9 +39,7 @@ jobs:
         run: git push origin HEAD:main
       - name: Publish extension
         run: |
-          cd packages/metals-languageclient
-          yarn install && yarn build
-          cd ../metals-vscode
+          cd packages/metals-vscode
           yarn vscode:publish -p ${{ secrets.VS_MARKETPLACE_TOKEN }}
       - name: Build VSIX package
         run: |
