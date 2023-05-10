@@ -1,10 +1,11 @@
 import * as vscode from "vscode";
-import { RemoveTestSuite, TargetName } from "./types";
+import { RemoveTestSuite, TargetName, FolderUri } from "./types";
 import { prefixesOf, TestItemPath } from "./util";
 
 export function removeTestItem(
   testController: vscode.TestController,
   targetName: TargetName,
+  folderUri: FolderUri,
   event: RemoveTestSuite
 ): void {
   const { fullyQualifiedClassName } = event;
@@ -26,12 +27,18 @@ export function removeTestItem(
     }
   }
 
-  const buildTargetItem = testController.items.get(targetName);
-  if (buildTargetItem) {
-    const testPath = prefixesOf(event.fullyQualifiedClassName);
-    removeTestItemLoop(buildTargetItem, testPath);
-    if (buildTargetItem.children.size === 0) {
-      testController.items.delete(buildTargetItem.id);
+  const workspaceFolderItem = testController.items.get(folderUri);
+  if (workspaceFolderItem) {
+    const buildTargetItem = workspaceFolderItem.children.get(targetName);
+    if (buildTargetItem) {
+      const testPath = prefixesOf(event.fullyQualifiedClassName);
+      removeTestItemLoop(buildTargetItem, testPath);
+      if (buildTargetItem.children.size === 0) {
+        testController.items.delete(buildTargetItem.id);
+      }
+    }
+    if (workspaceFolderItem.children.size === 0) {
+      testController.items.delete(workspaceFolderItem.id);
     }
   }
 }

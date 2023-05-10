@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { TargetName, UpdateSuiteLocation } from "./types";
+import { TargetName, UpdateSuiteLocation, FolderUri } from "./types";
 import { prefixesOf, TestItemPath, toVscodeRange } from "./util";
 
 /**
@@ -12,6 +12,7 @@ import { prefixesOf, TestItemPath, toVscodeRange } from "./util";
 export function updateTestSuiteLocation(
   testController: vscode.TestController,
   targetName: TargetName,
+  folderUri: FolderUri,
   event: UpdateSuiteLocation
 ): void {
   function updateTestSuiteLocationLoop(
@@ -33,9 +34,12 @@ export function updateTestSuiteLocation(
     }
   }
 
-  const buildTargetItem = testController.items.get(targetName);
-  if (buildTargetItem) {
-    const testPath = prefixesOf(event.fullyQualifiedClassName, true);
-    updateTestSuiteLocationLoop(buildTargetItem, testPath);
+  const workspaceFolderItem = testController.items.get(folderUri);
+  if (workspaceFolderItem) {
+    const buildTargetItem = workspaceFolderItem.children.get(targetName);
+    if (buildTargetItem) {
+      const testPath = prefixesOf(event.fullyQualifiedClassName, true);
+      updateTestSuiteLocationLoop(buildTargetItem, testPath);
+    }
   }
 }

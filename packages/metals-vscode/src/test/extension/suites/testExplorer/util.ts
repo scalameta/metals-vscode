@@ -1,9 +1,20 @@
 import * as vscode from "vscode";
-import { TargetName } from "../../../../testExplorer/types";
+import {
+  FolderName,
+  FolderUri,
+  TargetName,
+} from "../../../../testExplorer/types";
 import { TargetUri } from "../../../../types";
 
 export function randomString(): string {
   return Math.random().toString(36).substring(2, 15);
+}
+
+export function buildFolder(
+  folderName: string,
+  folderUri: string
+): [FolderName, FolderUri] {
+  return [folderName, folderUri] as [FolderName, FolderUri];
 }
 
 export function buildTarget(

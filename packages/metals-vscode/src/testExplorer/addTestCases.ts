@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
 import { TargetUri } from "../types";
-import { AddTestCases, TargetName } from "./types";
+import { AddTestCases, TargetName, FolderUri } from "./types";
 import {
   prefixesOf,
-  refineTestItem,
+  refineRunnableTestItem,
   TestItemPath,
   toVscodeRange,
 } from "./util";
@@ -20,6 +20,7 @@ export function addTestCases(
   testController: vscode.TestController,
   targetName: TargetName,
   targetUri: TargetUri,
+  folderUri: FolderUri,
   event: AddTestCases
 ): void {
   function addTestCasesLoop(
@@ -42,16 +43,24 @@ export function addTestCases(
         const parsedRange = toVscodeRange(location.range);
         const id = `${parent.id}.${name}`;
         const testItem = testController.createTestItem(id, name, parsedUri);
-        refineTestItem("testcase", testItem, targetUri, targetName, parent);
+        refineRunnableTestItem(
+          "testcase",
+          testItem,
+          targetUri,
+          targetName,
+          parent
+        );
         testItem.range = parsedRange;
         parent.children.add(testItem);
       }
     }
   }
-
-  const buildTargetItem = testController.items.get(targetName);
-  if (buildTargetItem) {
-    const testPath = prefixesOf(event.fullyQualifiedClassName, true);
-    addTestCasesLoop(buildTargetItem, testPath);
+  const workspaceFolderItem = testController.items.get(folderUri);
+  if (workspaceFolderItem) {
+    const buildTargetItem = workspaceFolderItem.children.get(targetName);
+    if (buildTargetItem) {
+      const testPath = prefixesOf(event.fullyQualifiedClassName, true);
+      addTestCasesLoop(buildTargetItem, testPath);
+    }
   }
 }

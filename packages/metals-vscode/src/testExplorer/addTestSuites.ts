@@ -1,10 +1,11 @@
 import * as vscode from "vscode";
 import { TargetUri } from "../types";
-import { AddTestSuite, TargetName } from "./types";
+import { AddTestSuite, TargetName, FolderName, FolderUri } from "./types";
 import {
   prefixesOf,
-  refineTestItem,
   TestItemPath,
+  refineRunnableTestItem,
+  refineTestItem,
   toVscodeRange,
 } from "./util";
 
@@ -21,12 +22,20 @@ export function addTestSuite(
   testController: vscode.TestController,
   targetName: TargetName,
   targetUri: TargetUri,
+  folderName: FolderName,
+  folderUri: FolderUri,
   event: AddTestSuite
 ): void {
+  const workspaceFolderItem = getOrCreateWorkspaceFolderItem(
+    testController,
+    folderName,
+    folderUri
+  );
+
   const buildTargetItem = getOrCreateBuildTargetItem(
     testController,
-    targetName,
-    targetUri
+    workspaceFolderItem,
+    targetName
   );
 
   function addTestSuiteLoop(
@@ -40,7 +49,7 @@ export function addTestSuite(
       } else {
         const { id, label } = testPrefix;
         const packageNode = testController.createTestItem(id, label);
-        refineTestItem("package", packageNode, targetUri, targetName, parent);
+        refineTestItem("package", packageNode, parent);
         parent.children.add(packageNode);
         addTestSuiteLoop(packageNode, testPrefix.next());
       }
@@ -54,7 +63,7 @@ export function addTestSuite(
         className,
         parsedUri
       );
-      refineTestItem("suite", testItem, targetUri, targetName, parent);
+      refineRunnableTestItem("suite", testItem, targetUri, targetName, parent);
       // if canResolveChildren is true then test item is shown as expandable in the Test Explorer view
       testItem.canResolveChildren = event.canResolveChildren;
       testItem.range = parsedRange;
@@ -72,16 +81,37 @@ export function addTestSuite(
  */
 function getOrCreateBuildTargetItem(
   testController: vscode.TestController,
-  targetName: TargetName,
-  targetUri: TargetUri
+  workspaceFolderItem: vscode.TestItem,
+  targetName: TargetName
 ): vscode.TestItem {
-  const buildTarget = testController.items.get(targetName);
+  const buildTarget = workspaceFolderItem.children.get(targetName);
   if (buildTarget) {
     return buildTarget;
   }
 
   const createdNode = testController.createTestItem(targetName, targetName);
-  refineTestItem("project", createdNode, targetUri, targetName);
+  refineTestItem("module", createdNode, workspaceFolderItem);
+  workspaceFolderItem.children.add(createdNode);
+
+  return createdNode;
+}
+
+/**
+ * Create and add test item for a workspace folder (first request)
+ * or get already created (subsequent requests)
+ */
+function getOrCreateWorkspaceFolderItem(
+  testController: vscode.TestController,
+  folderName: FolderName,
+  folderUri: FolderUri
+): vscode.TestItem {
+  const workspaceFolder = testController.items.get(folderUri);
+  if (workspaceFolder) {
+    return workspaceFolder;
+  }
+
+  const createdNode = testController.createTestItem(folderUri, folderName);
+  refineTestItem("workspaceFolder", createdNode);
   testController.items.add(createdNode);
 
   return createdNode;

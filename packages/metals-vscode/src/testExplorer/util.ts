@@ -3,47 +3,69 @@ import { Range } from "vscode-languageclient/node";
 import { FullyQualifiedClassName, TargetUri } from "../types";
 import {
   MetalsTestItem,
-  MetalsTestItemKind,
   PackageMetalsTestItem,
-  ProjectMetalsTestItem,
+  ModuleMetalsTestItem,
   SuiteMetalsTestItem,
   TargetName,
   TestCaseMetalsTestItem,
+  RunnableMetalsTestItem,
+  WorkSpaceFolderTestItem,
+  MetalsTestItemKind,
 } from "./types";
 
 // https://www.typescriptlang.org/docs/handbook/2/functions.html#function-overloads
 
 // prettier-ignore
-export function refineTestItem(kind: "project",  test: vscode.TestItem, targetUri: TargetUri, targetName: TargetName): ProjectMetalsTestItem;
+export function refineTestItem(kind: "workspaceFolder", test: vscode.TestItem): WorkSpaceFolderTestItem;
 // prettier-ignore
-export function refineTestItem(kind: "package",  test: vscode.TestItem, targetUri: TargetUri, targetName: TargetName, parent: vscode.TestItem): PackageMetalsTestItem;
+export function refineTestItem(kind: "module", test: vscode.TestItem, parent: vscode.TestItem): ModuleMetalsTestItem;
 // prettier-ignore
-export function refineTestItem(kind: "suite",    test: vscode.TestItem, targetUri: TargetUri, targetName: TargetName, parent: vscode.TestItem): SuiteMetalsTestItem;
-// prettier-ignore
-export function refineTestItem(kind: "testcase", test: vscode.TestItem, targetUri: TargetUri, targetName: TargetName, parent: vscode.TestItem): TestCaseMetalsTestItem;
+export function refineTestItem(kind: "package", test: vscode.TestItem, parent: vscode.TestItem): PackageMetalsTestItem;
+
 /**
  * Refine vscode.TestItem by extending it with additional metadata needed for test runs.
- * In order to handle all 4 cases with minimal boilerplate and casting reduced to the minimum as this function is overloaded
+ * In order to handle cases with minimal boilerplate and casting reduced to the minimum as this function is overloaded
  * for all 4 cases. Thanks to the overloading we can achieve mediocre type safety:
- * - project kind doesn't need parent
+ * - workspace folder kind doesn't need parent
  * - return types are narrowed down
  * while, at the same time, we are doing casting.
  */
 export function refineTestItem(
   kind: MetalsTestItemKind,
   test: vscode.TestItem,
+  parent?: vscode.TestItem
+): MetalsTestItem {
+  return refineTestItemAux(kind, test as MetalsTestItem, parent);
+}
+
+export function refineTestItemAux(
+  kind: MetalsTestItemKind,
+  test: MetalsTestItem,
+  parent?: vscode.TestItem
+): MetalsTestItem {
+  test._metalsKind = kind;
+  if (kind !== "workspaceFolder") {
+    test._metalsParent = parent as MetalsTestItem | undefined;
+  }
+  return test;
+}
+
+// prettier-ignore
+export function refineRunnableTestItem(kind: "suite",    test: vscode.TestItem, targetUri: TargetUri, targetName: TargetName, parent: vscode.TestItem): SuiteMetalsTestItem;
+// prettier-ignore
+export function refineRunnableTestItem(kind: "testcase", test: vscode.TestItem, targetUri: TargetUri, targetName: TargetName, parent: vscode.TestItem): TestCaseMetalsTestItem;
+
+export function refineRunnableTestItem(
+  kind: MetalsTestItemKind,
+  test: vscode.TestItem,
   targetUri: TargetUri,
   targetName: TargetName,
   parent?: vscode.TestItem
 ): MetalsTestItem {
-  const cast = test as MetalsTestItem;
-  cast._metalsKind = kind;
+  const cast = test as RunnableMetalsTestItem;
   cast._metalsTargetName = targetName;
   cast._metalsTargetUri = targetUri;
-  if (kind !== "project") {
-    cast._metalsParent = parent as MetalsTestItem | undefined;
-  }
-  return cast;
+  return refineTestItemAux(kind, cast, parent);
 }
 
 export function toVscodeRange(range: Range): vscode.Range {

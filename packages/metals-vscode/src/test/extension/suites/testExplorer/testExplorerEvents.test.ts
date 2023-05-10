@@ -4,8 +4,9 @@ import { addTestCases } from "../../../../testExplorer/addTestCases";
 import { addTestSuite } from "../../../../testExplorer/addTestSuites";
 import { removeTestItem } from "../../../../testExplorer/removeTestItem";
 import { foo, fooBar, fooTestCases, noPackage } from "./data";
-import { buildTarget, prettyPrint, randomString } from "./util";
+import { buildFolder, buildTarget, prettyPrint, randomString } from "./util";
 
+const [folderName, folderUri] = buildFolder("root", "uri");
 const [targetName, targetUri] = buildTarget("app", "");
 
 interface TestItem {
@@ -60,41 +61,83 @@ suite("Test Explorer events", () => {
   const uri = vscode.Uri.parse("");
 
   test("add suite without package", () => {
-    addTestSuite(testController, targetName, targetUri, noPackage);
+    addTestSuite(
+      testController,
+      targetName,
+      targetUri,
+      folderName,
+      folderUri,
+      noPackage
+    );
 
     checkTestController(testController, {
-      id: targetName,
-      label: targetName,
-      children: [{ id: "NoPackage", label: "NoPackage", uri, children: [] }],
+      id: folderUri,
+      label: folderName,
+      children: [
+        {
+          id: targetName,
+          label: targetName,
+          children: [
+            { id: "NoPackage", label: "NoPackage", uri, children: [] },
+          ],
+        },
+      ],
     });
     cleanup();
   });
 
   test("add suites with packages", () => {
-    addTestSuite(testController, targetName, targetUri, noPackage);
-    addTestSuite(testController, targetName, targetUri, foo);
-    addTestSuite(testController, targetName, targetUri, fooBar);
+    addTestSuite(
+      testController,
+      targetName,
+      targetUri,
+      folderName,
+      folderUri,
+      noPackage
+    );
+    addTestSuite(
+      testController,
+      targetName,
+      targetUri,
+      folderName,
+      folderUri,
+      foo
+    );
+    addTestSuite(
+      testController,
+      targetName,
+      targetUri,
+      folderName,
+      folderUri,
+      fooBar
+    );
 
     checkTestController(testController, {
-      id: targetName,
-      label: targetName,
+      id: folderUri,
+      label: folderName,
       children: [
-        { id: "NoPackage", label: "NoPackage", uri, children: [] },
         {
-          id: "a",
-          label: "a",
+          id: targetName,
+          label: targetName,
           children: [
+            { id: "NoPackage", label: "NoPackage", uri, children: [] },
             {
-              id: "a.Foo",
-              label: "Foo",
-              uri,
-              children: [],
-            },
-            {
-              id: "a.b",
-              label: "b",
+              id: "a",
+              label: "a",
               children: [
-                { id: "a.b.FooBar", label: "FooBar", uri, children: [] },
+                {
+                  id: "a.Foo",
+                  label: "Foo",
+                  uri,
+                  children: [],
+                },
+                {
+                  id: "a.b",
+                  label: "b",
+                  children: [
+                    { id: "a.b.FooBar", label: "FooBar", uri, children: [] },
+                  ],
+                },
               ],
             },
           ],
@@ -105,39 +148,90 @@ suite("Test Explorer events", () => {
   });
 
   test("remove suite", () => {
-    addTestSuite(testController, targetName, targetUri, noPackage);
-    addTestSuite(testController, targetName, targetUri, foo);
-    removeTestItem(testController, targetName, { ...foo, kind: "removeSuite" });
+    addTestSuite(
+      testController,
+      targetName,
+      targetUri,
+      folderName,
+      folderUri,
+      noPackage
+    );
+    addTestSuite(
+      testController,
+      targetName,
+      targetUri,
+      folderName,
+      folderUri,
+      foo
+    );
+    removeTestItem(testController, targetName, folderUri, {
+      ...foo,
+      kind: "removeSuite",
+    });
 
     checkTestController(testController, {
-      id: targetName,
-      label: targetName,
-      children: [{ id: "NoPackage", label: "NoPackage", uri, children: [] }],
+      id: folderUri,
+      label: folderName,
+      children: [
+        {
+          id: targetName,
+          label: targetName,
+          children: [
+            { id: "NoPackage", label: "NoPackage", uri, children: [] },
+          ],
+        },
+      ],
     });
     cleanup();
   });
 
   test("add test cases", () => {
-    addTestSuite(testController, targetName, targetUri, noPackage);
-    addTestSuite(testController, targetName, targetUri, foo);
-    addTestCases(testController, targetName, targetUri, fooTestCases);
+    addTestSuite(
+      testController,
+      targetName,
+      targetUri,
+      folderName,
+      folderUri,
+      noPackage
+    );
+    addTestSuite(
+      testController,
+      targetName,
+      targetUri,
+      folderName,
+      folderUri,
+      foo
+    );
+    addTestCases(
+      testController,
+      targetName,
+      targetUri,
+      folderUri,
+      fooTestCases
+    );
 
     checkTestController(testController, {
-      id: targetName,
-      label: targetName,
+      id: folderUri,
+      label: folderName,
       children: [
-        { id: "NoPackage", label: "NoPackage", uri, children: [] },
         {
-          id: "a",
-          label: "a",
+          id: targetName,
+          label: targetName,
           children: [
+            { id: "NoPackage", label: "NoPackage", uri, children: [] },
             {
-              id: "a.Foo",
-              label: "Foo",
-              uri,
+              id: "a",
+              label: "a",
               children: [
-                { id: "a.Foo.test1", label: "test1", uri, children: [] },
-                { id: "a.Foo.test2", label: "test2", uri, children: [] },
+                {
+                  id: "a.Foo",
+                  label: "Foo",
+                  uri,
+                  children: [
+                    { id: "a.Foo.test1", label: "test1", uri, children: [] },
+                    { id: "a.Foo.test2", label: "test2", uri, children: [] },
+                  ],
+                },
               ],
             },
           ],
