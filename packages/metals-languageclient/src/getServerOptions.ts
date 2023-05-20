@@ -18,10 +18,7 @@ function parse(v: string): number | undefined {
   else return undefined;
 }
 
-function getJavaVersion(extraEnv: {
-  [k: string]: string | undefined;
-}): number | undefined {
-  const javaHome = extraEnv["JAVA_HOME"]!;
+function getJavaVersion(javaHome: string): number | undefined {
   const dirs = [
     path.join(javaHome, "release"),
     path.join(path.dirname(javaHome), "release"),
@@ -54,7 +51,7 @@ export function getServerOptions({
   metalsClasspath,
   serverProperties = [],
   clientName,
-  javaConfig: { javaOptions, javaPath, extraEnv },
+  javaConfig: { javaOptions, javaHome, javaPath, extraEnv },
 }: GetServerOptions): ServerOptions {
   const baseProperties = ["-Xss4m", "-Xms100m"];
 
@@ -64,7 +61,7 @@ export function getServerOptions({
 
   const mainArgs = ["-classpath", metalsClasspath, "scala.meta.metals.Main"];
 
-  const javaVersion = getJavaVersion(extraEnv);
+  const javaVersion = getJavaVersion(javaHome);
 
   const addOpens =
     javaVersion !== undefined && javaVersion >= 17
