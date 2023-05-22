@@ -3,6 +3,8 @@ import { Location } from "vscode-languageclient/node";
 import { FullyQualifiedClassName, TargetUri } from "../types";
 import { newtype } from "../util";
 
+export type FolderName = newtype<string, "workspaceFolderVisiableName">;
+export type FolderUri = newtype<string, "workspaceFolderUri">;
 export type TargetName = newtype<string, "targetName">;
 export type ClassName = newtype<string, "className">;
 export type TestName = newtype<string, "testName">;
@@ -23,6 +25,8 @@ export interface TestItemMetadata {
 export interface BuildTargetUpdate {
   targetName: TargetName;
   targetUri: TargetUri;
+  folderName?: FolderName;
+  folderUri?: FolderUri;
   events: TestExplorerEvent[];
 }
 export type TestExplorerEvent =
@@ -135,35 +139,51 @@ export interface TestSuiteRun {
   testCases: vscode.TestItem[];
 }
 
-export type MetalsTestItemKind = "project" | "package" | "suite" | "testcase";
+export type RunnableMetalsTestItemKind = "suite" | "testcase";
+
+export type MetalsTestItemKind =
+  | "workspaceFolder"
+  | "module"
+  | "package"
+  | RunnableMetalsTestItemKind;
 
 type BaseMetalsTestItem = vscode.TestItem & {
   _metalsKind: MetalsTestItemKind;
-  _metalsTargetName: TargetName;
-  _metalsTargetUri: TargetUri;
   _metalsParent?: MetalsTestItem;
 };
-export interface ProjectMetalsTestItem extends BaseMetalsTestItem {
-  _metalsKind: "project";
+
+type RunnableTestItem = BaseMetalsTestItem & {
+  _metalsTargetName: TargetName;
+  _metalsTargetUri: TargetUri;
+};
+
+export interface WorkSpaceFolderTestItem extends BaseMetalsTestItem {
+  _metalsKind: "workspaceFolder";
+}
+
+export interface ModuleMetalsTestItem extends BaseMetalsTestItem {
+  _metalsKind: "module";
+  _metalsParent: WorkSpaceFolderTestItem;
 }
 
 export interface PackageMetalsTestItem extends BaseMetalsTestItem {
   _metalsKind: "package";
-  _metalsParent: ProjectMetalsTestItem | PackageMetalsTestItem;
+  _metalsParent: ModuleMetalsTestItem | PackageMetalsTestItem;
 }
 
-export interface SuiteMetalsTestItem extends BaseMetalsTestItem {
+export interface SuiteMetalsTestItem extends RunnableTestItem {
   _metalsKind: "suite";
-  _metalsParent: ProjectMetalsTestItem | PackageMetalsTestItem;
+  _metalsParent: ModuleMetalsTestItem | PackageMetalsTestItem;
 }
 
-export interface TestCaseMetalsTestItem extends BaseMetalsTestItem {
+export interface TestCaseMetalsTestItem extends RunnableTestItem {
   _metalsKind: "testcase";
   _metalsParent: SuiteMetalsTestItem;
 }
 
 export type MetalsTestItem =
-  | ProjectMetalsTestItem
+  | WorkSpaceFolderTestItem
+  | ModuleMetalsTestItem
   | PackageMetalsTestItem
   | SuiteMetalsTestItem
   | TestCaseMetalsTestItem;

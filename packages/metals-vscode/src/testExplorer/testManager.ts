@@ -8,7 +8,7 @@ import { addTestCases } from "./addTestCases";
 import { addTestSuite } from "./addTestSuites";
 import { removeTestItem } from "./removeTestItem";
 import { runHandler } from "./testRunHandler";
-import { BuildTargetUpdate } from "./types";
+import { BuildTargetUpdate, FolderName, FolderUri } from "./types";
 import { updateTestSuiteLocation } from "./updateTestSuiteLocation";
 
 export function createTestManager(
@@ -82,16 +82,42 @@ class TestManager {
   }
 
   updateTestExplorer(updates: BuildTargetUpdate[]) {
-    for (const { targetUri, targetName, events } of updates) {
+    for (const {
+      targetUri,
+      targetName,
+      folderUri,
+      folderName,
+      events,
+    } of updates) {
+      const folderUri_ = folderUri || ("root" as FolderUri);
+      const folderName_ = folderName || ("root" as FolderName);
       for (const event of events) {
         if (event.kind === "removeSuite") {
-          removeTestItem(this.testController, targetName, event);
+          removeTestItem(this.testController, targetName, folderUri_, event);
         } else if (event.kind === "addSuite") {
-          addTestSuite(this.testController, targetName, targetUri, event);
+          addTestSuite(
+            this.testController,
+            targetName,
+            targetUri,
+            folderName_,
+            folderUri_,
+            event
+          );
         } else if (event.kind === "updateSuiteLocation") {
-          updateTestSuiteLocation(this.testController, targetName, event);
+          updateTestSuiteLocation(
+            this.testController,
+            targetName,
+            folderUri_,
+            event
+          );
         } else if (event.kind === "addTestCases") {
-          addTestCases(this.testController, targetName, targetUri, event);
+          addTestCases(
+            this.testController,
+            targetName,
+            targetUri,
+            folderUri_,
+            event
+          );
         }
       }
     }

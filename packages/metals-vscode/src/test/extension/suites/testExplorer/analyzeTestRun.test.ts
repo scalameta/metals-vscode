@@ -7,7 +7,7 @@ import {
   TestRunActions,
   TestSuiteResult,
 } from "../../../../testExplorer/types";
-import { refineTestItem } from "../../../../testExplorer/util";
+import { refineRunnableTestItem } from "../../../../testExplorer/util";
 import { buildTarget } from "./util";
 
 const [targetName, targetUri] = buildTarget("app", "");
@@ -87,7 +87,7 @@ suite("Analyze tests results", () => {
   test("suite passed", () => {
     const [action, results] = getRunActions();
     const testItem = testController.createTestItem("TestSuite", "TestSuite");
-    const refined = refineTestItem(
+    const refined = refineRunnableTestItem(
       "suite",
       testItem,
       targetUri,
@@ -105,7 +105,7 @@ suite("Analyze tests results", () => {
   test("suite failed", () => {
     const [action, results] = getRunActions();
     const testItem = testController.createTestItem("TestSuite", "TestSuite");
-    const refined = refineTestItem(
+    const refined = refineRunnableTestItem(
       "suite",
       testItem,
       targetUri,
@@ -124,7 +124,7 @@ suite("Analyze tests results", () => {
   test("suite with testcases", () => {
     const [action, results] = getRunActions();
     const testItem = testController.createTestItem("TestSuite", "TestSuite");
-    const refined = refineTestItem(
+    const refined = refineRunnableTestItem(
       "suite",
       testItem,
       targetUri,
@@ -135,9 +135,27 @@ suite("Analyze tests results", () => {
     const child2 = testController.createTestItem("TestSuite.test2", "test2");
     const child3 = testController.createTestItem("TestSuite.test3", "test3");
     testItem.children.replace([
-      refineTestItem("testcase", child1, targetUri, targetName, refined),
-      refineTestItem("testcase", child2, targetUri, targetName, refined),
-      refineTestItem("testcase", child3, targetUri, targetName, refined),
+      refineRunnableTestItem(
+        "testcase",
+        child1,
+        targetUri,
+        targetName,
+        refined
+      ),
+      refineRunnableTestItem(
+        "testcase",
+        child2,
+        targetUri,
+        targetName,
+        refined
+      ),
+      refineRunnableTestItem(
+        "testcase",
+        child3,
+        targetUri,
+        targetName,
+        refined
+      ),
     ]);
 
     analyzeTestRun(action, [refined], failed);
@@ -155,7 +173,7 @@ suite("Analyze tests results", () => {
   test("testcase", () => {
     const [action, results] = getRunActions();
     const testItem = testController.createTestItem("TestSuite", "TestSuite");
-    const refined = refineTestItem(
+    const refined = refineRunnableTestItem(
       "suite",
       testItem,
       targetUri,
@@ -165,7 +183,7 @@ suite("Analyze tests results", () => {
     const child1 = testController.createTestItem("TestSuite.test1", "test1");
     const child2 = testController.createTestItem("TestSuite.test2", "test2");
     const child3 = testController.createTestItem("TestSuite.test3", "test3");
-    const refinedChild = refineTestItem(
+    const refinedChild = refineRunnableTestItem(
       "testcase",
       child1,
       targetUri,
@@ -174,8 +192,20 @@ suite("Analyze tests results", () => {
     );
     [
       refinedChild,
-      refineTestItem("testcase", child2, targetUri, targetName, refined),
-      refineTestItem("testcase", child3, targetUri, targetName, refined),
+      refineRunnableTestItem(
+        "testcase",
+        child2,
+        targetUri,
+        targetName,
+        refined
+      ),
+      refineRunnableTestItem(
+        "testcase",
+        child3,
+        targetUri,
+        targetName,
+        refined
+      ),
     ].forEach((c) => refined.children.add(c));
 
     analyzeTestRun(action, [refinedChild], failed);

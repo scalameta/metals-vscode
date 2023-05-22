@@ -67,13 +67,19 @@ export async function runHandler(
   const queue: RunnableMetalsTestItem[] = [];
 
   /**
-   * Loop through all included tests in request and add them to our queue if they are not excluded explicitly
+   * Loop through all included tests in request and add them to our queue if they are not excluded explicitly.
+   * The smallest runnable bit is a suite,
+   * for bigger groups (package, module, workspaceFolder) we collect and run all the included suites.
    */
   function createRunQueue(tests: Iterable<MetalsTestItem>): void {
     for (const test of tests) {
       if (!excludes.has(test)) {
         const kind = test._metalsKind;
-        if (kind === "project" || kind === "package") {
+        if (
+          kind === "workspaceFolder" ||
+          kind === "module" ||
+          kind === "package"
+        ) {
           createRunQueue(gatherTestItems(test.children));
         } else if (kind === "suite") {
           run.started(test);
