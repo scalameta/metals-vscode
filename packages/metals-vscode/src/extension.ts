@@ -80,6 +80,7 @@ import {
 import * as ext from "./hoverExtension";
 import { decodeAndShowFile, MetalsFileProvider } from "./metalsContentProvider";
 import {
+  currentWorkspaceFolder,
   getJavaHomeFromConfig,
   getTextDocumentPositionParams,
   getValueFromConfig,
@@ -959,7 +960,7 @@ function launchMetals(
         });
       });
 
-      const workspaceUri = workspace.workspaceFolders?.[0]?.uri;
+      const workspaceUri = currentWorkspaceFolder()?.uri;
       // NOTE: we offer a custom symbol search command to work around the limitations of the built-in one, see https://github.com/microsoft/vscode/issues/98125 for more details.
       registerCommand(`metals.symbol-search`, () =>
         openSymbolSearch(client, metalsFileProvider, workspaceUri)

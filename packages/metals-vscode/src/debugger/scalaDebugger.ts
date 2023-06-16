@@ -6,7 +6,6 @@ import {
   WorkspaceFolder,
   DebugAdapterDescriptor,
   DebugConfigurationProviderTriggerKind,
-  workspace,
   tasks,
   Task,
   ShellExecution,
@@ -18,6 +17,7 @@ import {
 } from "metals-languageclient";
 import { ExtendedScalaRunMain, ScalaCodeLensesParams } from "./types";
 import { platform } from "os";
+import { currentWorkspaceFolder } from "../util";
 
 const configurationType = "scala";
 
@@ -67,7 +67,8 @@ function platformSpecificOptions(): vscode.ShellExecutionOptions {
 
 async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
   const { environmentVariables, shellCommand } = main.data;
-  if (workspace.workspaceFolders) {
+  const workspaceFolder = currentWorkspaceFolder();
+  if (workspaceFolder) {
     const env = environmentVariables.reduce<Record<string, string>>(
       (acc, envKeyValue) => {
         const [key, value] = envKeyValue.split("=");
@@ -79,7 +80,7 @@ async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
     const shellOptions = { ...platformSpecificOptions(), env };
     const task = new Task(
       { type: "scala", task: "run" },
-      workspace.workspaceFolders[0],
+      workspaceFolder,
       "Scala run",
       "Metals",
       new ShellExecution(shellCommand, shellOptions)
