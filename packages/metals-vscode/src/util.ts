@@ -1,10 +1,12 @@
 import * as path from "path";
 import os from "os";
 import {
-  workspace,
   TextEditor,
   WorkspaceConfiguration,
   ConfigurationTarget,
+  window,
+  workspace,
+  WorkspaceFolder,
 } from "vscode";
 import {
   ExecuteCommandRequest,
@@ -48,12 +50,21 @@ export function getConfigValue<A>(
 }
 
 export function metalsDir(target: ConfigurationTarget): string {
-  if (target == ConfigurationTarget.Workspace && workspace.workspaceFolders) {
-    const wsDir = workspace.workspaceFolders[0]?.uri.fsPath;
+  const workspaceFolder = currentWorkspaceFolder();
+  if (target == ConfigurationTarget.Workspace && workspaceFolder) {
+    const wsDir = workspaceFolder.uri.fsPath;
     return path.join(wsDir, ".metals");
   } else {
     return path.join(os.homedir(), ".metals");
   }
+}
+
+export function currentWorkspaceFolder(): WorkspaceFolder | undefined {
+  const activeEditorUri = window.activeTextEditor?.document.uri;
+  if (activeEditorUri) {
+    return workspace.getWorkspaceFolder(activeEditorUri);
+  }
+  return workspace.workspaceFolders?.[0];
 }
 
 export function getTextDocumentPositionParams(
