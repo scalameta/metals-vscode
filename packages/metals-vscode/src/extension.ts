@@ -759,6 +759,17 @@ function launchMetals(
         });
       });
 
+      registerTextEditorCommand(`metals.scalafix-run-only`, (editor) => {
+        client.sendRequest(ExecuteCommandRequest.type, {
+          command: "scalafix-run-only",
+          arguments: [
+            {
+              textDocumentPositionParams: getTextDocumentPositionParams(editor),
+            },
+          ],
+        });
+      });
+
       registerTextEditorCommand(
         `metals.${ServerCommands.SuperMethodHierarchy}`,
         (editor) => {

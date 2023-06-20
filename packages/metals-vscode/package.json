@@ -500,6 +500,11 @@
         "title": "Run all Scalafix rules"
       },
       {
+        "command": "metals.scalafix-run-only",
+        "category": "Metals",
+        "title": "Run a single Scalafix rule"
+      },
+      {
         "command": "metals.show-tasty",
         "category": "Metals",
         "title": "Show decoded TASTy"
@@ -773,6 +778,10 @@
         },
         {
           "command": "metals.scalafix-run",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.scalafix-run-only",
           "when": "metals:enabled"
         },
         {
