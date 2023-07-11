@@ -29,6 +29,8 @@ import {
   Hover,
   TextDocument,
   tests as vscodeTextExplorer,
+  debug,
+  DebugSessionCustomEvent,
 } from "vscode";
 import {
   LanguageClient,
@@ -96,7 +98,11 @@ import {
   showInstallJavaAction,
   showMissingJavaAction,
 } from "./installJavaAction";
-import { openSettingsAction } from "./consts";
+import {
+  openSettingsAction,
+  USER_NOTIFICATION_EVENT,
+  SCALA_LANGID,
+} from "./consts";
 import { ScalaCodeLensesParams } from "./debugger/types";
 
 const outputChannel = window.createOutputChannel("Metals");
@@ -123,6 +129,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   const serverVersion = getServerVersion(config, context);
   detectLaunchConfigurationChanges();
   configureSettingsDefaults();
+  registerDebugEventListener(context);
 
   await window.withProgress(
     {
@@ -1298,4 +1305,27 @@ function toggleBooleanWorkspaceSetting(setting: string) {
   const configProperty = config.inspect<boolean>(setting);
   const currentValues = configProperty?.workspaceValue ?? false;
   config.update(setting, !currentValues, ConfigurationTarget.Workspace);
+}
+
+function registerDebugEventListener(context: ExtensionContext) {
+  context.subscriptions.push(
+    debug.onDidReceiveDebugSessionCustomEvent((customEvent) => {
+      if (
+        customEvent.session.type !== SCALA_LANGID &&
+        customEvent.event === USER_NOTIFICATION_EVENT
+      ) {
+        handleUserNotification(customEvent);
+      }
+    })
+  );
+}
+
+function handleUserNotification(customEvent: DebugSessionCustomEvent) {
+  if (customEvent.body.notificationType === "ERROR") {
+    window.showErrorMessage(customEvent.body.message);
+  } else if (customEvent.body.notificationType === "WARNING") {
+    window.showWarningMessage(customEvent.body.message);
+  } else {
+    window.showInformationMessage(customEvent.body.message);
+  }
 }
