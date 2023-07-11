@@ -1310,11 +1310,10 @@ function toggleBooleanWorkspaceSetting(setting: string) {
 function registerDebugEventListener(context: ExtensionContext) {
   context.subscriptions.push(
     debug.onDidReceiveDebugSessionCustomEvent((customEvent) => {
-      const t = customEvent.session ? customEvent.session.type : undefined;
-      if (t !== SCALA_LANGID) {
-        return;
-      }
-      if (customEvent.event === USER_NOTIFICATION_EVENT) {
+      if (
+        customEvent.session.type !== SCALA_LANGID &&
+        customEvent.event === USER_NOTIFICATION_EVENT
+      ) {
         handleUserNotification(customEvent);
       }
     })
