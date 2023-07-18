@@ -3,7 +3,6 @@ import * as path from "path";
 
 export interface JavaConfig {
   javaOptions: string[];
-  javaHome: string;
   javaPath: string;
   coursierPath: string;
   coursierMirrorFilePath: string | undefined;
@@ -38,7 +37,6 @@ export function getJavaConfig({
 
   return {
     javaOptions,
-    javaHome,
     javaPath,
     coursierPath,
     coursierMirrorFilePath,
