@@ -2,6 +2,30 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.24.0 (2023/07/19 15:05 +00:00)
+- [c4be766](https://github.com/scalameta/metals-vscode/commit/c4be7663f865dd8d4adf016aaa41f3ba9add5e8e) Increase patch version for pre-release
+- [093c49c](https://github.com/scalameta/metals-vscode/commit/093c49cf21ac130224bab05d7375df31b4cccbce) chore: Update Metals version to 1.0.0 (@tgodzik)
+- [e7ab1e3](https://github.com/scalameta/metals-vscode/commit/e7ab1e3be2ade6dcd689381990b12f80c05d1a75) Increase patch version for pre-release
+- [0f2c472](https://github.com/scalameta/metals-vscode/commit/0f2c472a85d4c72b6be6feefce61ccff485a2659) Increase patch version for pre-release
+- [976cce7](https://github.com/scalameta/metals-vscode/commit/976cce732075bbaff3ebe301434a27c93f36cddd) chore: Add icon for reset workspace command (@tgodzik)
+- [bbe5dd3](https://github.com/scalameta/metals-vscode/commit/bbe5dd32ac348ed28fa081300cd4df6248e498ee) Increase patch version for pre-release
+- [372720d](https://github.com/scalameta/metals-vscode/commit/372720d74e7837134c96d097580e1a8815c59a30) apply review from @kpodsiad (@adpi2)
+- [116da50](https://github.com/scalameta/metals-vscode/commit/116da50f4311f55d10256d95ea224dd8442bf703) Handle usernotification event from debug session (@adpi2)
+- [01676b6](https://github.com/scalameta/metals-vscode/commit/01676b674c77ab135e50430c8d503326b2e40f6d) build(deps): bump semver in /packages/metals-languageclient (@dependabot[bot])
+- [7c366ce](https://github.com/scalameta/metals-vscode/commit/7c366ce9c08eaea56aa392ec7af472e1747fc936) build(deps): bump semver from 7.3.8 to 7.5.2 in /packages/metals-vscode (@dependabot[bot])
+- [c81e1f0](https://github.com/scalameta/metals-vscode/commit/c81e1f095b74de72690a8fdc8737caa19108e6d0) Increase patch version for pre-release
+- [1e88964](https://github.com/scalameta/metals-vscode/commit/1e889642f7426cc7cc71356fa889affad19d42f1) feature: Add command to run single scalafix rule (@tgodzik)
+- [318862e](https://github.com/scalameta/metals-vscode/commit/318862ece3628641b1799def7606167bbaf63068) Increase patch version for pre-release
+- [89ff267](https://github.com/scalameta/metals-vscode/commit/89ff2675cd627e54078744f5de08195d7ec6d939) bugfix: Run task in the correct directory (@tgodzik)
+- [e43d90c](https://github.com/scalameta/metals-vscode/commit/e43d90ce444ec93ce5e26ad6dd2410402eb93eae) Increase patch version for pre-release
+- [df8c39f](https://github.com/scalameta/metals-vscode/commit/df8c39fdccb8152be03f9986192f980eccc0eba4) feat: Add Clean all command (@jkciesluk)
+- [e828bb7](https://github.com/scalameta/metals-vscode/commit/e828bb7eba429368efd5f608515900e6f5e5e619) Increase patch version for pre-release
+- [f6a6b51](https://github.com/scalameta/metals-vscode/commit/f6a6b5120d5c4948ad3ac05f4225d347532a47e3) Increase patch version for pre-release
+- [e0cf060](https://github.com/scalameta/metals-vscode/commit/e0cf060741723e63df24a1b7208875b27028974e) bugfix: display tests in explorer per workspace folder (@kasiaMarek)
+- [dafd1cd](https://github.com/scalameta/metals-vscode/commit/dafd1cd775e88e3bc138b5eef1c1f1c6ad039cc0) Increase patch version for pre-release
+- [36e1ed7](https://github.com/scalameta/metals-vscode/commit/36e1ed7b36472f0ff1e77ab0cef67f5e0b6aade1) chore(deps): use `@vscode/vsce` instead of `vsce` (@yoshinorin)
+- [c64b07e](https://github.com/scalameta/metals-vscode/commit/c64b07e94561c6ef2a4d3420d9ad982a1bafe42d) v1.23.0
+
 ### v1.23.0 (2023/04/21 16:18 +00:00)
 - [eb93f36](https://github.com/scalameta/metals-vscode/commit/eb93f36c9868f0d614c5ef8e5c2b857a7683f110) Increase patch version for pre-release
 - [c462316](https://github.com/scalameta/metals-vscode/commit/c462316f7ecffb2d5fd79fe33784a1933a199c73) bugfix: Try to build language-client in the first place (@tgodzik)
@@ -2115,8 +2139,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [790e47e](https://github.com/scalameta/metals-vscode/commit/790e47e820a5e57135f498d50d2fb6bdca41dc5a) Add super-basic CI that builds the extension (@gabro)
 - [9d4438c](https://github.com/scalameta/metals-vscode/commit/9d4438c282b6b9fd459b87f1b8c46f31e20e0bce) Add readme (@olafurpg)
 - [c1f9296](https://github.com/scalameta/metals-vscode/commit/c1f92968f5ebc71a55cd5be4ba5767ace0ce8dd9) Update VS Code package.json (@olafurpg)
-
-### v0.2.5 (2018/12/01 17:33 +00:00)
 - [0e7be26](https://github.com/scalameta/metals-vscode/commit/0e7be26c8129b552e1b33a7845ccaa36213a2533) Clean up code after self review (@olafurpg)
 - [3cc77a7](https://github.com/scalameta/metals-vscode/commit/3cc77a74e654375776175d8addb9da2718ae89e5) Add "Run doctor" command to troubleshoot issues. (@olafurpg)
 - [d6f4136](https://github.com/scalameta/metals-vscode/commit/d6f4136468e18a1601cd09c74fc675e7c8aa685d) Update docs for editor clients (@olafurpg)
