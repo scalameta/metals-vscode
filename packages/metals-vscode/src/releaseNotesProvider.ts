@@ -199,16 +199,18 @@ async function getReleaseNotesMarkdown(
   asWebviewUri: (_: vscode.Uri) => vscode.Uri
 ): Promise<string> {
   const text = await fetchFrom(releaseNotesUrl);
-  // every release notes starts with that
-  const beginning = "We're happy to announce the release of";
-  const notesStartIdx = text.indexOf(beginning);
+  // every release notes starts with metadata format
+  const tripleDash = "---";
+  const firstTripleDash = text.indexOf(tripleDash);
+  const notesStartIdx =
+    text.indexOf(tripleDash, firstTripleDash + 1) + tripleDash.length + 1;
   const releaseNotes = text.substring(notesStartIdx);
 
   // cut metadata yaml from release notes, it start with --- and ends with ---
   const metadata = text
     .substring(0, notesStartIdx - 1)
-    .replace("---", "")
-    .replace("---", "")
+    .replace(tripleDash, "")
+    .replace(tripleDash, "")
     .trim()
     .split("\n");
   const author = metadata[0].slice("author: ".length);
