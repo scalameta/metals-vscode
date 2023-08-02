@@ -62,6 +62,7 @@ export interface AddTestCases extends BaseTestExplorerEvent {
 
 export interface TestCaseEntry {
   name: string;
+  displayName?: string;
   location: Location;
 }
 

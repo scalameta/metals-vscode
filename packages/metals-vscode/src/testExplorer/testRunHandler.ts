@@ -110,9 +110,11 @@ export async function runHandler(
         tests: [],
       };
     } else {
+      const { id, parent, _metalsParent } = test;
+      const idStartsWithParent = parent && id.startsWith(`${parent.id}.`);
       return {
-        className: test._metalsParent.id,
-        tests: [test.label],
+        className: _metalsParent.id,
+        tests: [idStartsWithParent ? id.slice(parent.id.length + 1) : id],
       };
     }
   });
