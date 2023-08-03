@@ -130,7 +130,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   detectLaunchConfigurationChanges();
   configureSettingsDefaults();
   registerDebugEventListener(context);
-
+  migrateOldSettings();
   await window.withProgress(
     {
       location: ProgressLocation.Window,
@@ -157,6 +157,17 @@ export async function activate(context: ExtensionContext): Promise<void> {
   );
 }
 
+function migrateOldSettings(): void {
+  const setting = "showInferredType";
+  const oldBooleanProperty = config.inspect<boolean>(setting)?.workspaceValue;
+  if (oldBooleanProperty !== undefined) {
+    config.update(
+      setting,
+      `${oldBooleanProperty}`,
+      ConfigurationTarget.Workspace
+    );
+  }
+}
 export function deactivate(): Thenable<void> | undefined {
   return currentClient?.stop();
 }
@@ -905,7 +916,23 @@ function launchMetals(
       });
 
       registerCommand("metals.toggle-show-inferred-type", () => {
-        toggleBooleanWorkspaceSetting("showInferredType");
+        const setting = "showInferredType";
+        const config = workspace.getConfiguration("metals");
+        const configProperty = config.inspect<string>(setting);
+        const currentValue = configProperty?.workspaceValue ?? "false";
+        let newValue = "true";
+        switch (currentValue) {
+          case "true":
+            newValue = "minimal";
+            break;
+          case "minimal":
+            newValue = "false";
+            break;
+          case "false":
+            newValue = "true";
+            break;
+        }
+        config.update(setting, newValue, ConfigurationTarget.Workspace);
       });
 
       registerCommand(
