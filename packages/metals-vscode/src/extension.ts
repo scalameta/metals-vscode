@@ -569,9 +569,9 @@ function launchMetals(
         commands.executeCommand(workbenchCommands.focusDiagnostics)
       );
 
-      registerCommand(ClientCommands.RunDoctor, () =>
-        commands.executeCommand(ClientCommands.RunDoctor)
-      );
+      registerCommand(ClientCommands.RunDoctor, async () => {
+        await doctorProvider.runDoctor();
+      });
 
       registerCommand(ClientCommands.ToggleLogs, () => {
         if (channelOpen) {
@@ -722,13 +722,7 @@ function launchMetals(
             item.tooltip = params.tooltip;
           }
           if (params.command) {
-            const command = params.command;
             item.command = params.command;
-            commands.getCommands().then((values) => {
-              if (values.includes(command)) {
-                commands.executeCommand(command);
-              }
-            });
           } else {
             item.command = undefined;
           }
