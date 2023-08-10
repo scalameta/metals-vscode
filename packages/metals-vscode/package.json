@@ -345,7 +345,7 @@
         },
         "metals.enableSemanticHighlighting": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "markdownDescription": "When this option is enabled, Metals will provide semantic tokens for clients that support it. The feature is still experimental and does not work for all sources."
         },
         "metals.testUserInterface": {
