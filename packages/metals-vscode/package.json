@@ -218,6 +218,11 @@
     "configuration": {
       "title": "Metals",
       "properties": {
+        "metals.debug.settings.hotCodeReplace": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Allow Hot Code Replace (HCR) while debugging. Only available since Metals 1.0.X"
+        },
         "metals.serverVersion": {
           "type": "string",
           "default": "1.2.1",
@@ -422,6 +427,14 @@
       }
     },
     "commands": [
+      {
+        "command": "metals.debug.hotCodeReplace",
+        "title": "Hot Code Replace",
+        "icon": {
+          "light": "icons/hot_code_replace.svg",
+          "dark": "icons/hot_code_replace.svg"
+        }
+      },
       {
         "command": "metals.reveal-active-file",
         "category": "Metals",
@@ -693,6 +706,13 @@
           "command": "metals.reveal-active-file",
           "group": "navigation",
           "when": "view == metalsPackages"
+        }
+      ],
+      "debug/toolBar": [
+        {
+          "command": "metals.debug.hotCodeReplace",
+          "group": "navigation@100",
+          "when": "scalaHotReloadOn"
         }
       ],
       "commandPalette": [
@@ -1088,7 +1108,8 @@
     "metals-languageclient": "file:../metals-languageclient",
     "promisify-child-process": "4.1.1",
     "semver": "^7.5.2",
-    "vscode-languageclient": "8.1.0"
+    "vscode-languageclient": "8.1.0",
+    "vscode-extension-telemetry-wrapper": "^0.13.3"
   },
   "extensionPack": [
     "scala-lang.scala"
