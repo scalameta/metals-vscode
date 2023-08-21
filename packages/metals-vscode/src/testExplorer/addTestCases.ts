@@ -41,9 +41,8 @@ export function addTestCases(
       for (const { location, name, displayName } of event.testCases) {
         const parsedUri = vscode.Uri.parse(location.uri);
         const parsedRange = toVscodeRange(location.range);
-        const id = `${parent.id}.${name}`;
         const testItem = testController.createTestItem(
-          id,
+          name,
           displayName || name,
           parsedUri
         );

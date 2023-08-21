@@ -131,9 +131,9 @@ suite("Analyze tests results", () => {
       targetName,
       testItem
     );
-    const child1 = testController.createTestItem("TestSuite.test1", "test1");
-    const child2 = testController.createTestItem("TestSuite.test2", "test2");
-    const child3 = testController.createTestItem("TestSuite.test3", "test3");
+    const child1 = testController.createTestItem("test1", "test1");
+    const child2 = testController.createTestItem("test2", "test2");
+    const child3 = testController.createTestItem("test3", "test3");
     testItem.children.replace([
       refineRunnableTestItem(
         "testcase",
@@ -161,13 +161,13 @@ suite("Analyze tests results", () => {
     analyzeTestRun(action, [refined], failed);
     arrayEqual(results.failed, [
       {
-        id: "TestSuite.test1",
+        id: "test1",
         duration: 10,
         msg: { message: "Error" },
       },
     ]);
-    arrayEqual(results.passed, [{ id: "TestSuite.test2", duration: 90 }]);
-    arrayEqual(results.skipped, [{ id: "TestSuite.test3" }]);
+    arrayEqual(results.passed, [{ id: "test2", duration: 90 }]);
+    arrayEqual(results.skipped, [{ id: "test3" }]);
   });
 
   test("testcase", () => {
@@ -180,9 +180,9 @@ suite("Analyze tests results", () => {
       targetName,
       testItem
     );
-    const child1 = testController.createTestItem("TestSuite.test1", "test1");
-    const child2 = testController.createTestItem("TestSuite.test2", "test2");
-    const child3 = testController.createTestItem("TestSuite.test3", "test3");
+    const child1 = testController.createTestItem("test1", "test1");
+    const child2 = testController.createTestItem("test2", "test2");
+    const child3 = testController.createTestItem("test3", "test3");
     const refinedChild = refineRunnableTestItem(
       "testcase",
       child1,
@@ -211,7 +211,7 @@ suite("Analyze tests results", () => {
     analyzeTestRun(action, [refinedChild], failed);
     arrayEqual(results.failed, [
       {
-        id: "TestSuite.test1",
+        id: "test1",
         duration: 10,
         msg: { message: "Error" },
       },
