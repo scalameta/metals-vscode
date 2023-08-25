@@ -295,6 +295,7 @@ function launchMetals(
     decorationProvider: true,
     inlineDecorationProvider: true,
     debuggingProvider: true,
+    runProvider: true,
     doctorProvider: "html",
     didFocusProvider: true,
     executeClientCommandProvider: true,

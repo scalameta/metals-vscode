@@ -12,6 +12,7 @@ interface CompilerInitializationOptions {
 
 export interface MetalsInitializationOptions {
   compilerOptions?: CompilerInitializationOptions;
+  runProvider?: boolean;
   debuggingProvider?: boolean;
   decorationProvider?: boolean;
   inlineDecorationProvider?: boolean;
