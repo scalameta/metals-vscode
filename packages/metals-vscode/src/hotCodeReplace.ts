@@ -38,18 +38,6 @@ export async function applyHCR() {
     return;
   }
 
-  const serverVersion =
-    vscode.workspace.getConfiguration("metals").get<string>("serverVersion") ??
-    "";
-  if (serverVersion < "1.0.1") {
-    vscode.workspace
-      .getConfiguration("metals.debug.settings")
-      .update("hotCodeReplace", false, vscode.ConfigurationTarget.Workspace);
-    vscode.window.showErrorMessage(
-      "Hot code replace is only supported since scala-debug-adapter 3.1.5,\nwhich is shipped with metals 1.0.1"
-    );
-    return;
-  }
   if (debugSession.configuration.noDebug) {
     vscode.window
       .showWarningMessage(
@@ -82,7 +70,7 @@ export async function applyHCR() {
 
   if (!response?.changedClasses?.length) {
     const res = await vscode.window.showWarningMessage(
-      "No classes were reloaded. Did you applied your changes ?",
+      "No classes were reloaded",
       "Ok",
       NO_HCR
     );
