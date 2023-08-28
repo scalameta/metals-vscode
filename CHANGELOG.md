@@ -2,6 +2,23 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.25.0 (2023/08/28 16:02 +00:00)
+- [c10ef37](https://github.com/scalameta/metals-vscode/commit/c10ef371665e7ec96fb73a017fe4cf96d7d80a87) Increase patch version for pre-release
+- [b8b29c0](https://github.com/scalameta/metals-vscode/commit/b8b29c0be53a900bfa64849092d1fe2d649d0004) chore: Update Metals to v1.0.1 (@jkciesluk)
+- [29d6167](https://github.com/scalameta/metals-vscode/commit/29d6167444d8c6e258fc757aeae5d9dd2e49108a) Increase patch version for pre-release
+- [279e9f8](https://github.com/scalameta/metals-vscode/commit/279e9f83c4aa5648e94822a63b1260661298ee11) chore: Set runProvider as true (@tgodzik)
+- [0e07b14](https://github.com/scalameta/metals-vscode/commit/0e07b14d9fc1b9e01afe07b76ed898a2db540d8e) Increase patch version for pre-release
+- [cb02c65](https://github.com/scalameta/metals-vscode/commit/cb02c650de9ef34b22038b546f1a1c21e7bb6ea8) improvement: Set semantic highlighting to true by default (@tgodzik)
+- [b4f8146](https://github.com/scalameta/metals-vscode/commit/b4f8146772f5c5d62f52da7a2df784ea57a9f6b9) Increase patch version for pre-release
+- [caffc12](https://github.com/scalameta/metals-vscode/commit/caffc12bff36201733f7266fa306db323f81661c) bugfix: Don't run command without clicking and fix infinite recursion (@tgodzik)
+- [edc446c](https://github.com/scalameta/metals-vscode/commit/edc446cc58dc809f3ed7cfde15b1e7fd7b5be115) Increase patch version for pre-release
+- [76b8f05](https://github.com/scalameta/metals-vscode/commit/76b8f0515cf5dc4feca71a312d19005ff810d131) improvement: Set toggle for showInferredType to switch between true, false and minimal (@tgodzik)
+- [00bebd9](https://github.com/scalameta/metals-vscode/commit/00bebd9c8cf75a65fadd89b3703dd084f6a9316e) Increase patch version for pre-release
+- [292562a](https://github.com/scalameta/metals-vscode/commit/292562a0a64f2a85abc75fe7f004444addaae902) improvement: Don't rely on specific start of release notes (@tgodzik)
+- [303130c](https://github.com/scalameta/metals-vscode/commit/303130c60c0b41c3c5fecc330328e05d6f03b97d) build(deps): bump word-wrap in /packages/metals-vscode (@dependabot[bot])
+- [c725620](https://github.com/scalameta/metals-vscode/commit/c725620644fa6ad8e27c7959e1c62822be3aebb3) v1.24.0
+- [ba38cc6](https://github.com/scalameta/metals-vscode/commit/ba38cc60ad7982732fdca514266989c3effd867d) build(deps): bump word-wrap in /packages/metals-languageclient (@dependabot[bot])
+
 ### v1.24.0 (2023/07/19 15:05 +00:00)
 - [c4be766](https://github.com/scalameta/metals-vscode/commit/c4be7663f865dd8d4adf016aaa41f3ba9add5e8e) Increase patch version for pre-release
 - [093c49c](https://github.com/scalameta/metals-vscode/commit/093c49cf21ac130224bab05d7375df31b4cccbce) chore: Update Metals version to 1.0.0 (@tgodzik)
@@ -2122,8 +2139,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 ### v0.2.10 (2018/12/02 16:35 +00:00)
 - [c154636](https://github.com/scalameta/metals-vscode/commit/c1546367c98ffd15367740cc813694f175e24a18) 0.2.10 (@olafurpg)
 - [fc6f8b4](https://github.com/scalameta/metals-vscode/commit/fc6f8b4f466592ddc511d93b1fab71d522bce0b8) Remove mention of roadmap because there is no roadmap yet. (@olafurpg)
-
-### v0.2.9 (2018/12/02 15:52 +00:00)
 - [e317226](https://github.com/scalameta/metals-vscode/commit/e3172266d4718a6e7bb240d848dcb1a83b9881a2) 0.2.9 (@olafurpg)
 - [b796f67](https://github.com/scalameta/metals-vscode/commit/b796f675f9dd49f24702a61e33c1831243434045) Add Travis badge (@gabro)
 - [1a0b339](https://github.com/scalameta/metals-vscode/commit/1a0b339b478d228f5f406bedefc54ed21cc73fb6) Add table with supported features in extension overview (@olafurpg)
