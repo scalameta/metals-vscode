@@ -106,7 +106,6 @@ import {
 } from "./consts";
 import { ScalaCodeLensesParams } from "./debugger/types";
 import { applyHCR, initializeHotCodeReplace } from "./hotCodeReplace";
-import { instrumentOperationAsVsCodeCommand } from "vscode-extension-telemetry-wrapper";
 
 const outputChannel = window.createOutputChannel("Metals");
 const downloadJava = "Download Java";
@@ -1190,14 +1189,9 @@ function launchMetals(
         }
       );
       context.subscriptions.push(decorationsRangesDidChangeDispoasable);
-      context.subscriptions.push(
-        instrumentOperationAsVsCodeCommand(
-          "metals.debug.hotCodeReplace",
-          async () => {
-            await applyHCR();
-          }
-        )
-      );
+      registerCommand("metals.debug.hotCodeReplace", () => {
+        applyHCR();
+      });
       initializeHotCodeReplace();
     },
     (reason) => {

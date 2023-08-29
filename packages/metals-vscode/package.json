@@ -218,10 +218,10 @@
     "configuration": {
       "title": "Metals",
       "properties": {
-        "metals.debug.settings.hotCodeReplace": {
+        "metals.hotCodeReplace": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "Allow Hot Code Replace (HCR) while debugging. Only available since Metals 1.0.X"
+          "markdownDescription": "Allow Hot Code Replace (HCR) while debugging"
         },
         "metals.serverVersion": {
           "type": "string",
@@ -1108,8 +1108,7 @@
     "metals-languageclient": "file:../metals-languageclient",
     "promisify-child-process": "4.1.1",
     "semver": "^7.5.2",
-    "vscode-languageclient": "8.1.0",
-    "vscode-extension-telemetry-wrapper": "^0.13.3"
+    "vscode-languageclient": "8.1.0"
   },
   "extensionPack": [
     "scala-lang.scala"

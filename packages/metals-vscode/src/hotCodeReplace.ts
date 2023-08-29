@@ -7,25 +7,28 @@ import * as vscode from "vscode";
 
 import { DebugSession, commands } from "vscode";
 
+const HCR_CONFIG = "metals.hotCodeReplace";
+const HCR_ACTIVE = "scalaHotReloadOn";
+
 export function initializeHotCodeReplace() {
   vscode.workspace.onDidChangeConfiguration((event) => {
-    if (event.affectsConfiguration("metals.debug.settings.hotCodeReplace")) {
+    if (event.affectsConfiguration(HCR_CONFIG)) {
       vscode.commands.executeCommand(
         "setContext",
-        "scalaHotReloadOn",
+        HCR_ACTIVE,
         hotReplaceIsOn()
       );
     }
   });
   vscode.debug.onDidStartDebugSession((session) => {
     if (session?.configuration.noDebug && !vscode.debug.activeDebugSession) {
-      vscode.commands.executeCommand("setContext", "scalaHotReloadOn", false);
+      vscode.commands.executeCommand("setContext", HCR_ACTIVE, false);
     }
   });
   vscode.debug.onDidChangeActiveDebugSession((session) => {
     vscode.commands.executeCommand(
       "setContext",
-      "scalaHotReloadOn",
+      HCR_ACTIVE,
       session && !session.configuration.noDebug && hotReplaceIsOn()
     );
   });
@@ -66,21 +69,10 @@ export async function applyHCR() {
     return;
   }
 
-  const NO_HCR = "Disable HCR";
-
   if (!response?.changedClasses?.length) {
-    const res = await vscode.window.showWarningMessage(
-      "No classes were reloaded",
-      "Ok",
-      NO_HCR
+    vscode.window.showWarningMessage(
+      "No classes were reloaded, please check the logs"
     );
-
-    if (res === NO_HCR) {
-      vscode.workspace
-        .getConfiguration("metals.debug.settings")
-        .update("hotCodeReplace", false, vscode.ConfigurationTarget.Workspace);
-      vscode.commands.executeCommand("setContext", "scalaHotReloadOn", false);
-    }
     return;
   }
 
@@ -91,10 +83,5 @@ export async function applyHCR() {
   );
 }
 
-function hotReplaceIsOn(): boolean {
-  return (
-    vscode.workspace
-      .getConfiguration("metals.debug.settings")
-      .get("hotCodeReplace") ?? false
-  );
-}
+const hotReplaceIsOn = () =>
+  vscode.workspace.getConfiguration("metals").get("hotCodeReplace") ?? false;
