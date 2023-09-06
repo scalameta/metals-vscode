@@ -112,7 +112,7 @@ export async function runHandler(
     } else {
       return {
         className: test._metalsParent.id,
-        tests: [test.label],
+        tests: [test.id],
       };
     }
   });

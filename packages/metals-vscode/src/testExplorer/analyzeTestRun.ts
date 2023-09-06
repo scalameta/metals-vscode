@@ -37,7 +37,7 @@ export function analyzeTestRun(
     if (result != null) {
       // if suite run contains test cases (run was started for (single) test case)
       if (kind === "testcase") {
-        analyzeTestCases(run, result, [test], test.parent);
+        analyzeTestCases(run, result, [test], test._metalsParent);
       }
       // if test suite has children (test cases) do a more fine-grained analyze of results.
       // run was started for whole suite which has children (e.g. junit one)
@@ -94,8 +94,9 @@ function analyzeTestCases(
 
   if (parent) {
     const tests = new Set(testCases.map((t) => t.id as TestName));
-    const failed = Array.from(testCasesResults.values())
-      .filter((result) => !tests.has(result.testName))
+    const failed = Array.from(testCasesResults.entries())
+      .filter(([name, _]) => !tests.has(name))
+      .map(([_, result]) => result)
       .filter(isFailed);
     if (failed.length > 0) {
       const msg = extractErrorMessages(failed);
@@ -117,10 +118,10 @@ function createTestCasesMap(
 ): Map<TestName, SingleTestResult> {
   const tuples: [TestName, SingleTestResult][] = testSuiteResult.tests.map(
     (test) => {
-      const name = test.testName.startsWith(parentName)
-        ? test.testName
-        : `${parentName}.${test.testName}`;
-
+      const name =
+        parentName && test.testName.startsWith(parentName)
+          ? test.testName.slice(parentName.length + 1)
+          : test.testName;
       return [name as TestName, test];
     }
   );

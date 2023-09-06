@@ -228,8 +228,8 @@ suite("Test Explorer events", () => {
                   label: "Foo",
                   uri,
                   children: [
-                    { id: "a.Foo.test1", label: "test1", uri, children: [] },
-                    { id: "a.Foo.test2", label: "test2", uri, children: [] },
+                    { id: "test1", label: "test1", uri, children: [] },
+                    { id: "test2", label: "test2", uri, children: [] },
                   ],
                 },
               ],
