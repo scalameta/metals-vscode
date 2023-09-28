@@ -586,12 +586,6 @@ function launchMetals(
         }
       });
 
-      registerCommand(ClientCommands.ReconnectBsp, () =>
-        client.sendRequest(ExecuteCommandRequest.type, {
-          command: ServerCommands.BuildConnect,
-        })
-      );
-
       registerCommand(
         ClientCommands.StartDebugSession,
         (param: ScalaCodeLensesParams) => {
@@ -735,7 +729,7 @@ function launchMetals(
           }
 
           const commandTooltip = params.commandTooltip
-            ? "\n" + params.commandTooltip
+            ? "\nPress to " + params.commandTooltip.toLowerCase()
             : "";
 
           item.tooltip = params.tooltip

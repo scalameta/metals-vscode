@@ -45,10 +45,6 @@ export const ClientCommands = {
    * `window/logMessage`.
    */
   ToggleLogs: "metals-logs-toggle",
-  /**
-   * Reconnect with the build server. The client should send "build-connect" to server.
-   */
-  ReconnectBsp: "reconnect-bsp",
 } as const;
 
 export type ClientCommands = typeof ClientCommands;
