@@ -24,4 +24,10 @@ export interface MetalsStatusParams {
   tooltip?: string;
   /** If set, execute this command when the user clicks on the status bar item. */
   command?: string;
+  /** Is this metals or bsp status. */
+  statusType?: "bsp" | "metals";
+  /** Level: info, warn, error. */
+  level?: "info" | "warn" | "error";
+  /** Tooltip for the command. */
+  commandTooltip?: string;
 }

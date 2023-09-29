@@ -31,6 +31,7 @@ import {
   tests as vscodeTextExplorer,
   debug,
   DebugSessionCustomEvent,
+  ThemeColor,
 } from "vscode";
 import {
   LanguageClient,
@@ -312,6 +313,7 @@ function launchMetals(
     testExplorerProvider: true,
     commandInHtmlFormat: "vscode",
     doctorVisibilityProvider: true,
+    bspStatusBarProvider: "on",
   };
 
   const clientOptions: LanguageClientOptions = {
@@ -707,26 +709,46 @@ function launchMetals(
       context.subscriptions.push(executeClientCommandDisposable);
       // The server updates the client with a brief text message about what
       // it is currently doing, for example "Compiling..".
-      const item = window.createStatusBarItem(StatusBarAlignment.Right, 100);
-      item.command = ClientCommands.ToggleLogs;
-      item.hide();
+      const metalsItem = window.createStatusBarItem(
+        StatusBarAlignment.Right,
+        100
+      );
+      const bspItem = window.createStatusBarItem(StatusBarAlignment.Right, 100);
+      metalsItem.command = ClientCommands.ToggleLogs;
+      metalsItem.hide();
+      bspItem.hide();
       const metalsStatusDisposable = client.onNotification(
         MetalsStatus.type,
         (params) => {
+          const item = params.statusType === "bsp" ? bspItem : metalsItem;
           item.text = params.text;
           if (params.show) {
             item.show();
           } else if (params.hide) {
             item.hide();
           }
-          if (params.tooltip) {
-            item.tooltip = params.tooltip;
-          }
-          if (params.command) {
-            item.command = params.command;
+
+          const commandTooltip = params.commandTooltip
+            ? "\nPress to " + params.commandTooltip.toLowerCase()
+            : "";
+
+          item.tooltip = params.tooltip
+            ? params.tooltip + commandTooltip
+            : undefined;
+
+          if (params.level == "error") {
+            item.backgroundColor = new ThemeColor(
+              "statusBarItem.errorBackground"
+            );
+          } else if (params.level == "warn") {
+            item.backgroundColor = new ThemeColor(
+              "statusBarItem.warningBackground"
+            );
           } else {
-            item.command = undefined;
+            item.backgroundColor = undefined;
           }
+
+          item.command = params.command;
         }
       );
       context.subscriptions.push(metalsStatusDisposable);

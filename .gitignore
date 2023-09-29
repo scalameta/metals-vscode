@@ -4,6 +4,7 @@ node_modules
 *.vsix
 yarn-error.log
 .metals/
+*.DS_Store
 
 # sourcegraph
 index.scip

@@ -36,4 +36,5 @@ export interface MetalsInitializationOptions {
   copyWorksheetOutputProvider?: boolean;
   commandInHtmlFormat?: "vscode" | "sublime";
   doctorVisibilityProvider?: boolean;
+  bspStatusBarProvider?: "on" | "off" | "log-message" | "show-message";
 }
