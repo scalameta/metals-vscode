@@ -2,6 +2,15 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.26.0 (2023/10/17 13:25 +00:00)
+- [1216e55](https://github.com/scalameta/metals-vscode/commit/1216e55a63f732084f8c7a21ddca5148c4c8512c) Increase patch version for pre-release
+- [005cce9](https://github.com/scalameta/metals-vscode/commit/005cce93092bf8dd770f09dd271438132a68a127) chore: Update Metals to v1.1.0 (@kasiaMarek)
+- [22d7044](https://github.com/scalameta/metals-vscode/commit/22d7044f479559916df58d0c664ee91173723b40) Increase patch version for pre-release
+- [90ceb11](https://github.com/scalameta/metals-vscode/commit/90ceb114cc650b02ebd6708f0559af6018ac8797) build(deps): bump get-func-name in /packages/metals-vscode (@dependabot[bot])
+- [f660b9b](https://github.com/scalameta/metals-vscode/commit/f660b9b277498e53c96051e4465c6243415d32de) Increase patch version for pre-release
+- [a14199c](https://github.com/scalameta/metals-vscode/commit/a14199ce5e47e684e4fe96a90e838c4397aa5a02) refactor: don't prefix test case item with test suite name (@kasiaMarek)
+- [e148f0b](https://github.com/scalameta/metals-vscode/commit/e148f0b7d0b45faf17e9b2e17c04ac3d25a7a697) v1.25.0
+
 ### v1.25.0 (2023/08/28 16:02 +00:00)
 - [c10ef37](https://github.com/scalameta/metals-vscode/commit/c10ef371665e7ec96fb73a017fe4cf96d7d80a87) Increase patch version for pre-release
 - [b8b29c0](https://github.com/scalameta/metals-vscode/commit/b8b29c0be53a900bfa64849092d1fe2d649d0004) chore: Update Metals to v1.0.1 (@jkciesluk)
@@ -11,6 +20,7 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [cb02c65](https://github.com/scalameta/metals-vscode/commit/cb02c650de9ef34b22038b546f1a1c21e7bb6ea8) improvement: Set semantic highlighting to true by default (@tgodzik)
 - [b4f8146](https://github.com/scalameta/metals-vscode/commit/b4f8146772f5c5d62f52da7a2df784ea57a9f6b9) Increase patch version for pre-release
 - [caffc12](https://github.com/scalameta/metals-vscode/commit/caffc12bff36201733f7266fa306db323f81661c) bugfix: Don't run command without clicking and fix infinite recursion (@tgodzik)
+- [d9a347f](https://github.com/scalameta/metals-vscode/commit/d9a347f3fd8636985ec0c9ca2b1213fdc3d21fae) bugfix: accommodate junit encoded test names (@kasiaMarek)
 - [edc446c](https://github.com/scalameta/metals-vscode/commit/edc446cc58dc809f3ed7cfde15b1e7fd7b5be115) Increase patch version for pre-release
 - [76b8f05](https://github.com/scalameta/metals-vscode/commit/76b8f0515cf5dc4feca71a312d19005ff810d131) improvement: Set toggle for showInferredType to switch between true, false and minimal (@tgodzik)
 - [00bebd9](https://github.com/scalameta/metals-vscode/commit/00bebd9c8cf75a65fadd89b3703dd084f6a9316e) Increase patch version for pre-release
@@ -2007,7 +2017,7 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 ### v1.2.7 (2019/02/04 16:48 +00:00)
 - [b2471ef](https://github.com/scalameta/metals-vscode/commit/b2471ef5afa56349d384a32bdc8bf634636d0edc) Improve error messages for failed download of Metals (@gabro)
 - [894bbdd](https://github.com/scalameta/metals-vscode/commit/894bbdd38cf80c6eec3629ebb0fe1fb7d05ddd00) Enable strict mode in TypeScript. This also fixes #79 (@gabro)
-- [5f80582](https://github.com/scalameta/metals-vscode/commit/5f805822def5cb2290bbfa3840c085a3730ce764) Fix shell quote types
+- [5f80582](https://github.com/scalameta/metals-vscode/commit/5f805822def5cb2290bbfa3840c085a3730ce764) Fix shell quote types (@wiesner-dlr)
 - [2e68c2c](https://github.com/scalameta/metals-vscode/commit/2e68c2c18b8986bcf9b30825d91fa2d6fd7764a5) v1.2.6
 
 ### v1.2.6 (2019/02/02 20:50 +00:00)
@@ -2135,8 +2145,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [6768de5](https://github.com/scalameta/metals-vscode/commit/6768de507a1b3189e2e57b98e4969b47da417b17) 0.2.11 (@olafurpg)
 - [f485d82](https://github.com/scalameta/metals-vscode/commit/f485d823ed8050c03274e5a78dfcff4cb0eb4fd1) Consistent capitalization for commands (@olafurpg)
 - [861207d](https://github.com/scalameta/metals-vscode/commit/861207d547f6536819324eabba34725a2a8518c8) Update doctor-run client command (@olafurpg)
-
-### v0.2.10 (2018/12/02 16:35 +00:00)
 - [c154636](https://github.com/scalameta/metals-vscode/commit/c1546367c98ffd15367740cc813694f175e24a18) 0.2.10 (@olafurpg)
 - [fc6f8b4](https://github.com/scalameta/metals-vscode/commit/fc6f8b4f466592ddc511d93b1fab71d522bce0b8) Remove mention of roadmap because there is no roadmap yet. (@olafurpg)
 - [e317226](https://github.com/scalameta/metals-vscode/commit/e3172266d4718a6e7bb240d848dcb1a83b9881a2) 0.2.9 (@olafurpg)
