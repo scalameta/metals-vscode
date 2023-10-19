@@ -357,6 +357,12 @@
           ],
           "markdownDescription": "Specifies which UI should be used for tests. `Code lenses` shows virtual text above test class, just like it was previously. `Test explorer` is a new option which shows gutter icons on the left of the file in a less intrusive way. Moreover, this option comes with a new panel called `Testing` which lists all test suites in your codebase and allows you to browse tests and navigate to the file which contains them."
         },
+        "metals.customProjectRoot": {
+          "type": "string",
+          "default": "",
+          "scope": "machine-overridable",
+          "markdownDescription": "Optional relative path to your project's root. If you want your project root to be the workspace/workspace root set it to \".\" ."
+        },
         "metals.fallbackScalaVersion": {
           "type": "string",
           "default": "automatic",
