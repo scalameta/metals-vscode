@@ -52,7 +52,7 @@ function fromEnv(): TaskEither<unknown, string> {
 
 function locate(): TaskEither<Error, string> {
   return pipe(
-    locateJavaHome({ version: ">=1.8 <=17" }),
+    locateJavaHome({ version: ">=1.8 <=21" }),
     chain((javaHomes) => {
       if (!javaHomes || javaHomes.length === 0) {
         return TE.left(new Error("No suitable Java version found"));
