@@ -144,7 +144,11 @@ async function runDebugSession(
   }
   const wasStarted = await startDebugging(session, noDebug);
   if (!wasStarted) {
-    vscode.window.showErrorMessage("Debug session not started");
+    if (session.error) {
+      vscode.window.showErrorMessage(session.error);
+    } else {
+      vscode.window.showErrorMessage("Debug session not started");
+    }
     return;
   }
   await analyzeResults(run, tests);
@@ -179,16 +183,20 @@ async function createDebugSession(
  * containing information about test suite execution.
  */
 async function startDebugging(session: DebugSession, noDebug: boolean) {
-  const port = debugServerFromUri(session.uri).port;
-  const configuration: vscode.DebugConfiguration = {
-    type: "scala",
-    name: session.name,
-    noDebug,
-    request: "launch",
-    debugServer: port,
-    kind: testRunnerId,
-  };
-  return vscode.debug.startDebugging(undefined, configuration);
+  if (session.uri && session.name) {
+    const port = debugServerFromUri(session.uri).port;
+    const configuration: vscode.DebugConfiguration = {
+      type: "scala",
+      name: session.name,
+      noDebug,
+      request: "launch",
+      debugServer: port,
+      kind: testRunnerId,
+    };
+    return vscode.debug.startDebugging(undefined, configuration);
+  } else {
+    false;
+  }
 }
 
 /**

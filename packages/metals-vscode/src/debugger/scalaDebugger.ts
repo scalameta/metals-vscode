@@ -22,8 +22,9 @@ import { currentWorkspaceFolder } from "../util";
 const configurationType = "scala";
 
 export interface DebugSession {
-  name: string;
-  uri: string;
+  name: string | undefined;
+  uri: string | undefined;
+  error: string | undefined;
 }
 
 export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
@@ -143,17 +144,24 @@ async function debug(
     return false;
   }
 
-  const port = debugServerFromUri(response.uri).port;
+  if (response.uri && response.name) {
+    const port = debugServerFromUri(response.uri).port;
 
-  const configuration: vscode.DebugConfiguration = {
-    type: configurationType,
-    name: response.name,
-    noDebug: noDebug,
-    request: "launch",
-    debugServer: port, // note: MUST be a number. vscode magic - automatically connects to the server
-  };
-  commands.executeCommand("workbench.panel.repl.view.focus");
-  return vscode.debug.startDebugging(undefined, configuration);
+    const configuration: vscode.DebugConfiguration = {
+      type: configurationType,
+      name: response.name,
+      noDebug: noDebug,
+      request: "launch",
+      debugServer: port, // note: MUST be a number. vscode magic - automatically connects to the server
+    };
+    commands.executeCommand("workbench.panel.repl.view.focus");
+    return vscode.debug.startDebugging(undefined, configuration);
+  } else {
+    if (response.error) {
+      vscode.window.showErrorMessage(response.error);
+    }
+    return false;
+  }
 }
 
 class ScalaMainConfigProvider implements vscode.DebugConfigurationProvider {
@@ -191,13 +199,18 @@ class ScalaDebugServerFactory implements vscode.DebugAdapterDescriptorFactory {
         session.configuration
       );
 
-      if (debugSession === undefined) {
-        return null;
-      } else {
+      if (debugSession !== undefined && debugSession.uri !== undefined) {
         return debugServerFromUri(debugSession.uri);
+      } else if (
+        debugSession !== undefined &&
+        debugSession.error !== undefined
+      ) {
+        throw new Error(debugSession.error);
+      } else {
+        throw new Error("Could not start debug adapter");
       }
     }
-    return null;
+    throw new Error("Could not start debug adapter");
   }
 }
 
