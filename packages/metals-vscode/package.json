@@ -413,6 +413,17 @@
           "type": "boolean",
           "default": false,
           "markdownDescription": "Once in a day, notify if there are new server releases (including snapshots)"
+        },
+        "metals.telemetryLevel": {
+          "type": "string",
+          "enum": [
+            "off",
+            "crash",
+            "error",
+            "all"
+          ],
+          "default": "all",
+          "markdownDescription": "Control what kind of telemetry events can be sent to maintainers of Metals.\n\nWith `off` no telemetry data would be sent.\n\n The minimal recommended level is `crash` which would collect diagnostic information when Metals upon fatal failure, allowing us to understand why the problem occurred.\n\n When using `error` level both crashes and other unexpected, but non-fatal errors would be reported. Errors can contain anonymized and obfuscated sources allowing us to reproduce some of the issues - these would be included only when would are able to correctly remove any original names/types from the code, otherwise, sources would be excluded from reports.\n\nDefaults to `all` allowing us to collect all information including how features are used to help us prioritize future improvements."
         }
       }
     },
