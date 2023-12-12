@@ -23,7 +23,7 @@ The following table shows the status of various features.
 | Code actions          |   ✅   |                                                                                                  |
 | Organize imports      |   ✅   |                                                                                                  |
 | Show implicits        |   ✅   |                                                                                                  |
-| Basic Java support    |   ✅   | Most feature aside from hover, signature help and completions.                                   |
+| Basic Java support    |   ✅   | Most feature aside from signature help and semantic tokens.                                      |
 
 ## Requirements
 
@@ -36,20 +36,18 @@ every PR is tested on Ubuntu, Windows and MacOS.
 
 **Scala 2.13, 2.12, 2.11 and Scala 3**. Metals supports these Scala versions:
 
-- **Scala 2.13**:
-  2.13.12, 2.13.11, 2.13.10, 2.13.9, 2.13.8, 2.13.7, 2.13.6, 2.13.5
+- **Scala 2.13**: 2.13.12, 2.13.11, 2.13.10, 2.13.9, 2.13.8, 2.13.7, 2.13.6,
+  2.13.5
 
-- **Scala 2.12**:
-  2.12.18, 2.12.17, 2.12.16, 2.12.15, 2.12.14, 2.12.13, 2.12.12, 2.12.11
+- **Scala 2.12**: 2.12.18, 2.12.17, 2.12.16, 2.12.15, 2.12.14, 2.12.13, 2.12.12,
+  2.12.11
 
-- **Scala 2.11**:
-  2.11.12
+- **Scala 2.11**: 2.11.12
 
-- **Scala 3**:
-  3.3.1, 3.3.0, 3.2.2, 3.2.1, 3.2.0, 3.1.3, 3.1.2, 3.1.1, 3.1.0
+- **Scala 3**: 3.3.1, 3.3.0, 3.2.2, 3.2.1, 3.2.0, 3.1.3, 3.1.2, 3.1.1, 3.1.0
 
-Note that 2.11.x support is deprecated and it will be removed in future releases.
-It's recommended to upgrade to Scala 2.12 or Scala 2.13
+Note that 2.11.x support is deprecated and it will be removed in future
+releases. It's recommended to upgrade to Scala 2.12 or Scala 2.13
 
 ## Installation
 
@@ -445,9 +443,10 @@ command and select _Worksheet_ or create a file called `*.worksheet.sc`. This
 format is important since this is what tells Metals that it's meant to be
 treated as a worksheet and not just a Scala script. Where you create the script
 also matters. If you'd like to use classes and values from your project, you
-need to make sure the worksheet is created inside of your `src` directory. You
-can still create a worksheet in other places, but you will only have access to
-the standard library and your dependencies.
+need to make sure the worksheet is created inside of your sources next to any
+existing Scala files. directory. You can still create a worksheet in other
+places, but you will only have access to the standard library and your
+dependencies.
 
 ### Evaluations
 
@@ -479,6 +478,19 @@ You can also import `scalac` options in a special `$scalac` import like below:
 ```scala
 import $scalac.`-Ywarn-unused`
 ```
+
+### Troubleshooting
+
+Since worksheets are not standard Scala files, you may run into issues with some
+constructs. For example, you may see an error like this:
+
+```
+value classes may not be a member of another class - mdoc
+```
+
+This means that one of the classes defined in the worksheet extends AnyVal,
+which is not currently supported. You can work around this by moving the class
+to a separate file or removing the AnyVal parent.
 
 ## Running scalafix rules
 
