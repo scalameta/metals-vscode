@@ -2,8 +2,18 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.27.0 (2023/12/12 12:49 +00:00)
+- [3e689b0](https://github.com/scalameta/metals-vscode/commit/3e689b03a77b9b3697642f5324087678eaf3d9ef) Increase patch version for pre-release
+- [4e98a6a](https://github.com/scalameta/metals-vscode/commit/4e98a6a9737b55a44c7b3da126ad07ba815f7bc5) chore: Update Metals version to 1.2.0 (@tgodzik)
+- [16e7e65](https://github.com/scalameta/metals-vscode/commit/16e7e65ccd4e41355f046300f713ef8f05c9b2c5) Increase patch version for pre-release
+- [018afb7](https://github.com/scalameta/metals-vscode/commit/018afb7a92628ac77196a04da4325630ea9201d4) chore: Allow JDKs up until 21 to be found automatically (@tgodzik)
+- [f5de302](https://github.com/scalameta/metals-vscode/commit/f5de30248c6cabe24b0ebf45b37a57a2e4d85556) Increase patch version for pre-release
+- [4def14b](https://github.com/scalameta/metals-vscode/commit/4def14b7b40b43a70edc2210401963005feb8525) feat: add custom project root setting (@kasiaMarek)
+- [f9a32a2](https://github.com/scalameta/metals-vscode/commit/f9a32a21acda77d7f93da16674482503b2d099a5) v1.26.0
+
 ### v1.26.0 (2023/10/17 13:25 +00:00)
 - [1216e55](https://github.com/scalameta/metals-vscode/commit/1216e55a63f732084f8c7a21ddca5148c4c8512c) Increase patch version for pre-release
+- [81bb90d](https://github.com/scalameta/metals-vscode/commit/81bb90d24f59273d8a564f8948d6133f36a1eb17) build(deps): bump @babel/traverse in /packages/metals-languageclient (@dependabot[bot])
 - [005cce9](https://github.com/scalameta/metals-vscode/commit/005cce93092bf8dd770f09dd271438132a68a127) chore: Update Metals to v1.1.0 (@kasiaMarek)
 - [22d7044](https://github.com/scalameta/metals-vscode/commit/22d7044f479559916df58d0c664ee91173723b40) Increase patch version for pre-release
 - [90ceb11](https://github.com/scalameta/metals-vscode/commit/90ceb114cc650b02ebd6708f0559af6018ac8797) build(deps): bump get-func-name in /packages/metals-vscode (@dependabot[bot])
@@ -1845,14 +1855,14 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [4f1676b](https://github.com/scalameta/metals-vscode/commit/4f1676b91f3955375f1c2a1701c0022326fb2e4c) Pass user's environment to metals server process (@jodersky)
 - [02fcb1c](https://github.com/scalameta/metals-vscode/commit/02fcb1c19149e1a332320b2c3b1b0907ba91b626) update table in readme (@ckipp01)
 - [d931cca](https://github.com/scalameta/metals-vscode/commit/d931cca8a457aef6a696378bce9ce692d2f7a5e4) 1.7.1
-- [4a5e6e9](https://github.com/scalameta/metals-vscode/commit/4a5e6e9d5156e732ea11fb17283c539ee78e9cbd) Fix inverted meaning of run/debug commands (@mzarnowski)
+- [4a5e6e9](https://github.com/scalameta/metals-vscode/commit/4a5e6e9d5156e732ea11fb17283c539ee78e9cbd) Fix inverted meaning of run/debug commands
 - [f4659b5](https://github.com/scalameta/metals-vscode/commit/f4659b5d84ac7a86e1bb7d4185cab5e1a8fd98b3) v1.7.0
 
 ### v1.7.0 (2020/01/13 16:15 +00:00)
 - [a2ff1cf](https://github.com/scalameta/metals-vscode/commit/a2ff1cf1216c3e841f1b5aae7f43ace25ce0c38b) Update Metals version to 0.8.0 (@tgodzik)
 - [7f4e76f](https://github.com/scalameta/metals-vscode/commit/7f4e76fce370cedb35bd67e8eb1a9894479e5426) Fix worksheets on Windows
 - [ce0694d](https://github.com/scalameta/metals-vscode/commit/ce0694d7fd6cb2d0ef462823115611a343d56b19) Support StartRunSession command (@mzarnowski)
-- [42f3169](https://github.com/scalameta/metals-vscode/commit/42f3169a2cd2996320da7116a3b2be90023da5ab) Enable breakpoints in java and scala sources (@mzarnowski)
+- [42f3169](https://github.com/scalameta/metals-vscode/commit/42f3169a2cd2996320da7116a3b2be90023da5ab) Enable breakpoints in java and scala sources
 - [af4b53c](https://github.com/scalameta/metals-vscode/commit/af4b53cce81f4ff60bdfae480d983d22f61ff906) passing custom repositories to Metals (@sswistun-vl)
 - [b7201d1](https://github.com/scalameta/metals-vscode/commit/b7201d19d5d7bd65df3b20fe05621c052e8fc29b) coursier upgrade - now bootstrap supports mirrors (@sswistun-vl)
 - [ed00892](https://github.com/scalameta/metals-vscode/commit/ed008927144792227c14393ae5478aabb810e726) Add formatOnPaste and formatOnType defaults for Scala files (@gabro)
@@ -1909,10 +1919,10 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [60a3612](https://github.com/scalameta/metals-vscode/commit/60a3612aece97e0b225bfd84a622282c69c73416) Client command registration fix
 - [cebd70f](https://github.com/scalameta/metals-vscode/commit/cebd70f910148b15ee42b16458c62a7607a3a86f) Bump dependencies and remove test scaffolds (@gabro)
 - [02a3924](https://github.com/scalameta/metals-vscode/commit/02a39248f0db5b67254d9bc5db994e7b8718882f) use debugging provider instead of "supportsDebugging" (@mzarnowski)
-- [487854e](https://github.com/scalameta/metals-vscode/commit/487854e931c1f0471f27ee566ae73c5d7acf8990) setup scala debugger only when the server supports it (@mzarnowski)
-- [d6e87aa](https://github.com/scalameta/metals-vscode/commit/d6e87aae02e897470c231ad905051109a16a0367) rename debugger -> scalaDebugger (@mzarnowski)
-- [b332fde](https://github.com/scalameta/metals-vscode/commit/b332fde29efdf31524d698cc95efb55113d54193) fetch session name from metals (@mzarnowski)
-- [be06698](https://github.com/scalameta/metals-vscode/commit/be066984629950afe13a1e49ae69e714ef051332) move startDebugSession command to client-commands (@mzarnowski)
+- [487854e](https://github.com/scalameta/metals-vscode/commit/487854e931c1f0471f27ee566ae73c5d7acf8990) setup scala debugger only when the server supports it
+- [d6e87aa](https://github.com/scalameta/metals-vscode/commit/d6e87aae02e897470c231ad905051109a16a0367) rename debugger -> scalaDebugger
+- [b332fde](https://github.com/scalameta/metals-vscode/commit/b332fde29efdf31524d698cc95efb55113d54193) fetch session name from metals
+- [be06698](https://github.com/scalameta/metals-vscode/commit/be066984629950afe13a1e49ae69e714ef051332) move startDebugSession command to client-commands
 - [7a80af4](https://github.com/scalameta/metals-vscode/commit/7a80af4af34c361ca20424ee6b5d950980121d52) v1.5.5
 
 ### v1.5.5 (2019/09/23 16:53 +00:00)
@@ -1921,7 +1931,7 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ### v1.5.4 (2019/09/12 10:57 +00:00)
 - [ded494d](https://github.com/scalameta/metals-vscode/commit/ded494d63d3cb92a2a901cc8c5f39f1239d8bfed) Update Metals version to 0.7.5 (@tgodzik)
-- [68596eb](https://github.com/scalameta/metals-vscode/commit/68596eb301909ce5fd9c2f9b3f8c2d47357e4992) refresh code lenses on event from server (@mzarnowski)
+- [68596eb](https://github.com/scalameta/metals-vscode/commit/68596eb301909ce5fd9c2f9b3f8c2d47357e4992) refresh code lenses on event from server
 - [4404a44](https://github.com/scalameta/metals-vscode/commit/4404a44528dfac37d6772aeb36364573969ac56c) connect to the debug protocol adapter (@mzarnowski)
 - [69e0f8e](https://github.com/scalameta/metals-vscode/commit/69e0f8e7912236201cf045c4ec5cf89fdf0f395d) Migrate old settings from space-separated values to arrays (@gabro)
 - [243a27f](https://github.com/scalameta/metals-vscode/commit/243a27fba436f246473cb6421b01fa5ffd23e5e5) Use type array for serverProperties and customProperties settings (@gabro)
@@ -2010,7 +2020,7 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [d382e90](https://github.com/scalameta/metals-vscode/commit/d382e90f4105f42b6a8c1f500eb47763eb2b0d08) Link to HTTP proxy instructions in "failed to download" error. (@olafurpg)
 - [76c2857](https://github.com/scalameta/metals-vscode/commit/76c2857008dfba023e7626d762021f888c4a8551) Upgrade coursier binary from 1.1.0-M9 to 1.1.0-M13-2, fixes #66. (@olafurpg)
 - [27393ae](https://github.com/scalameta/metals-vscode/commit/27393ae6c48b5e4ef9a834c9dbe28cf71bb219e4) Remove default GC options, fixes #85. (@olafurpg)
-- [b1420ec](https://github.com/scalameta/metals-vscode/commit/b1420ec6ed3f365f553e80a3adaa3a8a07dae488) prevent fetch process from being run in debug mode (@mzarnowski)
+- [b1420ec](https://github.com/scalameta/metals-vscode/commit/b1420ec6ed3f365f553e80a3adaa3a8a07dae488) prevent fetch process from being run in debug mode
 - [1c2cd2f](https://github.com/scalameta/metals-vscode/commit/1c2cd2f90ad1edca8ef22f9348a8a992930ba8f8) Experiment with release drafter (@olafurpg)
 - [f8a49ba](https://github.com/scalameta/metals-vscode/commit/f8a49bae54af41a722beab860495879de7431dd2) v1.2.7
 
@@ -2140,8 +2150,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 ### v0.2.12 (2018/12/04 14:08 +00:00)
 - [b2b854c](https://github.com/scalameta/metals-vscode/commit/b2b854c1859c551e8e51d99d3f99afb7037e7d6d) 0.2.12 (@olafurpg)
 - [f801173](https://github.com/scalameta/metals-vscode/commit/f801173a782f0a2314f5ea92f7739b40a378e729) Update to 0.2.11 (@olafurpg)
-
-### v0.2.11 (2018/12/04 14:07 +00:00)
 - [6768de5](https://github.com/scalameta/metals-vscode/commit/6768de507a1b3189e2e57b98e4969b47da417b17) 0.2.11 (@olafurpg)
 - [f485d82](https://github.com/scalameta/metals-vscode/commit/f485d823ed8050c03274e5a78dfcff4cb0eb4fd1) Consistent capitalization for commands (@olafurpg)
 - [861207d](https://github.com/scalameta/metals-vscode/commit/861207d547f6536819324eabba34725a2a8518c8) Update doctor-run client command (@olafurpg)
