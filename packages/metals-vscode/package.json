@@ -343,6 +343,11 @@
           "default": false,
           "markdownDescription": "When this option is enabled, when user pastes any snippet into a Scala file, Metals will try to adjust the indentation to that of the current cursor."
         },
+        "metals.verboseCompilation": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "If a build server supports it (for example Bloop or Scala CLI), setting it to true will make the logs contain all the possible debugging information including about incremental compilation in Zinc."
+        },
         "metals.enableSemanticHighlighting": {
           "type": "boolean",
           "default": true,
