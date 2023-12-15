@@ -220,7 +220,7 @@
       "properties": {
         "metals.serverVersion": {
           "type": "string",
-          "default": "1.2.0",
+          "default": "1.2.0+12-644090c2-SNAPSHOT",
           "markdownDescription": "The version of the Metals server artifact. Requires reloading the window.  \n\n**VS Code extension version is guaranteed to work only with the default version, change if you know what you're doing**"
         },
         "metals.serverProperties": {
@@ -346,7 +346,7 @@
         "metals.verboseCompilation": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "If a build server supports it (for example Bloop or Scala CLI), setting it to true will make the logs contain all the possible debugging information including about incremental compilation in Zinc."
+          "markdownDescription": "If a build server supports it (for example Bloop or Scala CLI), setting it to true will make the logs contain all the possible debugging information including that about incremental compilation in Zinc."
         },
         "metals.enableSemanticHighlighting": {
           "type": "boolean",
