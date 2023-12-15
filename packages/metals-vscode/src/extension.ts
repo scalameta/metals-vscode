@@ -576,6 +576,10 @@ function launchMetals(
         await doctorProvider.runDoctor();
       });
 
+      registerCommand(ClientCommands.BuildConnect, () => {
+        commands.executeCommand(ServerCommands.BuildConnect);
+      });
+
       registerCommand(ClientCommands.ToggleLogs, () => {
         if (channelOpen) {
           client.outputChannel.hide();
@@ -698,6 +702,10 @@ function launchMetals(
             case "metals-update-test-explorer": {
               const updates: BuildTargetUpdate[] = params.arguments || [];
               testManager.updateTestExplorer(updates);
+              break;
+            }
+            case ClientCommands.BuildConnect: {
+              commands.executeCommand(ServerCommands.BuildConnect);
               break;
             }
             default:
