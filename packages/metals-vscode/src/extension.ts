@@ -589,22 +589,36 @@ function launchMetals(
       registerCommand(
         ClientCommands.StartDebugSession,
         (param: ScalaCodeLensesParams) => {
-          scalaDebugger.start(false, param).then((wasStarted) => {
-            if (!wasStarted) {
-              window.showErrorMessage("Debug session not started");
+          scalaDebugger.start(false, param).then(
+            (wasStarted) => {
+              if (!wasStarted) {
+                window.showErrorMessage("Debug session not started");
+              }
+            },
+            (reason) => {
+              if (reason instanceof Error) {
+                window.showErrorMessage(reason.message);
+              }
             }
-          });
+          );
         }
       );
 
       registerCommand(
         ClientCommands.StartRunSession,
         (param: ScalaCodeLensesParams) => {
-          scalaDebugger.start(true, param).then((wasStarted) => {
-            if (!wasStarted) {
-              window.showErrorMessage("Run session not started");
+          scalaDebugger.start(true, param).then(
+            (wasStarted) => {
+              if (!wasStarted) {
+                window.showErrorMessage("Run session not started");
+              }
+            },
+            (reason) => {
+              if (reason instanceof Error) {
+                window.showErrorMessage(reason.message);
+              }
             }
-          });
+          );
         }
       );
 
