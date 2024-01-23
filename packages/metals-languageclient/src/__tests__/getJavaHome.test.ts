@@ -1,6 +1,10 @@
-import { getJavaHome } from "../getJavaHome";
 import { IJavaHomeInfo } from "@viperproject/locate-java-home/js/es5/lib/interfaces";
 import path from "path";
+
+const exampleJavaVersionString =
+  `openjdk 17.0.1 2021-10-19
+  OpenJDK Runtime Environment (build 17.0.1+12-39)
+  OpenJDK 64-Bit Server VM (build 17.0.1+12-39, mixed mode, sharing)`
 
 describe("getJavaHome", () => {
   const originalEnv = process.env;
@@ -14,16 +18,11 @@ describe("getJavaHome", () => {
     process.env = originalEnv;
   });
 
-  it("reads from configuration", async () => {
-    const javaHomeConfig = "/path/to/java";
-    const javaHome = await getJavaHome(javaHomeConfig);
-    expect(javaHome).toBe(javaHomeConfig);
-  });
-
   it("reads from JAVA_HOME", async () => {
     const JAVA_HOME = "/path/to/java";
     process.env = { ...originalEnv, JAVA_HOME };
-    const javaHome = await getJavaHome(undefined);
+    mockSpawn(exampleJavaVersionString);
+    const javaHome = await require("../getJavaHome").fromEnv("17");
     expect(javaHome).toBe(JAVA_HOME);
   });
 
@@ -38,19 +37,8 @@ describe("getJavaHome", () => {
     mockLocateJavaHome([java8Jdk, java11Jdk]);
     mockFs(javaPaths);
     process.env = { PATH };
-    const javaHome = await require("../getJavaHome").getJavaHome(undefined);
+    const javaHome = await require("../getJavaHome").getJavaHome("11");
     expect(javaHome).toBe(java8Jdk.path);
-  });
-
-  it("prefers configuration to JAVA_HOME and installed Java", async () => {
-    const javaHomeConfig = "/path/to/config/java";
-    const JAVA_HOME = "/path/to/java";
-    process.env = { ...originalEnv, JAVA_HOME };
-    mockLocateJavaHome([java8Jdk, java11Jdk]);
-    const javaHome = await require("../getJavaHome").getJavaHome(
-      javaHomeConfig
-    );
-    expect(javaHome).toBe(javaHomeConfig);
   });
 
   // NOTE(gabro): we don't care about testing locate-java-home since it's an external dependency
@@ -59,31 +47,31 @@ describe("getJavaHome", () => {
 
   it("falls back to installed Java", async () => {
     mockLocateJavaHome([java8Jdk, java11Jdk]);
-    const javaHome = await require("../getJavaHome").getJavaHome(undefined);
+    const javaHome = await require("../getJavaHome").getJavaHome("11");
     expect(javaHome).toBe(java11Jdk.path);
   });
 
   it("prefers installed JDK over JRE", async () => {
     mockLocateJavaHome([java11Jre, java8Jdk, java8Jre]);
-    const javaHome = await require("../getJavaHome").getJavaHome(undefined);
+    const javaHome = await require("../getJavaHome").getJavaHome("8");
     expect(javaHome).toBe(java8Jdk.path);
   });
 
   it("prefers the most recent installed JDK 11", async () => {
     mockLocateJavaHome([java11Jdk, java8Jdk, java8Jre]);
-    const javaHome = await require("../getJavaHome").getJavaHome(undefined);
+    const javaHome = await require("../getJavaHome").getJavaHome("11");
     expect(javaHome).toBe(java11Jdk.path);
   });
 
   it("prefers the most recent installed JDK 17", async () => {
     mockLocateJavaHome([java17Jdk, java11Jdk, java8Jdk, java8Jre]);
-    const javaHome = await require("../getJavaHome").getJavaHome(undefined);
+    const javaHome = await require("../getJavaHome").getJavaHome("17");
     expect(javaHome).toBe(java17Jdk.path);
   });
 
   it("prefers the most recent security patch", async () => {
     mockLocateJavaHome([java11Jdk, java11JdkNewPatch, java8Jre]);
-    const javaHome = await require("../getJavaHome").getJavaHome(undefined);
+    const javaHome = await require("../getJavaHome").getJavaHome("11");
     expect(javaHome).toBe(java11JdkNewPatch.path);
   });
 });
@@ -124,7 +112,7 @@ const java11Jre = {
 };
 
 const java11JdkNewPatch = {
-  path: path.join("/", "path", "to", "java11jdk", "high", "securiry"),
+  path: path.join("/", "path", "to", "java11jdk", "high", "security"),
   version: "1.11.0",
   security: 192,
   isJDK: true,
@@ -171,5 +159,13 @@ function mockFs(javaLinks: { binPath: String; realPath: String }[]): void {
       } else {
         return path;
       }
+    });
+}
+
+function mockSpawn(resultString: String): void {
+  jest
+    .spyOn(require("promisify-child-process"), "spawn")
+    .mockImplementation(() => {
+      return Promise.resolve({stdout: resultString})
     });
 }

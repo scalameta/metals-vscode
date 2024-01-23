@@ -9,6 +9,7 @@ import {
 } from "promisify-child-process";
 import { JavaConfig } from "./getJavaConfig";
 import { OutputChannel } from "./interfaces/OutputChannel";
+import { getJavaHome } from "./getJavaHome";
 
 const coursierVersion = "v2.1.8";
 const coursierCommit = "11b428f35ca84a598ca30cce1c35ae4f375e5ee3";
@@ -60,7 +61,7 @@ export async function setupCoursier(
       });
   };
 
-  const resolveJavaHome = async (coursier: string) => {
+  const resolveJavaHomeWithCoursier = async (coursier: string) => {
     await run(
       coursier,
       ["java", "--jvm", javaVersion, "--setup"],
@@ -79,7 +80,10 @@ export async function setupCoursier(
   const coursier = await resolveCoursier();
   output.appendLine(`Using coursier located at ${coursier}`);
 
-  const javaHome = await resolveJavaHome(coursier);
+  const javaHome =
+    (await getJavaHome(javaVersion)) ||
+    (await resolveJavaHomeWithCoursier(coursier));
+
   output.appendLine(`Using Java Home: ${javaHome}`);
 
   return { coursier, javaHome };

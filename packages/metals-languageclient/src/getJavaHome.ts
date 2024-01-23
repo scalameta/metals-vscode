@@ -9,64 +9,75 @@ import {
   IJavaHomeInfo,
 } from "@viperproject/locate-java-home/js/es5/lib/interfaces";
 import { toPromise } from "./util";
-//import os from "os";
 import fs from "fs";
 import path from "path";
+import { JavaVersion } from "./fetchMetals";
+import { spawn } from "promisify-child-process";
 
 /**
  * Computes the user's Java Home path, using various strategies:
  *
- * - explicitly configured value
  * - JAVA_HOME environment variable
  * - realpath for `java` if it's presented in PATH enviroment variable
  * - the most recent compatible Java version found on the computer
  *   (with a preference for JDK over JRE)
  *
- * @param configuredJavaHome metals.javaHome value as read from the configuration
+ * @param javaVersion metals.javaVersion value as read from the configuration or default
  */
-export function getJavaHome(
-  configuredJavaHome: string | undefined
-): Promise<string> {
-  return toPromise(
-    pipe(fromConfig(configuredJavaHome), TE.orElse(fromEnv), TE.orElse(locate))
-  );
+export async function getJavaHome(
+  javaVersion: JavaVersion
+): Promise<string | undefined> {
+  const fromEnvValue = await fromEnv(javaVersion);
+  return fromEnvValue ? fromEnvValue : await locate(javaVersion);
 }
 
-function fromConfig(
-  configuredJavaHome: string | undefined
-): TaskEither<unknown, string> {
-  if (
-    typeof configuredJavaHome === "string" &&
-    configuredJavaHome.trim() !== ""
-  ) {
-    return TE.right(configuredJavaHome);
-  } else {
-    return TE.left({});
+const versionRegex = /\d+\.\d+\.\d+/;
+async function validateJavaVersion(
+  javaHome: string,
+  javaVersion: JavaVersion
+): Promise<boolean> {
+  const javaVersionOut = await spawn(javaHome, ["--version"], {
+    encoding: "utf8",
+  });
+
+  const javaInfoStr = javaVersionOut.stdout as string;
+  console.log(javaInfoStr);
+  const matches = javaInfoStr.match(versionRegex);
+  if (matches) {
+    if (matches[0].slice(0, 3) == "1.8") return javaVersion == "8";
+    else return matches[0].slice(0, 2) == javaVersion;
   }
+  return false;
 }
-
-function fromEnv(): TaskEither<unknown, string> {
+export async function fromEnv(javaVersion: JavaVersion): Promise<string | undefined> {
   const javaHome = process.env["JAVA_HOME"];
-  return javaHome ? TE.right(javaHome) : TE.left({});
+  
+  return javaHome && (await validateJavaVersion(javaHome, javaVersion))
+    ? javaHome
+    : undefined;
 }
 
-function locate(): TaskEither<Error, string> {
-  return pipe(
-    locateJavaHome({ version: ">=1.8 <=21" }),
-    chain((javaHomes) => {
-      if (!javaHomes || javaHomes.length === 0) {
-        return TE.left(new Error("No suitable Java version found"));
-      } else {
-        const jdkHomes = javaHomes.filter((j) => j.isJDK);
-        const fromBinPath = matchesBinFromPath(jdkHomes);
-        const jdkHome = fromBinPath ? fromBinPath : latestJdk(jdkHomes);
-        if (jdkHome) {
-          return TE.right(jdkHome.path);
+function locate(javaVersion: JavaVersion): Promise<undefined | string> {
+  const javaVersionString = javaVersion == "8" ? "1.8" : javaVersion;
+
+  return toPromise(
+    pipe(
+      locateJavaHome({ version: `~${javaVersionString}` }),
+      chain((javaHomes) => {
+        if (!javaHomes || javaHomes.length === 0) {
+          return TE.right(undefined);
         } else {
-          return TE.right(javaHomes[0].path);
+          const jdkHomes = javaHomes.filter((j) => j.isJDK);
+          const fromBinPath = matchesBinFromPath(jdkHomes);
+          const jdkHome = fromBinPath ? fromBinPath : latestJdk(jdkHomes);
+          if (jdkHome) {
+            return TE.right(jdkHome.path);
+          } else {
+            return TE.right(javaHomes[0].path);
+          }
         }
-      }
-    })
+      })
+    )
   );
 }
 
