@@ -11,8 +11,9 @@ import {
 import { toPromise } from "./util";
 import fs from "fs";
 import path from "path";
-import { JavaVersion } from "./fetchMetals";
 import { spawn } from "promisify-child-process";
+
+export type JavaVersion = "8" | "11" | "17" | "21";
 
 /**
  * Computes the user's Java Home path, using various strategies:
@@ -36,16 +37,27 @@ async function validateJavaVersion(
   javaHome: string,
   javaVersion: JavaVersion
 ): Promise<boolean> {
-  const javaVersionOut = await spawn(javaHome, ["--version"], {
-    encoding: "utf8",
-  });
+  const janaHomePath = path.resolve(javaHome)
+  const javaBins = 
+    [
+      path.join(janaHomePath, "bin", "java"),
+      path.join(janaHomePath, "bin", "java.exe"),
+      path.join(janaHomePath, "bin", "jre", "java"),
+      path.join(janaHomePath, "bin", "jre", "java.exe"),
+    ].filter(fs.existsSync)
 
-  const javaInfoStr = javaVersionOut.stdout as string;
-  console.log(javaInfoStr);
-  const matches = javaInfoStr.match(versionRegex);
-  if (matches) {
-    if (matches[0].slice(0, 3) == "1.8") return javaVersion == "8";
-    else return matches[0].slice(0, 2) == javaVersion;
+  if(javaBins.length != 0) {
+    const javaBin = javaBins[0]
+    const javaVersionOut = await spawn(javaBin, ["--version"], {
+      encoding: "utf8",
+    });
+
+    const javaInfoStr = javaVersionOut.stdout as string;
+    const matches = javaInfoStr.match(versionRegex);
+    if (matches) {
+      if (matches[0].slice(0, 3) == "1.8") return javaVersion == "8";
+      else return matches[0].slice(0, 2) == javaVersion;
+    }
   }
   return false;
 }

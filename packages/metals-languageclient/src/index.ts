@@ -6,6 +6,8 @@ export * from "./checkServerVersion";
 export * from "./fetchMetals";
 export * from "./getServerOptions";
 export * from "./getJavaConfig";
+export * from "./getJavaHome";
+export * from "./setupCoursier";
 
 export * from "./commands/restartServer";
 
