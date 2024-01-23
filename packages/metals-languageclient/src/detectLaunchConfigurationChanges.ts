@@ -16,7 +16,7 @@ export function detectLaunchConfigurationChanges(
     const promptRestartKeys = [
       UserConfiguration.ServerVersion,
       UserConfiguration.ServerProperties,
-      UserConfiguration.JavaHome,
+      UserConfiguration.JavaVersion,
       UserConfiguration.CustomRepositories,
       UserConfiguration.CoursierMirror,
       ...additionalRestartKeys,

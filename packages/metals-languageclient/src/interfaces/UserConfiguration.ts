@@ -13,9 +13,9 @@ export enum UserConfiguration {
    */
   ServerProperties = "serverProperties",
   /**
-   * Directory containing the Java binary.
+   * Java version. Can be one of 8, 11, 17, 21.
    */
-  JavaHome = "javaHome",
+  JavaVersion = "javaVersion",
   /**
    * Additional repositories that can be used to download dependencies.
    * https://get-coursier.io/docs/other-repositories
