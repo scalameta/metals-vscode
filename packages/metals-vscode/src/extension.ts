@@ -42,6 +42,7 @@ import {
 } from "vscode-languageclient/node";
 import { LazyProgress } from "./lazyProgress";
 import * as fs from "fs";
+import * as os from "os";
 import {
   restartServer,
   getJavaConfig,
@@ -188,9 +189,16 @@ async function fetchAndLaunchMetals(
   /* eslint-enable @typescript-eslint/no-non-null-assertion */
 
   const coursierMirror = getCoursierMirrorPath(config);
+
+  const metalsDirPath = path.join(os.homedir(), ".metals");
+
+  if (!fs.existsSync(metalsDirPath)) {
+    fs.existsSync(metalsDirPath);
+  }
+
   const { coursier, javaHome } = await metalsLanguageClient.setupCoursier(
     javaVersion,
-    context.extensionPath,
+    metalsDirPath,
     outputChannel
   );
 
