@@ -1,4 +1,9 @@
-import { ChildProcessPromise, Output, PromisifySpawnOptions, spawn } from "promisify-child-process";
+import {
+  ChildProcessPromise,
+  Output,
+  PromisifySpawnOptions,
+  spawn,
+} from "promisify-child-process";
 import { JavaVersion, getJavaHome } from "./getJavaHome";
 import { OutputChannel } from "./interfaces/OutputChannel";
 import path from "path";
@@ -19,7 +24,10 @@ export async function setupCoursier(
 
   const resolveCoursier = async () => {
     const envPath = process.env["PATH"];
-    const defaultCoursier = path.resolve(coursierFetchPath, "cs");
+    const isWindows = process.platform === "win32";
+    const defaultCoursier = isWindows
+      ? path.resolve(coursierFetchPath, "cs.exe")
+      : path.resolve(coursierFetchPath, "cs");
     const possibleCoursier: string | undefined = await validateCoursier(
       envPath,
       defaultCoursier
@@ -46,21 +54,29 @@ export async function setupCoursier(
       handleOutput
     );
 
-    const getJavaPath = await spawn(
-      coursier,
-      ["java-home", "--jvm", javaVersion],
-      { encoding: "utf8" }
-    );
+    const getJavaPath = spawn(coursier, ["java-home", "--jvm", javaVersion], {
+      encoding: "utf8",
+    });
 
-    return (getJavaPath.stdout as string).trim();
+    getJavaPath.stderr?.on("data", (out: Buffer) => {
+      const msg = out.toString().trim();
+      output.appendLine("Error: " + msg);
+    });
+
+    return ((await getJavaPath).stdout as string).trim();
   };
 
   const coursier = await resolveCoursier();
   output.appendLine(`Using coursier located at ${coursier}`);
 
-  const javaHome =
-    (await getJavaHome(javaVersion)) ||
-    (await resolveJavaHomeWithCoursier(coursier));
+  var javaHome = await getJavaHome(javaVersion);
+
+  if (!javaHome) {
+    output.appendLine(
+      `No installed java with version ${javaVersion} found. Will fetch one using coursier.`
+    );
+    javaHome = await resolveJavaHomeWithCoursier(coursier);
+  }
 
   output.appendLine(`Using Java Home: ${javaHome}`);
 
@@ -131,6 +147,7 @@ export async function fetchCoursier(
         const commandArr = curr.split(" ");
         return run(commandArr[0], commandArr.slice(1), handleOutput, {
           cwd: coursierFetchPath,
+          shell: true,
         });
       };
       return acc ? acc.then(() => res()) : res();
@@ -141,20 +158,20 @@ export async function fetchCoursier(
   if (process.platform == "win32") {
     // Windows
     return runChainedCommands([
-      `curl -fLo cs-x86_64-pc-win32.zi https://github.com/coursier/launchers/raw/${coursierCommit}/cs-x86_64-pc-win32.zip`,
+      `curl -fLo cs-x86_64-pc-win32.zip https://github.com/coursier/launchers/raw/${coursierCommit}/cs-x86_64-pc-win32.zip`,
       "tar -xf cs-x86_64-pc-win32.zip",
-      "move -xf cs-x86_64-pc-win32.exe cs.exe",
+      "move cs-x86_64-pc-win32.exe cs.exe",
     ]);
   } else {
     const gzPath =
       process.platform == "darwin"
         ? // MacOS
           process.arch == "arm64"
-          ? `https://github.com/VirtusLab/coursier-m1/releases/tag/${coursierVersion}/download/cs-aarch64-apple-darwin.gz`
+          ? `https://github.com/VirtusLab/coursier-m1/releases/download/${coursierVersion}/cs-aarch64-apple-darwin.gz`
           : `https://github.com/coursier/launchers/raw/${coursierCommit}/cs-x86_64-apple-darwin.gz`
         : // Linux
         process.arch == "arm64"
-        ? `https://github.com/VirtusLab/coursier-m1/releases/tag/${coursierVersion}/download/cs-aarch64-pc-linux.gz`
+        ? `https://github.com/VirtusLab/coursier-m1/releases/download/${coursierVersion}/cs-aarch64-pc-linux.gz`
         : `https://github.com/coursier/launchers/raw/${coursierCommit}/cs-x86_64-pc-linux.gz`;
     const command = `curl -fL ${gzPath} | gzip -d > cs && chmod +x cs`;
     const result = await run(command, undefined, handleOutput, {

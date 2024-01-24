@@ -37,22 +37,19 @@ async function validateJavaVersion(
   javaHome: string,
   javaVersion: JavaVersion
 ): Promise<boolean> {
-  const janaHomePath = path.resolve(javaHome)
-  const javaBins = 
-    [
-      path.join(janaHomePath, "bin", "java"),
-      path.join(janaHomePath, "bin", "java.exe"),
-      path.join(janaHomePath, "bin", "jre", "java"),
-      path.join(janaHomePath, "bin", "jre", "java.exe"),
-    ].filter(fs.existsSync)
+  const javaBins = [
+    path.join(javaHome, "bin", "java"),
+    path.join(javaHome, "bin", "java.exe"),
+    path.join(javaHome, "bin", "jre", "java"),
+    path.join(javaHome, "bin", "jre", "java.exe"),
+  ].filter(fs.existsSync);
 
-  if(javaBins.length != 0) {
-    const javaBin = javaBins[0]
-    const javaVersionOut = await spawn(javaBin, ["--version"], {
+  if (javaBins.length != 0) {
+    const javaBin = javaBins[0];
+    const javaVersionOut = await spawn(javaBin, ["-version"], {
       encoding: "utf8",
     });
-
-    const javaInfoStr = javaVersionOut.stdout as string;
+    const javaInfoStr = javaVersionOut.stderr as string;
     const matches = javaInfoStr.match(versionRegex);
     if (matches) {
       if (matches[0].slice(0, 3) == "1.8") return javaVersion == "8";
@@ -61,12 +58,17 @@ async function validateJavaVersion(
   }
   return false;
 }
-export async function fromEnv(javaVersion: JavaVersion): Promise<string | undefined> {
+
+export async function fromEnv(
+  javaVersion: JavaVersion
+): Promise<string | undefined> {
   const javaHome = process.env["JAVA_HOME"];
-  
-  return javaHome && (await validateJavaVersion(javaHome, javaVersion))
-    ? javaHome
-    : undefined;
+  if (javaHome) {
+    const isValid = await validateJavaVersion(javaHome, javaVersion);
+    if (isValid) return javaHome;
+  }
+
+  return undefined;
 }
 
 function locate(javaVersion: JavaVersion): Promise<undefined | string> {

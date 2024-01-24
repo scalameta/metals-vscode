@@ -1,8 +1,5 @@
 import * as semver from "semver";
-import {
-  ChildProcessPromise,
-  spawn
-} from "promisify-child-process";
+import { ChildProcessPromise, spawn } from "promisify-child-process";
 import { JavaConfig } from "./getJavaConfig";
 
 interface FetchMetalsOptions {
