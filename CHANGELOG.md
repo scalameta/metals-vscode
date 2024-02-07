@@ -2,6 +2,18 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.28.0 (2024/02/07 14:25 +00:00)
+- [85947de](https://github.com/scalameta/metals-vscode/commit/85947dea594c9cc0aeea2a153d1319b862f07ffe) chore: changes for metals release 1.2.1 (@kasiaMarek)
+- [da8566a](https://github.com/scalameta/metals-vscode/commit/da8566a932c073b4aef991db6712913d52dfe3c1) Increase patch version for pre-release
+- [d3f2ed2](https://github.com/scalameta/metals-vscode/commit/d3f2ed28cb8e839bd18731a79471f5da3a3d3289) build(deps): bump follow-redirects in /packages/metals-vscode (@dependabot[bot])
+- [dcd6f94](https://github.com/scalameta/metals-vscode/commit/dcd6f9451f146148ee54c89ff3601d109f84c35c) bugfix: Show error properly if lenses cannot be run (@tgodzik)
+- [9942834](https://github.com/scalameta/metals-vscode/commit/9942834ff2cb64e798b9cc265bdf4f16e71327aa) Increase patch version for pre-release
+- [1c17fe9](https://github.com/scalameta/metals-vscode/commit/1c17fe9eec2db5136f4b9384a64a12954646c888) chore: Use default that allows for verbose compilation (@tgodzik)
+- [b79a684](https://github.com/scalameta/metals-vscode/commit/b79a6847ab44c53cf656820812c7a10a08c812b7) Increase patch version for pre-release
+- [fe6b285](https://github.com/scalameta/metals-vscode/commit/fe6b28523cf673dc3b9d37b844c50eaaa751402b) add build connect client command (@kasiaMarek)
+- [8ed0cf1](https://github.com/scalameta/metals-vscode/commit/8ed0cf1f55edc38debcbefce141765a8aace9033) improvement: Add config for verbose compilation (@tgodzik)
+- [1348377](https://github.com/scalameta/metals-vscode/commit/134837798454707d26b6fe006f3c3e7b3902dc64) v1.27.0
+
 ### v1.27.0 (2023/12/12 12:49 +00:00)
 - [3e689b0](https://github.com/scalameta/metals-vscode/commit/3e689b03a77b9b3697642f5324087678eaf3d9ef) Increase patch version for pre-release
 - [4e98a6a](https://github.com/scalameta/metals-vscode/commit/4e98a6a9737b55a44c7b3da126ad07ba815f7bc5) chore: Update Metals version to 1.2.0 (@tgodzik)
@@ -1939,7 +1951,7 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ### v1.5.3 (2019/09/02 14:44 +00:00)
 - [852a65f](https://github.com/scalameta/metals-vscode/commit/852a65f054f2536c8a48a2e49fc2e196f6f99381) Update default Metals version to 0.7.2 (@tgodzik)
-- [d60a634](https://github.com/scalameta/metals-vscode/commit/d60a634f34ac251db3cb8a15e1f23faa6eb8283e) deleting pipe formatting in multiline strings outside of metals/metals (@Karolina-Bogacka)
+- [d60a634](https://github.com/scalameta/metals-vscode/commit/d60a634f34ac251db3cb8a15e1f23faa6eb8283e) deleting pipe formatting in multiline strings outside of metals/metals
 - [69e41bf](https://github.com/scalameta/metals-vscode/commit/69e41bfb6db808340d77e8ee467821236abf4203) Fix documentation about build tools (@tgodzik)
 - [474809c](https://github.com/scalameta/metals-vscode/commit/474809c3b70cba3a9d728ba1cc91e8d72ba7f76e) v1.5.2
 
@@ -2146,8 +2158,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [8ad00a6](https://github.com/scalameta/metals-vscode/commit/8ad00a684d46ffeeb56e81363436328eee8b8e00) Don't start server if Dotty is enabled in the workspace (@olafurpg)
 - [f6d6fba](https://github.com/scalameta/metals-vscode/commit/f6d6fba1acb9b1b91724673e6261b6a9b014fcde) Address review comments (@olafurpg)
 - [5ecaa29](https://github.com/scalameta/metals-vscode/commit/5ecaa2901d29497b840e6a7893fd6a11fccf1a9f) Show progress while downloading Metals. (@olafurpg)
-
-### v0.2.12 (2018/12/04 14:08 +00:00)
 - [b2b854c](https://github.com/scalameta/metals-vscode/commit/b2b854c1859c551e8e51d99d3f99afb7037e7d6d) 0.2.12 (@olafurpg)
 - [f801173](https://github.com/scalameta/metals-vscode/commit/f801173a782f0a2314f5ea92f7739b40a378e729) Update to 0.2.11 (@olafurpg)
 - [6768de5](https://github.com/scalameta/metals-vscode/commit/6768de507a1b3189e2e57b98e4969b47da417b17) 0.2.11 (@olafurpg)
