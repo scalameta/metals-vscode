@@ -32,15 +32,15 @@ describe("getJavaHome", () => {
     const javaPaths = [
       {
         binPath: path.join("/", "test", "usr", "bin", "java"),
-        realPath: path.join(java8Jdk.path, "bin", "java"),
+        realPath: path.join(java11Jdk.path, "bin", "java"),
       },
     ];
     const PATH = path.join("/", "test", "usr", "bin");
-    mockLocateJavaHome([java8Jdk, java11Jdk]);
+    mockLocateJavaHome([java11Jdk, java17Jdk]);
     mockFs(javaPaths);
     process.env = { PATH };
     const javaHome = await require("../getJavaHome").getJavaHome("11");
-    expect(javaHome).toBe(java8Jdk.path);
+    expect(javaHome).toBe(java11Jdk.path);
   });
 
   // NOTE(gabro): we don't care about testing locate-java-home since it's an external dependency
@@ -48,49 +48,35 @@ describe("getJavaHome", () => {
   // when multiple installed Java are available.
 
   it("falls back to installed Java", async () => {
-    mockLocateJavaHome([java8Jdk, java11Jdk]);
+    mockLocateJavaHome([java11Jdk]);
     const javaHome = await require("../getJavaHome").getJavaHome("11");
     expect(javaHome).toBe(java11Jdk.path);
   });
 
   it("prefers installed JDK over JRE", async () => {
-    mockLocateJavaHome([java11Jre, java8Jdk, java8Jre]);
-    const javaHome = await require("../getJavaHome").getJavaHome("8");
-    expect(javaHome).toBe(java8Jdk.path);
+    mockLocateJavaHome([java11Jre, java11Jdk]);
+    const javaHome = await require("../getJavaHome").getJavaHome("11");
+    expect(javaHome).toBe(java11Jdk.path);
   });
 
   it("prefers the most recent installed JDK 11", async () => {
-    mockLocateJavaHome([java11Jdk, java8Jdk, java8Jre]);
+    mockLocateJavaHome([java11Jdk]);
     const javaHome = await require("../getJavaHome").getJavaHome("11");
     expect(javaHome).toBe(java11Jdk.path);
   });
 
   it("prefers the most recent installed JDK 17", async () => {
-    mockLocateJavaHome([java17Jdk, java11Jdk, java8Jdk, java8Jre]);
+    mockLocateJavaHome([java17Jdk, java11Jdk]);
     const javaHome = await require("../getJavaHome").getJavaHome("17");
     expect(javaHome).toBe(java17Jdk.path);
   });
 
   it("prefers the most recent security patch", async () => {
-    mockLocateJavaHome([java11Jdk, java11JdkNewPatch, java8Jre]);
+    mockLocateJavaHome([java11Jdk, java11JdkNewPatch]);
     const javaHome = await require("../getJavaHome").getJavaHome("11");
     expect(javaHome).toBe(java11JdkNewPatch.path);
   });
 });
-
-const java8Jdk = {
-  path: path.join("/", "path", "to", "java8jdk"),
-  version: "1.8.0",
-  security: 1,
-  isJDK: true,
-};
-
-const java8Jre = {
-  path: path.join("/", "path", "to", "java8jdk"),
-  version: "1.8.0",
-  security: 1,
-  isJDK: false,
-};
 
 const java11Jdk = {
   path: path.join("/", "path", "to", "java11jdk"),

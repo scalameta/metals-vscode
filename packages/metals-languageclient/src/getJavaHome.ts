@@ -13,7 +13,7 @@ import fs from "fs";
 import path from "path";
 import { spawn } from "promisify-child-process";
 
-export type JavaVersion = "8" | "11" | "17" | "21";
+export type JavaVersion = "11" | "17" | "21";
 
 /**
  * Computes the user's Java Home path, using various strategies:
@@ -52,8 +52,7 @@ async function validateJavaVersion(
     const javaInfoStr = javaVersionOut.stderr as string;
     const matches = javaInfoStr.match(versionRegex);
     if (matches) {
-      if (matches[0].slice(0, 3) == "1.8") return javaVersion == "8";
-      else return matches[0].slice(0, 2) == javaVersion;
+      return matches[0].slice(0, 2) == javaVersion;
     }
   }
   return false;
@@ -72,11 +71,9 @@ export async function fromEnv(
 }
 
 function locate(javaVersion: JavaVersion): Promise<undefined | string> {
-  const javaVersionString = javaVersion == "8" ? "1.8" : javaVersion;
-
   return toPromise(
     pipe(
-      locateJavaHome({ version: `~${javaVersionString}` }),
+      locateJavaHome({ version: `~${javaVersion}` }),
       chain((javaHomes) => {
         if (!javaHomes || javaHomes.length === 0) {
           return TE.right(undefined);
