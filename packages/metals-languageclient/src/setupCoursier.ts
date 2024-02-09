@@ -10,6 +10,8 @@ import path from "path";
 import fs from "fs";
 
 const coursierVersion = "v2.1.8";
+// https://github.com/coursier/launchers contains only launchers with the most recent version
+// to get `coursierVersion` (above) we reference a specific commit
 const coursierCommit = "11b428f35ca84a598ca30cce1c35ae4f375e5ee3";
 
 export async function setupCoursier(

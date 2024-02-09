@@ -42,7 +42,6 @@ import {
 } from "vscode-languageclient/node";
 import { LazyProgress } from "./lazyProgress";
 import * as fs from "fs";
-import * as os from "os";
 import {
   restartServer,
   getJavaConfig,
@@ -88,6 +87,7 @@ import {
   getJavaVersionFromConfig,
   getTextDocumentPositionParams,
   getValueFromConfig,
+  metalsDir,
 } from "./util";
 import { createTestManager } from "./testExplorer/testManager";
 import { BuildTargetUpdate } from "./testExplorer/types";
@@ -190,7 +190,7 @@ async function fetchAndLaunchMetals(
 
   const coursierMirror = getCoursierMirrorPath(config);
 
-  const metalsDirPath = path.join(os.homedir(), ".metals");
+  const metalsDirPath = metalsDir(ConfigurationTarget.Global);
 
   if (!fs.existsSync(metalsDirPath)) {
     fs.existsSync(metalsDirPath);
