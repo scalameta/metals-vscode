@@ -29,9 +29,18 @@ export function getJavaConfig({
   const javaOptions = getJavaOptions(workspaceRoot);
   const javaPath = path.join(javaHome, "bin", "java");
   const coursierPath = path.join(extensionPath, "./coursier");
+
+  const coursierRepositories =
+    customRepositories.length > 0
+      ? { COURSIER_REPOSITORIES: customRepositories.join("|") }
+      : {};
+  const coursierMirrors = coursierMirrorFilePath
+    ? { COURSIER_MIRRORS: coursierMirrorFilePath }
+    : {};
+
   const extraEnv = {
-    COURSIER_REPOSITORIES: customRepositories.join("|"),
-    COURSIER_MIRRORS: coursierMirrorFilePath,
+    ...coursierRepositories,
+    ...coursierMirrors,
     JAVA_HOME: javaHome,
   };
 
