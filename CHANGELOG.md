@@ -2,6 +2,12 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.29.0 (2024/02/15 13:18 +00:00)
+- [c7f2dfa](https://github.com/scalameta/metals-vscode/commit/c7f2dfaa17fe5b6d10cd6337fe6a154ffd7bbaaa) chore: Change version for 1.2.2 release (@jkciesluk)
+- [7bfcb1f](https://github.com/scalameta/metals-vscode/commit/7bfcb1fa1f55ad11d905c3fc9de91a76df58367e) Increase patch version for pre-release
+- [7fa9a17](https://github.com/scalameta/metals-vscode/commit/7fa9a1763973c58890e5b9fcbf15044085cbeb95) fix: if no coursier repositories defined in settings use process's `COURSIER_REPOSITORIES` var (@kasiaMarek)
+- [6a8c039](https://github.com/scalameta/metals-vscode/commit/6a8c0395349c3d58018c6805bad2af47b44edfd7) v1.28.0
+
 ### v1.28.0 (2024/02/07 14:25 +00:00)
 - [85947de](https://github.com/scalameta/metals-vscode/commit/85947dea594c9cc0aeea2a153d1319b862f07ffe) chore: changes for metals release 1.2.1 (@kasiaMarek)
 - [da8566a](https://github.com/scalameta/metals-vscode/commit/da8566a932c073b4aef991db6712913d52dfe3c1) Increase patch version for pre-release
@@ -2141,7 +2147,7 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [1d2f396](https://github.com/scalameta/metals-vscode/commit/1d2f3969b4d59614c332c1766a889fbcc79bb6a1) Fix the publishing from the CI (@gabro)
 - [6eb23d2](https://github.com/scalameta/metals-vscode/commit/6eb23d29c915ccdbde64225b81c530ad8e397a27) v0.3.2
 
-### v0.3.1 (2018/12/07 11:10 +00:00)
+### v0.3.2 (2018/12/07 11:59 +00:00)
 - [b382a95](https://github.com/scalameta/metals-vscode/commit/b382a95b6e968b599f01a1edeb91eb6698686782) Use yarn version instead of vsce publish <version> (@gabro)
 - [cc19895](https://github.com/scalameta/metals-vscode/commit/cc19895a3c86071ea72d81b3ffdfb47bbbf63c9e) v0.3.1 (@gabro)
 - [6fc477b](https://github.com/scalameta/metals-vscode/commit/6fc477b763e5b3ea05574e3b6bf755d94813e822) Use yarn for everything (@gabro)
