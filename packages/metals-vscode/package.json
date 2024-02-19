@@ -218,11 +218,6 @@
     "configuration": {
       "title": "Metals",
       "properties": {
-        "metals.hotCodeReplace": {
-          "type": "boolean",
-          "default": false,
-          "markdownDescription": "Allow Hot Code Replace (HCR) while debugging"
-        },
         "metals.serverVersion": {
           "type": "string",
           "default": "1.2.1",
@@ -347,6 +342,11 @@
           "type": "boolean",
           "default": false,
           "markdownDescription": "When this option is enabled, when user pastes any snippet into a Scala file, Metals will try to adjust the indentation to that of the current cursor."
+        },
+        "metals.debug.hotCodeReplace": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Enable Hot Code Replace while debugging."
         },
         "metals.verboseCompilation": {
           "type": "boolean",

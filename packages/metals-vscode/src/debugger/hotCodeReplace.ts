@@ -1,18 +1,17 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-// Adapter from https://github.com/microsoft/vscode-java-debug/blob/main/src/hotCodeReplace.ts
+// Adapted from https://github.com/microsoft/vscode-java-debug/blob/main/src/hotCodeReplace.ts
 
 import * as vscode from "vscode";
 
 import { DebugSession, commands } from "vscode";
 
-const HCR_CONFIG = "metals.hotCodeReplace";
 const HCR_ACTIVE = "scalaHotReloadOn";
 
 export function initializeHotCodeReplace() {
   vscode.workspace.onDidChangeConfiguration((event) => {
-    if (event.affectsConfiguration(HCR_CONFIG)) {
+    if (event.affectsConfiguration("metals.debug.hotCodeReplace")) {
       vscode.commands.executeCommand(
         "setContext",
         HCR_ACTIVE,
@@ -84,4 +83,5 @@ export async function applyHCR() {
 }
 
 const hotReplaceIsOn = () =>
-  vscode.workspace.getConfiguration("metals").get("hotCodeReplace") ?? false;
+  vscode.workspace.getConfiguration("metals").get("debug.hotCodeReplace") ??
+  false;

@@ -105,7 +105,7 @@ import {
   SCALA_LANGID,
 } from "./consts";
 import { ScalaCodeLensesParams } from "./debugger/types";
-import { applyHCR, initializeHotCodeReplace } from "./hotCodeReplace";
+import { applyHCR, initializeHotCodeReplace } from "./debugger/hotCodeReplace";
 
 const outputChannel = window.createOutputChannel("Metals");
 const downloadJava = "Download Java";
