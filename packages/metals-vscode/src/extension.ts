@@ -105,6 +105,7 @@ import {
   SCALA_LANGID,
 } from "./consts";
 import { ScalaCodeLensesParams } from "./debugger/types";
+import { applyHCR, initializeHotCodeReplace } from "./debugger/hotCodeReplace";
 
 const outputChannel = window.createOutputChannel("Metals");
 const downloadJava = "Download Java";
@@ -1188,6 +1189,10 @@ function launchMetals(
         }
       );
       context.subscriptions.push(decorationsRangesDidChangeDispoasable);
+      registerCommand("metals.debug.hotCodeReplace", () => {
+        applyHCR();
+      });
+      initializeHotCodeReplace();
     },
     (reason) => {
       if (reason instanceof Error) {

@@ -423,6 +423,14 @@
     },
     "commands": [
       {
+        "command": "metals.debug.hotCodeReplace",
+        "title": "Hot Code Replace",
+        "icon": {
+          "light": "icons/hot_code_replace.svg",
+          "dark": "icons/hot_code_replace.svg"
+        }
+      },
+      {
         "command": "metals.reveal-active-file",
         "category": "Metals",
         "title": "Reveal Active File in Side Bar",
@@ -693,6 +701,13 @@
           "command": "metals.reveal-active-file",
           "group": "navigation",
           "when": "view == metalsPackages"
+        }
+      ],
+      "debug/toolBar": [
+        {
+          "command": "metals.debug.hotCodeReplace",
+          "group": "navigation@100",
+          "when": "scalaHotReloadOn"
         }
       ],
       "commandPalette": [
