@@ -10,15 +10,6 @@ import { DebugSession, commands } from "vscode";
 const HCR_ACTIVE = "scalaHotReloadOn";
 
 export function initializeHotCodeReplace() {
-  vscode.workspace.onDidChangeConfiguration((event) => {
-    if (event.affectsConfiguration("metals.debug.hotCodeReplace")) {
-      vscode.commands.executeCommand(
-        "setContext",
-        HCR_ACTIVE,
-        hotReplaceIsOn()
-      );
-    }
-  });
   vscode.debug.onDidStartDebugSession((session) => {
     if (session?.configuration.noDebug && !vscode.debug.activeDebugSession) {
       vscode.commands.executeCommand("setContext", HCR_ACTIVE, false);
@@ -28,7 +19,7 @@ export function initializeHotCodeReplace() {
     vscode.commands.executeCommand(
       "setContext",
       HCR_ACTIVE,
-      session && !session.configuration.noDebug && hotReplaceIsOn()
+      session && !session.configuration.noDebug
     );
   });
 }
@@ -77,11 +68,7 @@ export async function applyHCR() {
 
   const changed = response.changedClasses.length;
   vscode.window.setStatusBarMessage(
-    `$(check) Class${changed > 1 ? "es" : ""} successfully reloaded`,
+    `$(check) ${changed} Class${changed > 1 ? "es" : ""} reloaded`,
     5 * 1000
   );
 }
-
-const hotReplaceIsOn = () =>
-  vscode.workspace.getConfiguration("metals").get("debug.hotCodeReplace") ??
-  false;

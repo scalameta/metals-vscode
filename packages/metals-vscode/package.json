@@ -343,11 +343,6 @@
           "default": false,
           "markdownDescription": "When this option is enabled, when user pastes any snippet into a Scala file, Metals will try to adjust the indentation to that of the current cursor."
         },
-        "metals.debug.hotCodeReplace": {
-          "type": "boolean",
-          "default": false,
-          "markdownDescription": "Enable Hot Code Replace while debugging."
-        },
         "metals.verboseCompilation": {
           "type": "boolean",
           "default": false,
