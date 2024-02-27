@@ -67,7 +67,7 @@ export async function setupCoursier(
   const coursier = await resolveCoursier();
   output.appendLine(`Using coursier located at ${coursier}`);
 
-  var javaHome = await getJavaHome(javaVersion);
+  var javaHome = await getJavaHome(javaVersion, output);
 
   if (!javaHome) {
     output.appendLine(

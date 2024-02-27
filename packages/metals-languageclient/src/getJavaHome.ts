@@ -12,6 +12,7 @@ import { toPromise } from "./util";
 import fs from "fs";
 import path from "path";
 import { spawn } from "promisify-child-process";
+import { OutputChannel } from "./interfaces/OutputChannel";
 
 export type JavaVersion = "11" | "17" | "21";
 
@@ -26,23 +27,26 @@ export type JavaVersion = "11" | "17" | "21";
  * @param javaVersion metals.javaVersion value as read from the configuration or default
  */
 export async function getJavaHome(
-  javaVersion: JavaVersion
+  javaVersion: JavaVersion,
+  outputChannel: OutputChannel
 ): Promise<string | undefined> {
-  const fromEnvValue = await fromEnv(javaVersion);
+  const fromEnvValue = await fromEnv(javaVersion, outputChannel);
   return fromEnvValue ? fromEnvValue : await locate(javaVersion);
 }
 
 const versionRegex = /\d+\.\d+\.\d+/;
 async function validateJavaVersion(
   javaHome: string,
-  javaVersion: JavaVersion
+  javaVersion: JavaVersion,
+  outputChannel: OutputChannel
 ): Promise<boolean> {
-  const javaBins = [
+  const allPossibleJavaBins = [
     path.join(javaHome, "bin", "java.exe"),
     path.join(javaHome, "bin", "jre", "java.exe"),
     path.join(javaHome, "bin", "java"),
     path.join(javaHome, "bin", "jre", "java"),
-  ].filter(fs.existsSync);
+  ];
+  const javaBins = allPossibleJavaBins.filter(fs.existsSync);
 
   if (javaBins.length != 0) {
     const javaBin = javaBins[0];
@@ -53,17 +57,30 @@ async function validateJavaVersion(
     const matches = javaInfoStr.match(versionRegex);
     if (matches) {
       return +matches[0].slice(0, 2) >= +javaVersion;
+    } else {
+      outputChannel.appendLine(`${javaBin} -version:`);
+      outputChannel.appendLine(javaInfoStr);
     }
+  } else {
+    const checkedPaths = allPossibleJavaBins.join(", ");
+    outputChannel.appendLine(
+      `Warn: for JAVA_HOME=${javaHome} none of the following paths exist: ${checkedPaths}`
+    );
   }
   return false;
 }
 
 export async function fromEnv(
-  javaVersion: JavaVersion
+  javaVersion: JavaVersion,
+  outputChannel: OutputChannel
 ): Promise<string | undefined> {
   const javaHome = process.env["JAVA_HOME"];
   if (javaHome) {
-    const isValid = await validateJavaVersion(javaHome, javaVersion);
+    const isValid = await validateJavaVersion(
+      javaHome,
+      javaVersion,
+      outputChannel
+    );
     if (isValid) return javaHome;
   }
 
