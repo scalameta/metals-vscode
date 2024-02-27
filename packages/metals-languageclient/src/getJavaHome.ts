@@ -52,7 +52,7 @@ async function validateJavaVersion(
     const javaInfoStr = javaVersionOut.stderr as string;
     const matches = javaInfoStr.match(versionRegex);
     if (matches) {
-      return matches[0].slice(0, 2) == javaVersion;
+      return +matches[0].slice(0, 2) >= +javaVersion;
     }
   }
   return false;
@@ -73,7 +73,7 @@ export async function fromEnv(
 function locate(javaVersion: JavaVersion): Promise<undefined | string> {
   return toPromise(
     pipe(
-      locateJavaHome({ version: `~${javaVersion}` }),
+      locateJavaHome({ version: `>=${javaVersion}` }),
       chain((javaHomes) => {
         if (!javaHomes || javaHomes.length === 0) {
           return TE.right(undefined);
