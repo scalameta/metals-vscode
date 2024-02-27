@@ -43,7 +43,6 @@ import {
 import { LazyProgress } from "./lazyProgress";
 import * as fs from "fs";
 import {
-  getJavaHome,
   restartServer,
   getJavaConfig,
   fetchMetals,
@@ -66,6 +65,7 @@ import {
   DebugDiscoveryParams,
   RunType,
   TestUIKind,
+  JavaVersion,
 } from "metals-languageclient";
 import * as metalsLanguageClient from "metals-languageclient";
 import { startTreeView } from "./treeview";
@@ -84,9 +84,10 @@ import * as ext from "./hoverExtension";
 import { decodeAndShowFile, MetalsFileProvider } from "./metalsContentProvider";
 import {
   currentWorkspaceFolder,
-  getJavaHomeFromConfig,
+  getJavaVersionFromConfig,
   getTextDocumentPositionParams,
   getValueFromConfig,
+  metalsDir,
 } from "./util";
 import { createTestManager } from "./testExplorer/testManager";
 import { BuildTargetUpdate } from "./testExplorer/types";
@@ -96,10 +97,6 @@ import { getCoursierMirrorPath } from "./mirrors";
 import { DoctorProvider } from "./doctor";
 import { showReleaseNotes } from "./releaseNotesProvider";
 import {
-  showInstallJavaAction,
-  showMissingJavaAction,
-} from "./installJavaAction";
-import {
   openSettingsAction,
   USER_NOTIFICATION_EVENT,
   SCALA_LANGID,
@@ -108,7 +105,6 @@ import { ScalaCodeLensesParams } from "./debugger/types";
 import { applyHCR, initializeHotCodeReplace } from "./debugger/hotCodeReplace";
 
 const outputChannel = window.createOutputChannel("Metals");
-const downloadJava = "Download Java";
 
 let treeViews: MetalsTreeViews | undefined;
 let currentClient: LanguageClient | undefined;
@@ -142,11 +138,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
     async () => {
       commands.executeCommand("setContext", "metals:enabled", true);
       try {
-        const javaHome = await getJavaHome(getJavaHomeFromConfig());
-        await fetchAndLaunchMetals(context, javaHome, serverVersion);
+        const javaVersion = getJavaVersionFromConfig() || "17";
+        await fetchAndLaunchMetals(context, serverVersion, javaVersion);
       } catch (err) {
         outputChannel.appendLine(`${err}`);
-        showMissingJavaAction(outputChannel);
       }
     }
   );
@@ -174,10 +169,10 @@ export function deactivate(): Thenable<void> | undefined {
   return currentClient?.stop();
 }
 
-function fetchAndLaunchMetals(
+async function fetchAndLaunchMetals(
   context: ExtensionContext,
-  javaHome: string,
-  serverVersion: string
+  serverVersion: string,
+  javaVersion: JavaVersion
 ) {
   if (!workspace.workspaceFolders) {
     outputChannel.appendLine(
@@ -185,8 +180,6 @@ function fetchAndLaunchMetals(
     );
     return;
   }
-
-  outputChannel.appendLine(`Java home: ${javaHome}`);
 
   outputChannel.appendLine(`Metals version: ${serverVersion}`);
 
@@ -196,22 +189,31 @@ function fetchAndLaunchMetals(
   /* eslint-enable @typescript-eslint/no-non-null-assertion */
 
   const coursierMirror = getCoursierMirrorPath(config);
+
+  const metalsDirPath = metalsDir(ConfigurationTarget.Global);
+
+  if (!fs.existsSync(metalsDirPath)) {
+    fs.existsSync(metalsDirPath);
+  }
+
+  const { coursier, javaHome } = await metalsLanguageClient.setupCoursier(
+    javaVersion,
+    metalsDirPath,
+    outputChannel
+  );
+
   const javaConfig = getJavaConfig({
     workspaceRoot: workspace.workspaceFolders[0]?.uri.fsPath,
     javaHome,
+    coursier,
     customRepositories,
     coursierMirrorFilePath: coursierMirror,
-    extensionPath: context.extensionPath,
   });
 
-  const fetchProcess = fetchMetals(
-    {
-      serverVersion,
-      serverProperties,
-      javaConfig,
-    },
-    outputChannel
-  );
+  const fetchProcess = fetchMetals({
+    serverVersion,
+    javaConfig,
+  });
 
   const title = `Downloading Metals v${serverVersion}`;
   return fetchProcess
@@ -249,22 +251,17 @@ function fetchAndLaunchMetals(
           } else {
             return (
               `Failed to download Metals, make sure you have an internet connection, ` +
-              `the Metals version '${serverVersion}' is correct and the Java Home '${javaHome}' is valid. ` +
-              `You can configure the Metals version and Java Home in the settings.` +
+              `the Metals version '${serverVersion}'. ` +
               proxy
             );
           }
         })();
         outputChannel.show();
-        window
-          .showErrorMessage(msg, openSettingsAction, downloadJava)
-          .then((choice) => {
-            if (choice === openSettingsAction) {
-              commands.executeCommand(workbenchCommands.openSettings);
-            } else if (choice === downloadJava) {
-              showInstallJavaAction(outputChannel);
-            }
-          });
+        window.showErrorMessage(msg, openSettingsAction).then((choice) => {
+          if (choice === openSettingsAction) {
+            commands.executeCommand(workbenchCommands.openSettings);
+          }
+        });
       }
     );
 }

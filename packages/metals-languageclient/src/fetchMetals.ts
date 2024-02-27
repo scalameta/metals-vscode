@@ -1,13 +1,9 @@
 import * as semver from "semver";
-import path from "path";
-import fs from "fs";
 import { ChildProcessPromise, spawn } from "promisify-child-process";
 import { JavaConfig } from "./getJavaConfig";
-import { OutputChannel } from "./interfaces/OutputChannel";
 
 interface FetchMetalsOptions {
   serverVersion: string;
-  serverProperties: string[];
   javaConfig: JavaConfig;
 }
 
@@ -19,17 +15,10 @@ interface PackedChildPromise {
   promise: ChildProcessPromise;
 }
 
-export async function fetchMetals(
-  {
-    serverVersion,
-    serverProperties,
-    javaConfig: { javaPath, javaOptions, extraEnv, coursierPath },
-  }: FetchMetalsOptions,
-  output: OutputChannel
-): Promise<PackedChildPromise> {
-  const fetchProperties = serverProperties.filter(
-    (p) => !p.startsWith("-agentlib")
-  );
+export async function fetchMetals({
+  serverVersion,
+  javaConfig: { coursier },
+}: FetchMetalsOptions): Promise<PackedChildPromise> {
   const serverDependency = calcServerDependency(serverVersion);
 
   const coursierArgs = [
@@ -50,77 +39,7 @@ export async function fetchMetals(
     "-p",
   ];
 
-  const path = process.env["PATH"];
-  let possibleCoursier: string | undefined;
-  if (path) {
-    possibleCoursier = await validateCoursier(path);
-  }
-
-  function spawnDefault(): ChildProcessPromise {
-    return spawn(
-      javaPath,
-      [
-        ...javaOptions,
-        ...fetchProperties,
-        "-Dfile.encoding=UTF-8",
-        "-jar",
-        coursierPath,
-      ].concat(coursierArgs),
-      {
-        env: {
-          COURSIER_NO_TERM: "true",
-          ...extraEnv,
-          ...process.env,
-        },
-      }
-    );
-  }
-
-  if (possibleCoursier) {
-    const coursier: string = possibleCoursier;
-    output.appendLine(`Using coursier located at ${coursier}`);
-    return {
-      promise: spawn(coursier, coursierArgs),
-    };
-  } else {
-    return { promise: spawnDefault() };
-  }
-}
-
-export async function validateCoursier(
-  pathEnv: string
-): Promise<string | undefined> {
-  const isWindows = process.platform === "win32";
-  const possibleCoursier = pathEnv
-    .split(path.delimiter)
-    .flatMap((p) => {
-      try {
-        if (fs.statSync(p).isDirectory()) {
-          return fs.readdirSync(p).map((sub) => path.resolve(p, sub));
-        } else return [p];
-      } catch (e) {
-        return [];
-      }
-    })
-    .find(
-      (p) =>
-        (!isWindows && p.endsWith(path.sep + "cs")) ||
-        (!isWindows && p.endsWith(path.sep + "coursier")) ||
-        (isWindows && p.endsWith(path.sep + "cs.bat")) ||
-        (isWindows && p.endsWith(path.sep + "cs.exe"))
-    );
-  if (possibleCoursier) {
-    try {
-      const coursierVersion = await spawn(possibleCoursier, ["version"]);
-      if (coursierVersion.code !== 0) {
-        return undefined;
-      } else {
-        return possibleCoursier;
-      }
-    } catch (e) {
-      return undefined;
-    }
-  }
+  return { promise: spawn(coursier, coursierArgs) };
 }
 
 export function calcServerDependency(serverVersion: string): string {

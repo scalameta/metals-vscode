@@ -270,7 +270,18 @@
         "metals.javaHome": {
           "type": "string",
           "scope": "machine-overridable",
-          "markdownDescription": "Optional path to the Java home directory. Requires reloading the window.\n\nDefaults to the most recent Java version between 8 and 17 (inclusive) computed by the `locate-java-home` npm package."
+          "markdownDescription": "Optional path to the Java home directory. Requires reloading the window.\n\nDefaults to Java 17 (or another version specified in javaVersion) downloaded by coursier."
+        },
+        "metals.javaVersion": {
+          "type": "string",
+          "default": "17",
+          "enum": [
+            "11",
+            "17",
+            "21"
+          ],
+          "scope": "machine-overridable",
+          "markdownDescription": "Optional Java version to start metals with."
         },
         "metals.sbtScript": {
           "type": "string",

@@ -14,8 +14,11 @@ import {
 } from "vscode-languageclient";
 import { LanguageClient } from "vscode-languageclient/node";
 import http from "https";
+import { JavaVersion, UserConfiguration } from "metals-languageclient";
 
 declare const sym: unique symbol;
+
+const possibleJavaVersions = ["11", "17", "21"];
 /**
  * Creates a newtype without any runtime overhead. It's important for ID to be both unique and descriptive.
  */
@@ -101,19 +104,15 @@ export function getValueFromConfig<T>(
   return fromConfig ?? defaultValue;
 }
 
-export function getJavaHomeFromConfig(): string | undefined {
-  const javaHomePath = workspace
+export function getJavaVersionFromConfig() {
+  const javaVersion = workspace
     .getConfiguration("metals")
-    .get<string>("javaHome");
-  if (javaHomePath?.trim() && !path.isAbsolute(javaHomePath)) {
-    const pathSegments = [
-      workspace.workspaceFolders?.[0]?.uri.fsPath,
-      javaHomePath,
-    ].filter((s): s is string => s != null);
-    return path.resolve(...pathSegments);
-  } else {
-    return javaHomePath;
+    .get<string>(UserConfiguration.JavaVersion)
+    ?.trim();
+  if (javaVersion && possibleJavaVersions.includes(javaVersion)) {
+    return javaVersion as JavaVersion;
   }
+  return undefined;
 }
 
 export async function fetchFrom(
