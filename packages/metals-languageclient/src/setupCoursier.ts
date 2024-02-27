@@ -50,11 +50,7 @@ export async function setupCoursier(
   };
 
   const resolveJavaHomeWithCoursier = async (coursier: string) => {
-    await run(
-      coursier,
-      ["java", "--jvm", javaVersion, "--setup"],
-      handleOutput
-    );
+    await run(coursier, ["java", "--jvm", javaVersion], handleOutput);
 
     const getJavaPath = spawn(coursier, ["java-home", "--jvm", javaVersion], {
       encoding: "utf8",
