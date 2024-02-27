@@ -38,10 +38,10 @@ async function validateJavaVersion(
   javaVersion: JavaVersion
 ): Promise<boolean> {
   const javaBins = [
-    path.join(javaHome, "bin", "java"),
     path.join(javaHome, "bin", "java.exe"),
-    path.join(javaHome, "bin", "jre", "java"),
     path.join(javaHome, "bin", "jre", "java.exe"),
+    path.join(javaHome, "bin", "java"),
+    path.join(javaHome, "bin", "jre", "java"),
   ].filter(fs.existsSync);
 
   if (javaBins.length != 0) {
