@@ -193,7 +193,7 @@ async function fetchAndLaunchMetals(
   const metalsDirPath = metalsDir(ConfigurationTarget.Global);
 
   if (!fs.existsSync(metalsDirPath)) {
-    fs.existsSync(metalsDirPath);
+    fs.mkdirSync(metalsDirPath);
   }
 
   const { coursier, javaHome } = await metalsLanguageClient.setupCoursier(
