@@ -41,17 +41,26 @@ async function validateJavaVersion(
   outputChannel: OutputChannel
 ): Promise<boolean> {
   const javaBin = path.join(javaHome, "bin", "java");
-  const javaVersionOut = await spawn(javaBin, ["-version"], {
-    encoding: "utf8",
-  });
-  const javaInfoStr = javaVersionOut.stderr as string;
-  const matches = javaInfoStr.match(versionRegex);
-  if (matches) {
-    return +matches[0].slice(0, 2) >= +javaVersion;
-  }
+  try {
+    const javaVersionOut = spawn(javaBin, ["-version"], {
+      encoding: "utf8",
+    });
 
-  outputChannel.appendLine(`${javaBin} -version:`);
-  outputChannel.appendLine(javaInfoStr);
+    javaVersionOut.stderr?.on("data", (out: Buffer) => {
+      outputChannel.appendLine(`${javaBin} -version:`);
+      const msg = out.toString().trim();
+      outputChannel.appendLine(msg);
+    });
+
+    const javaInfoStr = (await javaVersionOut).stderr as string;
+    const matches = javaInfoStr.match(versionRegex);
+    if (matches) {
+      return +matches[0].slice(0, 2) >= +javaVersion;
+    }
+  } catch (error) {
+    outputChannel.appendLine(`failed while running ${javaBin} -version`);
+    outputChannel.appendLine(`${error}`);
+  }
   return false;
 }
 
