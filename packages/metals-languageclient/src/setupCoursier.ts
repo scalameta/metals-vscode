@@ -100,7 +100,11 @@ export async function validateCoursier(
   };
 
   const validateDefault = async () => {
-    if (defaultCoursier && fs.statSync(defaultCoursier).isFile()) {
+    if (
+      defaultCoursier &&
+      fs.existsSync(defaultCoursier) &&
+      fs.statSync(defaultCoursier).isFile()
+    ) {
       return validate(defaultCoursier);
     } else {
       return undefined;
