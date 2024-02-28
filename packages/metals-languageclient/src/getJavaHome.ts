@@ -12,6 +12,7 @@ import { toPromise } from "./util";
 import fs from "fs";
 import path from "path";
 import { spawn } from "promisify-child-process";
+import { OutputChannel } from "./interfaces/OutputChannel";
 
 export type JavaVersion = "11" | "17" | "21";
 
@@ -26,44 +27,54 @@ export type JavaVersion = "11" | "17" | "21";
  * @param javaVersion metals.javaVersion value as read from the configuration or default
  */
 export async function getJavaHome(
-  javaVersion: JavaVersion
+  javaVersion: JavaVersion,
+  outputChannel: OutputChannel
 ): Promise<string | undefined> {
-  const fromEnvValue = await fromEnv(javaVersion);
+  const fromEnvValue = await fromEnv(javaVersion, outputChannel);
   return fromEnvValue ? fromEnvValue : await locate(javaVersion);
 }
 
 const versionRegex = /\d+\.\d+\.\d+/;
 async function validateJavaVersion(
   javaHome: string,
-  javaVersion: JavaVersion
+  javaVersion: JavaVersion,
+  outputChannel: OutputChannel
 ): Promise<boolean> {
-  const javaBins = [
-    path.join(javaHome, "bin", "java"),
-    path.join(javaHome, "bin", "java.exe"),
-    path.join(javaHome, "bin", "jre", "java"),
-    path.join(javaHome, "bin", "jre", "java.exe"),
-  ].filter(fs.existsSync);
-
-  if (javaBins.length != 0) {
-    const javaBin = javaBins[0];
-    const javaVersionOut = await spawn(javaBin, ["-version"], {
+  const javaBin = path.join(javaHome, "bin", "java");
+  try {
+    const javaVersionOut = spawn(javaBin, ["-version"], {
       encoding: "utf8",
     });
-    const javaInfoStr = javaVersionOut.stderr as string;
+
+    javaVersionOut.stderr?.on("data", (out: Buffer) => {
+      outputChannel.appendLine(`${javaBin} -version:`);
+      const msg = out.toString().trim();
+      outputChannel.appendLine(msg);
+    });
+
+    const javaInfoStr = (await javaVersionOut).stderr as string;
     const matches = javaInfoStr.match(versionRegex);
     if (matches) {
-      return matches[0].slice(0, 2) == javaVersion;
+      return +matches[0].slice(0, 2) >= +javaVersion;
     }
+  } catch (error) {
+    outputChannel.appendLine(`failed while running ${javaBin} -version`);
+    outputChannel.appendLine(`${error}`);
   }
   return false;
 }
 
 export async function fromEnv(
-  javaVersion: JavaVersion
+  javaVersion: JavaVersion,
+  outputChannel: OutputChannel
 ): Promise<string | undefined> {
   const javaHome = process.env["JAVA_HOME"];
   if (javaHome) {
-    const isValid = await validateJavaVersion(javaHome, javaVersion);
+    const isValid = await validateJavaVersion(
+      javaHome,
+      javaVersion,
+      outputChannel
+    );
     if (isValid) return javaHome;
   }
 
@@ -73,7 +84,7 @@ export async function fromEnv(
 function locate(javaVersion: JavaVersion): Promise<undefined | string> {
   return toPromise(
     pipe(
-      locateJavaHome({ version: `~${javaVersion}` }),
+      locateJavaHome({ version: `>=${javaVersion}` }),
       chain((javaHomes) => {
         if (!javaHomes || javaHomes.length === 0) {
           return TE.right(undefined);

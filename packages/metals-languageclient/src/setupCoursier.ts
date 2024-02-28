@@ -52,7 +52,7 @@ export async function setupCoursier(
   const resolveJavaHomeWithCoursier = async (coursier: string) => {
     await run(
       coursier,
-      ["java", "--jvm", javaVersion, "--setup"],
+      ["java", "--jvm", javaVersion, "-version"],
       handleOutput
     );
 
@@ -71,7 +71,7 @@ export async function setupCoursier(
   const coursier = await resolveCoursier();
   output.appendLine(`Using coursier located at ${coursier}`);
 
-  var javaHome = await getJavaHome(javaVersion);
+  var javaHome = await getJavaHome(javaVersion, output);
 
   if (!javaHome) {
     output.appendLine(
@@ -100,7 +100,11 @@ export async function validateCoursier(
   };
 
   const validateDefault = async () => {
-    if (defaultCoursier && fs.statSync(defaultCoursier).isFile()) {
+    if (
+      defaultCoursier &&
+      fs.existsSync(defaultCoursier) &&
+      fs.statSync(defaultCoursier).isFile()
+    ) {
       return validate(defaultCoursier);
     } else {
       return undefined;
