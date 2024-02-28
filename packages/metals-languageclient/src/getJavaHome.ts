@@ -40,31 +40,18 @@ async function validateJavaVersion(
   javaVersion: JavaVersion,
   outputChannel: OutputChannel
 ): Promise<boolean> {
-  const allPossibleJavaBins = [
-    path.join(javaHome, "bin", "java.exe"),
-    path.join(javaHome, "bin", "java"),
-  ];
-  const javaBins = allPossibleJavaBins.filter(fs.existsSync);
-
-  if (javaBins.length != 0) {
-    const javaBin = javaBins[0];
-    const javaVersionOut = await spawn(javaBin, ["-version"], {
-      encoding: "utf8",
-    });
-    const javaInfoStr = javaVersionOut.stderr as string;
-    const matches = javaInfoStr.match(versionRegex);
-    if (matches) {
-      return +matches[0].slice(0, 2) >= +javaVersion;
-    } else {
-      outputChannel.appendLine(`${javaBin} -version:`);
-      outputChannel.appendLine(javaInfoStr);
-    }
-  } else {
-    const checkedPaths = allPossibleJavaBins.join(", ");
-    outputChannel.appendLine(
-      `Warn: for JAVA_HOME=${javaHome} none of the following paths exist: ${checkedPaths}`
-    );
+  const javaBin = path.join(javaHome, "bin", "java");
+  const javaVersionOut = await spawn(javaBin, ["-version"], {
+    encoding: "utf8",
+  });
+  const javaInfoStr = javaVersionOut.stderr as string;
+  const matches = javaInfoStr.match(versionRegex);
+  if (matches) {
+    return +matches[0].slice(0, 2) >= +javaVersion;
   }
+
+  outputChannel.appendLine(`${javaBin} -version:`);
+  outputChannel.appendLine(javaInfoStr);
   return false;
 }
 
