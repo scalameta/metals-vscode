@@ -1,7 +1,7 @@
 import { IJavaHomeInfo } from "@viperproject/locate-java-home/js/es5/lib/interfaces";
 import path from "path";
 
-const exampleJavaVersionString = `openjdk 17.0.1 2021-10-19
+const exampleJavaVersionString = `openjdk "17.0.1" 2021-10-19
   OpenJDK Runtime Environment (build 17.0.1+12-39)
   OpenJDK 64-Bit Server VM (build 17.0.1+12-39, mixed mode, sharing)`;
 

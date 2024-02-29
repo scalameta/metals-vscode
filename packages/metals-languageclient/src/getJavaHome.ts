@@ -34,7 +34,7 @@ export async function getJavaHome(
   return fromEnvValue ? fromEnvValue : await locate(javaVersion);
 }
 
-const versionRegex = /\d+\.\d+\.\d+/;
+const versionRegex = /\"\d\d/;
 async function validateJavaVersion(
   javaHome: string,
   javaVersion: JavaVersion,
@@ -55,7 +55,7 @@ async function validateJavaVersion(
     const javaInfoStr = (await javaVersionOut).stderr as string;
     const matches = javaInfoStr.match(versionRegex);
     if (matches) {
-      return +matches[0].slice(0, 2) >= +javaVersion;
+      return +matches[0].slice(1, 3) >= +javaVersion;
     }
   } catch (error) {
     outputChannel.appendLine(`failed while running ${javaBin} -version`);
