@@ -270,7 +270,7 @@
         "metals.javaHome": {
           "type": "string",
           "scope": "machine-overridable",
-          "markdownDescription": "Optional path to the Java home directory. Requires reloading the window.\n\nDefaults to Java 17 (or another version specified in javaVersion) downloaded by coursier."
+          "markdownDescription": "Optional path to the Java home directory that will be used for compiling the project.\n\nDefaults to JDK used by Metals's server (look: Java Version).\n\nThis Java version should be lower or equal to JDK version used by the Metals's server."
         },
         "metals.javaVersion": {
           "type": "string",
@@ -280,8 +280,8 @@
             "17",
             "21"
           ],
-          "scope": "machine-overridable",
-          "markdownDescription": "Optional Java version to start metals with."
+          "scope": "machine",
+          "markdownDescription": "JDK version used for running the Metals's server.\n\nShould be greater or equal to the JDK version used for the project (look: Java Home)."
         },
         "metals.sbtScript": {
           "type": "string",
