@@ -40,7 +40,6 @@ export function getJavaConfig({
   const extraEnv = {
     ...coursierRepositories,
     ...coursierMirrors,
-    JAVA_HOME: javaHome,
   };
 
   return {
