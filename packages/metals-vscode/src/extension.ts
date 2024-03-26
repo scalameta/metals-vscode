@@ -155,15 +155,33 @@ export async function activate(context: ExtensionContext): Promise<void> {
 }
 
 function migrateOldSettings(): void {
-  const setting = "showInferredType";
-  const oldBooleanProperty = config.inspect<boolean>(setting)?.workspaceValue;
-  if (oldBooleanProperty !== undefined) {
-    config.update(
-      setting,
-      `${oldBooleanProperty}`,
-      ConfigurationTarget.Workspace
-    );
-  }
+  const inferredTypeSetting = "showInferredType";
+  const oldStringProperty =
+    config.inspect<string>(inferredTypeSetting)?.workspaceValue;
+  const inferredType =
+    oldStringProperty === "true" || oldStringProperty === "minimal";
+  const typeParameters = oldStringProperty === "true";
+  const implicitArgsSetting = "showImplicitArguments";
+  const implicitArgs = config.get<boolean>(implicitArgsSetting) ?? false;
+  const implicitConvSetting = "showImplicitConversionsAndClasses";
+  const implicitConversions = config.get<boolean>(implicitConvSetting) ?? false;
+  [inferredTypeSetting, implicitArgsSetting, implicitConvSetting].forEach(
+    (setting) =>
+      config.update(setting, undefined, ConfigurationTarget.Workspace)
+  );
+  type SettingTuple = [string, boolean];
+  const settings: SettingTuple[] = [
+    ["inferredTypes", inferredType],
+    ["typeParameters", typeParameters],
+    ["implicitArguments", implicitArgs],
+    ["implicitConversions", implicitConversions],
+  ];
+  settings.forEach(([key, enabled]: SettingTuple) => {
+    const newKey = `inlayHints.${key}.enable`;
+    if (enabled) {
+      config.update(newKey, true, ConfigurationTarget.Workspace);
+    }
+  });
 }
 export function deactivate(): Thenable<void> | undefined {
   return currentClient?.stop();
@@ -944,32 +962,24 @@ function launchMetals(
         });
       });
 
-      registerCommand("metals.toggle-implicit-conversions-and-classes", () => {
-        toggleBooleanWorkspaceSetting("showImplicitConversionsAndClasses");
+      registerCommand("metals.toggle-implicit-parameters", () => {
+        toggleInlayHintsSetting("implicitArguments");
       });
 
-      registerCommand("metals.toggle-implicit-parameters", () => {
-        toggleBooleanWorkspaceSetting("showImplicitArguments");
+      registerCommand("metals.toggle-implicit-conversions-and-classes", () => {
+        toggleInlayHintsSetting("implicitConversions");
       });
 
       registerCommand("metals.toggle-show-inferred-type", () => {
-        const setting = "showInferredType";
-        const config = workspace.getConfiguration("metals");
-        const configProperty = config.inspect<string>(setting);
-        const currentValue = configProperty?.workspaceValue ?? "false";
-        let newValue = "true";
-        switch (currentValue) {
-          case "true":
-            newValue = "minimal";
-            break;
-          case "minimal":
-            newValue = "false";
-            break;
-          case "false":
-            newValue = "true";
-            break;
-        }
-        config.update(setting, newValue, ConfigurationTarget.Workspace);
+        toggleInlayHintsSetting("inferredTypes");
+      });
+
+      registerCommand("metals.toggle-type-parameters", () => {
+        toggleInlayHintsSetting("typeParameters");
+      });
+
+      registerCommand("metals.toggle-hints-in-pattern-match", () => {
+        toggleInlayHintsSetting("hintsInPatternMatch");
       });
 
       registerCommand(
@@ -1368,11 +1378,15 @@ function configureSettingsDefaults() {
   );
 }
 
-function toggleBooleanWorkspaceSetting(setting: string) {
-  const config = workspace.getConfiguration("metals");
-  const configProperty = config.inspect<boolean>(setting);
+function toggleInlayHintsSetting(setting: string) {
+  const config = workspace.getConfiguration("metals.inlayHints");
+  const configProperty = config.inspect<boolean>(`${setting}.enable`);
   const currentValues = configProperty?.workspaceValue ?? false;
-  config.update(setting, !currentValues, ConfigurationTarget.Workspace);
+  config.update(
+    `${setting}.enable`,
+    !currentValues,
+    ConfigurationTarget.Workspace
+  );
 }
 
 function registerDebugEventListener(context: ExtensionContext) {
