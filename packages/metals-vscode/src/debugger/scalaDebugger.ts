@@ -168,6 +168,12 @@ class ScalaMainConfigProvider implements vscode.DebugConfigurationProvider {
       const args: DebugDiscoveryParams = {
         path: editor.document.uri.toString(true),
         runType: RunType.RunOrTestFile,
+        buildTarget: undefined,
+        mainClass: undefined,
+        args: undefined,
+        jvmOptions: undefined,
+        env: undefined,
+        envFile: undefined,
       };
       await startDiscovery(debugConfiguration.noDebug, args);
       return debugConfiguration;
@@ -186,15 +192,34 @@ class ScalaDebugServerFactory implements vscode.DebugAdapterDescriptorFactory {
       session.configuration.testClass !== undefined ||
       session.configuration.hostName !== undefined
     ) {
-      const debugSession = await vscode.commands.executeCommand<DebugSession>(
-        ServerCommands.DebugAdapterStart,
-        session.configuration
-      );
+      if (session.configuration.noDebug) {
+        const args: DebugDiscoveryParams = {
+          path: undefined,
+          mainClass: session.configuration.mainClass,
+          buildTarget: session.configuration.buildTarget,
+          runType: RunType.Run,
+          args: session.configuration.args,
+          jvmOptions: session.configuration.jvmOptions,
+          env: session.configuration.env,
+          envFile: session.configuration.envFile,
+        };
+        await startDiscovery(session.configuration.noDebug, args);
 
-      if (debugSession === undefined) {
-        return null;
+        // This is the only way not to have to run full fledged DAP server
+        return new vscode.DebugAdapterExecutable("echo", [
+          '"Running in the task window"',
+        ]);
       } else {
-        return debugServerFromUri(debugSession.uri);
+        const debugSession = await vscode.commands.executeCommand<DebugSession>(
+          ServerCommands.DebugAdapterStart,
+          session.configuration
+        );
+
+        if (debugSession === undefined) {
+          return null;
+        } else {
+          return debugServerFromUri(debugSession.uri);
+        }
       }
     }
     return null;
