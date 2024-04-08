@@ -7,7 +7,6 @@ import {
   window,
   workspace,
   WorkspaceFolder,
-  TextDocument,
 } from "vscode";
 import {
   ExecuteCommandRequest,
@@ -69,10 +68,6 @@ export function currentWorkspaceFolder(): WorkspaceFolder | undefined {
     return workspace.getWorkspaceFolder(activeEditorUri);
   }
   return workspace.workspaceFolders?.[0];
-}
-
-export function currentFile(): TextDocument | undefined {
-  return window.activeTextEditor?.document;
 }
 
 export function getTextDocumentPositionParams(

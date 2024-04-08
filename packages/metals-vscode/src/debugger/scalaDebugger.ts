@@ -17,7 +17,7 @@ import {
 } from "metals-languageclient";
 import { ExtendedScalaRunMain, ScalaCodeLensesParams } from "./types";
 import { platform } from "os";
-import { currentFile, currentWorkspaceFolder } from "../util";
+import { currentWorkspaceFolder } from "../util";
 
 const configurationType = "scala";
 
@@ -76,10 +76,10 @@ async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
       },
       {}
     );
-    const file = currentFile();
+
     const shellOptions = { ...platformSpecificOptions(), env };
     const task = new Task(
-      { type: "scala" + (file ? `: ${file.fileName}` : ""), task: "run" },
+      { type: "scala", task: "run", class: main.data.class },
       workspaceFolder,
       "Scala run",
       "Metals",
