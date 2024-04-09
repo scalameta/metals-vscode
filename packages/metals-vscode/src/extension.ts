@@ -192,13 +192,6 @@ async function fetchAndLaunchMetals(
   serverVersion: string,
   javaVersion: JavaVersion
 ) {
-  if (!workspace.workspaceFolders) {
-    const message = `Metals will not start because you've opened a single file and not a project directory.`;
-    window.showErrorMessage(message);
-    outputChannel.appendLine(message);
-    return;
-  }
-
   outputChannel.appendLine(`Metals version: ${serverVersion}`);
 
   /* eslint-disable @typescript-eslint/no-non-null-assertion */
@@ -221,7 +214,9 @@ async function fetchAndLaunchMetals(
   );
 
   const javaConfig = getJavaConfig({
-    workspaceRoot: workspace.workspaceFolders[0]?.uri.fsPath,
+    workspaceRoot: workspace.workspaceFolders
+      ? workspace.workspaceFolders[0]?.uri.fsPath
+      : undefined,
     javaHome,
     coursier,
     customRepositories,
