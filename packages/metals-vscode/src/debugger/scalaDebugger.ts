@@ -79,7 +79,7 @@ async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
 
     const shellOptions = { ...platformSpecificOptions(), env };
     const task = new Task(
-      { type: "scala", task: "run" },
+      { type: "scala", task: "run", class: main.data.class },
       workspaceFolder,
       "Scala run",
       "Metals",
