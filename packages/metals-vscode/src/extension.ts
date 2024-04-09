@@ -175,9 +175,9 @@ async function fetchAndLaunchMetals(
   javaVersion: JavaVersion
 ) {
   if (!workspace.workspaceFolders) {
-    outputChannel.appendLine(
-      `Metals will not start because you've opened a single file and not a project directory.`
-    );
+    const message = `Metals will not start because you've opened a single file and not a project directory.`;
+    window.showErrorMessage(message);
+    outputChannel.appendLine(message);
     return;
   }
 
