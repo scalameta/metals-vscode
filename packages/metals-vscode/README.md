@@ -27,24 +27,21 @@ The following table shows the status of various features.
 
 ## Requirements
 
-**Java 8, 11, 17 provided by OpenJDK or Oracle**. Eclipse OpenJ9 is not
-supported, please make sure the `JAVA_HOME` environment variable points to a
-valid Java 8, 11 or 17 installation.
-
 **macOS, Linux or Windows**. Metals is developed on many operating systems and
 every PR is tested on Ubuntu, Windows and MacOS.
 
 **Scala 2.13, 2.12, 2.11 and Scala 3**. Metals supports these Scala versions:
 
-- **Scala 2.13**: 2.13.12, 2.13.11, 2.13.10, 2.13.9, 2.13.8, 2.13.7, 2.13.6,
-  2.13.5
+- **Scala 2.13**: 2.13.13, 2.13.12, 2.13.11, 2.13.10, 2.13.9, 2.13.8, 2.13.7,
+  2.13.6
 
-- **Scala 2.12**: 2.12.18, 2.12.17, 2.12.16, 2.12.15, 2.12.14, 2.12.13, 2.12.12,
-  2.12.11
+- **Scala 2.12**: 2.12.19, 2.12.18, 2.12.17, 2.12.16, 2.12.15, 2.12.14, 2.12.13,
+  2.12.12
 
 - **Scala 2.11**: 2.11.12
 
-- **Scala 3**: 3.3.2-RC3, 3.3.2-RC1, 3.3.1, 3.3.0, 3.2.2, 3.2.1, 3.2.0, 3.1.3, 3.1.2, 3.1.1, 3.1.0
+- **Scala 3**: 3.3.3, 3.3.2, 3.3.1, 3.2.2, 3.2.1, 3.2.0, 3.1.3, 3.1.2, 3.1.1,
+  3.1.0
 
 Note that 2.11.x support is deprecated and it will be removed in future
 releases. It's recommended to upgrade to Scala 2.12 or Scala 2.13
@@ -152,15 +149,41 @@ configuration problems in your workspace.
 
 ## Configure Java version
 
-The VS Code plugin uses by default the `JAVA_HOME` environment variable (via
-[`locate-java-home`](https://www.npmjs.com/package/locate-java-home)) to locate
-the `java` executable. To override the default Java home location, update the
-"Java Home" variable in the settings menu.
+Metals separates JDK used for starting Metals server from the JDK used for the
+project.
+
+### Metals's server JDK
+
+Minimum supported version is `11`. The VS Code plugin will first search for
+`java` executable with version equal or greater than setting using `JAVA_HOME`
+environment variable (via
+[`locate-java-home`](https://www.npmjs.com/package/@viperproject/locate-java-home)).
+If no matching Java found, a JDK will be downloaded using
+[coursier](https://get-coursier.io).
+
+#### Settings:
+
+- `Java Version` - minimum JDK version accepted for running Metals server. If
+  none found, this is also the version that will be downloaded using coursier.
+  Allows for one of: `11`, `17`, `21`, with `17` being the default.
+
+### Project's JDK
+
+JDK used for compiling and running the project. Build servers like `mill` and
+`sbt` are started using that JDK. In case of `Bloop` Metals's server JDK is used
+for running the build server but appropriate `-release` flags are added for
+compilation. By default Metals relies on the build server's mechanism for
+project's JDK resolution (e.g. `Bloop` - `JAVA_HOME`, `sbt` - java on `PATH`).
+
+#### Settings:
+
+- `Java Home` - path to project's JDK's Home. Note: this setting isn't respected
+  for `Bazel`.
 
 ![Java Home setting](https://i.imgur.com/sKrPKk2.png)
 
-If this setting is defined, the VS Code plugin uses the custom path instead of
-the `JAVA_HOME` environment variable.
+Note: Project's JDK version should be greater or equal to Metals's server JDK
+version for features like completions to work correctly.
 
 ### macOS
 
