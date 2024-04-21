@@ -64,7 +64,7 @@ export async function fromPath(
     outputChannel.appendLine(
       `Found java executable under ${javaExecutable} that resolves to ${realJavaPath}`
     );
-    let possibleJavaHome = path.dirname(path.dirname(realJavaPath));
+    const possibleJavaHome = path.dirname(path.dirname(realJavaPath));
     const isValid = await validateJavaVersion(
       possibleJavaHome,
       javaVersion,

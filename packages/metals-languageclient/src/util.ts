@@ -12,11 +12,11 @@ export function toPromise<E, A>(te: TaskEither<E, A>): Promise<A> {
 }
 
 export function findOnPath(names: string[]) {
-  const envPath = process.env["PATH"];
+  const envPath = process.env["PATH"] || process.env["Path"];
   const isWindows = process.platform === "win32";
 
   if (envPath) {
-    const possibleCoursier = envPath
+    const possibleExecutable = envPath
       .split(path.delimiter)
       .flatMap((p) => {
         try {
@@ -38,6 +38,6 @@ export function findOnPath(names: string[]) {
           return names.some((name) => p.endsWith(path.sep + name));
         }
       });
-    return possibleCoursier;
+    return possibleExecutable;
   }
 }
