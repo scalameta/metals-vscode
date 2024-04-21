@@ -30,7 +30,6 @@
     "typescript": "^3.7.5"
   },
   "dependencies": {
-    "@viperproject/locate-java-home": "^1.1.5",
     "fp-ts": "^2.4.1",
     "mkdirp": "^2.1.1",
     "node-fetch": "^2.6.0",
