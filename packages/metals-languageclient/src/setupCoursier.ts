@@ -8,6 +8,7 @@ import { JavaVersion, getJavaHome } from "./getJavaHome";
 import { OutputChannel } from "./interfaces/OutputChannel";
 import path from "path";
 import fs from "fs";
+import { findOnPath } from "./util";
 
 const coursierVersion = "v2.1.8";
 // https://github.com/coursier/launchers contains only launchers with the most recent version
@@ -25,13 +26,11 @@ export async function setupCoursier(
   };
 
   const resolveCoursier = async () => {
-    const envPath = process.env["PATH"];
     const isWindows = process.platform === "win32";
     const defaultCoursier = isWindows
       ? path.resolve(coursierFetchPath, "cs.exe")
       : path.resolve(coursierFetchPath, "cs");
     const possibleCoursier: string | undefined = await validateCoursier(
-      envPath,
       defaultCoursier
     );
 
@@ -86,10 +85,8 @@ export async function setupCoursier(
 }
 
 export async function validateCoursier(
-  pathEnv?: string | undefined,
   defaultCoursier?: string | undefined
 ): Promise<string | undefined> {
-  const isWindows = process.platform === "win32";
   const validate = async (coursier: string) => {
     try {
       const coursierVersion = await spawn(coursier, ["version"]);
@@ -111,33 +108,11 @@ export async function validateCoursier(
     }
   };
 
-  if (pathEnv) {
-    const possibleCoursier = pathEnv
-      .split(path.delimiter)
-      .flatMap((p) => {
-        try {
-          if (fs.statSync(p).isDirectory()) {
-            return fs.readdirSync(p).map((sub) => path.resolve(p, sub));
-          } else return [p];
-        } catch (e) {
-          return [];
-        }
-      })
-      .find(
-        (p) =>
-          (!isWindows && p.endsWith(path.sep + "cs")) ||
-          (!isWindows && p.endsWith(path.sep + "coursier")) ||
-          (isWindows && p.endsWith(path.sep + "cs.bat")) ||
-          (isWindows && p.endsWith(path.sep + "cs.exe"))
-      );
-
-    return (
-      (possibleCoursier && (await validate(possibleCoursier))) ||
-      (await validateDefault())
-    );
-  }
-
-  return validateDefault();
+  const possibleCoursier = findOnPath(["cs", "coursier"]);
+  return (
+    (possibleCoursier && (await validate(possibleCoursier))) ||
+    (await validateDefault())
+  );
 }
 
 export async function fetchCoursier(
