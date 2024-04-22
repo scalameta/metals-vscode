@@ -438,6 +438,11 @@
           "type": "boolean",
           "default": false,
           "markdownDescription": "Default to using build tool as your build server."
+        },
+        "metals.worksheetTimeout": {
+          "type": "string",
+          "default": "30",
+          "markdownDescription": "Timeout for worksheet evaluation in seconds."
         }
       }
     },
