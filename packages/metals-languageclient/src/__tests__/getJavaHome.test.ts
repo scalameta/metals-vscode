@@ -1,4 +1,14 @@
 import path from "path";
+import { OutputChannel } from "../interfaces/OutputChannel";
+
+class MockOutput implements OutputChannel {
+  append(value: string): void {
+    console.log(value);
+  }
+  appendLine(value: string): void {
+    console.log(value);
+  }
+}
 
 const exampleJavaVersionString = `openjdk "17.0.1" 2021-10-19
   OpenJDK Runtime Environment (build 17.0.1+12-39)
@@ -25,6 +35,28 @@ describe("getJavaHome", () => {
     mockExistsFs(javaPaths);
     const javaHome = await require("../getJavaHome").getJavaHome("17");
     expect(javaHome).toBe(JAVA_HOME);
+  });
+
+  // needs to run on a machine with an actual JAVA_HOME set up
+  it("reads from real JAVA_HOME", async () => {
+    process.env = { ...originalEnv };
+    delete process.env.PATH;
+    const javaHome = await require("../getJavaHome").getJavaHome(
+      "17",
+      new MockOutput()
+    );
+    expect(javaHome).toBeDefined();
+  });
+
+  // needs to run on a machine with an actual java on PATH set up
+  it("reads from real PATH", async () => {
+    process.env = { ...originalEnv };
+    delete process.env.JAVA_HOME;
+    const javaHome = await require("../getJavaHome").getJavaHome(
+      "17",
+      new MockOutput()
+    );
+    expect(javaHome).toBeDefined();
   });
 });
 

@@ -1,6 +1,8 @@
 import path from "path";
 import { spawn } from "promisify-child-process";
 import { OutputChannel } from "./interfaces/OutputChannel";
+import { findOnPath } from "./util";
+import { realpathSync } from "fs";
 
 export type JavaVersion = "11" | "17" | "21";
 
@@ -19,7 +21,7 @@ export async function getJavaHome(
   outputChannel: OutputChannel
 ): Promise<string | undefined> {
   const fromEnvValue = await fromEnv(javaVersion, outputChannel);
-  return fromEnvValue;
+  return fromEnvValue || (await fromPath(javaVersion, outputChannel));
 }
 
 const versionRegex = /\"\d\d/;
@@ -50,6 +52,26 @@ async function validateJavaVersion(
     outputChannel.appendLine(`${error}`);
   }
   return false;
+}
+
+export async function fromPath(
+  javaVersion: JavaVersion,
+  outputChannel: OutputChannel
+): Promise<string | undefined> {
+  let javaExecutable = findOnPath(["java"]);
+  if (javaExecutable) {
+    let realJavaPath = realpathSync(javaExecutable);
+    outputChannel.appendLine(
+      `Found java executable under ${javaExecutable} that resolves to ${realJavaPath}`
+    );
+    const possibleJavaHome = path.dirname(path.dirname(realJavaPath));
+    const isValid = await validateJavaVersion(
+      possibleJavaHome,
+      javaVersion,
+      outputChannel
+    );
+    if (isValid) return possibleJavaHome;
+  }
 }
 
 export async function fromEnv(

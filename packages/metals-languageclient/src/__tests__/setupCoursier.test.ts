@@ -33,7 +33,8 @@ describe("setupCoursier", () => {
   });
 
   it("should not find coursier if not present in PATH", async () => {
-    expect(await validateCoursier("path/fake")).toBeUndefined();
+    process.env = {};
+    expect(await validateCoursier()).toBeUndefined();
   });
 
   it("should fetch coursier correctly", async () => {
