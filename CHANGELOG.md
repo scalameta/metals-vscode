@@ -2,6 +2,19 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.31.0 (2024/05/05 12:49 +00:00)
+- [05d4af0](https://github.com/scalameta/metals-vscode/commit/05d4af0206547b4a9394af8e43164fed9c7f4249) Increase patch version for pre-release
+- [d6f15d6](https://github.com/scalameta/metals-vscode/commit/d6f15d641bfca1a3b6ace48b034b72dc9840af83) Revert "feat: allow for no workspace" (@tgodzik)
+- [701516e](https://github.com/scalameta/metals-vscode/commit/701516eb21a3cfa57ea4329e40b3915b766680a5) Increase patch version for pre-release
+- [892e8bc](https://github.com/scalameta/metals-vscode/commit/892e8bc5871b0f3877f424b16db8d6d4f453460f) tests: Add real tests for detecting Java (@tgodzik)
+- [916813c](https://github.com/scalameta/metals-vscode/commit/916813c9ec925cb51f3a7743c48d3e990f7a0222) Increase patch version for pre-release
+- [af86755](https://github.com/scalameta/metals-vscode/commit/af867557e9287623e7821989924b11b9a0f08c62) feat: allow for no workspace (@kasiaMarek)
+- [f82b387](https://github.com/scalameta/metals-vscode/commit/f82b3874e94eaccdc9b7008b021e817b5485d670) improvement: Search PATH for Java to use (@tgodzik)
+- [9c627a7](https://github.com/scalameta/metals-vscode/commit/9c627a78c135df453fb85cabd75ff7a087052052) build(deps): bump semver in /packages/metals-languageclient (@dependabot[bot])
+- [6a7019f](https://github.com/scalameta/metals-vscode/commit/6a7019fcb640a30679bd2cd13ba2c66c3f1ac1b9) Increase patch version for pre-release
+- [3ebd387](https://github.com/scalameta/metals-vscode/commit/3ebd387c3b228c13e760540072fb3db15eb20bfc) bugfix: Remove locate-java-home (@tgodzik)
+- [b2dbfa5](https://github.com/scalameta/metals-vscode/commit/b2dbfa5a630f2655c587d581fa864296fe3a5bac) v1.30.0
+
 ### v1.30.0 (2024/04/15 19:39 +00:00)
 - [60a8af6](https://github.com/scalameta/metals-vscode/commit/60a8af6a9759381c890966204b256e4025f9a5cb) Increase patch version for pre-release
 - [e5afbc0](https://github.com/scalameta/metals-vscode/commit/e5afbc04792f271210cd4dc153b16ce68352ee18) chore: Update Metals to 1.3.0 (@tgodzik)
@@ -2170,8 +2183,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 ### v1.0.0 (2018/12/07 16:00 +00:00)
 - [9b2dac1](https://github.com/scalameta/metals-vscode/commit/9b2dac1b218682ad45e3548e72ffa6ebcc575f53) Update supported Scala versions (@olafurpg)
 - [43ef17d](https://github.com/scalameta/metals-vscode/commit/43ef17d3a347818da42b482f1ec20108dd411b23) v0.3.3
-
-### v0.3.3 (2018/12/07 15:47 +00:00)
 - [37ec5e5](https://github.com/scalameta/metals-vscode/commit/37ec5e524ac8276713b3ee95c532fdd4baa20408) Bump default serverVersion to 0.3.1 (@gabro)
 - [bea5fff](https://github.com/scalameta/metals-vscode/commit/bea5fff1a328f0afab1df9c68872ab6c3b5a01e8) Use markdown for configuration description (@gabro)
 - [54c0e1f](https://github.com/scalameta/metals-vscode/commit/54c0e1ffdf118b3812826a4a9cbae0e515463599) Detect when javaHome and serverVersion change and prompt to reload (@gabro)
