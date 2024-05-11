@@ -4,6 +4,7 @@ import { JavaConfig } from "./getJavaConfig";
 
 interface FetchMetalsOptions {
   serverVersion: string;
+  serverProperties: string[];
   javaConfig: JavaConfig;
 }
 
@@ -17,15 +18,19 @@ interface PackedChildPromise {
 
 export async function fetchMetals({
   serverVersion,
-  javaConfig: { coursier },
+  serverProperties,
+  javaConfig: { javaOptions, coursier, extraEnv },
 }: FetchMetalsOptions): Promise<PackedChildPromise> {
   const serverDependency = calcServerDependency(serverVersion);
+
+  const fetchProperties = serverProperties.filter((p) => !p.startsWith("-agentlib"));
+  const javaArgs = javaOptions.concat(fetchProperties).map((p) => `-J${p}`);
 
   const coursierArgs = [
     "fetch",
     "-p",
     "--ttl",
-    // Use infinite ttl to avoid redunant "Checking..." logs when using SNAPSHOT
+    // Use infinite ttl to avoid redundant "Checking..." logs when using SNAPSHOT
     // versions. Metals SNAPSHOT releases are effectively immutable since we
     // never publish the same version twice.
     "Inf",
@@ -39,7 +44,14 @@ export async function fetchMetals({
     "-p",
   ];
 
-  return { promise: spawn(coursier, coursierArgs) };
+  const environment = {
+    env: {
+      ...process.env,
+      ...extraEnv
+    }
+  };
+
+  return { promise: spawn(coursier, javaArgs.concat(coursierArgs), environment) };
 }
 
 export function calcServerDependency(serverVersion: string): string {

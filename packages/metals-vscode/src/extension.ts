@@ -230,6 +230,7 @@ async function fetchAndLaunchMetals(
 
   const fetchProcess = fetchMetals({
     serverVersion,
+    serverProperties,
     javaConfig,
   });
 
