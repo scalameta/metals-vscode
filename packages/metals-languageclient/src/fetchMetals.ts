@@ -23,7 +23,9 @@ export async function fetchMetals({
 }: FetchMetalsOptions): Promise<PackedChildPromise> {
   const serverDependency = calcServerDependency(serverVersion);
 
-  const fetchProperties = serverProperties.filter((p) => !p.startsWith("-agentlib"));
+  const fetchProperties = serverProperties.filter(
+    (p) => !p.startsWith("-agentlib")
+  );
   const javaArgs = javaOptions.concat(fetchProperties).map((p) => `-J${p}`);
 
   const coursierArgs = [
@@ -47,11 +49,13 @@ export async function fetchMetals({
   const environment = {
     env: {
       ...process.env,
-      ...extraEnv
-    }
+      ...extraEnv,
+    },
   };
 
-  return { promise: spawn(coursier, javaArgs.concat(coursierArgs), environment) };
+  return {
+    promise: spawn(coursier, javaArgs.concat(coursierArgs), environment),
+  };
 }
 
 export function calcServerDependency(serverVersion: string): string {
