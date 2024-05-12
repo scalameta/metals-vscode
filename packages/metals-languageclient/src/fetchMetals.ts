@@ -1,11 +1,13 @@
 import * as semver from "semver";
 import { ChildProcessPromise, spawn } from "promisify-child-process";
 import { JavaConfig } from "./getJavaConfig";
+import { OutputChannel } from "./interfaces/OutputChannel";
 
 interface FetchMetalsOptions {
   serverVersion: string;
   serverProperties: string[];
   javaConfig: JavaConfig;
+  outputChannel: OutputChannel;
 }
 
 /**
@@ -20,15 +22,24 @@ export async function fetchMetals({
   serverVersion,
   serverProperties,
   javaConfig: { javaOptions, coursier, extraEnv },
+  outputChannel,
 }: FetchMetalsOptions): Promise<PackedChildPromise> {
   const serverDependency = calcServerDependency(serverVersion);
 
   const fetchProperties = serverProperties.filter(
     (p) => !p.startsWith("-agentlib")
   );
+  if (fetchProperties.length != serverProperties.length) {
+    outputChannel.appendLine(
+      'Ignoring "-agentlib" option when fetching Metals with Coursier'
+    );
+  }
+
+  // Convert Java properties to the "-J" argument form used by Coursier
   const javaArgs = javaOptions.concat(fetchProperties).map((p) => `-J${p}`);
 
   const coursierArgs = [
+    ...javaArgs,
     "fetch",
     "-p",
     "--ttl",
@@ -54,7 +65,7 @@ export async function fetchMetals({
   };
 
   return {
-    promise: spawn(coursier, javaArgs.concat(coursierArgs), environment),
+    promise: spawn(coursier, coursierArgs, environment),
   };
 }
 
