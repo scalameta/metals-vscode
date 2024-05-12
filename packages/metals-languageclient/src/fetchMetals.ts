@@ -1,10 +1,13 @@
 import * as semver from "semver";
 import { ChildProcessPromise, spawn } from "promisify-child-process";
 import { JavaConfig } from "./getJavaConfig";
+import { OutputChannel } from "./interfaces/OutputChannel";
 
 interface FetchMetalsOptions {
   serverVersion: string;
+  serverProperties: string[];
   javaConfig: JavaConfig;
+  outputChannel: OutputChannel;
 }
 
 /**
@@ -17,15 +20,30 @@ interface PackedChildPromise {
 
 export async function fetchMetals({
   serverVersion,
-  javaConfig: { coursier },
+  serverProperties,
+  javaConfig: { javaOptions, coursier, extraEnv },
+  outputChannel,
 }: FetchMetalsOptions): Promise<PackedChildPromise> {
   const serverDependency = calcServerDependency(serverVersion);
 
+  const fetchProperties = serverProperties.filter(
+    (p) => !p.startsWith("-agentlib")
+  );
+  if (fetchProperties.length != serverProperties.length) {
+    outputChannel.appendLine(
+      'Ignoring "-agentlib" option when fetching Metals with Coursier'
+    );
+  }
+
+  // Convert Java properties to the "-J" argument form used by Coursier
+  const javaArgs = javaOptions.concat(fetchProperties).map((p) => `-J${p}`);
+
   const coursierArgs = [
+    ...javaArgs,
     "fetch",
     "-p",
     "--ttl",
-    // Use infinite ttl to avoid redunant "Checking..." logs when using SNAPSHOT
+    // Use infinite ttl to avoid redundant "Checking..." logs when using SNAPSHOT
     // versions. Metals SNAPSHOT releases are effectively immutable since we
     // never publish the same version twice.
     "Inf",
@@ -39,7 +57,16 @@ export async function fetchMetals({
     "-p",
   ];
 
-  return { promise: spawn(coursier, coursierArgs) };
+  const environment = {
+    env: {
+      ...process.env,
+      ...extraEnv,
+    },
+  };
+
+  return {
+    promise: spawn(coursier, coursierArgs, environment),
+  };
 }
 
 export function calcServerDependency(serverVersion: string): string {

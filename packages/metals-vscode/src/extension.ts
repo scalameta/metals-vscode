@@ -230,7 +230,9 @@ async function fetchAndLaunchMetals(
 
   const fetchProcess = fetchMetals({
     serverVersion,
+    serverProperties,
     javaConfig,
+    outputChannel,
   });
 
   const title = `Downloading Metals v${serverVersion}`;
