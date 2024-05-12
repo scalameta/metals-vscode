@@ -142,6 +142,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
         await fetchAndLaunchMetals(context, serverVersion, javaVersion);
       } catch (err) {
         outputChannel.appendLine(`${err}`);
+        window.showErrorMessage(`${err}`);
       }
     }
   );
@@ -217,6 +218,7 @@ async function fetchAndLaunchMetals(
   const { coursier, javaHome } = await metalsLanguageClient.setupCoursier(
     javaVersion,
     metalsDirPath,
+    context.extensionPath,
     outputChannel
   );
 

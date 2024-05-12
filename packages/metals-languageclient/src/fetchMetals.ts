@@ -21,7 +21,7 @@ interface PackedChildPromise {
 export async function fetchMetals({
   serverVersion,
   serverProperties,
-  javaConfig: { javaOptions, coursier, extraEnv },
+  javaConfig: { javaOptions, coursier, extraEnv, javaPath },
   outputChannel,
 }: FetchMetalsOptions): Promise<PackedChildPromise> {
   const serverDependency = calcServerDependency(serverVersion);
@@ -35,11 +35,7 @@ export async function fetchMetals({
     );
   }
 
-  // Convert Java properties to the "-J" argument form used by Coursier
-  const javaArgs = javaOptions.concat(fetchProperties).map((p) => `-J${p}`);
-
   const coursierArgs = [
-    ...javaArgs,
     "fetch",
     "-p",
     "--ttl",
@@ -64,9 +60,22 @@ export async function fetchMetals({
     },
   };
 
-  return {
-    promise: spawn(coursier, coursierArgs, environment),
-  };
+  if (coursier.endsWith(".jar")) {
+    const jarArgs = [
+      ...javaOptions,
+      ...fetchProperties,
+      "-Dfile.encoding=UTF-8",
+      "-jar",
+      coursier,
+    ].concat(coursierArgs);
+    return { promise: spawn(javaPath, jarArgs, environment) };
+  } else {
+    // Convert Java properties to the "-J" argument form used by Coursier
+    const javaArgs = javaOptions.concat(fetchProperties).map((p) => `-J${p}`);
+    return {
+      promise: spawn(coursier, javaArgs.concat(coursierArgs), environment),
+    };
+  }
 }
 
 export function calcServerDependency(serverVersion: string): string {

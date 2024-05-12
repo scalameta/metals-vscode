@@ -18,6 +18,7 @@ const coursierCommit = "11b428f35ca84a598ca30cce1c35ae4f375e5ee3";
 export async function setupCoursier(
   javaVersion: JavaVersion,
   coursierFetchPath: string,
+  extensionPath: string,
   output: OutputChannel
 ): Promise<{ coursier: string; javaHome: string }> {
   const handleOutput = (out: Buffer) => {
@@ -40,11 +41,14 @@ export async function setupCoursier(
 
     return fetchCoursier(coursierFetchPath, handleOutput)
       .then(() => defaultCoursier)
-      .catch((err) => {
+      .catch((_) => {
         output.appendLine(
           "Failed to fetch coursier. You may want to try installing coursier manually and adding it to PATH."
         );
-        throw err;
+        output.appendLine(
+          "Will try to use jar based coursier if Java is available on the machine."
+        );
+        return undefined;
       });
   };
 
@@ -67,12 +71,12 @@ export async function setupCoursier(
     return ((await getJavaPath).stdout as string).trim();
   };
 
-  const coursier = await resolveCoursier();
+  var coursier = await resolveCoursier();
   output.appendLine(`Using coursier located at ${coursier}`);
 
   var javaHome = await getJavaHome(javaVersion, output);
 
-  if (!javaHome) {
+  if (!javaHome && coursier) {
     output.appendLine(
       `No installed java with version ${javaVersion} found. Will fetch one using coursier.`
     );
@@ -81,7 +85,18 @@ export async function setupCoursier(
 
   output.appendLine(`Using Java Home: ${javaHome}`);
 
-  return { coursier, javaHome };
+  /* If we couldn't download coursier, but we have Java
+   * we can still fall back to jar based launcher.
+   */
+  if (!coursier && javaHome) {
+    coursier = path.join(extensionPath, "./coursier-fallback.jar");
+  }
+
+  if (javaHome && coursier) return { coursier, javaHome };
+  else
+    throw Error(
+      "Cannot resolve Java home or coursier, please provide at least JAVA_HOME."
+    );
 }
 
 export async function validateCoursier(
