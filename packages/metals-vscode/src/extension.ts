@@ -232,7 +232,7 @@ async function fetchAndLaunchMetals(
     serverVersion,
     serverProperties,
     javaConfig,
-    outputChannel
+    outputChannel,
   });
 
   const title = `Downloading Metals v${serverVersion}`;
