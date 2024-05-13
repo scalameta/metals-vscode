@@ -49,6 +49,7 @@ describe("setupCoursier", () => {
     const { coursier, javaHome } = await setupCoursier(
       "17",
       tmpDir,
+      process.cwd(),
       new LogOutputChannel()
     );
     expect(fs.existsSync(coursier)).toBeTruthy;
