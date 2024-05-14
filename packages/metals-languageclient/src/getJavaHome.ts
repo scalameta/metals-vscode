@@ -38,7 +38,7 @@ async function validateJavaVersion(
 
     javaVersionOut.stderr?.on("data", (out: Buffer) => {
       outputChannel.appendLine(`${javaBin} -version:`);
-      const msg = out.toString().trim();
+      const msg = "\t" + out.toString().trim().split("\n").join("\n\t");
       outputChannel.appendLine(msg);
     });
 
@@ -62,7 +62,7 @@ export async function fromPath(
   if (javaExecutable) {
     let realJavaPath = realpathSync(javaExecutable);
     outputChannel.appendLine(
-      `Found java executable under ${javaExecutable} that resolves to ${realJavaPath}`
+      `Searching for Java on PATH. Found java executable under ${javaExecutable} that resolves to ${realJavaPath}`
     );
     const possibleJavaHome = path.dirname(path.dirname(realJavaPath));
     const isValid = await validateJavaVersion(
@@ -71,6 +71,11 @@ export async function fromPath(
       outputChannel
     );
     if (isValid) return possibleJavaHome;
+    else {
+      outputChannel.appendLine(
+        `Java version doesn't match the required one of ${javaVersion}`
+      );
+    }
   }
 }
 
@@ -80,12 +85,20 @@ export async function fromEnv(
 ): Promise<string | undefined> {
   const javaHome = process.env["JAVA_HOME"];
   if (javaHome) {
+    outputChannel.appendLine(
+      `Checking Java in JAVA_HOME, which points to ${javaHome}`
+    );
     const isValid = await validateJavaVersion(
       javaHome,
       javaVersion,
       outputChannel
     );
     if (isValid) return javaHome;
+    else {
+      outputChannel.appendLine(
+        `Java version doesn't match the required one of ${javaVersion}`
+      );
+    }
   }
 
   return undefined;

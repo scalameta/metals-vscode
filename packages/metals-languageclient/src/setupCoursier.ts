@@ -23,7 +23,7 @@ export async function setupCoursier(
 ): Promise<{ coursier: string; javaHome: string }> {
   const handleOutput = (out: Buffer) => {
     const msg = out.toString().trim();
-    output.appendLine("Coursier: " + msg);
+    output.appendLine("Coursier: \n" + msg);
   };
 
   const resolveCoursier = async () => {

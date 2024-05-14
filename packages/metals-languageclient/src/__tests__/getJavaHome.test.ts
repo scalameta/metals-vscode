@@ -33,7 +33,10 @@ describe("getJavaHome", () => {
     const javaPaths = [{ binPath: path.join(JAVA_HOME, "bin", "java") }];
     mockSpawn(exampleJavaVersionString);
     mockExistsFs(javaPaths);
-    const javaHome = await require("../getJavaHome").getJavaHome("17");
+    const javaHome = await require("../getJavaHome").getJavaHome(
+      "17",
+      new MockOutput()
+    );
     expect(javaHome).toBe(JAVA_HOME);
   });
 
