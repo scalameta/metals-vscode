@@ -59,9 +59,13 @@ export async function setupCoursier(
       handleOutput
     );
 
-    const getJavaPath = spawn(coursier, ["java-home", "--jvm", javaVersion], {
-      encoding: "utf8",
-    });
+    const getJavaPath = spawn(
+      coursier,
+      ["java-home", "--jvm", `temurin:${javaVersion}`],
+      {
+        encoding: "utf8",
+      }
+    );
 
     getJavaPath.stderr?.on("data", (out: Buffer) => {
       const msg = out.toString().trim();
