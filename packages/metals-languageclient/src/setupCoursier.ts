@@ -95,7 +95,8 @@ export async function setupCoursier(
   if (javaHome && coursier) return { coursier, javaHome };
   else
     throw Error(
-      "Cannot resolve Java home or coursier, please provide at least JAVA_HOME."
+      `Cannot resolve Java home or coursier, JAVA_HOME should exist with a version of at least ${javaVersion}.` +
+        `Alternatively, you can reduce the requirement using "metals.javaVersion" setting.`
     );
 }
 
