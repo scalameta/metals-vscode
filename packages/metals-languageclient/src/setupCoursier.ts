@@ -52,7 +52,7 @@ export async function setupCoursier(
   const resolveJavaHomeWithCoursier = async (coursier: string) => {
     await run(
       coursier,
-      ["java", "--jvm", javaVersion, "-version"],
+      ["java", "--jvm", `temurin:${javaVersion}`, "-version"],
       handleOutput
     );
 
