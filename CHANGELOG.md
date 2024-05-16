@@ -2,6 +2,9 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.33.0 (2024/05/16 13:35 +00:00)
+- [5a670da](https://github.com/scalameta/metals-vscode/commit/5a670da2073b402d54f0b90d8f17f83272f27063) v1.32.0
+
 ### v1.32.0 (2024/05/16 13:22 +00:00)
 - [3c4bd01](https://github.com/scalameta/metals-vscode/commit/3c4bd0114608dcd61b495db4191940607b223e80) chore: Update Metals to newest version (@tgodzik)
 - [d1e9163](https://github.com/scalameta/metals-vscode/commit/d1e9163e51aabfcb37f1567b5b53093abc3eb4a1) Increase patch version for pre-release
@@ -2176,8 +2179,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 ### v1.1.1 (2018/12/14 19:12 +00:00)
 - [13e9531](https://github.com/scalameta/metals-vscode/commit/13e95313d89867e5a1e5108412a0279eef97be1e) Upgrade to v0.3.3 (@olafurpg)
 - [195f83d](https://github.com/scalameta/metals-vscode/commit/195f83ddf7142b5a4acb1d626b58d0b4b4c7a66a) v1.1.0
-
-### v1.1.0 (2018/12/14 14:43 +00:00)
 - [efe19ab](https://github.com/scalameta/metals-vscode/commit/efe19ab4291e24da845f9607ef9b78db14e1ed47) Update sbtScript description as per review (@gabro)
 - [56e500b](https://github.com/scalameta/metals-vscode/commit/56e500b19da7369ac8850d9c11dc7e8d3d33afa5) Remove sbtLauncher and sbtOptions options (see scalameta/metals#410) (@gabro)
 - [596b8eb](https://github.com/scalameta/metals-vscode/commit/596b8ebfc9d157e3354b95f0ac54ab8028a8426f) Bump default serverVersion to 0.3.2 (@gabro)
