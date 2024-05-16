@@ -2,6 +2,11 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.34.0 (2024/05/16 18:08 +00:00)
+- [9ec7fcc](https://github.com/scalameta/metals-vscode/commit/9ec7fcc73bc958bf39022820c0ea4987ba538f75) Increase patch version for pre-release
+- [c5b3f98](https://github.com/scalameta/metals-vscode/commit/c5b3f9822a5022cf3e33cee8dcf6ed97e7b47996) bugfix: Revert changes to env and properties for now (@tgodzik)
+- [d9cb438](https://github.com/scalameta/metals-vscode/commit/d9cb4385ac1fbecb5cc2902dfbc13374b7381583) v1.33.0
+
 ### v1.33.0 (2024/05/16 13:35 +00:00)
 - [5a670da](https://github.com/scalameta/metals-vscode/commit/5a670da2073b402d54f0b90d8f17f83272f27063) v1.32.0
 
@@ -2175,8 +2180,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [8435883](https://github.com/scalameta/metals-vscode/commit/84358833ccae6a5af7720ef2ea2bff234e39f15b) Synchronize readme with latest website (@olafurpg)
 - [0cb3136](https://github.com/scalameta/metals-vscode/commit/0cb31361b5bbe36417e2c24481fc0cf5b85c0be9) 1.1.2 (@olafurpg)
 - [babbd18](https://github.com/scalameta/metals-vscode/commit/babbd18a556a897bd7825be904685993b8d28c1f) 1.1.1 (@olafurpg)
-
-### v1.1.1 (2018/12/14 19:12 +00:00)
 - [13e9531](https://github.com/scalameta/metals-vscode/commit/13e95313d89867e5a1e5108412a0279eef97be1e) Upgrade to v0.3.3 (@olafurpg)
 - [195f83d](https://github.com/scalameta/metals-vscode/commit/195f83ddf7142b5a4acb1d626b58d0b4b4c7a66a) v1.1.0
 - [efe19ab](https://github.com/scalameta/metals-vscode/commit/efe19ab4291e24da845f9607ef9b78db14e1ed47) Update sbtScript description as per review (@gabro)
