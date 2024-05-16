@@ -93,7 +93,7 @@ export async function setupCoursier(
    * we can still fall back to jar based launcher.
    */
   if (!coursier && javaHome) {
-    coursier = path.join(extensionPath, "./coursier-fallback.jar");
+    coursier = path.join(extensionPath, "coursier-fallback.jar");
   }
 
   if (javaHome && coursier) return { coursier, javaHome };
