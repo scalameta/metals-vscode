@@ -206,10 +206,6 @@
           "name": "Build commands"
         },
         {
-          "id": "metalsCompile",
-          "name": "Ongoing compilations"
-        },
-        {
           "id": "metalsHelp",
           "name": "Help and feedback"
         }
