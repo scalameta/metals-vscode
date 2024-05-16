@@ -32,16 +32,15 @@ every PR is tested on Ubuntu, Windows and MacOS.
 
 **Scala 2.13, 2.12, 2.11 and Scala 3**. Metals supports these Scala versions:
 
-- **Scala 2.13**: 2.13.13, 2.13.12, 2.13.11, 2.13.10, 2.13.9, 2.13.8, 2.13.7,
-  2.13.6
+- **Scala 2.13**: 2.13.14, 2.13.13, 2.13.12, 2.13.11, 2.13.10, 2.13.9, 2.13.8,
+  2.13.7
 
 - **Scala 2.12**: 2.12.19, 2.12.18, 2.12.17, 2.12.16, 2.12.15, 2.12.14, 2.12.13,
   2.12.12
 
 - **Scala 2.11**: 2.11.12
 
-- **Scala 3**: 3.3.3, 3.3.2, 3.3.1, 3.2.2, 3.2.1, 3.2.0, 3.1.3, 3.1.2, 3.1.1,
-  3.1.0
+- **Scala 3**: 3.3.3, 3.3.2, 3.3.1, 3.2.2, 3.1.3
 
 Note that 2.11.x support is deprecated and it will be removed in future
 releases. It's recommended to upgrade to Scala 2.12 or Scala 2.13
@@ -172,8 +171,8 @@ If no matching Java found, a JDK will be downloaded using
 JDK used for compiling and running the project. Build servers like `mill` and
 `sbt` are started using that JDK. In case of `Bloop` Metals's server JDK is used
 for running the build server but appropriate `-release` flags are added for
-compilation. By default Metals relies on the build server's mechanism for
-project's JDK resolution (e.g. `Bloop` - `JAVA_HOME`, `sbt` - java on `PATH`).
+compilation. By default Metals uses JDK defined by `JAVA_HOME` environment
+variable, if the variable is not set is falls to using the Metals's JDK.
 
 #### Settings:
 
