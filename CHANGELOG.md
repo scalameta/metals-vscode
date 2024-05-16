@@ -2,6 +2,25 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.32.0 (2024/05/16 13:22 +00:00)
+- [3c4bd01](https://github.com/scalameta/metals-vscode/commit/3c4bd0114608dcd61b495db4191940607b223e80) chore: Update Metals to newest version (@tgodzik)
+- [d1e9163](https://github.com/scalameta/metals-vscode/commit/d1e9163e51aabfcb37f1567b5b53093abc3eb4a1) Increase patch version for pre-release
+- [74a70a7](https://github.com/scalameta/metals-vscode/commit/74a70a7455754b36bff2e7dc56d0973d33ac25f6) bugfix: Use temurin always for coursier (@tgodzik)
+- [7d32a02](https://github.com/scalameta/metals-vscode/commit/7d32a0243e1add5ae545bc226cee68f75d5808cf) Increase patch version for pre-release
+- [eb10d08](https://github.com/scalameta/metals-vscode/commit/eb10d08acba4e600cfedbf28fecc696a16a6987e) improvement: Point to the java setting in error message (@tgodzik)
+- [a082109](https://github.com/scalameta/metals-vscode/commit/a08210963c7f5f1d0d7e15df8bc7bef63fb3d9db) Increase patch version for pre-release
+- [24aeaac](https://github.com/scalameta/metals-vscode/commit/24aeaacbd05099f3a32932d3bc2cfdaa9c7d251f) bugfix: Use temurin explicitely (@tgodzik)
+- [dac3366](https://github.com/scalameta/metals-vscode/commit/dac3366ff39542c9f0882cf4730236067da032ef) Increase patch version for pre-release
+- [924af14](https://github.com/scalameta/metals-vscode/commit/924af140655df0ea34896f8685bfe81a09f2d8d3) improvement: Use jar based coursier if unable to download native image (@tgodzik)
+- [3221ecb](https://github.com/scalameta/metals-vscode/commit/3221ecb2312fda2a3d8d2b41f07a86e660891459) Increase patch version for pre-release
+- [405492c](https://github.com/scalameta/metals-vscode/commit/405492cf0f00f5850b1378ed09654a6d4dd08ad1) format (@mliarakos)
+- [43258c9](https://github.com/scalameta/metals-vscode/commit/43258c9dc66ef0b1e0b3f3d1b89c3d0e6a693ac5) add agentlib warning message (@mliarakos)
+- [93cfeb2](https://github.com/scalameta/metals-vscode/commit/93cfeb2ea79f97c6ab68c1a29b7a181f5125fb40) format (@mliarakos)
+- [c595d3d](https://github.com/scalameta/metals-vscode/commit/c595d3d1f134c6f5437af51095f3da676c56c83a) use properties and environment when fetching metals (@mliarakos)
+- [391445d](https://github.com/scalameta/metals-vscode/commit/391445d4a1397d3a5769c60a5231640be5198072) improvement: delete ongoing compilations from tree view (@kasiaMarek)
+- [12a8ba7](https://github.com/scalameta/metals-vscode/commit/12a8ba74a88f7d9674611acabcbd9452da8e9db4) v1.31.0
+- [c273ea4](https://github.com/scalameta/metals-vscode/commit/c273ea4d04252d54815444653e3b00502832e7a4) feat: allow for no workspace (@kasiaMarek)
+
 ### v1.31.0 (2024/05/05 12:49 +00:00)
 - [05d4af0](https://github.com/scalameta/metals-vscode/commit/05d4af0206547b4a9394af8e43164fed9c7f4249) Increase patch version for pre-release
 - [d6f15d6](https://github.com/scalameta/metals-vscode/commit/d6f15d641bfca1a3b6ace48b034b72dc9840af83) Revert "feat: allow for no workspace" (@tgodzik)
@@ -2179,8 +2198,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [c464ecd](https://github.com/scalameta/metals-vscode/commit/c464ecd5013771759cd2bfc8a64a6f6f7a0b14c5) Use camel case instead of kebab for more readable settings UI (@olafurpg)
 - [d7cdb88](https://github.com/scalameta/metals-vscode/commit/d7cdb88acda597e4d5f9bddb7bd67d3f97607749) Add new configuration options (@olafurpg)
 - [7969642](https://github.com/scalameta/metals-vscode/commit/7969642212be207805825f9d10ed6d76fee33453) v1.0.0
-
-### v1.0.0 (2018/12/07 16:00 +00:00)
 - [9b2dac1](https://github.com/scalameta/metals-vscode/commit/9b2dac1b218682ad45e3548e72ffa6ebcc575f53) Update supported Scala versions (@olafurpg)
 - [43ef17d](https://github.com/scalameta/metals-vscode/commit/43ef17d3a347818da42b482f1ec20108dd411b23) v0.3.3
 - [37ec5e5](https://github.com/scalameta/metals-vscode/commit/37ec5e524ac8276713b3ee95c532fdd4baa20408) Bump default serverVersion to 0.3.1 (@gabro)
