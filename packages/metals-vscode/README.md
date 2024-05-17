@@ -30,20 +30,9 @@ The following table shows the status of various features.
 **macOS, Linux or Windows**. Metals is developed on many operating systems and
 every PR is tested on Ubuntu, Windows and MacOS.
 
-**Scala 2.13, 2.12, 2.11 and Scala 3**. Metals supports these Scala versions:
-
-- **Scala 2.13**: 2.13.14, 2.13.13, 2.13.12, 2.13.11, 2.13.10, 2.13.9, 2.13.8,
-  2.13.7
-
-- **Scala 2.12**: 2.12.19, 2.12.18, 2.12.17, 2.12.16, 2.12.15, 2.12.14, 2.12.13,
-  2.12.12
-
-- **Scala 2.11**: 2.11.12
-
-- **Scala 3**: 3.3.3, 3.3.2, 3.3.1, 3.2.2, 3.1.3
-
-Note that 2.11.x support is deprecated and it will be removed in future
-releases. It's recommended to upgrade to Scala 2.12 or Scala 2.13
+**Scala 2.13, 2.12, 2.11 and Scala 3**. Check which specific versions are
+currently supported in
+https://scalameta.org/metals/docs/editors/vscode#requirements
 
 ## Installation
 
