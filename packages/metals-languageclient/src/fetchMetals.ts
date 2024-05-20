@@ -60,7 +60,10 @@ export async function fetchMetals({
     return { promise: spawn(javaPath, jarArgs) };
   } else {
     return {
-      promise: spawn(coursier, coursierArgs),
+      promise: spawn(
+        coursier,
+        ["-J-Dfile.encoding=UTF-8"].concat(coursierArgs)
+      ),
     };
   }
 }
