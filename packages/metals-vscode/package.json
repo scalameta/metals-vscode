@@ -438,6 +438,16 @@
           "type": "boolean",
           "default": false,
           "markdownDescription": "Default to using build tool as your build server."
+        },
+        "metals.autoImportBuild": {
+          "type": "string",
+          "default": "off",
+          "enum": [
+            "off",
+            "initial",
+            "all"
+          ],
+          "markdownDescription": "Automatically import builds rather than prompting the user to choose. `initial` will only automatically import a build when a project is first opened, `all` will automate build imports after subsequent changes as well."
         }
       }
     },
