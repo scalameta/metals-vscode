@@ -21,7 +21,7 @@ interface PackedChildPromise {
 export async function fetchMetals({
   serverVersion,
   serverProperties,
-  javaConfig: { coursier, javaPath },
+  javaConfig: { javaOptions, coursier, extraEnv, javaPath },
   outputChannel,
 }: FetchMetalsOptions): Promise<PackedChildPromise> {
   const serverDependency = calcServerDependency(serverVersion);
@@ -53,14 +53,35 @@ export async function fetchMetals({
     "-p",
   ];
 
+  const environment = {
+    env: {
+      ...process.env,
+      ...extraEnv,
+    },
+  };
+
   if (coursier.endsWith(".jar")) {
-    const jarArgs = ["-Dfile.encoding=UTF-8", "-jar", coursier].concat(
-      coursierArgs
-    );
-    return { promise: spawn(javaPath, jarArgs) };
+    const jarArgs = [
+      ...javaOptions,
+      ...fetchProperties,
+      "-Dfile.encoding=UTF-8",
+      "-jar",
+      coursier,
+    ].concat(coursierArgs);
+    return { promise: spawn(javaPath, jarArgs, environment) };
   } else {
+    // Convert Java properties to the "-J" argument form used by Coursier
+    var javaArgs: Array<string> = [];
+
+    // setting properties on windows native launcher doesn't work
+    if (process.platform != "win32")
+      javaArgs = javaOptions
+        .concat(["-Dfile.encoding=UTF-8"])
+        .concat(fetchProperties)
+        .map((p) => `-J${p}`);
+
     return {
-      promise: spawn(coursier, coursierArgs),
+      promise: spawn(coursier, javaArgs.concat(coursierArgs), environment),
     };
   }
 }
