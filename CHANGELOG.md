@@ -2,6 +2,14 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.35.0 (2024/05/24 11:38 +00:00)
+- [4eeeb84](https://github.com/scalameta/metals-vscode/commit/4eeeb8407216f8824b4e9bffa6749da4b4227946) Increase patch version for pre-release
+- [98df585](https://github.com/scalameta/metals-vscode/commit/98df5859b902cb45550880efd671458c90a577c8) improvement: Restore adding properties and env when fetching metals (@tgodzik)
+- [a760bf2](https://github.com/scalameta/metals-vscode/commit/a760bf201b856d30634c7fda54650f35fa2951aa) bugfix: Add encoding to fix issue with non ASCII letter (@tgodzik)
+- [9eb637f](https://github.com/scalameta/metals-vscode/commit/9eb637f9d503bb3600465de6ecb103724d07c715) Increase patch version for pre-release
+- [273a5fe](https://github.com/scalameta/metals-vscode/commit/273a5fe8cf4e15e0bd5721d6a1f765a3f3b8b900) docs: Don't show supported Scala versions which might go out of date (@tgodzik)
+- [8ac4e55](https://github.com/scalameta/metals-vscode/commit/8ac4e55f8cc77104eca023e5fc904971d4a66f83) v1.34.0
+
 ### v1.34.0 (2024/05/16 18:08 +00:00)
 - [9ec7fcc](https://github.com/scalameta/metals-vscode/commit/9ec7fcc73bc958bf39022820c0ea4987ba538f75) Increase patch version for pre-release
 - [c5b3f98](https://github.com/scalameta/metals-vscode/commit/c5b3f9822a5022cf3e33cee8dcf6ed97e7b47996) bugfix: Revert changes to env and properties for now (@tgodzik)
@@ -2175,8 +2183,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [ffdeccb](https://github.com/scalameta/metals-vscode/commit/ffdeccbdc0aa99c4ef00b7c37949b1db3320eea3) Add scalafmtConfigPath option (@gabro)
 - [38f42be](https://github.com/scalameta/metals-vscode/commit/38f42be46bcbd848309ba23487800bf94c72aed9) Prefer JDK over JRE (@gabro)
 - [3e793ca](https://github.com/scalameta/metals-vscode/commit/3e793cacb2a4220f2aaab73e4f0f4761a0db441d) v1.1.3
-
-### v1.1.3 (2018/12/14 22:05 +00:00)
 - [8435883](https://github.com/scalameta/metals-vscode/commit/84358833ccae6a5af7720ef2ea2bff234e39f15b) Synchronize readme with latest website (@olafurpg)
 - [0cb3136](https://github.com/scalameta/metals-vscode/commit/0cb31361b5bbe36417e2c24481fc0cf5b85c0be9) 1.1.2 (@olafurpg)
 - [babbd18](https://github.com/scalameta/metals-vscode/commit/babbd18a556a897bd7825be904685993b8d28c1f) 1.1.1 (@olafurpg)
