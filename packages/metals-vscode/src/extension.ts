@@ -188,6 +188,22 @@ export function deactivate(): Thenable<void> | undefined {
   return currentClient?.stop();
 }
 
+function debugInformation(
+  serverVersion: string,
+  serverProperties: string[],
+  javaConfig: JavaConfig
+) {
+  return `  Metals version: ${serverVersion}  
+  Server proeprties: ${serverProperties} 
+  Java configuration: 
+    - coursier: ${javaConfig.coursier}
+    - coursier mirror: ${javaConfig.coursierMirrorFilePath}
+    - extra environment: ${javaConfig.extraEnv}
+    - java options: ${javaConfig.javaOptions}
+    - java path: ${javaConfig.javaPath}
+    `;
+}
+
 async function fetchAndLaunchMetals(
   context: ExtensionContext,
   serverVersion: string,
@@ -246,7 +262,16 @@ async function fetchAndLaunchMetals(
           serverProperties,
           javaConfig,
           serverVersion
-        );
+        ).catch((reason) => {
+          outputChannel.appendLine(
+            "Launching Metals failed with the following:"
+          );
+          outputChannel.appendLine(reason.message);
+          outputChannel.appendLine(
+            debugInformation(serverVersion, serverProperties, javaConfig)
+          );
+          throw reason;
+        });
       },
       (reason) => {
         if (reason instanceof Error) {
@@ -254,6 +279,9 @@ async function fetchAndLaunchMetals(
             "Downloading Metals failed with the following:"
           );
           outputChannel.appendLine(reason.message);
+          outputChannel.appendLine(
+            debugInformation(serverVersion, serverProperties, javaConfig)
+          );
         }
         const msg = (() => {
           const proxy =
