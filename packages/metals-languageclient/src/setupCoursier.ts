@@ -19,7 +19,8 @@ export async function setupCoursier(
   javaVersion: JavaVersion,
   coursierFetchPath: string,
   extensionPath: string,
-  output: OutputChannel
+  output: OutputChannel,
+  forceCoursierJar: boolean
 ): Promise<{ coursier: string; javaHome: string }> {
   const handleOutput = (out: Buffer) => {
     const msg = out.toString().trim();
@@ -75,7 +76,12 @@ export async function setupCoursier(
     return ((await getJavaPath).stdout as string).trim();
   };
 
-  var coursier = await resolveCoursier();
+  var coursier: string | undefined;
+  if (forceCoursierJar) {
+    coursier = undefined;
+  } else {
+    coursier = await resolveCoursier();
+  }
   output.appendLine(`Using coursier located at ${coursier}`);
 
   var javaHome = await getJavaHome(javaVersion, output);
