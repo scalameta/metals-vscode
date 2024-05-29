@@ -37,7 +37,6 @@ async function validateJavaVersion(
     });
 
     javaVersionOut.stderr?.on("data", (out: Buffer) => {
-      outputChannel.appendLine(`${javaBin} -version:`);
       const msg = "\t" + out.toString().trim().split("\n").join("\n\t");
       outputChannel.appendLine(msg);
     });

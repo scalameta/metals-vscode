@@ -22,8 +22,8 @@ export async function setupCoursier(
   output: OutputChannel
 ): Promise<{ coursier: string; javaHome: string }> {
   const handleOutput = (out: Buffer) => {
-    const msg = out.toString().trim();
-    output.appendLine("Coursier: \n" + msg);
+    const msg = "\t" + out.toString().trim().split("\n").join("\n\t");
+    output.appendLine(msg);
   };
 
   const resolveCoursier = async () => {
@@ -82,7 +82,7 @@ export async function setupCoursier(
 
   if (!javaHome && coursier) {
     output.appendLine(
-      `No installed java with version ${javaVersion} found. Will fetch one using coursier.`
+      `No installed java with version ${javaVersion} found. Will fetch one using coursier:`
     );
     javaHome = await resolveJavaHomeWithCoursier(coursier);
   }
