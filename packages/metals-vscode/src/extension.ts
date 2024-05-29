@@ -194,7 +194,7 @@ function debugInformation(
   javaConfig: JavaConfig
 ) {
   return `  Metals version: ${serverVersion}  
-  Server proeprties: ${serverProperties} 
+  Server properties: ${serverProperties} 
   Java configuration: 
     - coursier: ${javaConfig.coursier}
     - coursier mirror: ${javaConfig.coursierMirrorFilePath}
