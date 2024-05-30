@@ -42,6 +42,10 @@
     "Programming Languages",
     "Debuggers"
   ],
+  "extensionKind": [
+    "workspace",
+    "ui"
+  ],
   "activationEvents": [
     "onCommand:metals.start-server",
     "onCommand:metals.new-scala-project",
