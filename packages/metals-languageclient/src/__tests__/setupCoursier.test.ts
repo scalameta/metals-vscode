@@ -50,7 +50,8 @@ describe("setupCoursier", () => {
       "17",
       tmpDir,
       process.cwd(),
-      new LogOutputChannel()
+      new LogOutputChannel(),
+      false
     );
     expect(fs.existsSync(coursier)).toBeTruthy;
     expect(fs.existsSync(javaHome)).toBeTruthy;

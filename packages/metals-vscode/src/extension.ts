@@ -207,7 +207,8 @@ function debugInformation(
 async function fetchAndLaunchMetals(
   context: ExtensionContext,
   serverVersion: string,
-  javaVersion: JavaVersion
+  javaVersion: JavaVersion,
+  forceCoursierJar = false
 ) {
   outputChannel.appendLine(`Metals version: ${serverVersion}`);
 
@@ -228,8 +229,23 @@ async function fetchAndLaunchMetals(
     javaVersion,
     metalsDirPath,
     context.extensionPath,
-    outputChannel
+    outputChannel,
+    forceCoursierJar
   );
+
+  const canRetryWithJar =
+    javaHome && !coursier.endsWith(".jar") && !forceCoursierJar;
+
+  function retry(error: any): Promise<any> {
+    if (canRetryWithJar) {
+      outputChannel.appendLine(
+        "Trying again with the embedded coursier. This might take longer."
+      );
+      return fetchAndLaunchMetals(context, serverVersion, javaVersion, true);
+    } else {
+      return Promise.reject(error);
+    }
+  }
 
   const javaConfig = getJavaConfig({
     workspaceRoot: workspace.workspaceFolders
@@ -262,7 +278,7 @@ async function fetchAndLaunchMetals(
           serverProperties,
           javaConfig,
           serverVersion
-        ).catch((reason) => {
+        ).catch((reason): Promise<any> => {
           outputChannel.appendLine(
             "Launching Metals failed with the following:"
           );
@@ -270,7 +286,7 @@ async function fetchAndLaunchMetals(
           outputChannel.appendLine(
             debugInformation(serverVersion, serverProperties, javaConfig)
           );
-          throw reason;
+          return retry(reason);
         });
       },
       (reason) => {
@@ -283,30 +299,34 @@ async function fetchAndLaunchMetals(
             debugInformation(serverVersion, serverProperties, javaConfig)
           );
         }
-        const msg = (() => {
-          const proxy =
-            `See https://scalameta.org/metals/docs/editors/vscode/#http-proxy for instructions ` +
-            `if you are using an HTTP proxy.`;
-          if (process.env.FLATPAK_SANDBOX_DIR) {
-            return (
-              `Failed to download Metals. It seems you are running Visual Studio Code inside the ` +
-              `Flatpak sandbox, which is known to interfere with the download of Metals. ` +
-              `Please, try running Visual Studio Code without Flatpak.`
-            );
-          } else {
-            return (
-              `Failed to download Metals, make sure you have an internet connection, ` +
-              `the Metals version '${serverVersion}'. ` +
-              proxy
-            );
-          }
-        })();
-        outputChannel.show();
-        window.showErrorMessage(msg, openSettingsAction).then((choice) => {
-          if (choice === openSettingsAction) {
-            commands.executeCommand(workbenchCommands.openSettings);
-          }
-        });
+        if (canRetryWithJar) {
+          return retry(reason);
+        } else {
+          const msg = (() => {
+            const proxy =
+              `See https://scalameta.org/metals/docs/editors/vscode/#http-proxy for instructions ` +
+              `if you are using an HTTP proxy.`;
+            if (process.env.FLATPAK_SANDBOX_DIR) {
+              return (
+                `Failed to download Metals. It seems you are running Visual Studio Code inside the ` +
+                `Flatpak sandbox, which is known to interfere with the download of Metals. ` +
+                `Please, try running Visual Studio Code without Flatpak.`
+              );
+            } else {
+              return (
+                `Failed to download Metals, make sure you have an internet connection, ` +
+                `the Metals version '${serverVersion}'. ` +
+                proxy
+              );
+            }
+          })();
+          outputChannel.show();
+          window.showErrorMessage(msg, openSettingsAction).then((choice) => {
+            if (choice === openSettingsAction) {
+              commands.executeCommand(workbenchCommands.openSettings);
+            }
+          });
+        }
       }
     );
 }
