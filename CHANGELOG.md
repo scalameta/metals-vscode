@@ -2,8 +2,28 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.36.0 (2024/06/19 14:29 +00:00)
+- [2452f8d](https://github.com/scalameta/metals-vscode/commit/2452f8d419482f02c1b5c2c6565eb84c31dfc921) Increase patch version for pre-release
+- [96d2782](https://github.com/scalameta/metals-vscode/commit/96d27822ce26b05ead9a12ef7aed00960cca1037) chore: change version to release 1.3.2 (@kasiaMarek)
+- [8a7fae1](https://github.com/scalameta/metals-vscode/commit/8a7fae10aff6e0070e54fe907775edee64776468) build(deps): bump ws in /packages/metals-languageclient (@dependabot[bot])
+- [b4f2168](https://github.com/scalameta/metals-vscode/commit/b4f216838a47a2de7487ced3bf7a681b6db5602b) build(deps): bump braces from 3.0.2 to 3.0.3 in /packages/metals-vscode (@dependabot[bot])
+- [fdf57d3](https://github.com/scalameta/metals-vscode/commit/fdf57d369b371949d227d3887d71f13809ed63e2) Increase patch version for pre-release
+- [4c32225](https://github.com/scalameta/metals-vscode/commit/4c322250f79922a7c642f15fda523b3f5dce4810) improvement: Retry with coursier jar if anything fails (@tgodzik)
+- [177750a](https://github.com/scalameta/metals-vscode/commit/177750a290cd4f2441fb7b6630e10fd47e5d0266) Increase patch version for pre-release
+- [e531d09](https://github.com/scalameta/metals-vscode/commit/e531d09a54f107582396f03d0d17479f2555171f) linted (@Quafadas)
+- [6306deb](https://github.com/scalameta/metals-vscode/commit/6306deb5f8dd2782a6f9e40a298b6734f14e48f8) Prefer extension to run in the workspace (@Quafadas)
+- [6d96bd6](https://github.com/scalameta/metals-vscode/commit/6d96bd682965311efb914c6ad49f030d527058f1) Increase patch version for pre-release
+- [159df6c](https://github.com/scalameta/metals-vscode/commit/159df6c1c7031b91e24e48d08e5aed2aae7056b3) improvement: Print Java all at once (@tgodzik)
+- [cda40b5](https://github.com/scalameta/metals-vscode/commit/cda40b5846bcbfd56770eabb6a8fbed42b62273c) Increase patch version for pre-release
+- [c5d5a2e](https://github.com/scalameta/metals-vscode/commit/c5d5a2e931556c89ac6e1daae0220bed07865f23) Update packages/metals-vscode/src/extension.ts (@tgodzik)
+- [2cd95e7](https://github.com/scalameta/metals-vscode/commit/2cd95e75182e7f3f6e997f4f63e86b497cf69307) improvement: Print more info if metals fails (@tgodzik)
+- [ba9693a](https://github.com/scalameta/metals-vscode/commit/ba9693ae03a8b354f2b878c7251a50233f2276d7) Increase patch version for pre-release
+- [5bd74a1](https://github.com/scalameta/metals-vscode/commit/5bd74a1be1c3ec13b8869ea4020f3e5de5f9a901) Increase patch version for pre-release
+- [b0387c0](https://github.com/scalameta/metals-vscode/commit/b0387c0ffdcbf1e97777c546fb6bf11592475493) v1.35.0
+
 ### v1.35.0 (2024/05/24 11:38 +00:00)
 - [4eeeb84](https://github.com/scalameta/metals-vscode/commit/4eeeb8407216f8824b4e9bffa6749da4b4227946) Increase patch version for pre-release
+- [0cde190](https://github.com/scalameta/metals-vscode/commit/0cde190b4a397f1f340ce71c4451c2aac434afc9) chore: Add autoImportBuild option (@tgodzik)
 - [98df585](https://github.com/scalameta/metals-vscode/commit/98df5859b902cb45550880efd671458c90a577c8) improvement: Restore adding properties and env when fetching metals (@tgodzik)
 - [a760bf2](https://github.com/scalameta/metals-vscode/commit/a760bf201b856d30634c7fda54650f35fa2951aa) bugfix: Add encoding to fix issue with non ASCII letter (@tgodzik)
 - [9eb637f](https://github.com/scalameta/metals-vscode/commit/9eb637f9d503bb3600465de6ecb103724d07c715) Increase patch version for pre-release
@@ -22,6 +42,7 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [3c4bd01](https://github.com/scalameta/metals-vscode/commit/3c4bd0114608dcd61b495db4191940607b223e80) chore: Update Metals to newest version (@tgodzik)
 - [d1e9163](https://github.com/scalameta/metals-vscode/commit/d1e9163e51aabfcb37f1567b5b53093abc3eb4a1) Increase patch version for pre-release
 - [74a70a7](https://github.com/scalameta/metals-vscode/commit/74a70a7455754b36bff2e7dc56d0973d33ac25f6) bugfix: Use temurin always for coursier (@tgodzik)
+- [b0b0f4f](https://github.com/scalameta/metals-vscode/commit/b0b0f4f43b5b9b40b5d36c506b3c93649312e897) chore: Improve output information for the users (@tgodzik)
 - [7d32a02](https://github.com/scalameta/metals-vscode/commit/7d32a0243e1add5ae545bc226cee68f75d5808cf) Increase patch version for pre-release
 - [eb10d08](https://github.com/scalameta/metals-vscode/commit/eb10d08acba4e600cfedbf28fecc696a16a6987e) improvement: Point to the java setting in error message (@tgodzik)
 - [a082109](https://github.com/scalameta/metals-vscode/commit/a08210963c7f5f1d0d7e15df8bc7bef63fb3d9db) Increase patch version for pre-release
@@ -2158,8 +2179,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [b634db7](https://github.com/scalameta/metals-vscode/commit/b634db7d3d86ce47c1fe56239ab3df835352dcb8) Remove 'bug' label (@gabro)
 - [6afeb3b](https://github.com/scalameta/metals-vscode/commit/6afeb3b7a157be3b9e2ff343e9a654a2810fcee7) Add issue templates (@gabro)
 - [2d756bc](https://github.com/scalameta/metals-vscode/commit/2d756bc3a65d7221a0e09395c680af4dde2c69e6) v1.2.0
-
-### v1.2.0 (2019/01/25 13:55 +00:00)
 - [9e552b4](https://github.com/scalameta/metals-vscode/commit/9e552b4aa3d06f8ca7123e508f8abed0704ebf96) Upgrade to v0.4.0 (@olafurpg)
 - [f01c698](https://github.com/scalameta/metals-vscode/commit/f01c6989aa1e3a70d30185865d4bb3206f858ebe) Update readme. (@olafurpg)
 - [228bbcb](https://github.com/scalameta/metals-vscode/commit/228bbcb51c13f5485462b7f60ce1f84437909846) Remove unhelpful "Merge pull request" entries from changelog (@olafurpg)
