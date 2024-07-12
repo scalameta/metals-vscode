@@ -2,6 +2,11 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.37.0 (2024/07/12 14:31 +00:00)
+- [8b9f2a3](https://github.com/scalameta/metals-vscode/commit/8b9f2a3cea40b9277da605715f57cb7dfbc20757) Increase patch version for pre-release
+- [97085fc](https://github.com/scalameta/metals-vscode/commit/97085fc3b61146398bb5e60b7786ece34e720027) chore: Update Metals version to 3.3.3 (@tgodzik)
+- [08a3d10](https://github.com/scalameta/metals-vscode/commit/08a3d10e596a91bdaec30536a9fb8c87ab7ae8e9) v1.36.0
+
 ### v1.36.0 (2024/06/19 14:29 +00:00)
 - [2452f8d](https://github.com/scalameta/metals-vscode/commit/2452f8d419482f02c1b5c2c6565eb84c31dfc921) Increase patch version for pre-release
 - [96d2782](https://github.com/scalameta/metals-vscode/commit/96d27822ce26b05ead9a12ef7aed00960cca1037) chore: change version to release 1.3.2 (@kasiaMarek)
@@ -2169,8 +2174,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 ### v1.2.2 (2019/02/01 15:34 +00:00)
 - [7966916](https://github.com/scalameta/metals-vscode/commit/796691690151732ce6e4c865d532bd9126c14345) Update changelog (@olafurpg)
 - [158b040](https://github.com/scalameta/metals-vscode/commit/158b040b72224646489978e98f10d0aaf9c30499) v1.2.1
-
-### v1.2.1 (2019/02/01 15:29 +00:00)
 - [fdd912f](https://github.com/scalameta/metals-vscode/commit/fdd912f42a8d59d2cf877affd743ab0433af5a4e) Upgrade to v0.4.1 (@olafurpg)
 - [9e51395](https://github.com/scalameta/metals-vscode/commit/9e513954beb79e99c31282dba989e86ebfe3a6bb) Parse JAVA_OPTS using shell-quote (@gabro)
 - [a4aa8bd](https://github.com/scalameta/metals-vscode/commit/a4aa8bd839332f7c2a19a8ac4d5de1b220e5b3ff) Fix concatenation of jvmopts and javaopts (@gabro)
