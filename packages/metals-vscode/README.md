@@ -23,7 +23,7 @@ The following table shows the status of various features.
 | Code actions          |   ✅   |                                                                                                  |
 | Organize imports      |   ✅   |                                                                                                  |
 | Show implicits        |   ✅   |                                                                                                  |
-| Basic Java support    |   ✅   | Most feature aside from signature help and semantic tokens.                                      |
+| Basic Java support    |   ✅   | Most basic features aside from signature help and semantic tokens.                               |
 
 ## Requirements
 
@@ -318,7 +318,37 @@ supported `Run` view. When using Metals the debugger itself is
 [Bloop](https://scalacenter.github.io/bloop/), which is also responsible for
 starting the actual process.
 
-Users can begin the debugging session in two ways:
+Users can begin the debugging session in four ways:
+
+### via test explorer
+
+Since version 0.11.0 Metals implements Visual Studio Code's
+[Testing API](https://code.visualstudio.com/api/extension-guides/testing).
+
+Test Explorer UI is a new default way to run/debug test suites and replaces Code
+Lenses. The new UI adds a testing view, which shows all test suites declared in
+project's modules. From this panel it's possible to
+
+- view all discovered test suites grouped by build targets (modules) and filter
+  them
+- run/debug test
+- navigate to test's definition.
+
+![test-explorer](https://i.imgur.com/Z3VtS0O.gif)
+
+NOTE: While Metals detects test suites for most of existing testing frameworks,
+support for recognizing individual tests is more limited. Metals supports the
+current set of test frameworks when it comes to individual test discovery:
+
+- Junit
+- MUnit
+- Scalatest
+- Weaver Test
+
+If you encounter an error, create an
+[issue](https://github.com/scalameta/metals/issues).
+
+![test-explorer](https://i.imgur.com/Z3VtS0O.gif)
 
 ### via code lenses
 
@@ -416,6 +446,20 @@ You can also use commands that can be easily bound to shortcuts:
 To assign shortcuts just go to the Keyboard Shortcuts page (`File` ->
 `Preferences` -> `Keyboard Shortcuts`) and search for a command, click on it and
 use your preferred shortcut.
+
+### Defining jvm options
+
+Unfortunately, it's not always possible to define environment variables or jvm
+options for tests. To work around that you can use:
+
+- `.jvmopts` file inside the main project directory or `JVM_OPTS` environment
+  variable. In this case, we will filter out any -X options as it might
+  sometimes be problematic if the file is also used for specifying build tools'
+  options.
+- `.test-jvmopts` file or `TEST_JVM_OPTS` if you want to declare jvm options
+  only for your tests and/or you also want to use -X options.
+
+This will work for any method used to run tests.
 
 ## On type formatting for multiline string formatting
 
@@ -562,33 +606,6 @@ can configure this shortcut:
     "when": "editorLangId == scala"
   }
 ```
-
-## Test Explorer
-
-Metals 0.11.0 implements Visual Studio Code's
-[Testing API](https://code.visualstudio.com/api/extension-guides/testing).
-
-Test Explorer UI is a new default way to run/debug test suites and replaces Code
-Lenses. The new UI adds a testing view, which shows all test suites declared in
-project's modules. From this panel it's possible to
-
-- view all discovered test suites grouped by build targets (modules) and filter
-  them
-- run/debug test
-- navigate to test's definition.
-
-![test-explorer](https://i.imgur.com/Z3VtS0O.gif)
-
-NOTE: While Metals detects test suites for most of existing testing frameworks,
-support for recognizing individual tests is more limited. Metals supports the
-current set of test frameworks when it comes to individual test discovery:
-
-- Junit
-- MUnit
-- Scalatest
-
-If you encounter an error, create an
-[issue](https://github.com/scalameta/metals/issues).
 
 ## Coming from IntelliJ
 
