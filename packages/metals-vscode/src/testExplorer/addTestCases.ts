@@ -60,7 +60,7 @@ export function addTestCases(
   }
   const workspaceFolderItem = testController.items.get(folderUri);
   if (workspaceFolderItem) {
-    const buildTargetItem = workspaceFolderItem.children.get(targetName);
+    const buildTargetItem = workspaceFolderItem.children.get(targetUri);
     if (buildTargetItem) {
       const testPath = prefixesOf(event.fullyQualifiedClassName, true);
       addTestCasesLoop(buildTargetItem, testPath);
