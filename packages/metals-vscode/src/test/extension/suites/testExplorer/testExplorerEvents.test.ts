@@ -75,7 +75,7 @@ suite("Test Explorer events", () => {
       label: folderName,
       children: [
         {
-          id: targetName,
+          id: targetUri,
           label: targetName,
           children: [
             { id: "NoPackage", label: "NoPackage", uri, children: [] },
@@ -117,7 +117,7 @@ suite("Test Explorer events", () => {
       label: folderName,
       children: [
         {
-          id: targetName,
+          id: targetUri,
           label: targetName,
           children: [
             { id: "NoPackage", label: "NoPackage", uri, children: [] },
@@ -164,7 +164,7 @@ suite("Test Explorer events", () => {
       folderUri,
       foo
     );
-    removeTestItem(testController, targetName, folderUri, {
+    removeTestItem(testController, targetUri, folderUri, {
       ...foo,
       kind: "removeSuite",
     });
@@ -174,7 +174,7 @@ suite("Test Explorer events", () => {
       label: folderName,
       children: [
         {
-          id: targetName,
+          id: targetUri,
           label: targetName,
           children: [
             { id: "NoPackage", label: "NoPackage", uri, children: [] },
@@ -215,7 +215,7 @@ suite("Test Explorer events", () => {
       label: folderName,
       children: [
         {
-          id: targetName,
+          id: targetUri,
           label: targetName,
           children: [
             { id: "NoPackage", label: "NoPackage", uri, children: [] },

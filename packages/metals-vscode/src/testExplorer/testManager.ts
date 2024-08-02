@@ -93,7 +93,7 @@ class TestManager {
       const folderName_ = folderName || ("root" as FolderName);
       for (const event of events) {
         if (event.kind === "removeSuite") {
-          removeTestItem(this.testController, targetName, folderUri_, event);
+          removeTestItem(this.testController, targetUri, folderUri_, event);
         } else if (event.kind === "addSuite") {
           addTestSuite(
             this.testController,
@@ -106,7 +106,7 @@ class TestManager {
         } else if (event.kind === "updateSuiteLocation") {
           updateTestSuiteLocation(
             this.testController,
-            targetName,
+            targetUri,
             folderUri_,
             event
           );

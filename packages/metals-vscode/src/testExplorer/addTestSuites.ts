@@ -35,6 +35,7 @@ export function addTestSuite(
   const buildTargetItem = getOrCreateBuildTargetItem(
     testController,
     workspaceFolderItem,
+    targetUri,
     targetName
   );
 
@@ -82,14 +83,15 @@ export function addTestSuite(
 function getOrCreateBuildTargetItem(
   testController: vscode.TestController,
   workspaceFolderItem: vscode.TestItem,
+  targetUri: TargetUri,
   targetName: TargetName
 ): vscode.TestItem {
-  const buildTarget = workspaceFolderItem.children.get(targetName);
+  const buildTarget = workspaceFolderItem.children.get(targetUri);
   if (buildTarget) {
     return buildTarget;
   }
 
-  const createdNode = testController.createTestItem(targetName, targetName);
+  const createdNode = testController.createTestItem(targetUri, targetName);
   refineTestItem("module", createdNode, workspaceFolderItem);
   workspaceFolderItem.children.add(createdNode);
 
