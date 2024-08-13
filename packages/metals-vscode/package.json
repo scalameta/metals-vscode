@@ -43,8 +43,7 @@
     "Debuggers"
   ],
   "extensionKind": [
-    "workspace",
-    "ui"
+    "workspace"
   ],
   "activationEvents": [
     "onCommand:metals.start-server",
