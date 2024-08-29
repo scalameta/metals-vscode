@@ -422,7 +422,7 @@
           "default": false,
           "markdownDescription": "Default to using build tool as your build server."
         },
-        "metals.autoImportBuild": {
+        "metals.autoImportBuilds": {
           "type": "string",
           "default": "off",
           "enum": [
