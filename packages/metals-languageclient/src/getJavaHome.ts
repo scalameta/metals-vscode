@@ -89,7 +89,7 @@ export async function fromPath(
       const isValid =
         discoveredJavaHome &&
         discoveredJavaVersion &&
-        discoveredJavaVersion >= javaVersion;
+        parseInt(discoveredJavaVersion) >= parseInt(javaVersion);
 
       if (isValid) return discoveredJavaHome;
       else {
