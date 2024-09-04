@@ -88,8 +88,9 @@ async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
 
     await tasks.executeTask(task);
     return true;
+  } else {
+    return debug(true, main);
   }
-  return Promise.resolve(false);
 }
 
 export async function startDiscovery(
