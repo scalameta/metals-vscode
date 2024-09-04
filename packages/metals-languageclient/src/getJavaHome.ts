@@ -53,27 +53,55 @@ async function validateJavaVersion(
   return false;
 }
 
+function propertyValueOf(
+  input: string,
+  propertyName: string
+): string | undefined {
+  const start = input.indexOf(propertyName);
+  if (start === -1) return;
+
+  const end = input.indexOf("\n", start);
+  if (end === -1) return;
+
+  const propertyLine = input.substring(start, end);
+  return propertyLine.substring(propertyLine.indexOf("=") + 1).trim();
+}
+
 export async function fromPath(
   javaVersion: JavaVersion,
   outputChannel: OutputChannel
 ): Promise<string | undefined> {
   let javaExecutable = findOnPath(["java"]);
   if (javaExecutable) {
-    let realJavaPath = realpathSync(javaExecutable);
+    const realJavaPath = realpathSync(javaExecutable);
     outputChannel.appendLine(
       `Searching for Java on PATH. Found java executable under ${javaExecutable} that resolves to ${realJavaPath}`
     );
-    const possibleJavaHome = path.dirname(path.dirname(realJavaPath));
-    const isValid = await validateJavaVersion(
-      possibleJavaHome,
-      javaVersion,
-      outputChannel
-    );
-    if (isValid) return possibleJavaHome;
-    else {
-      outputChannel.appendLine(
-        `Java version doesn't match the required one of ${javaVersion}`
+    const cmdArgs = ["-XshowSettings:properties", "-version"];
+    try {
+      const cmd = await spawn(realJavaPath, cmdArgs, { encoding: "utf8" });
+      const cmdOutput = cmd.stderr as string;
+      const discoveredJavaHome = propertyValueOf(cmdOutput, "java.home");
+      const discoveredJavaVersion = propertyValueOf(
+        cmdOutput,
+        "java.specification.version"
       );
+      const isValid =
+        discoveredJavaHome &&
+        discoveredJavaVersion &&
+        parseInt(discoveredJavaVersion) >= parseInt(javaVersion);
+
+      if (isValid) return discoveredJavaHome;
+      else {
+        outputChannel.appendLine(
+          `Java version doesn't match the required one of ${javaVersion}`
+        );
+      }
+    } catch (error) {
+      outputChannel.appendLine(
+        `Failed while running ${realJavaPath} ${cmdArgs.join(" ")}`
+      );
+      outputChannel.appendLine(`${error}`);
     }
   }
 }
