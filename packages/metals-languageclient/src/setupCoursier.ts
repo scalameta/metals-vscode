@@ -9,6 +9,7 @@ import { OutputChannel } from "./interfaces/OutputChannel";
 import path from "path";
 import fs from "fs";
 import { findOnPath } from "./util";
+import { convertToCoursierProperties } from "./getJavaOptions";
 
 const coursierVersion = "v2.1.8";
 // https://github.com/coursier/launchers contains only launchers with the most recent version
@@ -20,7 +21,8 @@ export async function setupCoursier(
   coursierFetchPath: string,
   extensionPath: string,
   output: OutputChannel,
-  forceCoursierJar: boolean
+  forceCoursierJar: boolean,
+  serverProperties: string[]
 ): Promise<{ coursier: string; javaHome: string }> {
   const handleOutput = (out: Buffer) => {
     const msg = "\t" + out.toString().trim().split("\n").join("\n\t");
@@ -54,15 +56,30 @@ export async function setupCoursier(
   };
 
   const resolveJavaHomeWithCoursier = async (coursier: string) => {
+    const nonJvmServerProperties = convertToCoursierProperties(
+      serverProperties,
+      coursier.endsWith(".jar")
+    );
     await run(
       coursier,
-      ["java", "--jvm", `temurin:${javaVersion}`, "-version"],
+      [
+        "java",
+        ...nonJvmServerProperties,
+        "--jvm",
+        `temurin:${javaVersion}`,
+        "-version",
+      ],
       handleOutput
     );
 
     const getJavaPath = spawn(
       coursier,
-      ["java-home", "--jvm", `temurin:${javaVersion}`],
+      [
+        "java-home",
+        ...nonJvmServerProperties,
+        "--jvm",
+        `temurin:${javaVersion}`,
+      ],
       {
         encoding: "utf8",
       }

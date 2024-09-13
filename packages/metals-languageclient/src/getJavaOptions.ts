@@ -19,6 +19,26 @@ function sanitizeOption(option: string): string {
   return option.trim();
 }
 
+export function convertToCoursierProperties(
+  serverProperties: string[],
+  isCoursierJar: boolean
+): string[] {
+  // setting properties on windows native launcher doesn't work
+  if (!isCoursierJar && process.platform == "win32") {
+    return [];
+  } else {
+    return serverProperties
+      .filter((prop) => isValidOption(prop))
+      .map((prop) => {
+        if (isCoursierJar) {
+          return prop;
+        } else {
+          return "-J" + prop;
+        }
+      });
+  }
+}
+
 function isValidOption(option: string): boolean {
   return (
     option.startsWith("-") &&
@@ -28,6 +48,7 @@ function isValidOption(option: string): boolean {
     !option.startsWith("-Xms") &&
     !option.startsWith("-Xmx") &&
     !option.startsWith("-Xss") &&
+    !option.startsWith("-XX:") &&
     // Do not alter stdout that we capture when using Coursier
     option !== "-XX:+PrintCommandLineFlags"
   );

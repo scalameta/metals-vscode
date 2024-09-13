@@ -51,7 +51,8 @@ describe("setupCoursier", () => {
       tmpDir,
       process.cwd(),
       new LogOutputChannel(),
-      false
+      false,
+      ["-Xmx1000M", "-XX-fake!"]
     );
     expect(fs.existsSync(coursier)).toBeTruthy;
     expect(fs.existsSync(javaHome)).toBeTruthy;

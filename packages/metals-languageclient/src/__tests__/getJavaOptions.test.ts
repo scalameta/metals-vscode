@@ -25,11 +25,13 @@ describe("getJavaOptions", () => {
   });
 
   it("sanitizes options from .jvmopts", () => {
-    const malformedOptions = ["-XX:+UseNUMA   ", "-XX:+UseZGC  "];
-    const expectedOptions = ["-XX:+UseNUMA", "-XX:+UseZGC"];
+    const malformedOptions = [
+      "-Dhttp.proxyHost=proxy.example.com   ",
+      "-Dhttp.proxyPort=1234  ",
+    ];
     const workspaceRoot = createWorskpace(malformedOptions);
     const options = getJavaOptions(workspaceRoot);
-    expect(options).toEqual(expectedOptions);
+    expect(options).toEqual(proxyOptions);
   });
 
   it("reads from JAVA_OPTS", () => {
