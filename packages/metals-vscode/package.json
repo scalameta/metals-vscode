@@ -228,7 +228,11 @@
             "type": "string"
           },
           "default": [
-            "-Xmx1G"
+            "-Xmx2G",
+            "-XX:+UseZGC",
+            "-XX:ZUncommitDelay=30",
+            "-XX:ZCollectionInterval=5",
+            "-XX:+IgnoreUnrecognizedVMOptions"
           ],
           "markdownDescription": "Optional list of properties to pass along to the Metals server. By default, the environment variable `JAVA_OPTS` and `.jvmopts` file are respected. Each property needs to be a separate item.\n\nExample: `-Dhttps.proxyHost=…`, `-Dhttps.proxyPort=…` or `-Dmetals.statistics=all`"
         },
