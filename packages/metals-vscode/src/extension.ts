@@ -230,7 +230,8 @@ async function fetchAndLaunchMetals(
     metalsDirPath,
     context.extensionPath,
     outputChannel,
-    forceCoursierJar
+    forceCoursierJar,
+    serverProperties
   );
 
   const canRetryWithJar =

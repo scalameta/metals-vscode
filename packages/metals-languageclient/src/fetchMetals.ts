@@ -2,6 +2,7 @@ import * as semver from "semver";
 import { ChildProcessPromise, spawn } from "promisify-child-process";
 import { JavaConfig } from "./getJavaConfig";
 import { OutputChannel } from "./interfaces/OutputChannel";
+import { convertToCoursierProperties } from "./getJavaOptions";
 
 interface FetchMetalsOptions {
   serverVersion: string;
@@ -70,15 +71,10 @@ export async function fetchMetals({
     ].concat(coursierArgs);
     return { promise: spawn(javaPath, jarArgs, environment) };
   } else {
-    // Convert Java properties to the "-J" argument form used by Coursier
-    var javaArgs: Array<string> = [];
-
-    // setting properties on windows native launcher doesn't work
-    if (process.platform != "win32")
-      javaArgs = javaOptions
-        .concat(["-Dfile.encoding=UTF-8"])
-        .concat(fetchProperties)
-        .map((p) => `-J${p}`);
+    const javaArgs: Array<string> = convertToCoursierProperties(
+      javaOptions.concat(["-Dfile.encoding=UTF-8"]).concat(fetchProperties),
+      false
+    );
 
     return {
       promise: spawn(coursier, javaArgs.concat(coursierArgs), environment),
