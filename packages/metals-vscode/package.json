@@ -52,6 +52,8 @@
     "onLanguage:scala",
     "workspaceContains:build.sbt",
     "workspaceContains:build.sc",
+    "workspaceContains:build.mill",
+    "workspaceContains:build.mill.scala",
     "workspaceContains:project/build.properties",
     "workspaceContains:project.scala",
     "workspaceContains:.scala-build",
@@ -740,31 +742,31 @@
       "commandPalette": [
         {
           "command": "metals.show-tasty",
-          "when": "metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.tasty || metals:enabled && resourceExtname==.tasty-decoded || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc"
+          "when": "metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.tasty || metals:enabled && resourceExtname==.tasty-decoded || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc || metals:enabled && resourceExtname==.mill"
         },
         {
           "command": "metals.show-cfr",
-          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.cfr || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc"
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.cfr || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc || metals:enabled && resourceExtname==.mill"
         },
         {
           "command": "metals.show-javap",
-          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.javap || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc"
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.javap || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc || metals:enabled && resourceExtname==.mill"
         },
         {
           "command": "metals.show-javap-verbose",
-          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.javap-verbose || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc"
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.javap-verbose || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc || metals:enabled && resourceExtname==.mill"
         },
         {
           "command": "metals.show-semanticdb-compact",
-          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb || metals:enabled && resourceExtname==.semanticdb-compact || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc"
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb || metals:enabled && resourceExtname==.semanticdb-compact || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc || metals:enabled && resourceExtname==.mill"
         },
         {
           "command": "metals.show-semanticdb-detailed",
-          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb || metals:enabled && resourceExtname==.semanticdb-detailed || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc"
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb || metals:enabled && resourceExtname==.semanticdb-detailed || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc || metals:enabled && resourceExtname==.mill"
         },
         {
           "command": "metals.show-semanticdb-proto",
-          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb || metals:enabled && resourceExtname==.semanticdb-proto || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc"
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb || metals:enabled && resourceExtname==.semanticdb-proto || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc || metals:enabled && resourceExtname==.mill"
         },
         {
           "command": "metals.reveal-active-file",
@@ -912,44 +914,44 @@
         },
         {
           "submenu": "metals.analyze",
-          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.semanticdb || metals:enabled && resourceExtname==.tasty || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc",
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.semanticdb || metals:enabled && resourceExtname==.tasty || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc || metals:enabled && resourceExtname==.mill",
           "group": "navigation@3"
         }
       ],
       "metals.analyze": [
         {
           "command": "metals.show-tasty",
-          "when": "metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.tasty || metals:enabled && resourceExtname==.tasty-decoded || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc",
+          "when": "metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.tasty || metals:enabled && resourceExtname==.tasty-decoded || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc || metals:enabled && resourceExtname==.mill",
           "group": "metals-1@1"
         },
         {
           "command": "metals.show-cfr",
-          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc",
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc || metals:enabled && resourceExtname==.mill",
           "group": "metals-2@1"
         },
         {
           "command": "metals.show-javap",
-          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc",
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc || metals:enabled && resourceExtname==.mill",
           "group": "metals-3@1"
         },
         {
           "command": "metals.show-javap-verbose",
-          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc",
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc || metals:enabled && resourceExtname==.mill",
           "group": "metals-3@2"
         },
         {
           "command": "metals.show-semanticdb-compact",
-          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc",
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc || metals:enabled && resourceExtname==.mill",
           "group": "metals-4@1"
         },
         {
           "command": "metals.show-semanticdb-detailed",
-          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc",
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc || metals:enabled && resourceExtname==.mill",
           "group": "metals-4@2"
         },
         {
           "command": "metals.show-semanticdb-proto",
-          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc",
+          "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.semanticdb || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc || metals:enabled && resourceExtname==.mill",
           "group": "metals-4@3"
         }
       ],
