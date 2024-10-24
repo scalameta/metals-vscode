@@ -2,6 +2,31 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.40.0 (2024/10/24 11:02 +00:00)
+- [f26ca93](https://github.com/scalameta/metals-vscode/commit/f26ca937271ca67101739ba77b433db84a051210) Increase patch version for pre-release
+- [b958202](https://github.com/scalameta/metals-vscode/commit/b958202b01524b39046cf42b66e04e1518e578ae) chore: Update Metals release (@tgodzik)
+- [69d2cba](https://github.com/scalameta/metals-vscode/commit/69d2cbae9bcd06f2d6532ced3fcb79f4d778fe24) Increase patch version for pre-release
+- [045c635](https://github.com/scalameta/metals-vscode/commit/045c63564a12b3e77c5469cac648a30555c00e4a) Increase patch version for pre-release
+- [05635ca](https://github.com/scalameta/metals-vscode/commit/05635cab1b59e46a65fe5adb473811731038808e) Increase patch version for pre-release
+- [46d2666](https://github.com/scalameta/metals-vscode/commit/46d26667e77e04b88f9976e486265d7b77a4a3eb) improvement: Update Metals default JVM parameters (@tgodzik)
+- [27300e9](https://github.com/scalameta/metals-vscode/commit/27300e99f7ee99357f5382325a5ed3e75d3ad627) Add support for `build.mill` and `build.mill.scala` (@lolgab)
+- [65c61e8](https://github.com/scalameta/metals-vscode/commit/65c61e854909f2e1f95e2f4dd6986de34fb97785) bugfix: Make sure proxy settings are being forwarded to coursier (@tgodzik)
+- [46123b0](https://github.com/scalameta/metals-vscode/commit/46123b0d0e743b380108dfb9ffbeab3130953361) build(deps): bump path-to-regexp in /packages/metals-vscode (@dependabot[bot])
+- [9b5d480](https://github.com/scalameta/metals-vscode/commit/9b5d48013cac1f15fd41c8a2d298610cd93136c0) Increase patch version for pre-release
+- [eb629cc](https://github.com/scalameta/metals-vscode/commit/eb629cc175a42ad1c45a7fa29b6457e028ac38eb) bugfix: Use normal debug console without a workspace (@tgodzik)
+- [3082324](https://github.com/scalameta/metals-vscode/commit/308232450fc1d2264f3ee28b40576350b0c8a13b) build(deps): bump micromatch in /packages/metals-vscode (@dependabot[bot])
+- [3d8e098](https://github.com/scalameta/metals-vscode/commit/3d8e0981bed936d1dbe9edc2843e89be88098461) Increase patch version for pre-release
+- [244d682](https://github.com/scalameta/metals-vscode/commit/244d6828bb72c6d06b66b01300381ac9c0157a7e) Compare java versions numerically (@megri)
+- [5da48b6](https://github.com/scalameta/metals-vscode/commit/5da48b67e71d2183cdc28c44f5f5477bc8ca9fa1) Grab java home and version by running the binary found on path. (@megri)
+- [62248fc](https://github.com/scalameta/metals-vscode/commit/62248fc4f7d8476a7fd2d9611a7e04c41d5f12c2) Increase patch version for pre-release
+- [4dd08a9](https://github.com/scalameta/metals-vscode/commit/4dd08a96eb485be6d40c5d50a6d1f1324dcf9464) bugfix: Fix typo in metals.autoImportBuilds (@tgodzik)
+- [5130d1d](https://github.com/scalameta/metals-vscode/commit/5130d1d91cc47c391e94b2178baeedfdbf2bd4af) Increase patch version for pre-release
+- [cdb632c](https://github.com/scalameta/metals-vscode/commit/cdb632cc7c0ce3707b033d0ecbc8437c57978169) bugfix: Remove ui extensionKind (@tgodzik)
+- [fe3dfa0](https://github.com/scalameta/metals-vscode/commit/fe3dfa0aaa26b11d613f1f5b2233c638497920db) Increase patch version for pre-release
+- [a8ccbaa](https://github.com/scalameta/metals-vscode/commit/a8ccbaad49974a1f109f797ef83fb8bacb58b259) fix: use build target id instead of target name (@kasiaMarek)
+- [2e0957e](https://github.com/scalameta/metals-vscode/commit/2e0957e6a61931f0f0fc612681a7a3c1953a60b3) Increase patch version for pre-release
+- [2d40823](https://github.com/scalameta/metals-vscode/commit/2d408236a7444a2975e8271457b05e4d49f637f7) v1.39.0
+
 ### v1.39.0 (2024/08/02 13:07 +00:00)
 - [68c0aa1](https://github.com/scalameta/metals-vscode/commit/68c0aa1f8e1eb3eac11c1f2b4238234b8ae5c8b8) Increase patch version for pre-release
 - [0c92acd](https://github.com/scalameta/metals-vscode/commit/0c92acd00396cc544cd6e95ac14269d8b57e3d15) chore: Update metals to 1.3.5 (@tgodzik)
@@ -10,6 +35,7 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 ### v1.38.0 (2024/07/25 10:22 +00:00)
 - [a2eac2b](https://github.com/scalameta/metals-vscode/commit/a2eac2b9b5952726f2139bba8cd3bb5caa5aba80) Increase patch version for pre-release
 - [db58318](https://github.com/scalameta/metals-vscode/commit/db58318cfddb77907be2b179637d8112b3391535) chore: update metals version to v1.3.4 (@kasiaMarek)
+- [1e28ecf](https://github.com/scalameta/metals-vscode/commit/1e28ecf24dc30fb556d17e47d2497cd902694847) feature: Also run plain Java when noDebug from launch.json (@tgodzik)
 - [29f92d3](https://github.com/scalameta/metals-vscode/commit/29f92d37de25d366f45f09ca38290b7baaa3a57d) v1.37.0
 
 ### v1.37.0 (2024/07/12 14:31 +00:00)
@@ -2171,8 +2197,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [53fe047](https://github.com/scalameta/metals-vscode/commit/53fe0473d12c7b045bc5d169030a7e43d9c297b7) Update to Metals 0.4.3 (@gabro)
 - [51eabad](https://github.com/scalameta/metals-vscode/commit/51eabad2ee7fb728eb201ff3e21a2ff6116f5125) Add link to Metals release notes in CHANGELOG.md (@gabro)
 - [2640b23](https://github.com/scalameta/metals-vscode/commit/2640b2323830d6592b0528ffbf35050b993bcc2f) v1.2.4
-
-### v1.2.4 (2019/02/02 09:21 +00:00)
 - [2f98813](https://github.com/scalameta/metals-vscode/commit/2f9881330ea9441591b7dd8aa773f2ec674f35ab) Fix changelog format (@gabro)
 - [44e12d5](https://github.com/scalameta/metals-vscode/commit/44e12d546522bcc26b2eb9f5b8c7edbeeb8e2985) v1.2.3
 - [b5ce6ff](https://github.com/scalameta/metals-vscode/commit/b5ce6fff1808a08629e12eec55d5b514d8509be4) Automate CHANGELOG generation (@gabro)
