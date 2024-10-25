@@ -45,6 +45,7 @@ import * as fs from "fs";
 import {
   restartServer,
   getJavaConfig,
+  getJavaOptions,
   fetchMetals,
   JavaConfig,
   getServerOptions,
@@ -220,7 +221,9 @@ async function fetchAndLaunchMetals(
   const coursierMirror = getCoursierMirrorPath(config);
 
   const metalsDirPath = metalsDir(ConfigurationTarget.Global);
-
+  const workspaceRoot = workspace.workspaceFolders
+    ? workspace.workspaceFolders[0]?.uri.fsPath
+    : undefined;
   if (!fs.existsSync(metalsDirPath)) {
     fs.mkdirSync(metalsDirPath);
   }
@@ -231,7 +234,7 @@ async function fetchAndLaunchMetals(
     context.extensionPath,
     outputChannel,
     forceCoursierJar,
-    serverProperties
+    serverProperties.concat(getJavaOptions(workspaceRoot))
   );
 
   const canRetryWithJar =
@@ -249,9 +252,7 @@ async function fetchAndLaunchMetals(
   }
 
   const javaConfig = getJavaConfig({
-    workspaceRoot: workspace.workspaceFolders
-      ? workspace.workspaceFolders[0]?.uri.fsPath
-      : undefined,
+    workspaceRoot,
     javaHome,
     coursier,
     customRepositories,
