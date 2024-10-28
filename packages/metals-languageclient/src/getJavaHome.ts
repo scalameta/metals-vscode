@@ -6,6 +6,12 @@ import { realpathSync } from "fs";
 
 export type JavaVersion = "11" | "17" | "21";
 
+export interface JavaHome {
+  path: string;
+  description: string;
+  version: string;
+}
+
 /**
  * Computes the user's Java Home path, using various strategies:
  *
@@ -19,17 +25,17 @@ export type JavaVersion = "11" | "17" | "21";
 export async function getJavaHome(
   javaVersion: JavaVersion,
   outputChannel: OutputChannel
-): Promise<string | undefined> {
+): Promise<JavaHome | undefined> {
   const fromEnvValue = await fromEnv(javaVersion, outputChannel);
   return fromEnvValue || (await fromPath(javaVersion, outputChannel));
 }
 
 const versionRegex = /\"\d\d/;
-async function validateJavaVersion(
+export async function validateJavaVersion(
   javaHome: string,
   javaVersion: JavaVersion,
   outputChannel: OutputChannel
-): Promise<boolean> {
+): Promise<JavaHome | undefined> {
   const javaBin = path.join(javaHome, "bin", "java");
   try {
     const javaVersionOut = spawn(javaBin, ["-version"], {
@@ -43,14 +49,18 @@ async function validateJavaVersion(
 
     const javaInfoStr = (await javaVersionOut).stderr as string;
     const matches = javaInfoStr.match(versionRegex);
-    if (matches) {
-      return +matches[0].slice(1, 3) >= +javaVersion;
+    if (matches && +matches[0].slice(1, 3) >= +javaVersion) {
+      return {
+        path: javaHome,
+        description: javaInfoStr,
+        version: matches[0].slice(1, 3),
+      };
     }
   } catch (error) {
     outputChannel.appendLine(`failed while running ${javaBin} -version`);
     outputChannel.appendLine(`${error}`);
   }
-  return false;
+  return undefined;
 }
 
 function propertyValueOf(
@@ -70,7 +80,7 @@ function propertyValueOf(
 export async function fromPath(
   javaVersion: JavaVersion,
   outputChannel: OutputChannel
-): Promise<string | undefined> {
+): Promise<JavaHome | undefined> {
   let javaExecutable = findOnPath(["java"]);
   if (javaExecutable) {
     const realJavaPath = realpathSync(javaExecutable);
@@ -86,13 +96,22 @@ export async function fromPath(
         cmdOutput,
         "java.specification.version"
       );
-      const isValid =
-        discoveredJavaHome &&
-        discoveredJavaVersion &&
-        parseInt(discoveredJavaVersion) >= parseInt(javaVersion);
+      function getLastThreeLines(text: string): string {
+        let lines = text.split(/\r?\n/);
+        return lines.slice(-3).join("\n");
+      }
 
-      if (isValid) return discoveredJavaHome;
-      else {
+      if (
+        discoveredJavaVersion &&
+        discoveredJavaHome &&
+        parseInt(discoveredJavaVersion) >= parseInt(javaVersion)
+      ) {
+        return {
+          path: discoveredJavaHome,
+          description: getLastThreeLines(cmdOutput),
+          version: discoveredJavaVersion,
+        };
+      } else {
         outputChannel.appendLine(
           `Java version doesn't match the required one of ${javaVersion}`
         );
@@ -109,18 +128,18 @@ export async function fromPath(
 export async function fromEnv(
   javaVersion: JavaVersion,
   outputChannel: OutputChannel
-): Promise<string | undefined> {
+): Promise<JavaHome | undefined> {
   const javaHome = process.env["JAVA_HOME"];
   if (javaHome) {
     outputChannel.appendLine(
       `Checking Java in JAVA_HOME, which points to ${javaHome}`
     );
-    const isValid = await validateJavaVersion(
+    const validatedJavaHome = await validateJavaVersion(
       javaHome,
       javaVersion,
       outputChannel
     );
-    if (isValid) return javaHome;
+    if (validatedJavaHome) return validatedJavaHome;
     else {
       outputChannel.appendLine(
         `Java version doesn't match the required one of ${javaVersion}`

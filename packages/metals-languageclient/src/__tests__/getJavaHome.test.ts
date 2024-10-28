@@ -61,7 +61,7 @@ describe("getJavaHome", () => {
       new MockOutput()
     );
     jest.restoreAllMocks();
-    expect(javaHome).toBe(JAVA_HOME);
+    expect(javaHome.path).toBe(JAVA_HOME);
   });
 
   // needs to run on a machine with an actual JAVA_HOME set up
@@ -90,7 +90,7 @@ describe("getJavaHome", () => {
       new MockOutput()
     );
     jest.restoreAllMocks();
-    expect(javaHome).toBe(pathJavaHome);
+    expect(javaHome.path).toBe(pathJavaHome);
   });
 });
 
