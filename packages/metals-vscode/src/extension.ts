@@ -344,12 +344,12 @@ function launchMetals(
   // Make editing Scala docstrings slightly nicer.
   enableScaladocIndentation();
 
-  const serverOptions = getServerOptions({
+  const serverOptions = getServerOptions(
     metalsClasspath,
     serverProperties,
-    javaConfig,
-    clientName: "vscode",
-  });
+    "vscode",
+    javaConfig
+  );
 
   const initializationOptions: MetalsInitializationOptions = {
     compilerOptions: {

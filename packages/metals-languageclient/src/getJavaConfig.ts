@@ -1,9 +1,11 @@
+import { JavaHome } from "./getJavaHome";
 import { getJavaOptions } from "./getJavaOptions";
 import * as path from "path";
 
 export interface JavaConfig {
   javaOptions: string[];
   javaPath: string;
+  javaHome: JavaHome;
   coursier: string;
   coursierMirrorFilePath: string | undefined;
   extraEnv: {
@@ -13,7 +15,7 @@ export interface JavaConfig {
 
 interface GetJavaConfigOptions {
   workspaceRoot: string | undefined;
-  javaHome: string;
+  javaHome: JavaHome;
   coursier: string;
   coursierMirrorFilePath: string | undefined;
   customRepositories: string[] | undefined;
@@ -27,7 +29,7 @@ export function getJavaConfig({
   customRepositories = [],
 }: GetJavaConfigOptions): JavaConfig {
   const javaOptions = getJavaOptions(workspaceRoot);
-  const javaPath = path.join(javaHome, "bin", "java");
+  const javaPath = path.join(javaHome.path, "bin", "java");
 
   const coursierRepositories =
     customRepositories.length > 0
@@ -45,6 +47,7 @@ export function getJavaConfig({
   return {
     javaOptions,
     javaPath,
+    javaHome,
     coursier,
     coursierMirrorFilePath,
     extraEnv,

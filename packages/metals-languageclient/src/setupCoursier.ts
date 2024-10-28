@@ -4,7 +4,12 @@ import {
   PromisifySpawnOptions,
   spawn,
 } from "promisify-child-process";
-import { JavaVersion, getJavaHome } from "./getJavaHome";
+import {
+  JavaHome,
+  JavaVersion,
+  getJavaHome,
+  validateJavaVersion,
+} from "./getJavaHome";
 import { OutputChannel } from "./interfaces/OutputChannel";
 import path from "path";
 import fs from "fs";
@@ -23,7 +28,7 @@ export async function setupCoursier(
   output: OutputChannel,
   forceCoursierJar: boolean,
   serverProperties: string[]
-): Promise<{ coursier: string; javaHome: string }> {
+): Promise<{ coursier: string; javaHome: JavaHome }> {
   const handleOutput = (out: Buffer) => {
     const msg = "\t" + out.toString().trim().split("\n").join("\n\t");
     output.appendLine(msg);
@@ -107,10 +112,18 @@ export async function setupCoursier(
     output.appendLine(
       `No installed java with version ${javaVersion} found. Will fetch one using coursier:`
     );
-    javaHome = await resolveJavaHomeWithCoursier(coursier);
+    const coursierJavaHome = await resolveJavaHomeWithCoursier(coursier);
+    const validatedJavaHome = await validateJavaVersion(
+      coursierJavaHome,
+      javaVersion,
+      output
+    );
+    if (validatedJavaHome) {
+      javaHome = validatedJavaHome;
+    }
   }
 
-  output.appendLine(`Using Java Home: ${javaHome}`);
+  output.appendLine(`Using Java Home: ${javaHome?.path}`);
 
   /* If we couldn't download coursier, but we have Java
    * we can still fall back to jar based launcher.
