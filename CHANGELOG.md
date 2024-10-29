@@ -2,6 +2,13 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.41.0 (2024/10/28 14:37 +00:00)
+- [8d07e93](https://github.com/scalameta/metals-vscode/commit/8d07e93fac6b42b2104fa5c2d84067ca24cbdb60) Increase patch version for pre-release
+- [de7c8ae](https://github.com/scalameta/metals-vscode/commit/de7c8aeb7bfec6ab2183f5db8f28d1951eb31cb0) bugfix: Fix issues when zgc is not fully supported (@tgodzik)
+- [2db44b4](https://github.com/scalameta/metals-vscode/commit/2db44b4ad3efb9a6231393c95a2334b14af0f410) Increase patch version for pre-release
+- [3f33103](https://github.com/scalameta/metals-vscode/commit/3f33103f23d3909871a2986897c21cf2c2dcb39b) bugfix: Add java options while fetching java via coursier (@tgodzik)
+- [7bf4bfc](https://github.com/scalameta/metals-vscode/commit/7bf4bfc0bc26e69ac9470cbfa71f50569d11b4d4) v1.40.0
+
 ### v1.40.0 (2024/10/24 11:02 +00:00)
 - [f26ca93](https://github.com/scalameta/metals-vscode/commit/f26ca937271ca67101739ba77b433db84a051210) Increase patch version for pre-release
 - [b958202](https://github.com/scalameta/metals-vscode/commit/b958202b01524b39046cf42b66e04e1518e578ae) chore: Update Metals release (@tgodzik)
@@ -2192,8 +2199,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 ### v1.2.6 (2019/02/02 20:50 +00:00)
 - [89a5b7e](https://github.com/scalameta/metals-vscode/commit/89a5b7e21815b00612305a239c94a2357d093335) Upgrade to Scalameta v0.4.4 (@olafurpg)
 - [544aec7](https://github.com/scalameta/metals-vscode/commit/544aec7f6532aa8b1124e2ccbfa90cadf96c6789) v1.2.5
-
-### v1.2.5 (2019/02/02 11:05 +00:00)
 - [53fe047](https://github.com/scalameta/metals-vscode/commit/53fe0473d12c7b045bc5d169030a7e43d9c297b7) Update to Metals 0.4.3 (@gabro)
 - [51eabad](https://github.com/scalameta/metals-vscode/commit/51eabad2ee7fb728eb201ff3e21a2ff6116f5125) Add link to Metals release notes in CHANGELOG.md (@gabro)
 - [2640b23](https://github.com/scalameta/metals-vscode/commit/2640b2323830d6592b0528ffbf35050b993bcc2f) v1.2.4
