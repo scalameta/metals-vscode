@@ -18,7 +18,7 @@ import { JavaVersion, UserConfiguration } from "metals-languageclient";
 
 declare const sym: unique symbol;
 
-const possibleJavaVersions = ["11", "17", "21"];
+const possibleJavaVersions = ["17", "21"];
 /**
  * Creates a newtype without any runtime overhead. It's important for ID to be both unique and descriptive.
  */
