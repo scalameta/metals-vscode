@@ -2,6 +2,13 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.43.0 (2024/11/15 15:44 +00:00)
+- [304c00b](https://github.com/scalameta/metals-vscode/commit/304c00b7304bde1d2ad7f27c9c8898c8a55be5ac) Increase patch version for pre-release
+- [5dac000](https://github.com/scalameta/metals-vscode/commit/5dac000f8c99d6cf0b7bb0f0fb25d6225c53b269) chore: Update Metals to 1.4.1 (@tgodzik)
+- [4b87b58](https://github.com/scalameta/metals-vscode/commit/4b87b58c7c5c8ca329f391bb3e728647ca9999b3) Increase patch version for pre-release
+- [ca082b0](https://github.com/scalameta/metals-vscode/commit/ca082b023a134324e1dcd3c47b8073e05d1657c1) bugfix: Skip ZGC on Windows on JDK 17 (@tgodzik)
+- [be0356f](https://github.com/scalameta/metals-vscode/commit/be0356f44b0be944c0018b3a9440c74583caec44) v1.42.0
+
 ### v1.42.0 (2024/11/05 16:57 +00:00)
 - [a96ac8b](https://github.com/scalameta/metals-vscode/commit/a96ac8b9139fb698f9bd07f3010f5ded6990ff25) Increase patch version for pre-release
 - [36cb3e8](https://github.com/scalameta/metals-vscode/commit/36cb3e84fcb249b76d270dfcb3b51423ace6fc54) bugfix: Remove JDK 11 as a possibility since it will not work now (@tgodzik)
@@ -2194,8 +2201,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [b1420ec](https://github.com/scalameta/metals-vscode/commit/b1420ec6ed3f365f553e80a3adaa3a8a07dae488) prevent fetch process from being run in debug mode
 - [1c2cd2f](https://github.com/scalameta/metals-vscode/commit/1c2cd2f90ad1edca8ef22f9348a8a992930ba8f8) Experiment with release drafter (@olafurpg)
 - [f8a49ba](https://github.com/scalameta/metals-vscode/commit/f8a49bae54af41a722beab860495879de7431dd2) v1.2.7
-
-### v1.2.7 (2019/02/04 16:48 +00:00)
 - [b2471ef](https://github.com/scalameta/metals-vscode/commit/b2471ef5afa56349d384a32bdc8bf634636d0edc) Improve error messages for failed download of Metals (@gabro)
 - [894bbdd](https://github.com/scalameta/metals-vscode/commit/894bbdd38cf80c6eec3629ebb0fe1fb7d05ddd00) Enable strict mode in TypeScript. This also fixes #79 (@gabro)
 - [5f80582](https://github.com/scalameta/metals-vscode/commit/5f805822def5cb2290bbfa3840c085a3730ce764) Fix shell quote types (@wiesner-dlr)
