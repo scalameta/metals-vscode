@@ -18,9 +18,10 @@ export function getServerOptions(
    * Looks like JDK on Window is also affected.
    */
   const skipZGC =
-    +javaConfig.javaHome.version < 21 &&
-    (javaConfig.javaHome.description.indexOf("GraalVM") > -1 ||
-      process.platform == "win32");
+    (+javaConfig.javaHome.version < 21 &&
+      (javaConfig.javaHome.description.indexOf("GraalVM") > -1 ||
+        process.platform == "win32")) ||
+    process.platform == "openbsd";
 
   var filteredServerProperties = serverProperties;
   if (skipZGC) {
