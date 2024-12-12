@@ -17,6 +17,7 @@ export function detectLaunchConfigurationChanges(
       UserConfiguration.ServerVersion,
       UserConfiguration.ServerProperties,
       UserConfiguration.JavaVersion,
+      UserConfiguration.MetalsJavaHome,
       UserConfiguration.CustomRepositories,
       UserConfiguration.CoursierMirror,
       ...additionalRestartKeys,

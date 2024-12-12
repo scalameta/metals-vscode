@@ -115,6 +115,13 @@ export function getJavaVersionFromConfig() {
   return undefined;
 }
 
+export function getJavaVersionOverride(): string | undefined {
+  return workspace
+    .getConfiguration("metals")
+    .get<string>(UserConfiguration.MetalsJavaHome)
+    ?.trim();
+}
+
 export async function fetchFrom(
   url: string,
   options?: http.RequestOptions

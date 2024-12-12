@@ -279,6 +279,11 @@
           "scope": "machine-overridable",
           "markdownDescription": "Optional path to the Java home directory that will be used for compiling the project.\n\nDefaults to JDK used by Metals's server (look: Java Version).\n\nThis Java version should be lower or equal to JDK version used by the Metals's server."
         },
+        "metals.metalsJavaHome": {
+          "type": "string",
+          "scope": "machine",
+          "markdownDescription": "Optional path to the Java home directory that will be used for the running Metals server.\n\nBy default Metals will try to infer it using the version specified in metals.javaVersion.\n\nThis Java version should be higher than 17."
+        },
         "metals.javaVersion": {
           "type": "string",
           "default": "17",

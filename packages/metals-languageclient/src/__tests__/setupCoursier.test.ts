@@ -48,6 +48,7 @@ describe("setupCoursier", () => {
   it("should setup coursier correctly", async () => {
     const { coursier, javaHome } = await setupCoursier(
       "17",
+      undefined,
       tmpDir,
       process.cwd(),
       new LogOutputChannel(),
