@@ -2,6 +2,14 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.44.0 (2024/12/16 14:31 +00:00)
+- [f7dc5f3](https://github.com/scalameta/metals-vscode/commit/f7dc5f392da8621ad8affd35ea28a259adeb4dbd) Increase patch version for pre-release
+- [080b1f9](https://github.com/scalameta/metals-vscode/commit/080b1f9e9fc8ad9fcabd8dacfe28e321036e0cd5) chore: Set metals version to 1.4.2 (@tgodzik)
+- [1e10e1a](https://github.com/scalameta/metals-vscode/commit/1e10e1a71cf81569ea65329ec2aa0aa1cb6ad682) Increase patch version for pre-release
+- [72c1738](https://github.com/scalameta/metals-vscode/commit/72c1738f434c2c7f3e8aef9618d683fe58ace87d) bugfix: Skip ZGC on BSD systems (@tgodzik)
+- [4b31da7](https://github.com/scalameta/metals-vscode/commit/4b31da7817c1dabb6a9a12bebfc434bb53b78d19) build(deps): bump cross-spawn in /packages/metals-vscode (@dependabot[bot])
+- [5b6c165](https://github.com/scalameta/metals-vscode/commit/5b6c1652f1c152fb4fa1a269f4882161d9aec48a) v1.43.0
+
 ### v1.43.0 (2024/11/15 15:44 +00:00)
 - [304c00b](https://github.com/scalameta/metals-vscode/commit/304c00b7304bde1d2ad7f27c9c8898c8a55be5ac) Increase patch version for pre-release
 - [5dac000](https://github.com/scalameta/metals-vscode/commit/5dac000f8c99d6cf0b7bb0f0fb25d6225c53b269) chore: Update Metals to 1.4.1 (@tgodzik)
@@ -2190,8 +2198,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 ### v1.3.0 (2019/04/12 15:01 +00:00)
 - [fb0a6e1](https://github.com/scalameta/metals-vscode/commit/fb0a6e143749e35430a4592558dccf5ec6b31ed8) Upgrade to Metals v0.5.0 (@olafurpg)
 - [a4daa24](https://github.com/scalameta/metals-vscode/commit/a4daa24f14a5148dc42e4b7f303479f55661facd) v1.2.8
-
-### v1.2.8 (2019/04/03 13:05 +00:00)
 - [85e8e38](https://github.com/scalameta/metals-vscode/commit/85e8e38808556633333feb834de9e1ecf099dd6c) Update src/extension.ts (@gabro)
 - [a7faf56](https://github.com/scalameta/metals-vscode/commit/a7faf56fddc22d515331bf8fcfe04726040c5808) Update default for "editor.suggestSelection" to "first", fixes #86. (@olafurpg)
 - [893e4a4](https://github.com/scalameta/metals-vscode/commit/893e4a41b633e72406b39d72fc922e9d4c84db65) Treat JAVA_FLAGS the same way as JAVA_OPTS, fixes #83. (@olafurpg)
