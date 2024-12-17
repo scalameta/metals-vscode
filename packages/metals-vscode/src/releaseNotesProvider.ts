@@ -5,6 +5,7 @@ import path from "path";
 import { fetchFrom } from "./util";
 import { Either, makeLeft, makeRight } from "./types";
 import { marked } from "marked";
+import { load } from "js-yaml";
 
 const versionKey = "metals-server-version";
 type CalledOn = "onExtensionStart" | "onUserDemand";
@@ -182,6 +183,16 @@ async function getMarkdownLink(
   }
 }
 
+interface Author {
+  name: string;
+  url: string;
+  image_url: string[];
+}
+
+interface Authors {
+  [key: string]: Author;
+}
+
 /**
  *
  * @param releaseNotesUrl Url which server markdown with release notes
@@ -199,6 +210,10 @@ async function getReleaseNotesMarkdown(
   asWebviewUri: (_: vscode.Uri) => vscode.Uri
 ): Promise<string> {
   const text = await fetchFrom(releaseNotesUrl);
+  const authorsYaml = await fetchFrom(
+    "https://raw.githubusercontent.com/scalameta/metals/main/website/blog/authors.yml"
+  );
+  const authors = load(authorsYaml) as Authors;
   // every release notes starts with metadata format
   const tripleDash = "---";
   const firstTripleDash = text.indexOf(tripleDash);
@@ -213,9 +228,9 @@ async function getReleaseNotesMarkdown(
     .replace(tripleDash, "")
     .trim()
     .split("\n");
-  const author = metadata[0].slice("author: ".length);
+  const authorLogin = metadata[0].slice("authors: ".length);
+  const currentAuthor = authors[authorLogin];
   const title = metadata[1].slice("title: ".length);
-  const authorUrl = metadata[2].slice("authorURL: ".length);
   const renderedNotes = marked.parse(releaseNotes);
 
   // Uri with additional styles for webview
@@ -250,8 +265,8 @@ async function getReleaseNotesMarkdown(
     </p>
     <hr>
     <p>
-      <a href="${authorUrl}" target="_blank" itemprop="url">
-        <span itemprop="name">${author}</span>
+      <a href="${currentAuthor.url}" target="_blank" itemprop="url">
+        <span itemprop="name">${currentAuthor.name}</span>
       </a>
     </p>
     <hr>

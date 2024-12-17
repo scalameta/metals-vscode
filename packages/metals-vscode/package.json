@@ -1123,6 +1123,7 @@
     "@types/semver": "^7.3.13",
     "@types/sinon": "^10.0.13",
     "@types/vscode": "1.59.0",
+    "@types/js-yaml": "4.0.9",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.56.0",
     "@vscode/test-electron": "^2.3.0",
@@ -1147,7 +1148,8 @@
     "metals-languageclient": "file:../metals-languageclient",
     "promisify-child-process": "4.1.1",
     "semver": "^7.5.2",
-    "vscode-languageclient": "8.1.0"
+    "vscode-languageclient": "8.1.0",
+    "js-yaml": "4.1.0"
   },
   "extensionPack": [
     "scala-lang.scala"
