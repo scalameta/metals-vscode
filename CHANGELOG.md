@@ -2,6 +2,11 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.45.0 (2024/12/17 17:57 +00:00)
+- [541c2a1](https://github.com/scalameta/metals-vscode/commit/541c2a17473ea66b4cae14d856a31c7b4c1e15a8) Increase patch version for pre-release
+- [85de908](https://github.com/scalameta/metals-vscode/commit/85de908276c12a9c17f6a2c2c4b1ea500a9d381e) bugfix: Fix release notes (@tgodzik)
+- [5e97232](https://github.com/scalameta/metals-vscode/commit/5e97232ec99bec4f91609e93033803f43acdcfd2) v1.44.0
+
 ### v1.44.0 (2024/12/16 14:31 +00:00)
 - [f7dc5f3](https://github.com/scalameta/metals-vscode/commit/f7dc5f392da8621ad8affd35ea28a259adeb4dbd) Increase patch version for pre-release
 - [080b1f9](https://github.com/scalameta/metals-vscode/commit/080b1f9e9fc8ad9fcabd8dacfe28e321036e0cd5) chore: Set metals version to 1.4.2 (@tgodzik)
@@ -2194,8 +2199,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [d9b81e6](https://github.com/scalameta/metals-vscode/commit/d9b81e6b9415a7502bb17acd6005b14e80b9fb41) Bump patch version (@gabro)
 - [b571b3e](https://github.com/scalameta/metals-vscode/commit/b571b3eab10f7771f48676e35f5b7396d66a4ff8) Improve version upgrade logic (@gabro)
 - [a9cbc6e](https://github.com/scalameta/metals-vscode/commit/a9cbc6e44ede2f2e355cb076e658741a65e42d6a) v1.3.0
-
-### v1.3.0 (2019/04/12 15:01 +00:00)
 - [fb0a6e1](https://github.com/scalameta/metals-vscode/commit/fb0a6e143749e35430a4592558dccf5ec6b31ed8) Upgrade to Metals v0.5.0 (@olafurpg)
 - [a4daa24](https://github.com/scalameta/metals-vscode/commit/a4daa24f14a5148dc42e4b7f303479f55661facd) v1.2.8
 - [85e8e38](https://github.com/scalameta/metals-vscode/commit/85e8e38808556633333feb834de9e1ecf099dd6c) Update src/extension.ts (@gabro)
