@@ -86,6 +86,7 @@ import { decodeAndShowFile, MetalsFileProvider } from "./metalsContentProvider";
 import {
   currentWorkspaceFolder,
   getJavaVersionFromConfig,
+  getJavaVersionOverride,
   getTextDocumentPositionParams,
   getValueFromConfig,
   metalsDir,
@@ -230,6 +231,7 @@ async function fetchAndLaunchMetals(
 
   const { coursier, javaHome } = await metalsLanguageClient.setupCoursier(
     javaVersion,
+    getJavaVersionOverride(),
     metalsDirPath,
     context.extensionPath,
     outputChannel,
