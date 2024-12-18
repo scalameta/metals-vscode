@@ -66,6 +66,8 @@ async function showReleaseNotesImpl(
   // below are helper functions
 
   async function showPanel(version: string, releaseNotesUrl: string) {
+    const releaseNotes = await getReleaseNotesMarkdown(releaseNotesUrl);
+
     const panel = vscode.window.createWebviewPanel(
       `scalameta.metals.whatsNew`,
       `Metals ${version} release notes`,
@@ -76,13 +78,17 @@ async function showReleaseNotesImpl(
       path.join(context.extensionPath, "icons", "scalameta-logo.png")
     );
 
-    const releaseNotes = await getReleaseNotesMarkdown(
-      releaseNotesUrl,
-      context,
-      (uri) => panel.webview.asWebviewUri(uri)
+    // Uri with additional styles for webview
+    const stylesPathMainPath = vscode.Uri.joinPath(
+      context.extensionUri,
+      "media",
+      "styles.css"
     );
 
-    panel.webview.html = releaseNotes;
+    // need to transform Uri
+    const stylesUri = panel.webview.asWebviewUri(stylesPathMainPath);
+
+    panel.webview.html = releaseNotes(stylesUri);
     panel.reveal();
 
     // Update current device's latest server version when there's no value or it was a older one.
@@ -194,10 +200,8 @@ async function getMarkdownLink(
  * proxy to webview.asWebviewUri
  */
 async function getReleaseNotesMarkdown(
-  releaseNotesUrl: string,
-  context: ExtensionContext,
-  asWebviewUri: (_: vscode.Uri) => vscode.Uri
-): Promise<string> {
+  releaseNotesUrl: string
+): Promise<(_: vscode.Uri) => string> {
   const text = await fetchFrom(releaseNotesUrl);
   // every release notes starts with metadata format
   const tripleDash = "---";
@@ -218,16 +222,7 @@ async function getReleaseNotesMarkdown(
   const authorUrl = metadata[2].slice("authorURL: ".length);
   const renderedNotes = marked.parse(releaseNotes);
 
-  // Uri with additional styles for webview
-  const stylesPathMainPath = vscode.Uri.joinPath(
-    context.extensionUri,
-    "media",
-    "styles.css"
-  );
-  // need to transform Uri
-  const stylesUri = asWebviewUri(stylesPathMainPath);
-
-  return `
+  return (stylesUri: vscode.Uri) => `
   <!DOCTYPE html>
   <html lang="en" style="height: 100%; width: 100%;">
   <head>
