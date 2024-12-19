@@ -148,12 +148,16 @@ export async function activate(context: ExtensionContext): Promise<void> {
     }
   );
 
-  await showReleaseNotes(
-    "onExtensionStart",
-    context,
-    serverVersion,
-    outputChannel
-  );
+  const disableReleaseNotes =
+    config.get<boolean>("disableReleaseNotes") ?? false;
+  if (!disableReleaseNotes) {
+    await showReleaseNotes(
+      "onExtensionStart",
+      context,
+      serverVersion,
+      outputChannel
+    );
+  }
 }
 
 function migrateOldSettings(): void {
