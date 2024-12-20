@@ -17,6 +17,10 @@ export enum UserConfiguration {
    */
   JavaVersion = "javaVersion",
   /**
+   * Java Home to be used by Metals instead of it inferring using javaVersion.
+   */
+  MetalsJavaHome = "metalsJavaHome",
+  /**
    * Additional repositories that can be used to download dependencies.
    * https://get-coursier.io/docs/other-repositories
    */
