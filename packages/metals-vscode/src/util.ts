@@ -116,10 +116,15 @@ export function getJavaVersionFromConfig() {
 }
 
 export function getJavaVersionOverride(): string | undefined {
-  return workspace
+  const javaVersion = workspace
     .getConfiguration("metals")
     .get<string>(UserConfiguration.MetalsJavaHome)
     ?.trim();
+  if (javaVersion && javaVersion.length > 0) {
+    return javaVersion;
+  } else {
+    return undefined;
+  }
 }
 
 export async function fetchFrom(
