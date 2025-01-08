@@ -143,7 +143,7 @@ export async function setupCoursier(
   else
     throw Error(
       `Cannot resolve Java home or coursier, JAVA_HOME should exist with a version of at least ${javaVersion}.` +
-        `Alternatively, you can reduce the requirement using "metals.javaVersion" setting override the path using metals.metalsJavaHome setting.`
+        `Alternatively, you can reduce the requirement using "metals.javaVersion" setting and override the path using "metals.metalsJavaHome" setting.`
     );
 }
 
