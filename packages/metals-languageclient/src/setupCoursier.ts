@@ -23,6 +23,7 @@ const coursierCommit = "11b428f35ca84a598ca30cce1c35ae4f375e5ee3";
 
 export async function setupCoursier(
   javaVersion: JavaVersion,
+  javaHomeOverride: string | undefined,
   coursierFetchPath: string,
   extensionPath: string,
   output: OutputChannel,
@@ -106,7 +107,13 @@ export async function setupCoursier(
   }
   output.appendLine(`Using coursier located at ${coursier}`);
 
-  var javaHome = await getJavaHome(javaVersion, output);
+  var javaHome: JavaHome | undefined;
+
+  if (javaHomeOverride) {
+    javaHome = await validateJavaVersion(javaHomeOverride, javaVersion, output);
+  } else {
+    javaHome = await getJavaHome(javaVersion, output);
+  }
 
   if (!javaHome && coursier) {
     output.appendLine(
@@ -136,7 +143,7 @@ export async function setupCoursier(
   else
     throw Error(
       `Cannot resolve Java home or coursier, JAVA_HOME should exist with a version of at least ${javaVersion}.` +
-        `Alternatively, you can reduce the requirement using "metals.javaVersion" setting.`
+        `Alternatively, you can reduce the requirement using "metals.javaVersion" setting and override the path using "metals.metalsJavaHome" setting.`
     );
 }
 
