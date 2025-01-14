@@ -257,6 +257,9 @@
         },
         "metals.excludedPackages": {
           "type": "array",
+          "items": {
+            "type": "string"
+          },
           "default": [],
           "markdownDescription": "List of packages you'd like to be left out of completions, symbol searches, and code actions.\n\nEx. `akka.actor.typed.javadsl` will ensure nothing in the `javadsl` package gets recommended to you.\n\nYou can find the list of default exclusions [here on the Metals website](https://scalameta.org/metals/docs/editors/user-configuration/#excluded-packages).\n\nIf you need to remove one of the defaults, you can simply include it and preface it with `--`."
         },
