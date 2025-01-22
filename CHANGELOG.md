@@ -2,6 +2,18 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.46.0 (2025/01/22 12:15 +00:00)
+- [9187090](https://github.com/scalameta/metals-vscode/commit/9187090095f83049377132fe6eab192137596ec5) Increase patch version for pre-release
+- [f7cbee0](https://github.com/scalameta/metals-vscode/commit/f7cbee0736da722d9494d2052c2a0cb65bf5364b) chore: Metals release 1.5.0 (@kasiaMarek)
+- [dbe3f8a](https://github.com/scalameta/metals-vscode/commit/dbe3f8aa5e49e62a649b0faf69581029ffd58b42) Increase patch version for pre-release
+- [840eb72](https://github.com/scalameta/metals-vscode/commit/840eb7271bf446d7f0772d1692ff351deb4d6214) Add item schema to `metals.excludedPackages` setting (@harpocrates)
+- [1871c99](https://github.com/scalameta/metals-vscode/commit/1871c99cea1b785a30622569d334caf370952e48) Increase patch version for pre-release
+- [c745a6b](https://github.com/scalameta/metals-vscode/commit/c745a6b970406ce0e25fa5d5fa5ac033a6e689ba) improvement: Return undefined if empty string (@tgodzik)
+- [483bcf2](https://github.com/scalameta/metals-vscode/commit/483bcf26bfdfd2e6d1844992ec71f9322b8c3b01) Apply suggestions from code review (@tgodzik)
+- [6c7a914](https://github.com/scalameta/metals-vscode/commit/6c7a9142b69270b1fc7fc2439646024d07b48920) Increase patch version for pre-release
+- [41755b1](https://github.com/scalameta/metals-vscode/commit/41755b1feb5ebbd574fcd3b9aa2a1768799eabb9) improvement: Add disable release notes option (@tgodzik)
+- [f345732](https://github.com/scalameta/metals-vscode/commit/f3457324a54d362c7a2431a8f3a1d070088849b1) v1.45.0
+
 ### v1.45.0 (2024/12/17 17:57 +00:00)
 - [541c2a1](https://github.com/scalameta/metals-vscode/commit/541c2a17473ea66b4cae14d856a31c7b4c1e15a8) Increase patch version for pre-release
 - [85de908](https://github.com/scalameta/metals-vscode/commit/85de908276c12a9c17f6a2c2c4b1ea500a9d381e) bugfix: Fix release notes (@tgodzik)
@@ -10,6 +22,7 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 ### v1.44.0 (2024/12/16 14:31 +00:00)
 - [f7dc5f3](https://github.com/scalameta/metals-vscode/commit/f7dc5f392da8621ad8affd35ea28a259adeb4dbd) Increase patch version for pre-release
 - [080b1f9](https://github.com/scalameta/metals-vscode/commit/080b1f9e9fc8ad9fcabd8dacfe28e321036e0cd5) chore: Set metals version to 1.4.2 (@tgodzik)
+- [50732c5](https://github.com/scalameta/metals-vscode/commit/50732c5e5dbe4bcee73d3da883f0c7b62603e530) improvement: Allow to override mtals java home (@tgodzik)
 - [1e10e1a](https://github.com/scalameta/metals-vscode/commit/1e10e1a71cf81569ea65329ec2aa0aa1cb6ad682) Increase patch version for pre-release
 - [72c1738](https://github.com/scalameta/metals-vscode/commit/72c1738f434c2c7f3e8aef9618d683fe58ace87d) bugfix: Skip ZGC on BSD systems (@tgodzik)
 - [4b31da7](https://github.com/scalameta/metals-vscode/commit/4b31da7817c1dabb6a9a12bebfc434bb53b78d19) build(deps): bump cross-spawn in /packages/metals-vscode (@dependabot[bot])
@@ -2194,8 +2207,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 ### v1.3.2 (2019/04/27 07:24 +00:00)
 - [9214b3b](https://github.com/scalameta/metals-vscode/commit/9214b3b58d3fb2505ed71d7ea370a4cea2ace715) Upgrade to Metals v0.5.1 (@olafurpg)
 - [650e7c4](https://github.com/scalameta/metals-vscode/commit/650e7c4ffe5e06afe7298589d0bf1bbbe5b761cf) v1.3.1
-
-### v1.3.1 (2019/04/12 17:03 +00:00)
 - [d9b81e6](https://github.com/scalameta/metals-vscode/commit/d9b81e6b9415a7502bb17acd6005b14e80b9fb41) Bump patch version (@gabro)
 - [b571b3e](https://github.com/scalameta/metals-vscode/commit/b571b3eab10f7771f48676e35f5b7396d66a4ff8) Improve version upgrade logic (@gabro)
 - [a9cbc6e](https://github.com/scalameta/metals-vscode/commit/a9cbc6e44ede2f2e355cb076e658741a65e42d6a) v1.3.0
