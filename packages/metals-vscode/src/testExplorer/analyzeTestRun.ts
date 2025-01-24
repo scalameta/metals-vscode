@@ -10,6 +10,7 @@ import {
   TestSuiteResult,
 } from "./types";
 import { gatherTestItems } from "./util";
+import { existsSync } from "fs";
 
 /**
  * Analyze results from TestRun and pass inform Test Controller about them.
@@ -162,5 +163,21 @@ function extractErrorMessages(failed: Failed[]): vscode.TestMessage[] {
 }
 
 function toTestMessage(error: string): vscode.TestMessage {
-  return { message: ansicolor.strip(error) };
+  const message = ansicolor.strip(error);
+  const regex = /[\\\/]([^\s]*):(\d+)/;
+  const match = regex.exec(message);
+
+  if (match) {
+    const [, file, line] = match;
+    const filePath = vscode.Uri.file(file).fsPath;
+    if (existsSync(filePath)) {
+      const location = new vscode.Location(
+        vscode.Uri.file(file),
+        new vscode.Position(parseInt(line) - 1, 0)
+      );
+      return { message, location };
+    }
+  }
+
+  return { message };
 }
