@@ -2,6 +2,11 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.47.0 (2025/01/24 16:57 +00:00)
+- [44a687f](https://github.com/scalameta/metals-vscode/commit/44a687f34ff375602726e1414cd7eedbfbfd1481) Increase patch version for pre-release
+- [7ad8da9](https://github.com/scalameta/metals-vscode/commit/7ad8da92ed01459c4ad61336ac41ffdb6ddc99bd) chore: Metals release 1.5.1 (@kasiaMarek)
+- [5a8413e](https://github.com/scalameta/metals-vscode/commit/5a8413e3a3fcad9ac6d9f76898c0de519fadd13c) v1.46.0
+
 ### v1.46.0 (2025/01/22 12:15 +00:00)
 - [9187090](https://github.com/scalameta/metals-vscode/commit/9187090095f83049377132fe6eab192137596ec5) Increase patch version for pre-release
 - [f7cbee0](https://github.com/scalameta/metals-vscode/commit/f7cbee0736da722d9494d2052c2a0cb65bf5364b) chore: Metals release 1.5.0 (@kasiaMarek)
@@ -2203,8 +2208,6 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 - [f80c533](https://github.com/scalameta/metals-vscode/commit/f80c5337fe9f7ae2a64ff213b76b9e7adbc6a250) Upgrade to 0.5.2 (@olafurpg)
 - [1cc6b23](https://github.com/scalameta/metals-vscode/commit/1cc6b239ac7505c35900b65717a0b864cc2fd0aa) Add metals/windowStateDidChange notification (@agajek)
 - [60dfeb1](https://github.com/scalameta/metals-vscode/commit/60dfeb1dcac94a00807beeaa1c73382156604cb6) v1.3.2
-
-### v1.3.2 (2019/04/27 07:24 +00:00)
 - [9214b3b](https://github.com/scalameta/metals-vscode/commit/9214b3b58d3fb2505ed71d7ea370a4cea2ace715) Upgrade to Metals v0.5.1 (@olafurpg)
 - [650e7c4](https://github.com/scalameta/metals-vscode/commit/650e7c4ffe5e06afe7298589d0bf1bbbe5b761cf) v1.3.1
 - [d9b81e6](https://github.com/scalameta/metals-vscode/commit/d9b81e6b9415a7502bb17acd6005b14e80b9fb41) Bump patch version (@gabro)
