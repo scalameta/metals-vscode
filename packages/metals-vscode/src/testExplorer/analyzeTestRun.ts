@@ -85,7 +85,7 @@ function analyzeTestCases(
     if (testCaseResult?.kind === "passed") {
       run.passed?.(test, testCaseResult.duration);
     } else if (testCaseResult?.kind === "failed") {
-      const errorMsg = toTestMessage(testCaseResult.error);
+      const errorMsg = toTestMessage(testCaseResult);
       run.failed?.(test, errorMsg, testCaseResult.duration);
     } else {
       run.skipped?.(test);
@@ -157,10 +157,19 @@ function isFailed(result: SingleTestResult): result is Failed {
  * because vscode test explorer doesn't support ANSI color codes.
  */
 function extractErrorMessages(failed: Failed[]): vscode.TestMessage[] {
-  const messages = failed.map((entry) => toTestMessage(entry.error));
+  const messages = failed.map((entry) => toTestMessage(entry));
   return messages;
 }
 
-function toTestMessage(error: string): vscode.TestMessage {
-  return { message: ansicolor.strip(error) };
+function toTestMessage(failed: Failed): vscode.TestMessage {
+  if (failed.location) {
+    return {
+      message: ansicolor.strip(failed.error),
+      location: new vscode.Location(
+        vscode.Uri.parse(failed.location.file),
+        new vscode.Position(failed.location.line, 0)
+      ),
+    };
+  }
+  return { message: ansicolor.strip(failed.error) };
 }
