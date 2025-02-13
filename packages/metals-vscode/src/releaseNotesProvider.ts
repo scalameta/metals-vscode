@@ -66,7 +66,14 @@ async function showReleaseNotesImpl(
   // below are helper functions
 
   async function showPanel(version: string, releaseNotesUrl: string) {
-    const releaseNotes = await getReleaseNotesMarkdown(releaseNotesUrl);
+    const timeoutMs = 10000; // 10 seconds timeout
+    const timeoutPromise = new Promise<(_: vscode.Uri) => string>((_, reject) =>
+      setTimeout(() => reject(new Error("Request timed out")), timeoutMs)
+    );
+    const releaseNotes = await Promise.race([
+      getReleaseNotesMarkdown(releaseNotesUrl),
+      timeoutPromise,
+    ]);
 
     const panel = vscode.window.createWebviewPanel(
       `scalameta.metals.whatsNew`,
