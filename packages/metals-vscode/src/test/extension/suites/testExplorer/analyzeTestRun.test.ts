@@ -33,6 +33,7 @@ const failed: TestSuiteResult[] = [
         testName: "TestSuite.test1" as TestName,
         error: "Error",
         duration: 10,
+        location: { file: "file://test", line: 1 },
       },
       { kind: "passed", testName: "TestSuite.test2" as TestName, duration: 90 },
       { kind: "skipped", testName: "TestSuite.test3" as TestName },
@@ -115,7 +116,19 @@ suite("Analyze tests results", () => {
 
     analyzeTestRun(action, [refined], failed);
     arrayEqual(results.failed, [
-      { id: "TestSuite", duration: 100, msg: [{ message: "Error" }] },
+      {
+        id: "TestSuite",
+        duration: 100,
+        msg: [
+          {
+            message: "Error",
+            location: new vscode.Location(
+              vscode.Uri.parse("file://test"),
+              new vscode.Position(1, 0)
+            ),
+          },
+        ],
+      },
     ]);
     arrayEqual(results.skipped, []);
     arrayEqual(results.passed, []);
@@ -163,7 +176,13 @@ suite("Analyze tests results", () => {
       {
         id: "test1",
         duration: 10,
-        msg: { message: "Error" },
+        msg: {
+          message: "Error",
+          location: new vscode.Location(
+            vscode.Uri.parse("file://test"),
+            new vscode.Position(1, 0)
+          ),
+        },
       },
     ]);
     arrayEqual(results.passed, [{ id: "test2", duration: 90 }]);
@@ -213,7 +232,13 @@ suite("Analyze tests results", () => {
       {
         id: "test1",
         duration: 10,
-        msg: { message: "Error" },
+        msg: {
+          message: "Error",
+          location: new vscode.Location(
+            vscode.Uri.parse("file://test"),
+            new vscode.Position(1, 0)
+          ),
+        },
       },
     ]);
     arrayEqual(results.passed, []);

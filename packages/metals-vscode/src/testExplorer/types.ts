@@ -108,11 +108,17 @@ interface Passed {
   duration: number;
 }
 
+export interface TestLocation {
+  file: string;
+  line: number;
+}
+
 export interface Failed {
   kind: "failed";
   testName: TestName;
   duration: number;
   error: string;
+  location?: TestLocation;
 }
 
 /**
