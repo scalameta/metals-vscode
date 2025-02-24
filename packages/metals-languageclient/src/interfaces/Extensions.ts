@@ -33,25 +33,6 @@ export namespace MetalsDidFocus {
 }
 
 /**
- * The `metals/windowStateDidChange` notification is sent from the client to
- * the server to indicate whether the editor application window is focused or
- * not. When the editor window is not focused, Metals tries to avoid triggering
- * expensive computation in the background such as compilation.
- *
- * - https://scalameta.org/metals/docs/editors/new-editor.html#metalswindowstatedidchange
- */
-export namespace MetalsWindowStateDidChange {
-  export const type = new NotificationType<MetalsWindowStateDidChangeParams>(
-    "metals/windowStateDidChange"
-  );
-}
-
-export interface MetalsWindowStateDidChangeParams {
-  /** If true, the editor application window is focused. False, otherwise. */
-  focused: boolean;
-}
-
-/**
  * The  `metals/openWindow` params are used with the New Scala Project
  * functionality. After the new project has been created, if the editor has the
  * ability to open the project in a new window then these params are used with the

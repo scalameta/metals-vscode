@@ -60,7 +60,6 @@ import {
   MetalsOpenWindowParams,
   MetalsStatus,
   MetalsDidFocus,
-  MetalsWindowStateDidChange,
   MetalsInputBox,
   MetalsQuickPick,
   DebugDiscoveryParams,
@@ -1132,12 +1131,6 @@ function launchMetals(
             editor.document.uri.toString()
           );
         }
-      });
-
-      window.onDidChangeWindowState((windowState) => {
-        client.sendNotification(MetalsWindowStateDidChange.type, {
-          focused: windowState.focused,
-        });
       });
 
       client.onRequest(MetalsInputBox.type, (options, requestToken) => {
