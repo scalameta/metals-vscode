@@ -1156,7 +1156,7 @@
     "typescript": "5.0.2"
   },
   "dependencies": {
-    "ansicolor": "^1.1.100",
+    "ansicolor": "^2.0.3",
     "js-yaml": "4.1.0",
     "marked": "^4.2.12",
     "metals-languageclient": "file:../metals-languageclient",
