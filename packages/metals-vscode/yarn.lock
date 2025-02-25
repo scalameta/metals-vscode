@@ -386,10 +386,10 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
   dependencies:
     color-convert "^2.0.1"
 
-ansicolor@^1.1.100:
-  version "1.1.100"
-  resolved "https://registry.yarnpkg.com/ansicolor/-/ansicolor-1.1.100.tgz#811f1afbf726edca3aafb942a14df8351996304a"
-  integrity sha512-Jl0pxRfa9WaQVUX57AB8/V2my6FJxrOR1Pp2qqFbig20QB4HzUoQ48THTKAgHlUCJeQm/s2WoOPcoIDhyCL/kw==
+ansicolor@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/ansicolor/-/ansicolor-2.0.3.tgz#ec4448ae5baf8c2d62bf2dad52eac06ba0b5ea21"
+  integrity sha512-pzusTqk9VHrjgMCcTPDTTvfJfx6Q3+L5tQ6yKC8Diexmoit4YROTFIkxFvRTNL9y5s0Q8HrSrgerCD5bIC+Kiw==
 
 anymatch@~3.1.2:
   version "3.1.2"
