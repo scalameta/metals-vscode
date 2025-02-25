@@ -851,13 +851,14 @@ eslint-config-prettier@^8.8.0:
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.8.0.tgz#bfda738d412adc917fd7b038857110efe98c9348"
   integrity sha512-wLbQiFre3tdGgpDv67NQKnJuTlcUVYHas3k+DZCc2U2BadthoEY4B7hLPvAxaqdyOGCzuLfii2fqGph10va7oA==
 
-eslint-plugin-mocha@^10.1.0:
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-mocha/-/eslint-plugin-mocha-10.1.0.tgz#69325414f875be87fb2cb00b2ef33168d4eb7c8d"
-  integrity sha512-xLqqWUF17llsogVOC+8C6/jvQ+4IoOREbN7ZCHuOHuD6cT5cDD4h7f2LgsZuzMAiwswWE21tO7ExaknHVDrSkw==
+eslint-plugin-mocha@^10.5.0:
+  version "10.5.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-mocha/-/eslint-plugin-mocha-10.5.0.tgz#0aca8d709e7cddef566e0dc252f6b02e307a2b7e"
+  integrity sha512-F2ALmQVPT1GoP27O1JTZGrV9Pqg8k79OeIuvw63UxMtQKREZtmkK1NFgkZQ2TW7L2JSSFKHFPTtHu5z8R9QNRw==
   dependencies:
     eslint-utils "^3.0.0"
-    rambda "^7.1.0"
+    globals "^13.24.0"
+    rambda "^7.4.0"
 
 eslint-scope@^5.1.1:
   version "5.1.1"
@@ -1165,10 +1166,10 @@ glob@^9.2.0, glob@^9.3.1:
     minipass "^4.2.4"
     path-scurry "^1.6.1"
 
-globals@^13.19.0:
-  version "13.19.0"
-  resolved "https://registry.yarnpkg.com/globals/-/globals-13.19.0.tgz#7a42de8e6ad4f7242fbcca27ea5b23aca367b5c8"
-  integrity sha512-dkQ957uSRWHw7CFXLUtUHQI3g3aWApYhfNR2O6jn/907riyTYKVBmxYVROkBcY614FSSeSJh7Xm7SrUWCxvJMQ==
+globals@^13.19.0, globals@^13.24.0:
+  version "13.24.0"
+  resolved "https://registry.yarnpkg.com/globals/-/globals-13.24.0.tgz#8432a19d78ce0c1e833949c36adb345400bb1171"
+  integrity sha512-AhO5QUcj8llrbG09iWhPU2B204J1xnPeL8kQmVorSsy+Sjj1sk8gIyh6cUocGmH4L0UuhAJy+hJMRA4mgA4mFQ==
   dependencies:
     type-fest "^0.20.2"
 
@@ -1958,10 +1959,10 @@ queue-microtask@^1.2.2:
   resolved "https://registry.yarnpkg.com/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
-rambda@^7.1.0:
-  version "7.1.4"
-  resolved "https://registry.yarnpkg.com/rambda/-/rambda-7.1.4.tgz#7faa9665a54c5d81773975532a942b3113bb4a56"
-  integrity sha512-bPK8sSiVHIC7CqdWga8R+hRi5hfc4hK6S01lZW4KrLwSNryQoKaCOJA9GNiF20J7Nbe1vejRfR37/ASQXFL5EA==
+rambda@^7.4.0:
+  version "7.5.0"
+  resolved "https://registry.yarnpkg.com/rambda/-/rambda-7.5.0.tgz#1865044c59bc0b16f63026c6e5a97e4b1bbe98fe"
+  integrity sha512-y/M9weqWAH4iopRd7EHDEQQvpFPHj1AA3oHozE9tfITHUtTR7Z9PSlIRRG2l1GuW7sefC1cXFfIcF+cgnShdBA==
 
 randombytes@^2.1.0:
   version "2.1.0"
