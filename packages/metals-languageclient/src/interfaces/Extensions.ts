@@ -17,7 +17,7 @@ import {
  */
 export namespace ExecuteClientCommand {
   export const type = new NotificationType<ExecuteCommandParams>(
-    "metals/executeClientCommand"
+    "metals/executeClientCommand",
   );
 }
 
@@ -28,7 +28,7 @@ export namespace ExecuteClientCommand {
  */
 export namespace MetalsDidFocus {
   export const type = new NotificationType<string>(
-    "metals/didFocusTextDocument"
+    "metals/didFocusTextDocument",
   );
 }
 

@@ -78,7 +78,7 @@ describe("getJavaOptions", () => {
 
 function createWorskpace(jvmOpts: string[]): string {
   const tmpDir = fs.mkdtempSync(
-    path.join(os.tmpdir(), "metals-languageclient")
+    path.join(os.tmpdir(), "metals-languageclient"),
   );
   fs.writeFileSync(path.join(tmpDir, ".jvmopts"), jvmOpts.join("\n"), "utf8");
   return tmpDir;

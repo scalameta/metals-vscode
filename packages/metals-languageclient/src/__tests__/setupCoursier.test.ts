@@ -41,7 +41,7 @@ describe("setupCoursier", () => {
     expect(
       await fetchCoursier(tmpDir, (out) => {
         log(out.toString().trim());
-      })
+      }),
     ).toEqual(0);
   }, 10000);
 
@@ -53,7 +53,7 @@ describe("setupCoursier", () => {
       process.cwd(),
       new LogOutputChannel(),
       false,
-      ["-Xmx1000M", "-XX-fake!"]
+      ["-Xmx1000M", "-XX-fake!"],
     );
     expect(fs.existsSync(coursier)).toBeTruthy;
     expect(fs.existsSync(javaHome)).toBeTruthy;
