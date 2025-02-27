@@ -10,14 +10,14 @@ import {
   Task,
   ShellExecution,
 } from "vscode";
-import {
-  DebugDiscoveryParams,
-  RunType,
-  ServerCommands,
-} from "metals-languageclient";
 import { ExtendedScalaRunMain, ScalaCodeLensesParams } from "./types";
 import { platform } from "os";
 import { currentWorkspaceFolder } from "../util";
+import {
+  DebugDiscoveryParams,
+  RunType,
+} from "../interfaces/DebugDiscoveryParams";
+import { ServerCommands } from "../interfaces/ServerCommands";
 
 const configurationType = "scala";
 

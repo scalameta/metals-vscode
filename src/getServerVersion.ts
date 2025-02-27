@@ -5,13 +5,13 @@ import {
   WorkspaceConfiguration,
   ConfigurationTarget as VConfigurationTarget,
 } from "vscode";
-import * as metalsLanguageClient from "metals-languageclient";
 import * as workbenchCommands from "./workbenchCommands";
 import http from "https";
 import { getConfigValue } from "./util";
 import { DefaultCheckForUpdateRepo } from "./repository/CheckForUpdateRepo";
 import { needCheckForUpdates } from "./service/checkForUpdate";
 import { ConfigurationTarget } from "./ConfigurationTarget";
+import { checkServerVersion } from "./checkServerVersion";
 
 const serverVersionSection = "serverVersion";
 const suggestLatestUpgrade = "suggestLatestUpgrade";
@@ -109,7 +109,7 @@ async function fetchLatest(): Promise<string> {
 }
 
 function warnIfIsOutdated(config: WorkspaceConfiguration): void {
-  metalsLanguageClient.checkServerVersion({
+  checkServerVersion({
     config,
     updateConfig: (updateParams) => {
       const { configSection, latestServerVersion, configurationTarget } =

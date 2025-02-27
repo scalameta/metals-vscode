@@ -14,15 +14,15 @@ import {
   ThemeIcon,
 } from "vscode";
 import {
+  MetalsTreeRevealResult,
+  MetalsTreeViewChildren,
+  MetalsTreeViewDidChange,
+  MetalsTreeViewNode,
+  MetalsTreeViewNodeCollapseDidChange,
+  MetalsTreeViewParent,
   MetalsTreeViews,
   MetalsTreeViewVisibilityDidChange,
-  MetalsTreeViewNodeCollapseDidChange,
-  MetalsTreeViewDidChange,
-  MetalsTreeRevealResult,
-  MetalsTreeViewNode,
-  MetalsTreeViewParent,
-  MetalsTreeViewChildren,
-} from "metals-languageclient";
+} from "./interfaces/TreeViewProtocol";
 
 export function startTreeView(
   client: LanguageClient,

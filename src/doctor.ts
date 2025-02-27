@@ -1,4 +1,3 @@
-import { ClientCommands, ServerCommands } from "metals-languageclient";
 import path from "path";
 import {
   ExtensionContext,
@@ -14,6 +13,8 @@ import {
   LanguageClient,
   NotificationType,
 } from "vscode-languageclient/node";
+import { ClientCommands } from "./interfaces/ClientCommands";
+import { ServerCommands } from "./interfaces/ServerCommands";
 
 export interface DoctorVisibilityDidChangeParams {
   visible: boolean;
