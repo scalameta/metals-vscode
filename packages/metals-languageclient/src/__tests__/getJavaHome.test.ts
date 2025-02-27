@@ -58,7 +58,7 @@ describe("getJavaHome", () => {
     mockExistsFs(javaPaths);
     const javaHome = await require("../getJavaHome").getJavaHome(
       "17",
-      new MockOutput()
+      new MockOutput(),
     );
     jest.restoreAllMocks();
     expect(javaHome.path).toBe(JAVA_HOME);
@@ -70,7 +70,7 @@ describe("getJavaHome", () => {
     delete process.env.PATH;
     const javaHome = await require("../getJavaHome").getJavaHome(
       "17",
-      new MockOutput()
+      new MockOutput(),
     );
     expect(javaHome).toBeDefined();
   });
@@ -87,7 +87,7 @@ describe("getJavaHome", () => {
      */
     const javaHome = await require("../getJavaHome").getJavaHome(
       "17",
-      new MockOutput()
+      new MockOutput(),
     );
     jest.restoreAllMocks();
     expect(javaHome.path).toBe(pathJavaHome);

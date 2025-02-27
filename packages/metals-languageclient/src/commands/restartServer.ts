@@ -17,7 +17,7 @@ const timeoutMs = 4000;
  */
 export function restartServer(
   client: LanguageClient,
-  showMessage: ShowMessage
+  showMessage: ShowMessage,
 ): () => Promise<void> {
   return () => {
     const { showInformationMessage, showWarningMessage } =
@@ -35,7 +35,7 @@ export function restartServer(
     return Promise.race([gracefullyTerminate, timeout(timeoutMs)]).catch(() => {
       showWarningMessage(
         "Metals is unresponsive, killing the process and starting a new server.",
-        "warning"
+        "warning",
       );
 
       // NOTE(gabro): we know LanguageClient contains the _serverProcess private property,

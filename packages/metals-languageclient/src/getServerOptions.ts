@@ -5,7 +5,7 @@ export function getServerOptions(
   metalsClasspath: string,
   serverProperties: string[],
   clientName: string,
-  javaConfig: JavaConfig
+  javaConfig: JavaConfig,
 ): ServerOptions {
   const baseProperties = ["-Xss4m", "-Xms100m"];
 
