@@ -1,4 +1,3 @@
-import { isSupportedLanguage, ServerCommands } from "metals-languageclient";
 import {
   EventEmitter,
   ProviderResult,
@@ -10,6 +9,8 @@ import {
 import { ExecuteCommandRequest } from "vscode-languageclient";
 import { LanguageClient } from "vscode-languageclient/node";
 import { executeCommand } from "./util";
+import { ServerCommands } from "./interfaces/ServerCommands";
+import { isSupportedLanguage } from "./isSupportedLanguage";
 
 export interface DecoderResponse {
   requestedUri: string;

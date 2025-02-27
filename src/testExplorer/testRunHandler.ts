@@ -1,4 +1,3 @@
-import { ServerCommands } from "metals-languageclient";
 import * as vscode from "vscode";
 import { CancellationToken, TestController, TestRunRequest } from "vscode";
 import { debugServerFromUri, DebugSession } from "../debugger/scalaDebugger";
@@ -15,6 +14,7 @@ import {
   TestSuiteResult,
 } from "./types";
 import { gatherTestItems } from "./util";
+import { ServerCommands } from "../interfaces/ServerCommands";
 
 // this id is used to mark DAP sessions created by TestController
 // thanks to that debug tracker knows which requests it should track and gather results

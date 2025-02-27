@@ -42,32 +42,6 @@ import {
 } from "vscode-languageclient/node";
 import { LazyProgress } from "./lazyProgress";
 import * as fs from "fs";
-import {
-  restartServer,
-  getJavaConfig,
-  getJavaOptions,
-  fetchMetals,
-  JavaConfig,
-  getServerOptions,
-  downloadProgress,
-  ClientCommands,
-  MetalsTreeViews,
-  MetalsTreeViewReveal,
-  MetalsInitializationOptions,
-  ServerCommands,
-  MetalsSlowTask,
-  ExecuteClientCommand,
-  MetalsOpenWindowParams,
-  MetalsStatus,
-  MetalsDidFocus,
-  MetalsInputBox,
-  MetalsQuickPick,
-  DebugDiscoveryParams,
-  RunType,
-  TestUIKind,
-  JavaVersion,
-} from "metals-languageclient";
-import * as metalsLanguageClient from "metals-languageclient";
 import { startTreeView } from "./treeview";
 import * as scalaDebugger from "./debugger/scalaDebugger";
 import { DecorationsRangesDidChange } from "./decorationProtocol";
@@ -104,6 +78,36 @@ import {
 } from "./consts";
 import { ScalaCodeLensesParams } from "./debugger/types";
 import { applyHCR, initializeHotCodeReplace } from "./debugger/hotCodeReplace";
+import {
+  MetalsTreeViewReveal,
+  MetalsTreeViews,
+} from "./interfaces/TreeViewProtocol";
+import { JavaVersion } from "./getJavaHome";
+import { setupCoursier } from "./setupCoursier";
+import { getJavaOptions } from "./getJavaOptions";
+import { getJavaConfig, JavaConfig } from "./getJavaConfig";
+import { fetchMetals } from "./fetchMetals";
+import { getServerOptions } from "./getServerOptions";
+import { MetalsInitializationOptions } from "./interfaces/MetalsInitializationOptions";
+import { restartServer } from "./commands/restartServer";
+import { ServerCommands } from "./interfaces/ServerCommands";
+import { ClientCommands } from "./interfaces/ClientCommands";
+import {
+  ExecuteClientCommand,
+  MetalsDidFocus,
+  MetalsOpenWindowParams,
+} from "./interfaces/Extensions";
+import { TestUIKind } from "./interfaces/TestUI";
+import { MetalsStatus } from "./interfaces/MetalsStatus";
+import {
+  DebugDiscoveryParams,
+  RunType,
+} from "./interfaces/DebugDiscoveryParams";
+import { MetalsInputBox } from "./interfaces/MetalsInputBox";
+import { MetalsQuickPick } from "./interfaces/MetalsQuickPick";
+import { MetalsSlowTask } from "./interfaces/MetalsSlowTask";
+import { downloadProgress } from "./downloadProgress";
+import { detectLaunchConfigurationChanges } from "./detectLaunchConfigurationChanges";
 
 const outputChannel = window.createOutputChannel("Metals");
 
@@ -126,7 +130,7 @@ const config = workspace.getConfiguration("metals");
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const serverVersion = getServerVersion(config, context);
-  detectLaunchConfigurationChanges();
+  detectConfigurationChanges();
   configureSettingsDefaults();
   registerDebugEventListener(context);
   migrateOldSettings();
@@ -232,7 +236,7 @@ async function fetchAndLaunchMetals(
     fs.mkdirSync(metalsDirPath);
   }
 
-  const { coursier, javaHome } = await metalsLanguageClient.setupCoursier(
+  const { coursier, javaHome } = await setupCoursier(
     javaVersion,
     getJavaVersionOverride(),
     metalsDirPath,
@@ -1365,8 +1369,8 @@ function enableScaladocIndentation() {
   });
 }
 
-function detectLaunchConfigurationChanges() {
-  metalsLanguageClient.detectLaunchConfigurationChanges(
+function detectConfigurationChanges() {
+  detectLaunchConfigurationChanges(
     workspace,
     ({ message, reloadWindowChoice, dismissChoice }) =>
       window

@@ -20,12 +20,8 @@ jobs:
         id: get_version
         run: echo ::set-output name=NEW_VERSION::${GITHUB_REF#refs/tags/v}
       - run: |
-          cd packages/metals-languageclient
-          yarn install && yarn build
-          cd ../metals-vscode
           yarn install
       - run: |
-          cd packages/metals-vscode
           yarn version --no-git-tag-version --new-version ${{ steps.get_version.outputs.NEW_VERSION }}
       - name: Generate changelog
         run: |
@@ -39,11 +35,9 @@ jobs:
         run: git push origin HEAD:main
       - name: Publish extension
         run: |
-          cd packages/metals-vscode
           yarn vscode:publish -p ${{ secrets.VS_MARKETPLACE_TOKEN }}
       - name: Build VSIX package
         run: |
-          cd packages/metals-vscode
           yarn build
       - name: Get upload url
         id: get_upload_url
@@ -56,9 +50,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_upload_url.outputs.UPLOAD_URL }}
-          asset_path:
-            ./packages/metals-vscode/metals-${{
-            steps.get_version.outputs.NEW_VERSION }}.vsix
+          asset_path: ./metals-${{ steps.get_version.outputs.NEW_VERSION }}.vsix
           asset_name: |
             scalameta.metals-${{ steps.get_version.outputs.NEW_VERSION }}.vsix
           asset_content_type: application/octet-stream
@@ -67,5 +59,4 @@ jobs:
         env:
           OVSX_PAT: ${{ secrets.OVSX_TOKEN }}
         run: |
-          cd packages/metals-vscode
           yarn ovsx:publish --pat $OVSX_PAT ./metals-${{ steps.get_version.outputs.NEW_VERSION }}.vsix

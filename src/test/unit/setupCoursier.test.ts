@@ -3,8 +3,8 @@ import {
   fetchCoursier,
   setupCoursier,
   validateCoursier,
-} from "../setupCoursier";
-import { OutputChannel } from "../interfaces/OutputChannel";
+} from "../../setupCoursier";
+import { OutputChannel } from "../../interfaces/OutputChannel";
 import { log } from "console";
 
 describe("setupCoursier", () => {
@@ -41,9 +41,9 @@ describe("setupCoursier", () => {
     expect(
       await fetchCoursier(tmpDir, (out) => {
         log(out.toString().trim());
-      }),
+      })
     ).toEqual(0);
-  }, 10000);
+  });
 
   it("should setup coursier correctly", async () => {
     const { coursier, javaHome } = await setupCoursier(
@@ -53,11 +53,11 @@ describe("setupCoursier", () => {
       process.cwd(),
       new LogOutputChannel(),
       false,
-      ["-Xmx1000M", "-XX-fake!"],
+      ["-Xmx1000M", "-XX-fake!"]
     );
     expect(fs.existsSync(coursier)).toBeTruthy;
     expect(fs.existsSync(javaHome)).toBeTruthy;
-  }, 50000);
+  });
 });
 
 class LogOutputChannel implements OutputChannel {

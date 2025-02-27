@@ -10,5 +10,8 @@
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-  }
+    "rootDir": "src",
+    "outDir": "out"
+  },
+  "exclude": ["node_modules", ".vscode-test", "src/test/unit"]
 }

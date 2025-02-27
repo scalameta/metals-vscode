@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as os from "os";
-import { getJavaOptions } from "../getJavaOptions";
+import { getJavaOptions } from "../../getJavaOptions";
 
 describe("getJavaOptions", () => {
   // Silence noisy debug logs during tests
@@ -78,7 +78,7 @@ describe("getJavaOptions", () => {
 
 function createWorskpace(jvmOpts: string[]): string {
   const tmpDir = fs.mkdtempSync(
-    path.join(os.tmpdir(), "metals-languageclient"),
+    path.join(os.tmpdir(), "metals-languageclient")
   );
   fs.writeFileSync(path.join(tmpDir, ".jvmopts"), jvmOpts.join("\n"), "utf8");
   return tmpDir;
