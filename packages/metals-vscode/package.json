@@ -1128,7 +1128,7 @@
     "format-check": "prettier --check **/*.{ts,js,json}"
   },
   "devDependencies": {
-    "@sourcegraph/scip-typescript": "^0.3.7",
+    "@sourcegraph/scip-typescript": "^0.3.15",
     "@types/chai": "^4.3.4",
     "@types/js-yaml": "4.0.9",
     "@types/marked": "^4.0.8",
