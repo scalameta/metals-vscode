@@ -1,5 +1,7 @@
 import path from "path";
 import { OutputChannel } from "../../interfaces/OutputChannel";
+import { expect } from "chai";
+import sinon from "sinon";
 
 class MockOutput implements OutputChannel {
   append(value: string): void {
@@ -39,8 +41,10 @@ OpenJDK 64-Bit Server VM Zulu17.50+19-CA (build 17.0.11+9-LTS, mixed mode, shari
 
 describe("getJavaHome", () => {
   const originalEnv = process.env;
+  let sandbox: sinon.SinonSandbox;
 
   beforeEach(() => {
+    sandbox = sinon.createSandbox();
     process.env = { ...originalEnv };
     delete process.env.JAVA_HOME;
     delete process.env.PATH;
@@ -48,68 +52,61 @@ describe("getJavaHome", () => {
 
   afterEach(() => {
     process.env = originalEnv;
+    sandbox.restore();
   });
 
   it("reads from JAVA_HOME", async () => {
     const JAVA_HOME = path.join("/", "path", "to", "java");
     process.env = { ...originalEnv, JAVA_HOME };
     const javaPaths = [{ binPath: path.join(JAVA_HOME, "bin", "java") }];
-    mockSpawn(exampleJavaVersionString);
-    mockExistsFs(javaPaths);
-    const javaHome = await require("../getJavaHome").getJavaHome(
+    mockSpawn(exampleJavaVersionString, sandbox);
+    mockExistsFs(javaPaths, sandbox);
+    const javaHome = await require("../../getJavaHome").getJavaHome(
       "17",
       new MockOutput()
     );
-    jest.restoreAllMocks();
-    expect(javaHome.path).toBe(JAVA_HOME);
+    expect(javaHome.path).to.equal(JAVA_HOME);
   });
 
   // needs to run on a machine with an actual JAVA_HOME set up
   it("reads from real JAVA_HOME", async () => {
     process.env = { ...originalEnv };
     delete process.env.PATH;
-    const javaHome = await require("../getJavaHome").getJavaHome(
+    const javaHome = await require("../../getJavaHome").getJavaHome(
       "17",
       new MockOutput()
     );
-    expect(javaHome).toBeDefined();
+    expect(javaHome).to.not.be.undefined;
   });
 
   // needs to run on a machine with an actual java on PATH set up
   it("reads from real PATH", async () => {
     process.env = { ...originalEnv };
     delete process.env.JAVA_HOME;
-    mockSpawn(exampleJavaPropertiesVersionString);
-    /*
-     note: this is a really messy test in that it requires java to exist on the
-     real path, but replaces the call to it with a mock. It would be nicer if
-     we could fake the path as well since it's really not used in the test.
-     */
-    const javaHome = await require("../getJavaHome").getJavaHome(
+    mockSpawn(exampleJavaPropertiesVersionString, sandbox);
+    const javaHome = await require("../../getJavaHome").getJavaHome(
       "17",
       new MockOutput()
     );
-    jest.restoreAllMocks();
-    expect(javaHome.path).toBe(pathJavaHome);
+    expect(javaHome.path).to.equal(pathJavaHome);
   });
 });
 
-function mockExistsFs(javaLinks: { binPath: String }[]): void {
-  jest
-    .spyOn(require("fs"), "existsSync")
-    .mockImplementation((path: unknown) => {
-      if (javaLinks.find((o) => o.binPath == path)) {
-        return true;
-      } else {
-        return false;
-      }
-    });
+function mockExistsFs(
+  javaLinks: { binPath: String }[],
+  sandbox: sinon.SinonSandbox
+): void {
+  sandbox.stub(require("fs"), "existsSync").callsFake((path: unknown) => {
+    if (javaLinks.find((o) => o.binPath == path)) {
+      return true;
+    } else {
+      return false;
+    }
+  });
 }
 
-function mockSpawn(resultString: string): void {
-  jest
-    .spyOn(require("promisify-child-process"), "spawn")
-    .mockImplementation(() => {
-      return Promise.resolve({ stderr: resultString });
-    });
+function mockSpawn(resultString: string, sandbox: sinon.SinonSandbox): void {
+  sandbox.stub(require("promisify-child-process"), "spawn").resolves({
+    stderr: resultString,
+  });
 }

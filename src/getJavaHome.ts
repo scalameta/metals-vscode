@@ -2,7 +2,7 @@ import path from "path";
 import { spawn } from "promisify-child-process";
 import { OutputChannel } from "./interfaces/OutputChannel";
 import { realpathSync } from "fs";
-import { findOnPath } from "./util";
+import { findOnPath } from "./findOnPath";
 
 export type JavaVersion = "11" | "17" | "21";
 

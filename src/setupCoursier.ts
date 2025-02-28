@@ -13,7 +13,7 @@ import {
 import { OutputChannel } from "./interfaces/OutputChannel";
 import path from "path";
 import fs from "fs";
-import { findOnPath } from "./util";
+import { findOnPath } from "./findOnPath";
 import { convertToCoursierProperties } from "./getJavaOptions";
 
 const coursierVersion = "v2.1.8";
@@ -28,7 +28,7 @@ export async function setupCoursier(
   extensionPath: string,
   output: OutputChannel,
   forceCoursierJar: boolean,
-  serverProperties: string[],
+  serverProperties: string[]
 ): Promise<{ coursier: string; javaHome: JavaHome }> {
   const handleOutput = (out: Buffer) => {
     const msg = "\t" + out.toString().trim().split("\n").join("\n\t");
@@ -40,8 +40,9 @@ export async function setupCoursier(
     const defaultCoursier = isWindows
       ? path.resolve(coursierFetchPath, "cs.exe")
       : path.resolve(coursierFetchPath, "cs");
-    const possibleCoursier: string | undefined =
-      await validateCoursier(defaultCoursier);
+    const possibleCoursier: string | undefined = await validateCoursier(
+      defaultCoursier
+    );
 
     if (possibleCoursier) return possibleCoursier;
 
@@ -51,10 +52,10 @@ export async function setupCoursier(
       .then(() => defaultCoursier)
       .catch((_) => {
         output.appendLine(
-          "Failed to fetch coursier. You may want to try installing coursier manually and adding it to PATH.",
+          "Failed to fetch coursier. You may want to try installing coursier manually and adding it to PATH."
         );
         output.appendLine(
-          "Will try to use jar based coursier if Java is available on the machine.",
+          "Will try to use jar based coursier if Java is available on the machine."
         );
         return undefined;
       });
@@ -63,7 +64,7 @@ export async function setupCoursier(
   const resolveJavaHomeWithCoursier = async (coursier: string) => {
     const nonJvmServerProperties = convertToCoursierProperties(
       serverProperties,
-      coursier.endsWith(".jar"),
+      coursier.endsWith(".jar")
     );
     await run(
       coursier,
@@ -74,7 +75,7 @@ export async function setupCoursier(
         `temurin:${javaVersion}`,
         "-version",
       ],
-      handleOutput,
+      handleOutput
     );
 
     const getJavaPath = spawn(
@@ -87,7 +88,7 @@ export async function setupCoursier(
       ],
       {
         encoding: "utf8",
-      },
+      }
     );
 
     getJavaPath.stderr?.on("data", (out: Buffer) => {
@@ -116,13 +117,13 @@ export async function setupCoursier(
 
   if (!javaHome && coursier) {
     output.appendLine(
-      `No installed java with version ${javaVersion} found. Will fetch one using coursier:`,
+      `No installed java with version ${javaVersion} found. Will fetch one using coursier:`
     );
     const coursierJavaHome = await resolveJavaHomeWithCoursier(coursier);
     const validatedJavaHome = await validateJavaVersion(
       coursierJavaHome,
       javaVersion,
-      output,
+      output
     );
     if (validatedJavaHome) {
       javaHome = validatedJavaHome;
@@ -142,12 +143,12 @@ export async function setupCoursier(
   else
     throw Error(
       `Cannot resolve Java home or coursier, JAVA_HOME should exist with a version of at least ${javaVersion}.` +
-        `Alternatively, you can reduce the requirement using "metals.javaVersion" setting and override the path using "metals.metalsJavaHome" setting.`,
+        `Alternatively, you can reduce the requirement using "metals.javaVersion" setting and override the path using "metals.metalsJavaHome" setting.`
     );
 }
 
 export async function validateCoursier(
-  defaultCoursier?: string | undefined,
+  defaultCoursier?: string | undefined
 ): Promise<string | undefined> {
   const validate = async (coursier: string) => {
     try {
@@ -179,11 +180,11 @@ export async function validateCoursier(
 
 export async function fetchCoursier(
   coursierFetchPath: string,
-  handleOutput: (out: Buffer) => void,
+  handleOutput: (out: Buffer) => void
 ) {
   async function runChainedCommands(
     command: string[],
-    initValue?: Promise<Output> | undefined,
+    initValue?: Promise<Output> | undefined
   ) {
     const out = command.reduce((acc, curr) => {
       const res = () => {
@@ -213,9 +214,9 @@ export async function fetchCoursier(
           ? `https://github.com/VirtusLab/coursier-m1/releases/download/${coursierVersion}/cs-aarch64-apple-darwin.gz`
           : `https://github.com/coursier/launchers/raw/${coursierCommit}/cs-x86_64-apple-darwin.gz`
         : // Linux
-          process.arch == "arm64"
-          ? `https://github.com/VirtusLab/coursier-m1/releases/download/${coursierVersion}/cs-aarch64-pc-linux.gz`
-          : `https://github.com/coursier/launchers/raw/${coursierCommit}/cs-x86_64-pc-linux.gz`;
+        process.arch == "arm64"
+        ? `https://github.com/VirtusLab/coursier-m1/releases/download/${coursierVersion}/cs-aarch64-pc-linux.gz`
+        : `https://github.com/coursier/launchers/raw/${coursierCommit}/cs-x86_64-pc-linux.gz`;
     const command = `curl -fL ${gzPath} | gzip -d > cs && chmod +x cs`;
     const result = await run(command, undefined, handleOutput, {
       shell: true,
@@ -229,7 +230,7 @@ function run(
   command: string,
   args?: string[],
   handleOutput?: (out: Buffer) => void | undefined,
-  options?: PromisifySpawnOptions | undefined,
+  options?: PromisifySpawnOptions | undefined
 ): ChildProcessPromise {
   const result = args ? spawn(command, args, options) : spawn(command, options);
   if (handleOutput) {
