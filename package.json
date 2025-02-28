@@ -1128,7 +1128,6 @@
     "format-check": "prettier --check **/*.{ts,js,json}"
   },
   "devDependencies": {
-    "@types/mkdirp": "^1.0.0",
     "@types/node-fetch": "^2.5.4",
     "@types/shell-quote": "^1.6.1",
     "@sourcegraph/scip-typescript": "^0.3.15",
@@ -1149,7 +1148,6 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-mocha": "^10.5.0",
     "glob": "^11.0.1",
-    "mkdirp": "^3.0.1",
     "mocha": "^10.2.0",
     "ovsx": "0.8.0",
     "prettier": "2.8.5",
@@ -1160,7 +1158,6 @@
   },
   "dependencies": {
     "fp-ts": "^2.4.1",
-    "mkdirp": "^3.0.1",
     "node-fetch": "^2.6.0",
     "shell-quote": "^1.7.2",
     "vscode-languageserver-protocol": "3.17.3",
