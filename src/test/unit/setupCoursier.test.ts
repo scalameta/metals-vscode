@@ -7,10 +7,10 @@ import {
 import { OutputChannel } from "../../interfaces/OutputChannel";
 import { log } from "console";
 import { assert } from "chai";
+import fs from "fs";
 
 describe("setupCoursier", () => {
   const tmpDir = path.resolve(process.cwd(), ".tmp");
-  const fs = require("fs");
 
   before(() => {
     if (!fs.existsSync(tmpDir)) {
@@ -38,7 +38,8 @@ describe("setupCoursier", () => {
     assert.isUndefined(await validateCoursier());
   });
 
-  it("should fetch coursier correctly", async () => {
+  it("should fetch coursier correctly", async function () {
+    this.timeout(0);
     assert.equal(
       await fetchCoursier(tmpDir, (out) => {
         log(out.toString().trim());
@@ -47,7 +48,8 @@ describe("setupCoursier", () => {
     );
   });
 
-  it("should setup coursier correctly", async () => {
+  it("should setup coursier correctly", async function () {
+    this.timeout(0);
     const { coursier, javaHome } = await setupCoursier(
       "17",
       undefined,

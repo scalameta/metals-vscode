@@ -10,7 +10,7 @@ interface PromptRestartParams {
 export function detectLaunchConfigurationChanges(
   workspace: Workspace,
   promptRestart: (params: PromptRestartParams) => Thenable<void>,
-  additionalRestartKeys: string[] = [],
+  additionalRestartKeys: string[] = []
 ): void {
   workspace.onDidChangeConfiguration((e) => {
     const promptRestartKeys = [
@@ -23,7 +23,7 @@ export function detectLaunchConfigurationChanges(
       ...additionalRestartKeys,
     ];
     const shouldPromptRestart = promptRestartKeys.some((key) =>
-      e.affectsConfiguration(`metals.${key}`),
+      e.affectsConfiguration(`metals.${key}`)
     );
     if (shouldPromptRestart) {
       promptRestart({

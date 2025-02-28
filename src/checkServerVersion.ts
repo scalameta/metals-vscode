@@ -34,7 +34,11 @@ export async function checkServerVersion({
     serverVersionInfo(config);
   const isOutdated = (() => {
     try {
-      return semver.lt(serverVersion, latestServerVersion);
+      if (serverVersion && latestServerVersion) {
+        return semver.lt(serverVersion, latestServerVersion);
+      } else {
+        return false;
+      }
     } catch (_e) {
       // serverVersion has an invalid format
       // ignore the exception here, and let subsequent checks handle this
@@ -47,9 +51,15 @@ export async function checkServerVersion({
     const upgradeChoice = `Upgrade to ${latestServerVersion} now`;
     const openSettingsChoice = "Open settings";
     const dismissChoice = "Not now";
-    const upgrade = () =>
-      updateConfig({ configSection, latestServerVersion, configurationTarget });
-
+    const upgrade = () => {
+      if (latestServerVersion) {
+        updateConfig({
+          configSection,
+          latestServerVersion,
+          configurationTarget,
+        });
+      }
+    };
     onOutdated({
       message,
       upgradeChoice,
@@ -61,21 +71,25 @@ export async function checkServerVersion({
 }
 
 function serverVersionInfo(config: WorkspaceConfiguration): {
-  serverVersion: string;
-  latestServerVersion: string;
+  serverVersion: string | undefined;
+  latestServerVersion: string | undefined;
   configurationTarget: ConfigurationTarget;
 } {
-  const computedVersion = config.get<string>(configSection)!;
-  const { defaultValue, globalValue } = config.inspect<string>(configSection)!;
+  const computedVersion = config.get<string>(configSection);
+  const defaultAndGlobal = config.inspect<string>(configSection);
   const configurationTarget = (() => {
-    if (globalValue && globalValue !== defaultValue) {
+    if (
+      defaultAndGlobal &&
+      defaultAndGlobal.globalValue &&
+      defaultAndGlobal.globalValue !== defaultAndGlobal.defaultValue
+    ) {
       return ConfigurationTarget.Global;
     }
     return ConfigurationTarget.Workspace;
   })();
   return {
     serverVersion: computedVersion,
-    latestServerVersion: defaultValue!,
+    latestServerVersion: defaultAndGlobal?.defaultValue,
     configurationTarget,
   };
 }

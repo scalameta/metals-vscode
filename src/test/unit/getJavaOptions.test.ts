@@ -5,8 +5,9 @@ import * as assert from "assert";
 import { getJavaOptions } from "../../getJavaOptions";
 
 describe("getJavaOptions", () => {
-  // Silence noisy debug logs during tests
-  console.debug = () => {};
+  console.debug = () => {
+    // Silence noisy debug logs during tests
+  };
 
   const originalEnv = process.env;
 

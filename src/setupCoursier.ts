@@ -44,7 +44,9 @@ export async function setupCoursier(
       defaultCoursier
     );
 
-    if (possibleCoursier) return possibleCoursier;
+    if (possibleCoursier) {
+      return possibleCoursier;
+    }
 
     output.appendLine(`Fetching coursier`);
 
@@ -99,7 +101,7 @@ export async function setupCoursier(
     return ((await getJavaPath).stdout as string).trim();
   };
 
-  var coursier: string | undefined;
+  let coursier: string | undefined;
   if (forceCoursierJar) {
     coursier = undefined;
   } else {
@@ -107,7 +109,7 @@ export async function setupCoursier(
   }
   output.appendLine(`Using coursier located at ${coursier}`);
 
-  var javaHome: JavaHome | undefined;
+  let javaHome: JavaHome | undefined;
 
   if (javaHomeOverride) {
     javaHome = await validateJavaVersion(javaHomeOverride, javaVersion, output);
@@ -139,12 +141,14 @@ export async function setupCoursier(
     coursier = path.join(extensionPath, "coursier-fallback.jar");
   }
 
-  if (javaHome && coursier) return { coursier, javaHome };
-  else
+  if (javaHome && coursier) {
+    return { coursier, javaHome };
+  } else {
     throw Error(
       `Cannot resolve Java home or coursier, JAVA_HOME should exist with a version of at least ${javaVersion}.` +
         `Alternatively, you can reduce the requirement using "metals.javaVersion" setting and override the path using "metals.metalsJavaHome" setting.`
     );
+  }
 }
 
 export async function validateCoursier(

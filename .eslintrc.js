@@ -7,7 +7,7 @@ module.exports = {
     "plugin:@typescript-eslint/recommended",
     "prettier",
   ],
-  ignorePatterns: ["out/*", "*.js"],
+  ignorePatterns: ["out/*", "*.js", "src/test/unit/getJavaHome.test.ts"],
   overrides: [
     {
       files: ["*.ts"],

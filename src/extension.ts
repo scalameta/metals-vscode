@@ -79,7 +79,7 @@ import {
 import { ScalaCodeLensesParams } from "./debugger/types";
 import { applyHCR, initializeHotCodeReplace } from "./debugger/hotCodeReplace";
 import {
-  MetalsTreeViewReveal,
+  MetalsTreeViewRevealType,
   MetalsTreeViews,
 } from "./interfaces/TreeViewProtocol";
 import { JavaVersion } from "./getJavaHome";
@@ -93,19 +93,22 @@ import { restartServer } from "./commands/restartServer";
 import { ServerCommands } from "./interfaces/ServerCommands";
 import { ClientCommands } from "./interfaces/ClientCommands";
 import {
-  ExecuteClientCommand,
-  MetalsDidFocus,
+  ExecuteClientCommandType,
+  MetalsDidFocusTypeType as MetalsDidFocusType,
   MetalsOpenWindowParams,
 } from "./interfaces/Extensions";
 import { TestUIKind } from "./interfaces/TestUI";
-import { MetalsStatus } from "./interfaces/MetalsStatus";
+import { MetalsStatusType } from "./interfaces/MetalsStatus";
 import {
   DebugDiscoveryParams,
   RunType,
 } from "./interfaces/DebugDiscoveryParams";
-import { MetalsInputBox } from "./interfaces/MetalsInputBox";
-import { MetalsQuickPick } from "./interfaces/MetalsQuickPick";
-import { MetalsSlowTask } from "./interfaces/MetalsSlowTask";
+import {
+  MetalsInputBoxHandle,
+  MetalsInputBoxType,
+} from "./interfaces/MetalsInputBox";
+import { MetalsQuickPickType } from "./interfaces/MetalsQuickPick";
+import { MetalsSlowTaskType } from "./interfaces/MetalsSlowTask";
 import { downloadProgress } from "./downloadProgress";
 import { detectLaunchConfigurationChanges } from "./detectLaunchConfigurationChanges";
 
@@ -745,7 +748,7 @@ function launchMetals(
 
       // Handle the metals/executeClientCommand extension notification.
       const executeClientCommandDisposable = client.onNotification(
-        ExecuteClientCommand.type,
+        ExecuteClientCommandType,
         (params) => {
           switch (params.command) {
             case ClientCommands.GotoLocation: {
@@ -814,7 +817,7 @@ function launchMetals(
       metalsItem.hide();
       bspItem.hide();
       const metalsStatusDisposable = client.onNotification(
-        MetalsStatus.type,
+        MetalsStatusType,
         (params) => {
           const item = params.statusType === "bsp" ? bspItem : metalsItem;
           item.text = params.text;
@@ -1009,7 +1012,7 @@ function launchMetals(
               },
               (progress) => {
                 return client
-                  .sendRequest(MetalsTreeViewReveal.type, params)
+                  .sendRequest(MetalsTreeViewRevealType, params)
                   .then((result) => {
                     progress.report({ increment: 100 });
                     if (treeViews) {
@@ -1131,19 +1134,19 @@ function launchMetals(
       window.onDidChangeActiveTextEditor((editor) => {
         if (editor && isSupportedLanguage(editor.document.languageId)) {
           client.sendNotification(
-            MetalsDidFocus.type,
+            MetalsDidFocusType,
             editor.document.uri.toString()
           );
         }
       });
 
-      client.onRequest(MetalsInputBox.type, (options, requestToken) => {
+      client.onRequest(MetalsInputBoxType, (options, requestToken) => {
         return window
           .showInputBox(options, requestToken)
-          .then(MetalsInputBox.handleInput);
+          .then(MetalsInputBoxHandle);
       });
 
-      client.onRequest(MetalsQuickPick.type, (params, requestToken) => {
+      client.onRequest(MetalsQuickPickType, (params, requestToken) => {
         return window
           .showQuickPick(params.items, params, requestToken)
           .then((result) => {
@@ -1158,7 +1161,7 @@ function launchMetals(
 
       // Long running tasks such as "import project" trigger start a progress
       // bar with a "cancel" button.
-      client.onRequest(MetalsSlowTask.type, (params, requestToken) => {
+      client.onRequest(MetalsSlowTaskType, (params, requestToken) => {
         return new Promise((requestResolve) => {
           const showLogs = ` ([show logs](command:${ClientCommands.ToggleLogs} "Show Metals logs"))`;
 

@@ -68,10 +68,14 @@ function propertyValueOf(
   propertyName: string
 ): string | undefined {
   const start = input.indexOf(propertyName);
-  if (start === -1) return;
+  if (start === -1) {
+    return;
+  }
 
   const end = input.indexOf("\n", start);
-  if (end === -1) return;
+  if (end === -1) {
+    return;
+  }
 
   const propertyLine = input.substring(start, end);
   return propertyLine.substring(propertyLine.indexOf("=") + 1).trim();
@@ -81,7 +85,11 @@ export async function fromPath(
   javaVersion: JavaVersion,
   outputChannel: OutputChannel
 ): Promise<JavaHome | undefined> {
-  let javaExecutable = findOnPath(["java"]);
+  function getLastThreeLines(text: string): string {
+    const lines = text.split(/\r?\n/);
+    return lines.slice(-3).join("\n");
+  }
+  const javaExecutable = findOnPath(["java"]);
   if (javaExecutable) {
     const realJavaPath = realpathSync(javaExecutable);
     outputChannel.appendLine(
@@ -96,10 +104,6 @@ export async function fromPath(
         cmdOutput,
         "java.specification.version"
       );
-      function getLastThreeLines(text: string): string {
-        let lines = text.split(/\r?\n/);
-        return lines.slice(-3).join("\n");
-      }
 
       if (
         discoveredJavaVersion &&
@@ -139,8 +143,9 @@ export async function fromEnv(
       javaVersion,
       outputChannel
     );
-    if (validatedJavaHome) return validatedJavaHome;
-    else {
+    if (validatedJavaHome) {
+      return validatedJavaHome;
+    } else {
       outputChannel.appendLine(
         `Java version doesn't match the required one of ${javaVersion}`
       );

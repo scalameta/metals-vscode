@@ -8,13 +8,11 @@ import { RequestType } from "vscode-languageserver-protocol";
  *
  * - https://scalameta.org/metals/docs/editors/new-editor.html#metalsslowtask
  */
-export namespace MetalsSlowTask {
-  export const type = new RequestType<
-    MetalsSlowTaskParams,
-    MetalsSlowTaskResult,
-    void
-  >("metals/slowTask");
-}
+export const MetalsSlowTaskType = new RequestType<
+  MetalsSlowTaskParams,
+  MetalsSlowTaskResult,
+  void
+>("metals/slowTask");
 
 export interface MetalsSlowTaskParams {
   /** The name of this slow task */

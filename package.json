@@ -1149,7 +1149,7 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-mocha": "^10.5.0",
     "glob": "^11.0.1",
-    "mkdirp": "2.1.5",
+    "mkdirp": "^3.0.1",
     "mocha": "^10.2.0",
     "ovsx": "0.8.0",
     "prettier": "2.8.5",

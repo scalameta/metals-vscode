@@ -2,6 +2,9 @@ import path from "path";
 import { OutputChannel } from "../../interfaces/OutputChannel";
 import { expect } from "chai";
 import sinon from "sinon";
+import { getJavaHome } from "../../getJavaHome";
+import fs from "fs";
+import child_promise from "promisify-child-process";
 
 class MockOutput implements OutputChannel {
   append(value: string): void {
@@ -61,21 +64,16 @@ describe("getJavaHome", () => {
     const javaPaths = [{ binPath: path.join(JAVA_HOME, "bin", "java") }];
     mockSpawn(exampleJavaVersionString, sandbox);
     mockExistsFs(javaPaths, sandbox);
-    const javaHome = await require("../../getJavaHome").getJavaHome(
-      "17",
-      new MockOutput()
-    );
-    expect(javaHome.path).to.equal(JAVA_HOME);
+    const javaHome = await getJavaHome("17", new MockOutput());
+    expect(javaHome).to.not.be.undefined;
+    expect(javaHome?.path).to.equal(JAVA_HOME);
   });
 
   // needs to run on a machine with an actual JAVA_HOME set up
   it("reads from real JAVA_HOME", async () => {
     process.env = { ...originalEnv };
     delete process.env.PATH;
-    const javaHome = await require("../../getJavaHome").getJavaHome(
-      "17",
-      new MockOutput()
-    );
+    const javaHome = await getJavaHome("17", new MockOutput());
     expect(javaHome).to.not.be.undefined;
   });
 
@@ -84,19 +82,17 @@ describe("getJavaHome", () => {
     process.env = { ...originalEnv };
     delete process.env.JAVA_HOME;
     mockSpawn(exampleJavaPropertiesVersionString, sandbox);
-    const javaHome = await require("../../getJavaHome").getJavaHome(
-      "17",
-      new MockOutput()
-    );
-    expect(javaHome.path).to.equal(pathJavaHome);
+    const javaHome = await getJavaHome("17", new MockOutput());
+    expect(javaHome).to.not.be.undefined;
+    expect(javaHome?.path).to.equal(pathJavaHome);
   });
 });
 
 function mockExistsFs(
-  javaLinks: { binPath: String }[],
+  javaLinks: { binPath: string }[],
   sandbox: sinon.SinonSandbox
 ): void {
-  sandbox.stub(require("fs"), "existsSync").callsFake((path: unknown) => {
+  sandbox.stub(fs, "existsSync").callsFake((path: unknown) => {
     if (javaLinks.find((o) => o.binPath == path)) {
       return true;
     } else {

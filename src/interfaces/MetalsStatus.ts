@@ -9,9 +9,9 @@ import { NotificationType } from "vscode-languageserver-protocol";
  * Unlike `window/showMessage`, status notifications are not critical meaning
  * that they should not demand too much attention from the user.
  */
-export namespace MetalsStatus {
-  export const type = new NotificationType<MetalsStatusParams>("metals/status");
-}
+export const MetalsStatusType = new NotificationType<MetalsStatusParams>(
+  "metals/status"
+);
 
 export interface MetalsStatusParams {
   /** The text to display in the status bar. */
