@@ -22,7 +22,9 @@ export function findOnPath(names: string[]) {
         try {
           if (fs.statSync(p).isDirectory()) {
             return fs.readdirSync(p).map((sub) => path.resolve(p, sub));
-          } else return [p];
+          } else {
+            return [p];
+          }
         } catch (e) {
           return [];
         }

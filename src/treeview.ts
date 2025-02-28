@@ -15,13 +15,13 @@ import {
 } from "vscode";
 import {
   MetalsTreeRevealResult,
-  MetalsTreeViewChildren,
-  MetalsTreeViewDidChange,
+  MetalsTreeViewChildrenType,
+  MetalsTreeViewDidChangeType,
   MetalsTreeViewNode,
-  MetalsTreeViewNodeCollapseDidChange,
-  MetalsTreeViewParent,
+  MetalsTreeViewNodeCollapseDidChangeType,
+  MetalsTreeViewParentType,
   MetalsTreeViews,
-  MetalsTreeViewVisibilityDidChange,
+  MetalsTreeViewVisibilityDidChangeType,
 } from "./interfaces/TreeViewProtocol";
 
 export function startTreeView(
@@ -58,14 +58,14 @@ export function startTreeView(
 
     // Notify the server about view visibility changes
     const onDidChangeVisibility = view.onDidChangeVisibility((e) => {
-      client.sendNotification(MetalsTreeViewVisibilityDidChange.type, {
+      client.sendNotification(MetalsTreeViewVisibilityDidChangeType, {
         viewId: viewId,
         visible: e.visible,
       });
     });
     const onDidChangeExpandNode = view.onDidExpandElement((e) => {
       expandedNode(viewId).add(e.element);
-      client.sendNotification(MetalsTreeViewNodeCollapseDidChange.type, {
+      client.sendNotification(MetalsTreeViewNodeCollapseDidChangeType, {
         viewId: viewId,
         nodeUri: e.element,
         collapsed: false,
@@ -73,7 +73,7 @@ export function startTreeView(
     });
     const onDidChangeCollapseNode = view.onDidCollapseElement((e) => {
       expandedNode(viewId).delete(e.element);
-      client.sendNotification(MetalsTreeViewNodeCollapseDidChange.type, {
+      client.sendNotification(MetalsTreeViewNodeCollapseDidChangeType, {
         viewId: viewId,
         nodeUri: e.element,
         collapsed: true,
@@ -90,7 +90,7 @@ export function startTreeView(
 
   // Update tree nodes on server notificiations
   const metalsTreeViewDidChangeDispoasble = client.onNotification(
-    MetalsTreeViewDidChange.type,
+    MetalsTreeViewDidChangeType,
     (params) => {
       params.nodes.forEach((node) => {
         const provider = allProviders.get(node.viewId);
@@ -210,7 +210,7 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
   // Forward get parent request to the server.
   getParent(uri: string): Thenable<string | undefined> {
     return this.client
-      .sendRequest(MetalsTreeViewParent.type, {
+      .sendRequest(MetalsTreeViewParentType, {
         viewId: this.viewId,
         nodeUri: uri,
       })
@@ -228,7 +228,7 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
   // Forward get children request to the server.
   getChildren(uri?: string): Thenable<string[] | undefined> {
     return this.client
-      .sendRequest(MetalsTreeViewChildren.type, {
+      .sendRequest(MetalsTreeViewChildrenType, {
         viewId: this.viewId,
         nodeUri: uri,
       })

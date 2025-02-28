@@ -8,13 +8,11 @@ import { RequestType } from "vscode-languageserver-protocol";
  *
  * - https://scalameta.org/metals/docs/editors/new-editor.html#metalsquickpick
  */
-export namespace MetalsQuickPick {
-  export const type = new RequestType<
-    MetalsQuickPickParams,
-    MetalsQuickPickResult,
-    void
-  >("metals/quickPick");
-}
+export const MetalsQuickPickType = new RequestType<
+  MetalsQuickPickParams,
+  MetalsQuickPickResult,
+  void
+>("metals/quickPick");
 
 export interface MetalsQuickPickParams {
   /** An array of items that can be selected from. */

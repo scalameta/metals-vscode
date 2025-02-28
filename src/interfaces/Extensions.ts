@@ -15,22 +15,17 @@ import {
  *
  * All client commands can be found in the ClientCommands enum.
  */
-export namespace ExecuteClientCommand {
-  export const type = new NotificationType<ExecuteCommandParams>(
-    "metals/executeClientCommand",
-  );
-}
+export const ExecuteClientCommandType =
+  new NotificationType<ExecuteCommandParams>("metals/executeClientCommand");
 
 /**
  * The Metals did focus notification is sent from the client to the server when the editor changes focus to a new text document. Unlike textDocument/didOpen, the did focus notification is sent even when the text document is already open.
  *
  * - https://scalameta.org/metals/docs/editors/new-editor.html#metalsdidfocustextdocument
  */
-export namespace MetalsDidFocus {
-  export const type = new NotificationType<string>(
-    "metals/didFocusTextDocument",
-  );
-}
+export const MetalsDidFocusTypeType = new NotificationType<string>(
+  "metals/didFocusTextDocument"
+);
 
 /**
  * The  `metals/openWindow` params are used with the New Scala Project

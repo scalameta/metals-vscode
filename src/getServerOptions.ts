@@ -5,7 +5,7 @@ export function getServerOptions(
   metalsClasspath: string,
   serverProperties: string[],
   clientName: string,
-  javaConfig: JavaConfig,
+  javaConfig: JavaConfig
 ): ServerOptions {
   const baseProperties = ["-Xss4m", "-Xms100m"];
 
@@ -23,7 +23,7 @@ export function getServerOptions(
         process.platform == "win32")) ||
     process.platform == "openbsd";
 
-  var filteredServerProperties = serverProperties;
+  let filteredServerProperties = serverProperties;
   if (skipZGC) {
     filteredServerProperties = serverProperties.filter(function (prop) {
       return prop.indexOf("UseZGC") === -1;

@@ -50,22 +50,19 @@ export interface MetalsTreeViewChildrenResult {
   nodes: MetalsTreeViewNode[];
 }
 
-export namespace MetalsTreeViewChildren {
-  export const type = new RequestType<
-    MetalsTreeViewChildrenParams,
-    MetalsTreeViewChildrenResult,
-    void
-  >("metals/treeViewChildren");
-}
+export const MetalsTreeViewChildrenType = new RequestType<
+  MetalsTreeViewChildrenParams,
+  MetalsTreeViewChildrenResult,
+  void
+>("metals/treeViewChildren");
 
 export interface MetalsTreeViewDidChangeParams {
   nodes: MetalsTreeViewNode[];
 }
-export namespace MetalsTreeViewDidChange {
-  export const type = new NotificationType<MetalsTreeViewDidChangeParams>(
-    "metals/treeViewDidChange",
+export const MetalsTreeViewDidChangeType =
+  new NotificationType<MetalsTreeViewDidChangeParams>(
+    "metals/treeViewDidChange"
   );
-}
 
 export interface MetalsTreeViewParentParams {
   viewId: string;
@@ -76,13 +73,11 @@ export interface MetalsTreeViewParentResult {
   uri?: string;
 }
 
-export namespace MetalsTreeViewParent {
-  export const type = new RequestType<
-    MetalsTreeViewParentParams,
-    MetalsTreeViewParentResult,
-    void
-  >("metals/treeViewParent");
-}
+export const MetalsTreeViewParentType = new RequestType<
+  MetalsTreeViewParentParams,
+  MetalsTreeViewParentResult,
+  void
+>("metals/treeViewParent");
 
 export interface MetalsTreeViewVisibilityDidChangeParams {
   /** The ID of the view that this node is associated with. */
@@ -91,12 +86,10 @@ export interface MetalsTreeViewVisibilityDidChangeParams {
   visible: boolean;
 }
 
-export namespace MetalsTreeViewVisibilityDidChange {
-  export const type =
-    new NotificationType<MetalsTreeViewVisibilityDidChangeParams>(
-      "metals/treeViewVisibilityDidChange",
-    );
-}
+export const MetalsTreeViewVisibilityDidChangeType =
+  new NotificationType<MetalsTreeViewVisibilityDidChangeParams>(
+    "metals/treeViewVisibilityDidChange"
+  );
 
 export interface MetalsTreeViewNodeCollapseDidChangeParams {
   /** The ID of the view that this node is associated with. */
@@ -107,12 +100,10 @@ export interface MetalsTreeViewNodeCollapseDidChangeParams {
   collapsed: boolean;
 }
 
-export namespace MetalsTreeViewNodeCollapseDidChange {
-  export const type =
-    new NotificationType<MetalsTreeViewNodeCollapseDidChangeParams>(
-      "metals/treeViewNodeCollapseDidChange",
-    );
-}
+export const MetalsTreeViewNodeCollapseDidChangeType =
+  new NotificationType<MetalsTreeViewNodeCollapseDidChangeParams>(
+    "metals/treeViewNodeCollapseDidChange"
+  );
 
 export interface MetalsTreeRevealResult {
   /** The ID of the view that this node is associated with. */
@@ -126,10 +117,8 @@ export interface MetalsTreeRevealResult {
   uriChain: string[];
 }
 
-export namespace MetalsTreeViewReveal {
-  export const type = new RequestType<
-    TextDocumentPositionParams,
-    MetalsTreeRevealResult,
-    void
-  >("metals/treeViewReveal");
-}
+export const MetalsTreeViewRevealType = new RequestType<
+  TextDocumentPositionParams,
+  MetalsTreeRevealResult,
+  void
+>("metals/treeViewReveal");

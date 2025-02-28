@@ -16,8 +16,8 @@ export function downloadProgress({
   onComplete,
   onError,
 }: DownlodProgressParams): Promise<string> {
-  let stdout: Buffer[] = [];
-  let stderr: Buffer[] = [];
+  const stdout: Buffer[] = [];
+  const stderr: Buffer[] = [];
   download.stdout?.on("data", (out: Buffer) => {
     stdout.push(out);
   });
