@@ -68,17 +68,22 @@ export async function setupCoursier(
       serverProperties,
       coursier.endsWith(".jar")
     );
-    await run(
-      coursier,
-      [
-        "java",
-        ...nonJvmServerProperties,
-        "--jvm",
-        `temurin:${javaVersion}`,
-        "-version",
-      ],
-      handleOutput
-    );
+    try {
+      // This seems to throw on Windows despite the fact that the path exists
+      await run(
+        coursier,
+        [
+          "java",
+          ...nonJvmServerProperties,
+          "--jvm",
+          `temurin:${javaVersion}`,
+          "-version",
+        ],
+        handleOutput
+      );
+    } catch (err) {
+      output.appendLine(`Error checking downloading java version: ${err}`);
+    }
 
     const getJavaPath = spawn(
       coursier,
@@ -95,7 +100,7 @@ export async function setupCoursier(
 
     getJavaPath.stderr?.on("data", (out: Buffer) => {
       const msg = out.toString().trim();
-      output.appendLine("Error: " + msg);
+      output.appendLine("Errorr: " + msg);
     });
 
     return ((await getJavaPath).stdout as string).trim();
