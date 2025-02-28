@@ -24,7 +24,6 @@ jobs:
           git config --global user.email "bot@scalameta.org"
           git config --global user.name "Scalameta bot"
       - run: |
-          cd packages/metals-vscode
           yarn install
           yarn version --no-git-tag-version --patch
       - name: Commit changes
@@ -35,9 +34,6 @@ jobs:
       # but we don't want to force normal users to update, modify it
       - name: Update required vs code version
         run: |
-          cd packages/metals-languageclient
-          yarn install && yarn build
-          cd ../metals-vscode
           node ./update-version.js
           yarn install
       - name: Publish pre-release version to Visual Studio Marketplace
@@ -47,7 +43,7 @@ jobs:
           registryUrl: https://marketplace.visualstudio.com
           preRelease: true
           yarn: true
-          packagePath: "./packages/metals-vscode"
+          packagePath: "."
       # Don't publish for VSX, it doesn't support pre-release versions
       # Push changes - increased patch version
       - name: Push changes
