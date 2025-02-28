@@ -6,18 +6,19 @@ import {
 } from "../../setupCoursier";
 import { OutputChannel } from "../../interfaces/OutputChannel";
 import { log } from "console";
+import { assert } from "chai";
 
 describe("setupCoursier", () => {
   const tmpDir = path.resolve(process.cwd(), ".tmp");
   const fs = require("fs");
 
-  beforeAll(() => {
+  before(() => {
     if (!fs.existsSync(tmpDir)) {
       fs.mkdirSync(tmpDir);
     }
   });
 
-  afterAll(() => {
+  after(() => {
     if (fs.existsSync(tmpDir)) {
       fs.rmSync(tmpDir, { recursive: true, force: true });
     }
@@ -26,23 +27,24 @@ describe("setupCoursier", () => {
   it("should find coursier in PATH", async () => {
     const pathEnv = process.env["PATH"];
     if (pathEnv) {
-      expect(await validateCoursier(pathEnv)).toBeDefined();
+      assert.isDefined(await validateCoursier(pathEnv));
     } else {
-      fail("PATH environment variable is not defined");
+      assert.fail("PATH environment variable is not defined");
     }
   });
 
   it("should not find coursier if not present in PATH", async () => {
     process.env = {};
-    expect(await validateCoursier()).toBeUndefined();
+    assert.isUndefined(await validateCoursier());
   });
 
   it("should fetch coursier correctly", async () => {
-    expect(
+    assert.equal(
       await fetchCoursier(tmpDir, (out) => {
         log(out.toString().trim());
-      })
-    ).toEqual(0);
+      }),
+      0
+    );
   });
 
   it("should setup coursier correctly", async () => {
@@ -55,8 +57,8 @@ describe("setupCoursier", () => {
       false,
       ["-Xmx1000M", "-XX-fake!"]
     );
-    expect(fs.existsSync(coursier)).toBeTruthy;
-    expect(fs.existsSync(javaHome)).toBeTruthy;
+    assert.isTrue(fs.existsSync(coursier));
+    assert.isTrue(fs.existsSync(javaHome.path));
   });
 });
 

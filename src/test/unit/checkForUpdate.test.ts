@@ -5,7 +5,12 @@ import sinon from "sinon";
 import { expect } from "chai";
 
 class MockRepo implements CheckForUpdateRepo {
-  constructor(private prevVersion?: string, private lastUpdatedAt?: string) {}
+  private prevVersion?: string;
+  private lastUpdatedAt?: string;
+  constructor(prevVersion?: string, lastUpdatedAt?: string) {
+    this.prevVersion = prevVersion;
+    this.lastUpdatedAt = lastUpdatedAt;
+  }
   getLastUpdated(_target: ConfigurationTarget): {
     prevVersion?: string | undefined;
     lastUpdatedAt?: string | undefined;

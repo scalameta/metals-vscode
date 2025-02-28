@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as os from "os";
+import * as assert from "assert";
 import { getJavaOptions } from "../../getJavaOptions";
 
 describe("getJavaOptions", () => {
@@ -21,7 +22,7 @@ describe("getJavaOptions", () => {
   it("reads from .jvmopts", () => {
     const workspaceRoot = createWorskpace(proxyOptions);
     const options = getJavaOptions(workspaceRoot);
-    expect(options).toEqual(proxyOptions);
+    assert.deepStrictEqual(options, proxyOptions);
   });
 
   it("sanitizes options from .jvmopts", () => {
@@ -31,21 +32,21 @@ describe("getJavaOptions", () => {
     ];
     const workspaceRoot = createWorskpace(malformedOptions);
     const options = getJavaOptions(workspaceRoot);
-    expect(options).toEqual(proxyOptions);
+    assert.deepStrictEqual(options, proxyOptions);
   });
 
   it("reads from JAVA_OPTS", () => {
     process.env = { ...originalEnv, JAVA_OPTS: proxyOptions.join(" ") };
     const workspaceRoot = createWorskpace([]);
     const options = getJavaOptions(workspaceRoot);
-    expect(options).toEqual(proxyOptions);
+    assert.deepStrictEqual(options, proxyOptions);
   });
 
   it("reads from JAVA_FLAGS", () => {
     process.env = { ...originalEnv, JAVA_FLAGS: proxyOptions.join(" ") };
     const workspaceRoot = createWorskpace([]);
     const options = getJavaOptions(workspaceRoot);
-    expect(options).toEqual(proxyOptions);
+    assert.deepStrictEqual(options, proxyOptions);
   });
 
   it("reads from multiple sources", () => {
@@ -58,21 +59,25 @@ describe("getJavaOptions", () => {
     };
     const workspaceRoot = createWorskpace(proxyOptions);
     const options = getJavaOptions(workspaceRoot);
-    expect(options).toEqual([...javaOpts, ...javaFlags, ...proxyOptions]);
+    assert.deepStrictEqual(options, [
+      ...javaOpts,
+      ...javaFlags,
+      ...proxyOptions,
+    ]);
   });
 
   it("ignores memory options", () => {
     const jvmOpts = ["-Xms256m", ...proxyOptions, "-Xmx4g"];
     const workspaceRoot = createWorskpace(jvmOpts);
     const options = getJavaOptions(workspaceRoot);
-    expect(options).toEqual(proxyOptions);
+    assert.deepStrictEqual(options, proxyOptions);
   });
 
   it("ignores PrintCommandLineFlags", () => {
     const jvmOpts = ["-XX:+PrintCommandLineFlags", ...proxyOptions];
     const workspaceRoot = createWorskpace(jvmOpts);
     const options = getJavaOptions(workspaceRoot);
-    expect(options).toEqual(proxyOptions);
+    assert.deepStrictEqual(options, proxyOptions);
   });
 });
 
