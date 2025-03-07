@@ -1147,7 +1147,7 @@
     "eslint-plugin-mocha": "^10.5.0",
     "glob": "^11.0.1",
     "mkdirp": "2.1.5",
-    "mocha": "^10.2.0",
+    "mocha": "^10.8.2",
     "ovsx": "0.8.0",
     "prettier": "2.8.5",
     "rimraf": "^4.4.0",
