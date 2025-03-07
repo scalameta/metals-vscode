@@ -102,18 +102,22 @@ export async function startDiscovery(
     debugParams.runType != RunType.TestFile &&
     debugParams.runType != RunType.TestTarget
   ) {
-    return vscode.commands
-      .executeCommand<ScalaCodeLensesParams>(
+    let response: ScalaCodeLensesParams | undefined;
+    try {
+      response = await vscode.commands.executeCommand<ScalaCodeLensesParams>(
         "discover-jvm-run-command",
         debugParams
-      )
-      .then((response) => {
-        if (response && isExtendedScalaRunMain(response)) {
-          return runMain(response);
-        } else {
-          return debug(noDebug, debugParams);
-        }
-      });
+      );
+    } catch (error) {
+      // recovering from discover-jvm-run-command failure
+      // when trying to run a main class from a dependency
+      return debug(noDebug, debugParams);
+    }
+    if (response && isExtendedScalaRunMain(response)) {
+      return runMain(response);
+    } else {
+      return debug(noDebug, debugParams);
+    }
   } else {
     return debug(noDebug, debugParams);
   }
