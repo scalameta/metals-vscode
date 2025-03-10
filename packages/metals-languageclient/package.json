@@ -20,7 +20,7 @@
   "devDependencies": {
     "@types/jest": "^27.0.0",
     "@types/mkdirp": "^1.0.0",
-    "@types/node": "^18.0.0",
+    "@types/node": "^22.13.10",
     "@types/node-fetch": "^2.5.4",
     "@types/semver": "^7.1.0",
     "@types/shell-quote": "^1.6.1",
