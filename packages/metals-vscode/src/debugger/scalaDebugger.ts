@@ -134,15 +134,43 @@ export async function start(
   }
 }
 
+function handleCompileError(error: unknown) {
+  const errorMessage = error instanceof Error ? error.message : String(error);
+  if (
+    errorMessage.includes("Cannot run class, since the workspace has errors.")
+  ) {
+    vscode.window
+      .showErrorMessage(
+        "Cannot launch due to compilation errors.",
+        { modal: true },
+        "View Problems"
+      )
+      .then((action) => {
+        if (action === "View Problems") {
+          vscode.commands.executeCommand("workbench.action.problems.focus");
+        }
+      });
+  } else {
+    throw error;
+  }
+}
+
 async function debug(
   noDebug: boolean,
   debugParams: DebugDiscoveryParams | ScalaCodeLensesParams
 ): Promise<boolean> {
   await commands.executeCommand("workbench.action.files.save");
-  const response = await vscode.commands.executeCommand<DebugSession>(
-    ServerCommands.DebugAdapterStart,
-    debugParams
-  );
+
+  let response: DebugSession | undefined;
+  try {
+    response = await vscode.commands.executeCommand<DebugSession>(
+      ServerCommands.DebugAdapterStart,
+      debugParams
+    );
+  } catch (error) {
+    handleCompileError(error);
+    return false;
+  }
 
   if (response === undefined) {
     return false;
@@ -215,15 +243,25 @@ class ScalaDebugServerFactory implements vscode.DebugAdapterDescriptorFactory {
           '"Running in the task window"',
         ]);
       } else {
-        const debugSession = await vscode.commands.executeCommand<DebugSession>(
-          ServerCommands.DebugAdapterStart,
-          session.configuration
-        );
-
-        if (debugSession === undefined) {
-          return null;
-        } else {
-          return debugServerFromUri(debugSession.uri);
+        let debugSession: DebugSession | undefined;
+        try {
+          debugSession = await vscode.commands.executeCommand<DebugSession>(
+            ServerCommands.DebugAdapterStart,
+            session.configuration
+          );
+          if (debugSession === undefined) {
+            // return null makes vscode show "Couldn't find a debug adapter descriptor for debug type 'scala' (extension might have failed to activate)"
+            return null;
+          } else {
+            return debugServerFromUri(debugSession.uri);
+          }
+        } catch (error) {
+          handleCompileError(error);
+          // For compile errors, return null or throw error make vscode
+          // show misleading error messages.
+          // A dummy DebugAdapterExecutable suppresses those and
+          // does not seem to cause any other observable problems.
+          return new vscode.DebugAdapterExecutable("", []);
         }
       }
     }
