@@ -9,7 +9,7 @@
     "ide",
     "scalameta"
   ],
-  "version": "1.47.7",
+  "version": "1.47.8",
   "publisher": "scalameta",
   "contributors": [
     {
@@ -1128,15 +1128,15 @@
     "format-check": "prettier --check **/*.{ts,js,json}"
   },
   "devDependencies": {
-    "@types/node-fetch": "^2.5.4",
-    "@types/shell-quote": "^1.6.1",
     "@sourcegraph/scip-typescript": "^0.3.15",
     "@types/chai": "^4.3.4",
     "@types/js-yaml": "4.0.9",
     "@types/marked": "^4.0.8",
     "@types/mocha": "^10.0.1",
     "@types/node": "18.15.5",
+    "@types/node-fetch": "^2.5.4",
     "@types/semver": "^7.3.13",
+    "@types/shell-quote": "^1.6.1",
     "@types/sinon": "^10.0.13",
     "@types/vscode": "1.59.0",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
@@ -1157,16 +1157,16 @@
     "typescript": "5.0.2"
   },
   "dependencies": {
-    "fp-ts": "^2.4.1",
-    "node-fetch": "^2.6.0",
-    "shell-quote": "^1.7.2",
-    "vscode-languageserver-protocol": "3.17.3",
     "ansicolor": "^2.0.3",
+    "fp-ts": "^2.4.1",
     "js-yaml": "4.1.0",
     "marked": "^4.2.12",
+    "node-fetch": "^2.6.0",
     "promisify-child-process": "4.1.1",
     "semver": "^7.5.2",
-    "vscode-languageclient": "8.1.0"
+    "shell-quote": "^1.7.2",
+    "vscode-languageclient": "8.1.0",
+    "vscode-languageserver-protocol": "3.17.3"
   },
   "extensionPack": [
     "scala-lang.scala"
