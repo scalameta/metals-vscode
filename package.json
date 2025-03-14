@@ -1162,7 +1162,7 @@
     "js-yaml": "4.1.0",
     "marked": "^4.2.12",
     "node-fetch": "^2.6.0",
-    "promisify-child-process": "4.1.1",
+    "promisify-child-process": "4.1.2",
     "semver": "^7.5.2",
     "shell-quote": "^1.7.2",
     "vscode-languageclient": "8.1.0",
