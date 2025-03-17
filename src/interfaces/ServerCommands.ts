@@ -5,10 +5,6 @@
  *  - https://scalameta.org/metals/docs/editors/new-editor.html#metals-server-commands
  */
 export const ServerCommands = {
-  /** Start the Ammonite build server. */
-  AmmoniteStart: "ammonite-start",
-  /** Stop the Ammonite build server. */
-  AmmoniteStop: "ammonite-stop",
   /**
    * Converts provided stacktrace in the parameter to a format that contains
    * links to locations of places where the exception was raised.
