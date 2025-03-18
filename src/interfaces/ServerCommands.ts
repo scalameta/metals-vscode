@@ -53,6 +53,8 @@ export const ServerCommands = {
   CascadeCompile: "compile-cascade",
   /** Recompile all build targets in this workspace. */
   CleanCompile: "compile-clean",
+  /** Compile the given target and report if there were errors. */
+  CompileTarget: "compile-target",
   /**
    * Copy the contents of a worksheet to your local buffer.
    *

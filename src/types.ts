@@ -21,3 +21,13 @@ export type FullyQualifiedClassName = newtype<
 export interface BuildTargetIdentifier {
   uri: TargetUri;
 }
+
+export interface CompileResult {
+  statusCode: BuildStatusCode;
+}
+
+export enum BuildStatusCode {
+  Ok = 1,
+  Error = 2,
+  Cancelled = 3,
+}

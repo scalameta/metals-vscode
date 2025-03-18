@@ -43,6 +43,7 @@ import {
 import { LazyProgress } from "./lazyProgress";
 import * as fs from "fs";
 import { startTreeView } from "./treeview";
+import { BuildStatusCode, CompileResult } from "./types";
 import * as scalaDebugger from "./debugger/scalaDebugger";
 import { DecorationsRangesDidChange } from "./decorationProtocol";
 import { clearTimeout } from "timers";
@@ -591,6 +592,7 @@ function launchMetals(
         ServerCommands.SourcesScan,
         ServerCommands.CascadeCompile,
         ServerCommands.CleanCompile,
+        ServerCommands.CompileTarget,
         ServerCommands.CancelCompilation,
         ServerCommands.AmmoniteStart,
         ServerCommands.AmmoniteStop,
@@ -687,19 +689,50 @@ function launchMetals(
 
       registerCommand(
         ClientCommands.StartRunSession,
-        (param: ScalaCodeLensesParams) => {
-          scalaDebugger.start(true, param).then(
-            (wasStarted) => {
-              if (!wasStarted) {
-                window.showErrorMessage("Run session not started");
-              }
-            },
-            (reason) => {
-              if (reason instanceof Error) {
-                window.showErrorMessage(reason.message);
-              }
-            }
-          );
+        async (param: ScalaCodeLensesParams) => {
+          await commands.executeCommand("workbench.action.files.save");
+          const compileResult: CompileResult | null | undefined =
+            await commands.executeCommand(
+              ServerCommands.CompileTarget,
+              param.targets[0]
+            );
+          switch (compileResult?.statusCode) {
+            case BuildStatusCode.Ok:
+              scalaDebugger.start(true, param).then(
+                (wasStarted) => {
+                  if (!wasStarted) {
+                    window.showErrorMessage("Run session not started");
+                  }
+                },
+                (reason) => {
+                  if (reason instanceof Error) {
+                    window.showErrorMessage(reason.message);
+                  }
+                }
+              );
+              break;
+            case BuildStatusCode.Error:
+              window
+                .showErrorMessage(
+                  "Cannot execute code lens due to compilation errors.",
+                  { modal: true },
+                  "View Problems"
+                )
+                .then((action) => {
+                  if (action === "View Problems") {
+                    commands.executeCommand("workbench.action.problems.focus");
+                  }
+                });
+              break;
+            case BuildStatusCode.Cancelled:
+              window.showErrorMessage(
+                "Cannot run code lens. Build was cancelled.",
+                { modal: true }
+              );
+              break;
+            default:
+            // server emits error in this case
+          }
         }
       );
 
