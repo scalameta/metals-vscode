@@ -1145,7 +1145,7 @@
     "@vscode/vsce": "^2.19.0",
     "chai": "^4.3.7",
     "eslint": "^8.36.0",
-    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-mocha": "^10.5.0",
     "glob": "^11.0.1",
     "mocha": "^10.8.2",
