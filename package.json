@@ -248,13 +248,6 @@
           "type": "string",
           "markdownDescription": "Optional alternative repository to maven central if maven central is not available. For example: `https://jcenter.bintray.com`, which will be used to set to property described [here](https://get-coursier.io/blog/#mirrors)"
         },
-        "metals.ammoniteJvmProperties": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "markdownDescription": "Optional list of JVM properties to pass along to the Ammonite server. Each property needs to be a separate item.\n\nExample: `-Xmx1G` or `-Xms100M`"
-        },
         "metals.excludedPackages": {
           "type": "array",
           "items": {
@@ -425,7 +418,7 @@
             "3.3.4",
             "3.3.3"
           ],
-          "markdownDescription": "The Scala compiler version that is used as the default or fallback in case a file doesn't belong to any build target or the specified Scala version isn't supported by Metals.\n\nThis applies to standalone Scala files, worksheets, and Ammonite scripts.\n\n The `automatic` value means that the Scala version for these files will be inferred from the highest supported Scala version in your projects build definition"
+          "markdownDescription": "The Scala compiler version that is used as the default or fallback in case a file doesn't belong to any build target or the specified Scala version isn't supported by Metals.\n\nThis applies to standalone Scala files, worksheets, and Scala CLI scripts.\n\n The `automatic` value means that the Scala version for these files will be inferred from the highest supported Scala version in your projects build definition"
         },
         "metals.javaFormat.eclipseConfigPath": {
           "type": "string",
@@ -653,16 +646,6 @@
         "command": "metals.goto-super-method",
         "category": "Metals",
         "title": "Go to super method"
-      },
-      {
-        "command": "metals.ammonite-start",
-        "category": "Metals",
-        "title": "Start Ammonite build server"
-      },
-      {
-        "command": "metals.ammonite-stop",
-        "category": "Metals",
-        "title": "Stop Ammonite build server"
       },
       {
         "command": "metals.scala-cli-start",
@@ -903,14 +886,6 @@
         },
         {
           "command": "metals.reset-notifications",
-          "when": "metals:enabled"
-        },
-        {
-          "command": "metals.ammonite-start",
-          "when": "metals:enabled"
-        },
-        {
-          "command": "metals.ammonite-stop",
           "when": "metals:enabled"
         },
         {

@@ -592,8 +592,6 @@ function launchMetals(
         ServerCommands.CascadeCompile,
         ServerCommands.CleanCompile,
         ServerCommands.CancelCompilation,
-        ServerCommands.AmmoniteStart,
-        ServerCommands.AmmoniteStop,
         ServerCommands.ScalaCliStart,
         ServerCommands.ScalaCliStop,
         ServerCommands.ZipReports,
@@ -1431,7 +1429,6 @@ function configureSettingsDefaults() {
     {
       "**/.bloop": true,
       "**/.metals": true,
-      "**/.ammonite": true,
     },
     ConfigurationTarget.Global
   );
