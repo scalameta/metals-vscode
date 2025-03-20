@@ -7,16 +7,16 @@ import { existsSync } from "fs";
  * @param workspaceRoot the workspace root, if defined
  */
 export function checkDottyIde(
-  workspaceRoot: string | undefined,
+  workspaceRoot: string | undefined
 ): { enabled: true; path: string } | { enabled: false } {
   if (workspaceRoot) {
     const dottyIdeArtifactPath = path.join(
       workspaceRoot,
-      ".dotty-ide-artifact",
+      ".dotty-ide-artifact"
     );
     return {
       enabled: existsSync(dottyIdeArtifactPath),
-      path: dottyIdeArtifactPath,
+      path: dottyIdeArtifactPath
     };
   }
   return { enabled: false };

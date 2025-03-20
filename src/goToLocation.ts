@@ -10,13 +10,13 @@ export interface WindowLocation {
 
 export function gotoLocation(
   location: WindowLocation,
-  metalsFileProvider?: MetalsFileProvider,
+  metalsFileProvider?: MetalsFileProvider
 ): void {
   const range = new Range(
     location.range.start.line,
     location.range.start.character,
     location.range.end.line,
-    location.range.end.character,
+    location.range.end.character
   );
   let vs = ViewColumn.Active;
   if (location.otherWindow) {
@@ -25,7 +25,7 @@ export function gotoLocation(
         .filter(
           (vte) =>
             window.activeTextEditor?.document.uri.scheme != "output" &&
-            vte.viewColumn,
+            vte.viewColumn
         )
         .pop()?.viewColumn || ViewColumn.Beside;
   }
@@ -37,7 +37,7 @@ export function gotoLocation(
   workspace.openTextDocument(uri).then((textDocument) =>
     window.showTextDocument(textDocument, {
       selection: range,
-      viewColumn: vs,
-    }),
+      viewColumn: vs
+    })
   );
 }

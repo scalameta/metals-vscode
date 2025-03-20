@@ -7,7 +7,7 @@ import * as path from "path";
 export function toPromise<E, A>(te: TaskEither<E, A>): Promise<A> {
   return te().then(
     (res) =>
-      new Promise((resolve, reject) => pipe(res, E.fold(reject, resolve))),
+      new Promise((resolve, reject) => pipe(res, E.fold(reject, resolve)))
   );
 }
 
@@ -34,7 +34,7 @@ export function findOnPath(names: string[]) {
           return names.some(
             (name) =>
               p.endsWith(path.sep + name + ".bat") ||
-              p.endsWith(path.sep + name + ".exe"),
+              p.endsWith(path.sep + name + ".exe")
           );
         } else {
           return names.some((name) => p.endsWith(path.sep + name));

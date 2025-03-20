@@ -5,7 +5,7 @@ import {
   prefixesOf,
   refineRunnableTestItem,
   TestItemPath,
-  toVscodeRange,
+  toVscodeRange
 } from "./util";
 
 /**

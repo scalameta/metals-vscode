@@ -21,7 +21,7 @@ function sanitizeOption(option: string): string {
 
 export function convertToCoursierProperties(
   serverProperties: string[],
-  isCoursierJar: boolean,
+  isCoursierJar: boolean
 ): string[] {
   // setting properties on windows native launcher doesn't work
   if (!isCoursierJar && process.platform == "win32") {

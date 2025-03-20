@@ -22,7 +22,7 @@ export async function showReleaseNotes(
   calledOn: CalledOn,
   context: ExtensionContext,
   serverVersion: string,
-  outputChannel: vscode.OutputChannel,
+  outputChannel: vscode.OutputChannel
 ): Promise<void> {
   try {
     const result = await showReleaseNotesImpl(calledOn, context, serverVersion);
@@ -32,7 +32,7 @@ export async function showReleaseNotes(
     }
   } catch (error) {
     outputChannel.appendLine(
-      `Error, couldn't show release notes for Metals ${serverVersion}`,
+      `Error, couldn't show release notes for Metals ${serverVersion}`
     );
     outputChannel.appendLine(`${error}`);
   }
@@ -41,7 +41,7 @@ export async function showReleaseNotes(
 async function showReleaseNotesImpl(
   calledOn: CalledOn,
   context: ExtensionContext,
-  currentVersion: string,
+  currentVersion: string
 ): Promise<Either<string, void>> {
   const state = context.globalState;
 
@@ -69,28 +69,28 @@ async function showReleaseNotesImpl(
   async function showPanel(version: string, releaseNotesUrl: string) {
     const timeoutMs = 10000; // 10 seconds timeout
     const timeoutPromise = new Promise<(_: vscode.Uri) => string>((_, reject) =>
-      setTimeout(() => reject(new Error("Request timed out")), timeoutMs),
+      setTimeout(() => reject(new Error("Request timed out")), timeoutMs)
     );
     const releaseNotes = await Promise.race([
       getReleaseNotesMarkdown(releaseNotesUrl),
-      timeoutPromise,
+      timeoutPromise
     ]);
 
     const panel = vscode.window.createWebviewPanel(
       `scalameta.metals.whatsNew`,
       `Metals ${version} release notes`,
-      vscode.ViewColumn.One,
+      vscode.ViewColumn.One
     );
 
     panel.iconPath = vscode.Uri.file(
-      path.join(context.extensionPath, "icons", "scalameta-logo.png"),
+      path.join(context.extensionPath, "icons", "scalameta-logo.png")
     );
 
     // Uri with additional styles for webview
     const stylesPathMainPath = vscode.Uri.joinPath(
       context.extensionUri,
       "media",
-      "styles.css",
+      "styles.css"
     );
 
     // need to transform Uri
@@ -149,7 +149,7 @@ async function showReleaseNotesImpl(
     return isNewerVersion
       ? makeRight(cleanVersion)
       : makeLeft(
-          `not showing release notes since they've already been seen for your current version`,
+          `not showing release notes since they've already been seen for your current version`
         );
   }
 }
@@ -163,13 +163,13 @@ async function showReleaseNotesImpl(
  * contains can be converted to name of markdown file with release notes.
  */
 async function getMarkdownLink(
-  version: string,
+  version: string
 ): Promise<Either<string, string>> {
   const releaseInfoUrl = `https://api.github.com/repos/scalameta/metals/releases/tags/v${version}`;
   const options = {
     headers: {
-      "User-Agent": "metals",
-    },
+      "User-Agent": "metals"
+    }
   };
   const stringifiedContent = await fetchFrom(releaseInfoUrl, options);
   const body = JSON.parse(stringifiedContent)["body"] as string;
@@ -181,7 +181,7 @@ async function getMarkdownLink(
 
   // matches (2022)/(06)/(03)/(aluminium) via capture groups
   const matchResult = body.match(
-    new RegExp("(\\d\\d\\d\\d)/(\\d\\d)/(\\d\\d)/(\\w+)"),
+    new RegExp("(\\d\\d\\d\\d)/(\\d\\d)/(\\d\\d)/(\\w+)")
   );
   // whole expression + 4 capture groups = 5 entries
   if (matchResult?.length === 5) {
@@ -218,11 +218,11 @@ interface Authors {
  * proxy to webview.asWebviewUri
  */
 async function getReleaseNotesMarkdown(
-  releaseNotesUrl: string,
+  releaseNotesUrl: string
 ): Promise<(_: vscode.Uri) => string> {
   const text = await fetchFrom(releaseNotesUrl);
   const authorsYaml = await fetchFrom(
-    "https://raw.githubusercontent.com/scalameta/metals/main/website/blog/authors.yml",
+    "https://raw.githubusercontent.com/scalameta/metals/main/website/blog/authors.yml"
   );
   const authors = load(authorsYaml) as Authors;
   // every release notes starts with metadata format

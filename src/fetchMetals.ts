@@ -23,16 +23,16 @@ export async function fetchMetals({
   serverVersion,
   serverProperties,
   javaConfig: { javaOptions, coursier, extraEnv, javaPath },
-  outputChannel,
+  outputChannel
 }: FetchMetalsOptions): Promise<PackedChildPromise> {
   const serverDependency = calcServerDependency(serverVersion);
 
   const fetchProperties = serverProperties.filter(
-    (p) => !p.startsWith("-agentlib"),
+    (p) => !p.startsWith("-agentlib")
   );
   if (fetchProperties.length != serverProperties.length) {
     outputChannel.appendLine(
-      'Ignoring "-agentlib" option when fetching Metals with Coursier',
+      'Ignoring "-agentlib" option when fetching Metals with Coursier'
     );
   }
 
@@ -51,14 +51,14 @@ export async function fetchMetals({
     "sonatype:public",
     "-r",
     "sonatype:snapshots",
-    "-p",
+    "-p"
   ];
 
   const environment = {
     env: {
       ...process.env,
-      ...extraEnv,
-    },
+      ...extraEnv
+    }
   };
 
   if (coursier.endsWith(".jar")) {
@@ -67,17 +67,17 @@ export async function fetchMetals({
       ...fetchProperties,
       "-Dfile.encoding=UTF-8",
       "-jar",
-      coursier,
+      coursier
     ].concat(coursierArgs);
     return { promise: spawn(javaPath, jarArgs, environment) };
   } else {
     const javaArgs: Array<string> = convertToCoursierProperties(
       javaOptions.concat(["-Dfile.encoding=UTF-8"]).concat(fetchProperties),
-      false,
+      false
     );
 
     return {
-      promise: spawn(coursier, javaArgs.concat(coursierArgs), environment),
+      promise: spawn(coursier, javaArgs.concat(coursierArgs), environment)
     };
   }
 }

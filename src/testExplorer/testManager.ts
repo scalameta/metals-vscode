@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { TestRunProfileKind, tests } from "vscode";
 import {
   ExecuteCommandRequest,
-  LanguageClient,
+  LanguageClient
 } from "vscode-languageclient/node";
 import { addTestCases } from "./addTestCases";
 import { addTestSuite } from "./addTestSuites";
@@ -27,7 +27,10 @@ class TestManager {
   private isDisabled = false;
   private isRunning = false;
 
-  constructor(private readonly client: LanguageClient, isDisabled: boolean) {
+  constructor(
+    private readonly client: LanguageClient,
+    isDisabled: boolean
+  ) {
     if (isDisabled) {
       this.disable();
     }
@@ -87,7 +90,7 @@ class TestManager {
       targetName,
       folderUri,
       folderName,
-      events,
+      events
     } of updates) {
       const folderUri_ = folderUri || ("root" as FolderUri);
       const folderName_ = folderName || ("root" as FolderName);
@@ -133,7 +136,7 @@ class TestManager {
     return this.client
       .sendRequest(ExecuteCommandRequest.type, {
         command: "discover-tests",
-        arguments: args,
+        arguments: args
       })
       .then(
         (updates: BuildTargetUpdate[]) => {

@@ -4,14 +4,14 @@ import {
   Uri,
   ViewColumn,
   WebviewPanel,
-  window,
+  window
 } from "vscode";
 import {
   Disposable,
   ExecuteCommandParams,
   ExecuteCommandRequest,
   LanguageClient,
-  NotificationType,
+  NotificationType
 } from "vscode-languageclient/node";
 import { ClientCommands } from "./interfaces/ClientCommands";
 import { ServerCommands } from "./interfaces/ServerCommands";
@@ -35,7 +35,7 @@ export class DoctorProvider implements Disposable {
   // private extensionContext: ExtensionContext | undefined;
   constructor(
     private client: LanguageClient,
-    private context: ExtensionContext,
+    private context: ExtensionContext
   ) {}
 
   dispose(): void {
@@ -48,15 +48,17 @@ export class DoctorProvider implements Disposable {
         "metals-doctor",
         "Metals Doctor",
         ViewColumn.Active,
-        { enableCommandUris: true },
+        { enableCommandUris: true }
       );
       this.doctor.iconPath = Uri.file(
-        path.join(this.context.extensionPath, "icons", "doctor.svg"),
+        path.join(this.context.extensionPath, "icons", "doctor.svg")
       );
       this.isOpened = true;
 
       this.doctor.onDidDispose(() => {
-        this.client.sendNotification(doctorNotification, { visible: false });
+        this.client.sendNotification(doctorNotification, {
+          visible: false
+        });
         this.isOpened = false;
         this.doctor = undefined;
       });
@@ -80,7 +82,7 @@ export class DoctorProvider implements Disposable {
 
   async runDoctor(): Promise<void> {
     await this.client.sendRequest(ExecuteCommandRequest.type, {
-      command: ServerCommands.DoctorRun,
+      command: ServerCommands.DoctorRun
     });
     this.isOpened = true;
   }

@@ -9,7 +9,7 @@ const mirrorProperty = "coursierMirror";
  * @returns path to the mirror config file described in https://get-coursier.io/blog/#mirrors
  */
 export function getCoursierMirrorPath(
-  config: WorkspaceConfiguration,
+  config: WorkspaceConfiguration
 ): string | undefined {
   const mirrorConfig = getConfigValue<string>(config, mirrorProperty);
 
@@ -27,7 +27,7 @@ function writeMirrorFile(mirrorString: string, target: ConfigurationTarget) {
   const file = path.join(dotMetalsDir, "mirror.properties");
   const mirrorContents = [
     "metals.from=https://repo1.maven.org/maven2",
-    `metals.to=${mirrorString}`,
+    `metals.to=${mirrorString}`
   ].join("\n");
   fs.writeFileSync(file, mirrorContents);
   return file;

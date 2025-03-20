@@ -10,7 +10,7 @@ import {
   TestCaseMetalsTestItem,
   RunnableMetalsTestItem,
   WorkSpaceFolderTestItem,
-  MetalsTestItemKind,
+  MetalsTestItemKind
 } from "./types";
 
 // https://www.typescriptlang.org/docs/handbook/2/functions.html#function-overloads
@@ -136,7 +136,7 @@ export function prefixesOf(
       return {
         id: prefixes[idx],
         label: parts[idx],
-        next: () => makeTestPrefix(idx + 1, parts, prefixes),
+        next: () => makeTestPrefix(idx + 1, parts, prefixes)
       };
     } else {
       return null;

@@ -17,7 +17,7 @@ describe("getJavaOptions", () => {
 
   const proxyOptions = [
     "-Dhttp.proxyHost=proxy.example.com",
-    "-Dhttp.proxyPort=1234",
+    "-Dhttp.proxyPort=1234"
   ];
 
   it("reads from .jvmopts", () => {
@@ -29,7 +29,7 @@ describe("getJavaOptions", () => {
   it("sanitizes options from .jvmopts", () => {
     const malformedOptions = [
       "-Dhttp.proxyHost=proxy.example.com   ",
-      "-Dhttp.proxyPort=1234  ",
+      "-Dhttp.proxyPort=1234  "
     ];
     const workspaceRoot = createWorskpace(malformedOptions);
     const options = getJavaOptions(workspaceRoot);
@@ -56,14 +56,14 @@ describe("getJavaOptions", () => {
     process.env = {
       ...originalEnv,
       JAVA_OPTS: javaOpts.join(" "),
-      JAVA_FLAGS: javaFlags.join(" "),
+      JAVA_FLAGS: javaFlags.join(" ")
     };
     const workspaceRoot = createWorskpace(proxyOptions);
     const options = getJavaOptions(workspaceRoot);
     assert.deepStrictEqual(options, [
       ...javaOpts,
       ...javaFlags,
-      ...proxyOptions,
+      ...proxyOptions
     ]);
   });
 

@@ -1099,8 +1099,8 @@
     "vscode:publish": "vsce publish --yarn",
     "ovsx:publish": "ovsx publish",
     "lint": "eslint . --ext .ts --fix && yarn format",
-    "format": "prettier --write **/*.{ts,js,json}",
-    "format-check": "prettier --check **/*.{ts,js,json}"
+    "format": "prettier --write '**/*.{ts,js,json}'",
+    "format-check": "prettier --check '**/*.{ts,js,json}'"
   },
   "devDependencies": {
     "@sourcegraph/scip-typescript": "^0.3.15",

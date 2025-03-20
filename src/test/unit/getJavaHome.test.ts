@@ -103,6 +103,6 @@ function mockExistsFs(
 
 function mockSpawn(resultString: string, sandbox: sinon.SinonSandbox): void {
   sandbox.stub(require("promisify-child-process"), "spawn").resolves({
-    stderr: resultString,
+    stderr: resultString
   });
 }

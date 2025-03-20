@@ -17,7 +17,7 @@ class MockRepo implements CheckForUpdateRepo {
   } {
     return {
       prevVersion: this.prevVersion,
-      lastUpdatedAt: this.lastUpdatedAt,
+      lastUpdatedAt: this.lastUpdatedAt
     };
   }
   saveLastUpdated(
@@ -45,7 +45,7 @@ describe("needCheckForUpdates", () => {
     expect(spy.getCall(0).args).to.eql([
       currentVersion,
       today,
-      ConfigurationTarget.Global,
+      ConfigurationTarget.Global
     ]);
   });
 
@@ -65,7 +65,7 @@ describe("needCheckForUpdates", () => {
     expect(spy.getCall(0).args).to.eql([
       currentVersion,
       today,
-      ConfigurationTarget.Global,
+      ConfigurationTarget.Global
     ]);
   });
 

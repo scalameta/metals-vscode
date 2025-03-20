@@ -8,14 +8,14 @@ import {
   DebugConfigurationProviderTriggerKind,
   tasks,
   Task,
-  ShellExecution,
+  ShellExecution
 } from "vscode";
 import { ExtendedScalaRunMain, ScalaCodeLensesParams } from "./types";
 import { platform } from "os";
 import { currentWorkspaceFolder } from "../util";
 import {
   DebugDiscoveryParams,
-  RunType,
+  RunType
 } from "../interfaces/DebugDiscoveryParams";
 import { ServerCommands } from "../interfaces/ServerCommands";
 
@@ -37,7 +37,7 @@ export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
     vscode.debug.registerDebugAdapterDescriptorFactory(
       configurationType,
       new ScalaDebugServerFactory()
-    ),
+    )
   ];
 }
 
@@ -155,7 +155,7 @@ async function debug(
     name: response.name,
     noDebug: noDebug,
     request: "launch",
-    debugServer: port, // note: MUST be a number. vscode magic - automatically connects to the server
+    debugServer: port // note: MUST be a number. vscode magic - automatically connects to the server
   };
   commands.executeCommand("workbench.panel.repl.view.focus");
   return vscode.debug.startDebugging(undefined, configuration);
@@ -178,7 +178,7 @@ class ScalaMainConfigProvider implements vscode.DebugConfigurationProvider {
         args: undefined,
         jvmOptions: undefined,
         env: undefined,
-        envFile: undefined,
+        envFile: undefined
       };
       await startDiscovery(debugConfiguration.noDebug, args);
       return debugConfiguration;
@@ -206,13 +206,13 @@ class ScalaDebugServerFactory implements vscode.DebugAdapterDescriptorFactory {
           args: session.configuration.args,
           jvmOptions: session.configuration.jvmOptions,
           env: session.configuration.env,
-          envFile: session.configuration.envFile,
+          envFile: session.configuration.envFile
         };
         await startDiscovery(session.configuration.noDebug, args);
 
         // This is the only way not to have to run full fledged DAP server
         return new vscode.DebugAdapterExecutable("echo", [
-          '"Running in the task window"',
+          '"Running in the task window"'
         ]);
       } else {
         const debugSession = await vscode.commands.executeCommand<DebugSession>(
