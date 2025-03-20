@@ -14,7 +14,7 @@ import {
  */
 export namespace DecorationTypeDidChange {
   export const type = new NotificationType<DecorationRenderOptions>(
-    "metals/decorationTypeDidChange"
+    "metals/decorationTypeDidChange",
   );
 }
 
@@ -35,6 +35,6 @@ export interface PublishDecorationsParams {
 
 export namespace DecorationsRangesDidChange {
   export const type = new NotificationType<PublishDecorationsParams>(
-    "metals/publishDecorations"
+    "metals/publishDecorations",
   );
 }

@@ -9,7 +9,7 @@ const mirrorProperty = "coursierMirror";
  * @returns path to the mirror config file described in https://get-coursier.io/blog/#mirrors
  */
 export function getCoursierMirrorPath(
-  config: WorkspaceConfiguration
+  config: WorkspaceConfiguration,
 ): string | undefined {
   const mirrorConfig = getConfigValue<string>(config, mirrorProperty);
 

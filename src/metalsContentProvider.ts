@@ -59,7 +59,7 @@ export async function decodeAndShowFile(
   client: LanguageClient,
   metalsFileProvider: MetalsFileProvider,
   uri: Uri | undefined,
-  decodeExtension: DecodeExtension
+  decodeExtension: DecodeExtension,
 ): Promise<void> {
   // returns an active editor uri, fallbacks to currently active file
   function uriWithFallback(): Uri | undefined {
@@ -70,7 +70,7 @@ export async function decodeAndShowFile(
       const editor = window.visibleTextEditors.find(
         (e) =>
           isSupportedLanguage(e.document.languageId) ||
-          e.document.fileName.endsWith(decodeExtension)
+          e.document.fileName.endsWith(decodeExtension),
       );
       return editor?.document.uri;
     }
@@ -100,7 +100,7 @@ export async function decodeAndShowFile(
           {
             textDocument: { uri: currentUri.toString() },
             kind: decodeExtension === "tasty-decoded" ? "tasty" : "class",
-          }
+          },
         );
         if (value) {
           uriToResource = Uri.parse(value);
@@ -111,7 +111,7 @@ export async function decodeAndShowFile(
 
       if (uriToResource) {
         uriWithParams = Uri.parse(
-          `metalsDecode:${uriToResource.toString()}.${decodeExtension}`
+          `metalsDecode:${uriToResource.toString()}.${decodeExtension}`,
         );
       }
     }

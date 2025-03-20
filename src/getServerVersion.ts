@@ -18,7 +18,7 @@ const suggestLatestUpgrade = "suggestLatestUpgrade";
 
 export function getServerVersion(
   config: WorkspaceConfiguration,
-  context: ExtensionContext
+  context: ExtensionContext,
 ): string {
   /* eslint-disable @typescript-eslint/no-non-null-assertion */
   const serverVersionConfig = config.get<string>(serverVersionSection);
@@ -33,11 +33,11 @@ export function getServerVersion(
 async function validateCurrentVersion(
   serverVersion: string,
   config: WorkspaceConfiguration,
-  context: ExtensionContext
+  context: ExtensionContext,
 ): Promise<void> {
   const suggestUpgradeSetting = getConfigValue<boolean>(
     config,
-    suggestLatestUpgrade
+    suggestLatestUpgrade,
   );
 
   const checkForUpdateRepo = new DefaultCheckForUpdateRepo(context);
@@ -48,7 +48,7 @@ async function validateCurrentVersion(
         serverVersion,
         todayString(),
         fromVSCode(suggestUpgradeSetting.target),
-        checkForUpdateRepo
+        checkForUpdateRepo,
       );
     } else {
       return false;
@@ -69,19 +69,19 @@ async function validateCurrentVersion(
             config.update(
               serverVersionSection,
               nextVersion,
-              suggestUpgradeSetting.target
+              suggestUpgradeSetting.target,
             );
             checkForUpdateRepo.saveLastUpdated(
               nextVersion,
               todayString(),
-              fromVSCode(suggestUpgradeSetting.target)
+              fromVSCode(suggestUpgradeSetting.target),
             );
           } else if (result == ignoreChoice) {
             // extend the current version expiration date
             checkForUpdateRepo.saveLastUpdated(
               serverVersion,
               todayString(),
-              fromVSCode(suggestUpgradeSetting.target)
+              fromVSCode(suggestUpgradeSetting.target),
             );
           }
         });
@@ -128,7 +128,7 @@ function warnIfIsOutdated(config: WorkspaceConfiguration): void {
         message,
         upgradeChoice,
         openSettingsChoice,
-        dismissChoice
+        dismissChoice,
       );
       switch (choice) {
         case upgradeChoice:

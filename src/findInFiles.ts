@@ -22,7 +22,7 @@ import { MetalsFileProvider } from "./metalsContentProvider";
 class TopLevel {
   constructor(
     readonly positions: PositionInFile[],
-    readonly resourceUri: Uri
+    readonly resourceUri: Uri,
   ) {}
 
   readonly key = "TopLevel";
@@ -32,7 +32,7 @@ class PositionInFile {
   constructor(
     readonly location: Location,
     readonly uri: Uri,
-    readonly label: string
+    readonly label: string,
   ) {}
 
   readonly key = "PositionInFile";
@@ -41,12 +41,12 @@ class PositionInFile {
 type Node = TopLevel | PositionInFile;
 
 export function startFindInFilesProvider(
-  context: ExtensionContext
+  context: ExtensionContext,
 ): FindInFilesProvider {
   const findInFilesProvider = new FindInFilesProvider();
   const treeDataProvider = window.registerTreeDataProvider(
     "metalsFindInFiles",
-    findInFilesProvider
+    findInFilesProvider,
   );
   context.subscriptions.push(treeDataProvider);
 
@@ -55,7 +55,7 @@ export function startFindInFilesProvider(
 
 export function createFindInFilesTreeView(
   provider: FindInFilesProvider,
-  context: ExtensionContext
+  context: ExtensionContext,
 ): TreeView<unknown> {
   commands.executeCommand("setContext", "metals.showFindInFiles", false);
   const treeView = window.createTreeView("metalsFindInFiles", {
@@ -74,7 +74,7 @@ export function createFindInFilesTreeView(
         case "PositionInFile": {
           const positionInFile = head;
           const textDocument = await workspace.openTextDocument(
-            positionInFile.uri
+            positionInFile.uri,
           );
           const textEditor = await window.showTextDocument(textDocument);
           const range = positionInFile.location.range;
@@ -83,7 +83,7 @@ export function createFindInFilesTreeView(
           const selection = new Selection(end, start);
           const vscodeRange = new Range(
             new Position(range.start.line, range.start.character),
-            new Position(range.end.line, range.end.character)
+            new Position(range.end.line, range.end.character),
           );
           textEditor.revealRange(vscodeRange, TextEditorRevealType.InCenter);
           textEditor.selection = selection;
@@ -102,7 +102,7 @@ export async function executeFindInFiles(
   provider: FindInFilesProvider,
   view: TreeView<unknown>,
   metalsFileProvider: MetalsFileProvider,
-  outputChannel: OutputChannel
+  outputChannel: OutputChannel,
 ): Promise<void> {
   try {
     const include = await window
@@ -139,7 +139,7 @@ export async function executeFindInFiles(
       {
         options: { include },
         query: { pattern },
-      }
+      },
     );
 
     commands.executeCommand("setContext", "metals.showFindInFiles", true);
@@ -154,14 +154,14 @@ export async function executeFindInFiles(
     }
   } catch (error) {
     outputChannel.appendLine(
-      "Error finding text in dependency jars: " + JSON.stringify(error)
+      "Error finding text in dependency jars: " + JSON.stringify(error),
     );
   }
 }
 
 async function toTopLevel(
   locations: Location[],
-  metalsFileProvider: MetalsFileProvider
+  metalsFileProvider: MetalsFileProvider,
 ): Promise<TopLevel[]> {
   const locationsByFile = new Map<string, Location[]>();
 
@@ -193,7 +193,7 @@ async function toTopLevel(
       } else {
         return new TopLevel([] as PositionInFile[], uri);
       }
-    })
+    }),
   );
 }
 
@@ -261,7 +261,7 @@ class FindInFilesProvider implements TreeDataProvider<Node> {
         return Promise.resolve(undefined);
       case "PositionInFile":
         return Promise.resolve(
-          this.items.find((topLevel) => topLevel.positions.includes(element))
+          this.items.find((topLevel) => topLevel.positions.includes(element)),
         );
     }
   }

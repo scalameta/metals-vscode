@@ -152,7 +152,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
         outputChannel.appendLine(`${err}`);
         window.showErrorMessage(`${err}`);
       }
-    }
+    },
   );
 
   const disableReleaseNotes =
@@ -162,7 +162,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
       "onExtensionStart",
       context,
       serverVersion,
-      outputChannel
+      outputChannel,
     );
   }
 }
@@ -180,7 +180,7 @@ function migrateOldSettings(): void {
   const implicitConversions = config.get<boolean>(implicitConvSetting) ?? false;
   [inferredTypeSetting, implicitArgsSetting, implicitConvSetting].forEach(
     (setting) =>
-      config.update(setting, undefined, ConfigurationTarget.Workspace)
+      config.update(setting, undefined, ConfigurationTarget.Workspace),
   );
   type SettingTuple = [string, boolean];
   const settings: SettingTuple[] = [
@@ -203,7 +203,7 @@ export function deactivate(): Thenable<void> | undefined {
 function debugInformation(
   serverVersion: string,
   serverProperties: string[],
-  javaConfig: JavaConfig
+  javaConfig: JavaConfig,
 ) {
   return `  Metals version: ${serverVersion}  
   Server properties: ${serverProperties} 
@@ -220,7 +220,7 @@ async function fetchAndLaunchMetals(
   context: ExtensionContext,
   serverVersion: string,
   javaVersion: JavaVersion,
-  forceCoursierJar = false
+  forceCoursierJar = false,
 ) {
   outputChannel.appendLine(`Metals version: ${serverVersion}`);
 
@@ -246,7 +246,7 @@ async function fetchAndLaunchMetals(
     context.extensionPath,
     outputChannel,
     forceCoursierJar,
-    serverProperties.concat(getJavaOptions(workspaceRoot))
+    serverProperties.concat(getJavaOptions(workspaceRoot)),
   );
 
   const canRetryWithJar =
@@ -255,7 +255,7 @@ async function fetchAndLaunchMetals(
   function retry(error: any): Promise<any> {
     if (canRetryWithJar) {
       outputChannel.appendLine(
-        "Trying again with the embedded coursier. This might take longer."
+        "Trying again with the embedded coursier. This might take longer.",
       );
       return fetchAndLaunchMetals(context, serverVersion, javaVersion, true);
     } else {
@@ -291,14 +291,14 @@ async function fetchAndLaunchMetals(
           classpath,
           serverProperties,
           javaConfig,
-          serverVersion
+          serverVersion,
         ).catch((reason): Promise<any> => {
           outputChannel.appendLine(
-            "Launching Metals failed with the following:"
+            "Launching Metals failed with the following:",
           );
           outputChannel.appendLine(reason.message);
           outputChannel.appendLine(
-            debugInformation(serverVersion, serverProperties, javaConfig)
+            debugInformation(serverVersion, serverProperties, javaConfig),
           );
           return retry(reason);
         });
@@ -306,11 +306,11 @@ async function fetchAndLaunchMetals(
       (reason) => {
         if (reason instanceof Error) {
           outputChannel.appendLine(
-            "Downloading Metals failed with the following:"
+            "Downloading Metals failed with the following:",
           );
           outputChannel.appendLine(reason.message);
           outputChannel.appendLine(
-            debugInformation(serverVersion, serverProperties, javaConfig)
+            debugInformation(serverVersion, serverProperties, javaConfig),
           );
         }
         if (canRetryWithJar) {
@@ -341,7 +341,7 @@ async function fetchAndLaunchMetals(
             }
           });
         }
-      }
+      },
     );
 }
 
@@ -351,7 +351,7 @@ function launchMetals(
   metalsClasspath: string,
   serverProperties: string[],
   javaConfig: JavaConfig,
-  serverVersion: string
+  serverVersion: string,
 ) {
   // Make editing Scala docstrings slightly nicer.
   enableScaladocIndentation();
@@ -360,7 +360,7 @@ function launchMetals(
     metalsClasspath,
     serverProperties,
     "vscode",
-    javaConfig
+    javaConfig,
   );
 
   const initializationOptions: MetalsInitializationOptions = {
@@ -417,7 +417,7 @@ function launchMetals(
   function hoverLinksMiddlewareHook(
     document: TextDocument,
     position: Position,
-    token: CancellationToken
+    token: CancellationToken,
   ): ProviderResult<Hover> {
     const editor = window.activeTextEditor;
     const pos = client.code2ProtocolConverter.asPosition(position);
@@ -433,7 +433,7 @@ function launchMetals(
           position: pos,
           range: range,
         },
-        token
+        token,
       )
       .then(
         (result) => {
@@ -441,7 +441,7 @@ function launchMetals(
         },
         () => {
           return Promise.resolve(null);
-        }
+        },
       );
   }
 
@@ -449,13 +449,13 @@ function launchMetals(
     "metals",
     "Metals",
     serverOptions,
-    clientOptions
+    clientOptions,
   );
 
   currentClient = client;
   function registerCommand(
     command: string,
-    callback: (...args: any[]) => unknown
+    callback: (...args: any[]) => unknown,
   ) {
     context.subscriptions.push(commands.registerCommand(command, callback));
   }
@@ -466,19 +466,19 @@ function launchMetals(
       textEditor: TextEditor,
       edit: TextEditorEdit,
       ...args: any[]
-    ) => unknown
+    ) => unknown,
   ) {
     context.subscriptions.push(
-      commands.registerTextEditorCommand(command, callback)
+      commands.registerTextEditorCommand(command, callback),
     );
   }
 
   function registerTextDocumentContentProvider(
     scheme: string,
-    provider: TextDocumentContentProvider
+    provider: TextDocumentContentProvider,
   ) {
     context.subscriptions.push(
-      workspace.registerTextDocumentContentProvider(scheme, provider)
+      workspace.registerTextDocumentContentProvider(scheme, provider),
     );
   }
 
@@ -504,7 +504,7 @@ function launchMetals(
       client,
       metalsFileProvider,
       uri,
-      "semanticdb-compact"
+      "semanticdb-compact",
     );
   });
 
@@ -513,7 +513,7 @@ function launchMetals(
       client,
       metalsFileProvider,
       uri,
-      "semanticdb-detailed"
+      "semanticdb-detailed",
     );
   });
 
@@ -522,7 +522,7 @@ function launchMetals(
       client,
       metalsFileProvider,
       uri,
-      "semanticdb-proto"
+      "semanticdb-proto",
     );
   });
 
@@ -536,8 +536,8 @@ function launchMetals(
       // NOTE(gabro): this is due to mismatching versions of vscode-languageserver-protocol
       // which are not trivial to fix, currently
       client,
-      window
-    )
+      window,
+    ),
   );
 
   registerCommand(
@@ -547,8 +547,8 @@ function launchMetals(
         "onUserDemand",
         context,
         serverVersion,
-        outputChannel
-      )
+        outputChannel,
+      ),
   );
 
   return client.start().then(
@@ -562,14 +562,14 @@ function launchMetals(
             "metals-stacktrace",
             "Analyze Stacktrace",
             ViewColumn.Beside,
-            { enableCommandUris: true }
+            { enableCommandUris: true },
           );
           stacktrace.iconPath = {
             light: Uri.file(
-              path.join(context.extensionPath, "icons", "exception-light.svg")
+              path.join(context.extensionPath, "icons", "exception-light.svg"),
             ),
             dark: Uri.file(
-              path.join(context.extensionPath, "icons", "exception-dark.svg")
+              path.join(context.extensionPath, "icons", "exception-dark.svg"),
             ),
           };
           context.subscriptions.push(stacktrace);
@@ -599,7 +599,7 @@ function launchMetals(
         "open-new-github-issue",
       ].forEach((command) => {
         registerCommand("metals." + command, async () =>
-          client.sendRequest(ExecuteCommandRequest.type, { command: command })
+          client.sendRequest(ExecuteCommandRequest.type, { command: command }),
         );
       });
 
@@ -644,7 +644,7 @@ function launchMetals(
       let channelOpen = false;
 
       registerCommand(ClientCommands.FocusDiagnostics, () =>
-        commands.executeCommand(workbenchCommands.focusDiagnostics)
+        commands.executeCommand(workbenchCommands.focusDiagnostics),
       );
 
       registerCommand(ClientCommands.RunDoctor, async () => {
@@ -678,9 +678,9 @@ function launchMetals(
               if (reason instanceof Error) {
                 window.showErrorMessage(reason.message);
               }
-            }
+            },
           );
-        }
+        },
       );
 
       registerCommand(
@@ -696,9 +696,9 @@ function launchMetals(
               if (reason instanceof Error) {
                 window.showErrorMessage(reason.message);
               }
-            }
+            },
           );
-        }
+        },
       );
 
       // should be the compilation of a currently opened file
@@ -712,18 +712,18 @@ function launchMetals(
 
       languages.registerCodeLensProvider(
         { scheme: "file", language: "scala" },
-        codeLensRefresher
+        codeLensRefresher,
       );
       languages.registerCodeLensProvider(
         { scheme: "jar", language: "scala" },
-        codeLensRefresher
+        codeLensRefresher,
       );
 
       const getTestUI = () =>
         getValueFromConfig<TestUIKind>(
           config,
           "testUserInterface",
-          "Test Explorer"
+          "Test Explorer",
         );
 
       // vscodeTextExplorer can be undefined e.g. for eclipse theia,
@@ -754,7 +754,7 @@ function launchMetals(
               commands.executeCommand(
                 `metals.${ClientCommands.GotoLocation}`,
                 location,
-                metalsFileProvider
+                metalsFileProvider,
               );
               break;
             }
@@ -768,7 +768,7 @@ function launchMetals(
                 commands.executeCommand(
                   "vscode.openFolder",
                   Uri.parse(openWindowParams.uri),
-                  openWindowParams.openNewWindow
+                  openWindowParams.openNewWindow,
                 );
               }
               break;
@@ -800,7 +800,7 @@ function launchMetals(
             default:
               outputChannel.appendLine(`unknown command: ${params.command}`);
           }
-        }
+        },
       );
 
       context.subscriptions.push(executeClientCommandDisposable);
@@ -808,7 +808,7 @@ function launchMetals(
       // it is currently doing, for example "Compiling..".
       const metalsItem = window.createStatusBarItem(
         StatusBarAlignment.Right,
-        100
+        100,
       );
       const bspItem = window.createStatusBarItem(StatusBarAlignment.Right, 100);
       metalsItem.command = ClientCommands.ToggleLogs;
@@ -835,18 +835,18 @@ function launchMetals(
 
           if (params.level == "error") {
             item.backgroundColor = new ThemeColor(
-              "statusBarItem.errorBackground"
+              "statusBarItem.errorBackground",
             );
           } else if (params.level == "warn") {
             item.backgroundColor = new ThemeColor(
-              "statusBarItem.warningBackground"
+              "statusBarItem.warningBackground",
             );
           } else {
             item.backgroundColor = undefined;
           }
 
           item.command = params.command;
-        }
+        },
       );
       context.subscriptions.push(metalsStatusDisposable);
 
@@ -893,7 +893,7 @@ function launchMetals(
             command: ServerCommands.GotoSuperMethod,
             arguments: [getTextDocumentPositionParams(editor)],
           });
-        }
+        },
       );
 
       registerTextEditorCommand(`metals.scalafix-run`, (editor) => {
@@ -921,14 +921,14 @@ function launchMetals(
             command: ServerCommands.SuperMethodHierarchy,
             arguments: [getTextDocumentPositionParams(editor)],
           });
-        }
+        },
       );
 
       registerCommand(`metals.${ServerCommands.AnalyzeStacktrace}`, () => {
         env.clipboard.readText().then((clip) => {
           if (clip.trim().length < 1) {
             window.showInformationMessage(
-              "Clipboard appears to be empty, copy stacktrace to clipboard and retry this command"
+              "Clipboard appears to be empty, copy stacktrace to clipboard and retry this command",
             );
           } else {
             client.sendRequest(ExecuteCommandRequest.type, {
@@ -954,16 +954,16 @@ function launchMetals(
                 if (result.value) {
                   env.clipboard.writeText(result.value);
                   window.showInformationMessage(
-                    "Copied worksheet evaluation to clipboard."
+                    "Copied worksheet evaluation to clipboard.",
                   );
                 }
               });
           } else {
             window.showWarningMessage(
-              "You must be in a worksheet to use this feature."
+              "You must be in a worksheet to use this feature.",
             );
           }
-        }
+        },
       );
 
       registerCommand(`metals.${ServerCommands.ResetChoice}`, (args = []) => {
@@ -993,13 +993,13 @@ function launchMetals(
           if (location) {
             gotoLocation(location, metalsFileProvider);
           }
-        }
+        },
       );
 
       registerCommand("metals.reveal-active-file", () => {
         if (treeViews) {
           const editor = window.visibleTextEditors.find((e) =>
-            isSupportedLanguage(e.document.languageId)
+            isSupportedLanguage(e.document.languageId),
           );
           if (editor) {
             const params = getTextDocumentPositionParams(editor);
@@ -1017,12 +1017,12 @@ function launchMetals(
                       treeViews.reveal(result);
                     }
                   });
-              }
+              },
             );
           }
         } else {
           window.showErrorMessage(
-            "This version of Metals does not support tree views."
+            "This version of Metals does not support tree views.",
           );
         }
       });
@@ -1060,7 +1060,7 @@ function launchMetals(
             command: ServerCommands.NewScalaFile,
             arguments: [directory?.toString()],
           });
-        }
+        },
       );
 
       registerCommand(
@@ -1070,13 +1070,13 @@ function launchMetals(
             command: ServerCommands.NewJavaFile,
             arguments: [directory?.toString()],
           });
-        }
+        },
       );
 
       const findInFilesProvider = startFindInFilesProvider(context);
       const findInFilesView = createFindInFilesTreeView(
         findInFilesProvider,
-        context
+        context,
       );
 
       registerCommand(`metals.find-text-in-dependency-jars`, async () =>
@@ -1085,8 +1085,8 @@ function launchMetals(
           findInFilesProvider,
           findInFilesView,
           metalsFileProvider,
-          outputChannel
-        )
+          outputChannel,
+        ),
       );
 
       registerCommand(`metals.new-scala-worksheet`, async () => {
@@ -1104,7 +1104,7 @@ function launchMetals(
           const fullPath = path.join(parentPath, `${name}.worksheet.sc`);
           if (fs.existsSync(fullPath)) {
             window.showWarningMessage(
-              `A worksheet ${name}.worksheet.sc already exists, opening it instead`
+              `A worksheet ${name}.worksheet.sc already exists, opening it instead`,
             );
             return workspace
               .openTextDocument(fullPath)
@@ -1126,14 +1126,14 @@ function launchMetals(
       const workspaceUri = currentWorkspaceFolder()?.uri;
       // NOTE: we offer a custom symbol search command to work around the limitations of the built-in one, see https://github.com/microsoft/vscode/issues/98125 for more details.
       registerCommand(`metals.symbol-search`, () =>
-        openSymbolSearch(client, metalsFileProvider, workspaceUri)
+        openSymbolSearch(client, metalsFileProvider, workspaceUri),
       );
 
       window.onDidChangeActiveTextEditor((editor) => {
         if (editor && isSupportedLanguage(editor.document.languageId)) {
           client.sendNotification(
             MetalsDidFocusType,
-            editor.document.uri.toString()
+            editor.document.uri.toString(),
           );
         }
       });
@@ -1201,7 +1201,7 @@ function launchMetals(
                     setTimeout(() => progressResolve(undefined), 1000);
                   });
                 });
-              }
+              },
             );
           }, delay * 1000);
 
@@ -1216,11 +1216,11 @@ function launchMetals(
       const packageJson = JSON.parse(
         fs.readFileSync(
           path.join(context.extensionPath, "package.json"),
-          "utf8"
-        )
+          "utf8",
+        ),
       );
       const viewIds = packageJson.contributes.views["metals-explorer"].map(
-        (view: { id: string }) => view.id
+        (view: { id: string }) => view.id,
       );
       treeViews = startTreeView(client, outputChannel, context, viewIds);
       context.subscriptions.concat(treeViews.disposables);
@@ -1233,14 +1233,14 @@ function launchMetals(
           const editors = window.visibleTextEditors;
           const path = Uri.parse(params.uri).toString();
           const workheetEditors = editors.filter(
-            (editor) => editor.document.uri.toString() == path
+            (editor) => editor.document.uri.toString() == path,
           );
           if (workheetEditors.length > 0) {
             const options = params.options.map<DecorationOptions>((o) => {
               return {
                 range: new Range(
                   new Position(o.range.start.line, o.range.start.character),
-                  new Position(o.range.end.line, o.range.end.character)
+                  new Position(o.range.end.line, o.range.end.character),
                 ),
                 hoverMessage: o.hoverMessage?.value,
                 renderOptions: o.renderOptions,
@@ -1255,10 +1255,10 @@ function launchMetals(
             });
           } else {
             outputChannel.appendLine(
-              `Ignoring decorations for non-active document '${params.uri}'.`
+              `Ignoring decorations for non-active document '${params.uri}'.`,
             );
           }
-        }
+        },
       );
       context.subscriptions.push(decorationsRangesDidChangeDispoasable);
       registerCommand("metals.debug.hotCodeReplace", () => {
@@ -1271,14 +1271,14 @@ function launchMetals(
         outputChannel.appendLine("Could not launch Metals Language Server:");
         outputChannel.appendLine(reason.message);
       }
-    }
+    },
   );
 }
 
 function trackDownloadProgress(
   title: string,
   output: OutputChannel,
-  download: ChildProcessPromise
+  download: ChildProcessPromise,
 ): Promise<string> {
   const progress = new LazyProgress();
   return downloadProgress({
@@ -1380,7 +1380,7 @@ function detectConfigurationChanges() {
           if (choice === reloadWindowChoice) {
             commands.executeCommand(workbenchCommands.reloadWindow);
           }
-        })
+        }),
   );
 }
 
@@ -1405,7 +1405,7 @@ function configureSettingsDefaults() {
     newValues: Record<string, boolean>,
     configurationTarget:
       | ConfigurationTarget.Global
-      | ConfigurationTarget.Workspace
+      | ConfigurationTarget.Workspace,
   ) {
     const config = workspace.getConfiguration(configKey);
     const configProperty = config.inspect<Record<string, boolean>>(propertyKey);
@@ -1420,7 +1420,7 @@ function configureSettingsDefaults() {
     config.update(
       propertyKey,
       { ...currentValues, ...newValues },
-      configurationTarget
+      configurationTarget,
     );
   }
   updateFileConfig(
@@ -1430,7 +1430,7 @@ function configureSettingsDefaults() {
       "**/.bloop": true,
       "**/.metals": true,
     },
-    ConfigurationTarget.Global
+    ConfigurationTarget.Global,
   );
   updateFileConfig(
     "files",
@@ -1438,7 +1438,7 @@ function configureSettingsDefaults() {
     {
       "**/target": true,
     },
-    ConfigurationTarget.Workspace
+    ConfigurationTarget.Workspace,
   );
 }
 
@@ -1449,7 +1449,7 @@ function toggleInlayHintsSetting(setting: string) {
   config.update(
     `${setting}.enable`,
     !currentValues,
-    ConfigurationTarget.Workspace
+    ConfigurationTarget.Workspace,
   );
 }
 
@@ -1462,7 +1462,7 @@ function registerDebugEventListener(context: ExtensionContext) {
       ) {
         handleUserNotification(customEvent);
       }
-    })
+    }),
   );
 }
 

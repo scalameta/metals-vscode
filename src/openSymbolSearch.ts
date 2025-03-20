@@ -30,7 +30,7 @@ class SymbolItem implements QuickPickItem {
     this.alwaysShow = true;
     this.location = Location.create(
       si.location.uri.toString(),
-      si.location.range
+      si.location.range,
     );
   }
 }
@@ -38,7 +38,7 @@ class SymbolItem implements QuickPickItem {
 export function openSymbolSearch(
   client: LanguageClient,
   metalsFileProvider: MetalsFileProvider,
-  workspace: Uri | undefined
+  workspace: Uri | undefined,
 ): void {
   const inputBox = window.createQuickPick<SymbolItem>();
   inputBox.placeholder =
@@ -48,7 +48,7 @@ export function openSymbolSearch(
 
   const activeTextEditor = window.activeTextEditor;
   const wordRange = activeTextEditor?.document?.getWordRangeAtPosition(
-    activeTextEditor?.selection.active
+    activeTextEditor?.selection.active,
   );
   const wordUnderCursor =
     wordRange && activeTextEditor?.document?.getText(wordRange);
@@ -68,7 +68,7 @@ export function openSymbolSearch(
       .sendRequest(
         "workspace/symbol",
         { query: inputBox.value },
-        cancelToken.token
+        cancelToken.token,
       )
       .then((v) => {
         const symbols = v as SymbolInformation[];

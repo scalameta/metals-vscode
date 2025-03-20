@@ -24,7 +24,7 @@ export interface JavaHome {
  */
 export async function getJavaHome(
   javaVersion: JavaVersion,
-  outputChannel: OutputChannel
+  outputChannel: OutputChannel,
 ): Promise<JavaHome | undefined> {
   const fromEnvValue = await fromEnv(javaVersion, outputChannel);
   return fromEnvValue || (await fromPath(javaVersion, outputChannel));
@@ -34,7 +34,7 @@ const versionRegex = /\"\d\d/;
 export async function validateJavaVersion(
   javaHome: string,
   javaVersion: JavaVersion,
-  outputChannel: OutputChannel
+  outputChannel: OutputChannel,
 ): Promise<JavaHome | undefined> {
   const javaBin = path.join(javaHome, "bin", "java");
   try {
@@ -65,7 +65,7 @@ export async function validateJavaVersion(
 
 function propertyValueOf(
   input: string,
-  propertyName: string
+  propertyName: string,
 ): string | undefined {
   const start = input.indexOf(propertyName);
   if (start === -1) {
@@ -83,7 +83,7 @@ function propertyValueOf(
 
 export async function fromPath(
   javaVersion: JavaVersion,
-  outputChannel: OutputChannel
+  outputChannel: OutputChannel,
 ): Promise<JavaHome | undefined> {
   function getLastThreeLines(text: string): string {
     const lines = text.split(/\r?\n/);
@@ -93,7 +93,7 @@ export async function fromPath(
   if (javaExecutable) {
     const realJavaPath = realpathSync(javaExecutable);
     outputChannel.appendLine(
-      `Searching for Java on PATH. Found java executable under ${javaExecutable} that resolves to ${realJavaPath}`
+      `Searching for Java on PATH. Found java executable under ${javaExecutable} that resolves to ${realJavaPath}`,
     );
     const cmdArgs = ["-XshowSettings:properties", "-version"];
     try {
@@ -102,7 +102,7 @@ export async function fromPath(
       const discoveredJavaHome = propertyValueOf(cmdOutput, "java.home");
       const discoveredJavaVersion = propertyValueOf(
         cmdOutput,
-        "java.specification.version"
+        "java.specification.version",
       );
 
       if (
@@ -117,12 +117,12 @@ export async function fromPath(
         };
       } else {
         outputChannel.appendLine(
-          `Java version doesn't match the required one of ${javaVersion}`
+          `Java version doesn't match the required one of ${javaVersion}`,
         );
       }
     } catch (error) {
       outputChannel.appendLine(
-        `Failed while running ${realJavaPath} ${cmdArgs.join(" ")}`
+        `Failed while running ${realJavaPath} ${cmdArgs.join(" ")}`,
       );
       outputChannel.appendLine(`${error}`);
     }
@@ -131,23 +131,23 @@ export async function fromPath(
 
 export async function fromEnv(
   javaVersion: JavaVersion,
-  outputChannel: OutputChannel
+  outputChannel: OutputChannel,
 ): Promise<JavaHome | undefined> {
   const javaHome = process.env["JAVA_HOME"];
   if (javaHome) {
     outputChannel.appendLine(
-      `Checking Java in JAVA_HOME, which points to ${javaHome}`
+      `Checking Java in JAVA_HOME, which points to ${javaHome}`,
     );
     const validatedJavaHome = await validateJavaVersion(
       javaHome,
       javaVersion,
-      outputChannel
+      outputChannel,
     );
     if (validatedJavaHome) {
       return validatedJavaHome;
     } else {
       outputChannel.appendLine(
-        `Java version doesn't match the required one of ${javaVersion}`
+        `Java version doesn't match the required one of ${javaVersion}`,
       );
     }
   }

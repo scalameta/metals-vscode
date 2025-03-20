@@ -35,7 +35,7 @@ export class DoctorProvider implements Disposable {
   // private extensionContext: ExtensionContext | undefined;
   constructor(
     private client: LanguageClient,
-    private context: ExtensionContext
+    private context: ExtensionContext,
   ) {}
 
   dispose(): void {
@@ -48,10 +48,10 @@ export class DoctorProvider implements Disposable {
         "metals-doctor",
         "Metals Doctor",
         ViewColumn.Active,
-        { enableCommandUris: true }
+        { enableCommandUris: true },
       );
       this.doctor.iconPath = Uri.file(
-        path.join(this.context.extensionPath, "icons", "doctor.svg")
+        path.join(this.context.extensionPath, "icons", "doctor.svg"),
       );
       this.isOpened = true;
 

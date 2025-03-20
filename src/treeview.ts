@@ -28,7 +28,7 @@ export function startTreeView(
   client: LanguageClient,
   out: OutputChannel,
   context: ExtensionContext,
-  viewIds: string[]
+  viewIds: string[],
 ): MetalsTreeViews {
   const allProviders: Map<string, MetalsTreeDataProvider> = new Map();
   const allViews: Map<string, TreeView<string>> = new Map();
@@ -47,7 +47,7 @@ export function startTreeView(
       out,
       viewId,
       allProviders,
-      context
+      context,
     );
     allProviders.set(viewId, provider);
     const view = window.createTreeView(viewId, {
@@ -106,7 +106,7 @@ export function startTreeView(
           provider.didChange.fire(undefined);
         }
       });
-    }
+    },
   );
   context.subscriptions.push(metalsTreeViewDidChangeDispoasble);
 
@@ -178,7 +178,7 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
     readonly out: OutputChannel,
     readonly viewId: string,
     readonly views: Map<string, MetalsTreeDataProvider>,
-    readonly context: ExtensionContext
+    readonly context: ExtensionContext,
   ) {}
 
   // Populate TreeItem based on cached children response from the server.
@@ -281,7 +281,7 @@ function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
 }
 
 function toTreeItemCollapsibleState(
-  s: MetalsTreeViewNode["collapseState"]
+  s: MetalsTreeViewNode["collapseState"],
 ): TreeItemCollapsibleState {
   switch (s) {
     case "expanded":
