@@ -1110,7 +1110,7 @@
     "@types/mocha": "^10.0.1",
     "@types/node": "22.13.10",
     "@types/node-fetch": "^2.5.4",
-    "@types/semver": "^7.3.13",
+    "@types/semver": "^7.5.8",
     "@types/shell-quote": "^1.6.1",
     "@types/sinon": "^10.0.13",
     "@types/vscode": "1.59.0",
