@@ -114,7 +114,7 @@ export const ServerCommands = {
   /**
    * Delete all directories in .bloop and restart the Bloop server.
    */
-  ResetWorkspace: "reset-workspace",
+  ResetWorkspace: "reset-workspace"
 } as const;
 
 type ServerCommands = typeof ServerCommands;

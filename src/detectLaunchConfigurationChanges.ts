@@ -20,7 +20,7 @@ export function detectLaunchConfigurationChanges(
       UserConfiguration.MetalsJavaHome,
       UserConfiguration.CustomRepositories,
       UserConfiguration.CoursierMirror,
-      ...additionalRestartKeys,
+      ...additionalRestartKeys
     ];
     const shouldPromptRestart = promptRestartKeys.some((key) =>
       e.affectsConfiguration(`metals.${key}`)
@@ -30,7 +30,7 @@ export function detectLaunchConfigurationChanges(
         message:
           "Server launch configuration change detected. Reload the window for changes to take effect",
         reloadWindowChoice: "Reload Window",
-        dismissChoice: "Not now",
+        dismissChoice: "Not now"
       });
     }
   });

@@ -27,7 +27,7 @@ function writeMirrorFile(mirrorString: string, target: ConfigurationTarget) {
   const file = path.join(dotMetalsDir, "mirror.properties");
   const mirrorContents = [
     "metals.from=https://repo1.maven.org/maven2",
-    `metals.to=${mirrorString}`,
+    `metals.to=${mirrorString}`
   ].join("\n");
   fs.writeFileSync(file, mirrorContents);
   return file;

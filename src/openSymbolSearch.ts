@@ -4,7 +4,7 @@ import {
   SymbolInformation,
   CancellationTokenSource,
   SymbolKind,
-  Uri,
+  Uri
 } from "vscode";
 import { LanguageClient, Location } from "vscode-languageclient/node";
 import { gotoLocation, WindowLocation } from "./goToLocation";
@@ -82,7 +82,7 @@ export function openSymbolSearch(
     const windowLocation: WindowLocation = {
       uri: location.uri,
       range: location.range,
-      otherWindow: false,
+      otherWindow: false
     };
     inputBox.dispose();
 

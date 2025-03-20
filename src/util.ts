@@ -6,11 +6,11 @@ import {
   ConfigurationTarget,
   window,
   workspace,
-  WorkspaceFolder,
+  WorkspaceFolder
 } from "vscode";
 import {
   ExecuteCommandRequest,
-  TextDocumentPositionParams,
+  TextDocumentPositionParams
 } from "vscode-languageclient";
 import { LanguageClient } from "vscode-languageclient/node";
 import http from "https";
@@ -49,7 +49,7 @@ export function getConfigValue<A>(
   } else if (defaultValue) {
     return {
       value: defaultValue,
-      target: ConfigurationTarget.Global,
+      target: ConfigurationTarget.Global
     };
   }
 }
@@ -78,7 +78,7 @@ export function getTextDocumentPositionParams(
   const pos = editor.selection.active;
   return {
     textDocument: { uri: editor.document.uri.toString() },
-    position: { line: pos.line, character: pos.character },
+    position: { line: pos.line, character: pos.character }
   };
 }
 
@@ -89,7 +89,7 @@ export function executeCommand<T>(
 ): Promise<T> {
   return client.sendRequest(ExecuteCommandRequest.type, {
     command,
-    arguments: args,
+    arguments: args
   });
 }
 

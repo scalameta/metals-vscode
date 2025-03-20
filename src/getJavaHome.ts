@@ -39,7 +39,7 @@ export async function validateJavaVersion(
   const javaBin = path.join(javaHome, "bin", "java");
   try {
     const javaVersionOut = spawn(javaBin, ["-version"], {
-      encoding: "utf8",
+      encoding: "utf8"
     });
 
     javaVersionOut.stderr?.on("data", (out: Buffer) => {
@@ -53,7 +53,7 @@ export async function validateJavaVersion(
       return {
         path: javaHome,
         description: javaInfoStr,
-        version: matches[0].slice(1, 3),
+        version: matches[0].slice(1, 3)
       };
     }
   } catch (error) {
@@ -113,7 +113,7 @@ export async function fromPath(
         return {
           path: discoveredJavaHome,
           description: getLastThreeLines(cmdOutput),
-          version: discoveredJavaVersion,
+          version: discoveredJavaVersion
         };
       } else {
         outputChannel.appendLine(

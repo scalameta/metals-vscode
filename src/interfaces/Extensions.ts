@@ -1,6 +1,6 @@
 import {
   NotificationType,
-  ExecuteCommandParams,
+  ExecuteCommandParams
 } from "vscode-languageserver-protocol";
 
 /**

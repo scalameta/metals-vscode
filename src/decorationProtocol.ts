@@ -3,7 +3,7 @@ import { NotificationType } from "vscode-jsonrpc";
 import {
   DecorationRenderOptions,
   DecorationInstanceRenderOptions,
-  Range,
+  Range
 } from "vscode";
 
 /**

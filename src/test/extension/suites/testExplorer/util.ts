@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import {
   FolderName,
   FolderUri,
-  TargetName,
+  TargetName
 } from "../../../../testExplorer/types";
 import { TargetUri } from "../../../../types";
 
@@ -30,7 +30,7 @@ function traverse(items: vscode.TestItemCollection): unknown[] {
     testItems.push({
       id: c.id,
       label: c.label,
-      children: traverse(c.children),
+      children: traverse(c.children)
     });
   });
   return testItems;

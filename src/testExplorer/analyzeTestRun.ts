@@ -7,7 +7,7 @@ import {
   SuiteName,
   TestName,
   TestRunActions,
-  TestSuiteResult,
+  TestSuiteResult
 } from "./types";
 import { gatherTestItems } from "./util";
 
@@ -168,7 +168,7 @@ function toTestMessage(failed: Failed): vscode.TestMessage {
       location: new vscode.Location(
         vscode.Uri.parse(failed.location.file),
         new vscode.Position(failed.location.line, 0)
-      ),
+      )
     };
   }
   return { message: ansicolor.strip(failed.error) };

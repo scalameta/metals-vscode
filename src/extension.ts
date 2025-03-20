@@ -31,14 +31,14 @@ import {
   tests as vscodeTextExplorer,
   debug,
   DebugSessionCustomEvent,
-  ThemeColor,
+  ThemeColor
 } from "vscode";
 import {
   LanguageClient,
   LanguageClientOptions,
   RevealOutputChannelOn,
   ExecuteCommandRequest,
-  CancellationToken,
+  CancellationToken
 } from "vscode-languageclient/node";
 import { LazyProgress } from "./lazyProgress";
 import * as fs from "fs";
@@ -52,7 +52,7 @@ import { openSymbolSearch } from "./openSymbolSearch";
 import {
   createFindInFilesTreeView,
   executeFindInFiles,
-  startFindInFilesProvider,
+  startFindInFilesProvider
 } from "./findInFiles";
 import * as ext from "./hoverExtension";
 import { decodeAndShowFile, MetalsFileProvider } from "./metalsContentProvider";
@@ -62,7 +62,7 @@ import {
   getJavaVersionOverride,
   getTextDocumentPositionParams,
   getValueFromConfig,
-  metalsDir,
+  metalsDir
 } from "./util";
 import { createTestManager } from "./testExplorer/testManager";
 import { BuildTargetUpdate } from "./testExplorer/types";
@@ -74,13 +74,13 @@ import { showReleaseNotes } from "./releaseNotesProvider";
 import {
   openSettingsAction,
   USER_NOTIFICATION_EVENT,
-  SCALA_LANGID,
+  SCALA_LANGID
 } from "./consts";
 import { ScalaCodeLensesParams } from "./debugger/types";
 import { applyHCR, initializeHotCodeReplace } from "./debugger/hotCodeReplace";
 import {
   MetalsTreeViewRevealType,
-  MetalsTreeViews,
+  MetalsTreeViews
 } from "./interfaces/TreeViewProtocol";
 import { JavaVersion } from "./getJavaHome";
 import { setupCoursier } from "./setupCoursier";
@@ -95,17 +95,17 @@ import { ClientCommands } from "./interfaces/ClientCommands";
 import {
   ExecuteClientCommandType,
   MetalsDidFocusTypeType as MetalsDidFocusType,
-  MetalsOpenWindowParams,
+  MetalsOpenWindowParams
 } from "./interfaces/Extensions";
 import { TestUIKind } from "./interfaces/TestUI";
 import { MetalsStatusType } from "./interfaces/MetalsStatus";
 import {
   DebugDiscoveryParams,
-  RunType,
+  RunType
 } from "./interfaces/DebugDiscoveryParams";
 import {
   MetalsInputBoxHandle,
-  MetalsInputBoxType,
+  MetalsInputBoxType
 } from "./interfaces/MetalsInputBox";
 import { MetalsQuickPickType } from "./interfaces/MetalsQuickPick";
 import { MetalsSlowTaskType } from "./interfaces/MetalsSlowTask";
@@ -120,13 +120,13 @@ let currentClient: LanguageClient | undefined;
 // Inline needs to be first to be shown always first
 const inlineDecorationType: TextEditorDecorationType =
   window.createTextEditorDecorationType({
-    rangeBehavior: DecorationRangeBehavior.OpenOpen,
+    rangeBehavior: DecorationRangeBehavior.OpenOpen
   });
 
 const decorationType: TextEditorDecorationType =
   window.createTextEditorDecorationType({
     isWholeLine: true,
-    rangeBehavior: DecorationRangeBehavior.OpenClosed,
+    rangeBehavior: DecorationRangeBehavior.OpenClosed
   });
 
 const config = workspace.getConfiguration("metals");
@@ -141,7 +141,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     {
       location: ProgressLocation.Window,
       title: `Starting Metals server...`,
-      cancellable: false,
+      cancellable: false
     },
     async () => {
       commands.executeCommand("setContext", "metals:enabled", true);
@@ -187,7 +187,7 @@ function migrateOldSettings(): void {
     ["inferredTypes", inferredType],
     ["typeParameters", typeParameters],
     ["implicitArguments", implicitArgs],
-    ["implicitConversions", implicitConversions],
+    ["implicitConversions", implicitConversions]
   ];
   settings.forEach(([key, enabled]: SettingTuple) => {
     const newKey = `inlayHints.${key}.enable`;
@@ -268,14 +268,14 @@ async function fetchAndLaunchMetals(
     javaHome,
     coursier,
     customRepositories,
-    coursierMirrorFilePath: coursierMirror,
+    coursierMirrorFilePath: coursierMirror
   });
 
   const fetchProcess = fetchMetals({
     serverVersion,
     serverProperties,
     javaConfig,
-    outputChannel,
+    outputChannel
   });
 
   const title = `Downloading Metals v${serverVersion}`;
@@ -367,7 +367,7 @@ function launchMetals(
     compilerOptions: {
       completionCommand: "editor.action.triggerSuggest",
       overrideDefFormat: "unicode",
-      parameterHintsCommand: "editor.action.triggerParameterHints",
+      parameterHintsCommand: "editor.action.triggerParameterHints"
     },
     copyWorksheetOutputProvider: true,
     decorationProvider: true,
@@ -390,7 +390,7 @@ function launchMetals(
     testExplorerProvider: true,
     commandInHtmlFormat: "vscode",
     doctorVisibilityProvider: true,
-    bspStatusBarProvider: "on",
+    bspStatusBarProvider: "on"
   };
 
   const clientOptions: LanguageClientOptions = {
@@ -398,20 +398,20 @@ function launchMetals(
       { scheme: "file", language: "scala" },
       { scheme: "file", language: "java" },
       { scheme: "jar", language: "scala" },
-      { scheme: "jar", language: "java" },
+      { scheme: "jar", language: "java" }
     ],
     synchronize: {
-      configurationSection: "metals",
+      configurationSection: "metals"
     },
     revealOutputChannelOn: RevealOutputChannelOn.Never,
     outputChannel: outputChannel,
     initializationOptions,
     middleware: {
-      provideHover: hoverLinksMiddlewareHook,
+      provideHover: hoverLinksMiddlewareHook
     },
     markdown: {
-      isTrusted: true,
-    },
+      isTrusted: true
+    }
   };
 
   function hoverLinksMiddlewareHook(
@@ -431,7 +431,7 @@ function launchMetals(
           textDocument:
             client.code2ProtocolConverter.asTextDocumentIdentifier(document),
           position: pos,
-          range: range,
+          range: range
         },
         token
       )
@@ -570,7 +570,7 @@ function launchMetals(
             ),
             dark: Uri.file(
               path.join(context.extensionPath, "icons", "exception-dark.svg")
-            ),
+            )
           };
           context.subscriptions.push(stacktrace);
           stacktrace.onDidDispose(() => {
@@ -596,10 +596,12 @@ function launchMetals(
         ServerCommands.ScalaCliStop,
         ServerCommands.ZipReports,
         ServerCommands.ResetWorkspace,
-        "open-new-github-issue",
+        "open-new-github-issue"
       ].forEach((command) => {
         registerCommand("metals." + command, async () =>
-          client.sendRequest(ExecuteCommandRequest.type, { command: command })
+          client.sendRequest(ExecuteCommandRequest.type, {
+            command: command
+          })
         );
       });
 
@@ -632,7 +634,7 @@ function launchMetals(
         } else {
           // pick from list of targets
           const targets = await client.sendRequest(ExecuteCommandRequest.type, {
-            command: ServerCommands.ListBuildTargets,
+            command: ServerCommands.ListBuildTargets
           });
           const picked = await window.showQuickPick(targets);
           if (picked) {
@@ -707,7 +709,7 @@ function launchMetals(
 
       const codeLensRefresher: CodeLensProvider = {
         onDidChangeCodeLenses: compilationDoneEmitter.event,
-        provideCodeLenses: () => undefined,
+        provideCodeLenses: () => undefined
       };
 
       languages.registerCodeLensProvider(
@@ -859,7 +861,7 @@ function launchMetals(
           args: undefined,
           jvmOptions: undefined,
           env: undefined,
-          envFile: undefined,
+          envFile: undefined
         };
         scalaDebugger.startDiscovery(true, args).then((wasStarted) => {
           if (!wasStarted) {
@@ -877,7 +879,7 @@ function launchMetals(
           args: undefined,
           jvmOptions: undefined,
           env: undefined,
-          envFile: undefined,
+          envFile: undefined
         };
         scalaDebugger.startDiscovery(true, args).then((wasStarted) => {
           if (!wasStarted) {
@@ -891,7 +893,7 @@ function launchMetals(
         (editor) => {
           client.sendRequest(ExecuteCommandRequest.type, {
             command: ServerCommands.GotoSuperMethod,
-            arguments: [getTextDocumentPositionParams(editor)],
+            arguments: [getTextDocumentPositionParams(editor)]
           });
         }
       );
@@ -899,7 +901,7 @@ function launchMetals(
       registerTextEditorCommand(`metals.scalafix-run`, (editor) => {
         client.sendRequest(ExecuteCommandRequest.type, {
           command: "scalafix-run",
-          arguments: [getTextDocumentPositionParams(editor)],
+          arguments: [getTextDocumentPositionParams(editor)]
         });
       });
 
@@ -908,9 +910,9 @@ function launchMetals(
           command: "scalafix-run-only",
           arguments: [
             {
-              textDocumentPositionParams: getTextDocumentPositionParams(editor),
-            },
-          ],
+              textDocumentPositionParams: getTextDocumentPositionParams(editor)
+            }
+          ]
         });
       });
 
@@ -919,7 +921,7 @@ function launchMetals(
         (editor) => {
           client.sendRequest(ExecuteCommandRequest.type, {
             command: ServerCommands.SuperMethodHierarchy,
-            arguments: [getTextDocumentPositionParams(editor)],
+            arguments: [getTextDocumentPositionParams(editor)]
           });
         }
       );
@@ -933,7 +935,7 @@ function launchMetals(
           } else {
             client.sendRequest(ExecuteCommandRequest.type, {
               command: "analyze-stacktrace",
-              arguments: [clip],
+              arguments: [clip]
             });
           }
         });
@@ -947,7 +949,7 @@ function launchMetals(
             client
               .sendRequest(ExecuteCommandRequest.type, {
                 command: ServerCommands.CopyWorksheetOutput,
-                arguments: [uri.toString()],
+                arguments: [uri.toString()]
               })
               .then((result) => {
                 window.showInformationMessage(result);
@@ -969,21 +971,21 @@ function launchMetals(
       registerCommand(`metals.${ServerCommands.ResetChoice}`, (args = []) => {
         client.sendRequest(ExecuteCommandRequest.type, {
           command: ServerCommands.ResetChoice,
-          arguments: args,
+          arguments: args
         });
       });
 
       registerCommand(`metals.reset-notifications`, (args = []) => {
         client.sendRequest(ExecuteCommandRequest.type, {
           command: "reset-notifications",
-          arguments: args,
+          arguments: args
         });
       });
 
       registerCommand(`metals.${ServerCommands.Goto}`, (args) => {
         client.sendRequest(ExecuteCommandRequest.type, {
           command: ServerCommands.Goto,
-          arguments: args,
+          arguments: args
         });
       });
 
@@ -1006,7 +1008,7 @@ function launchMetals(
             return window.withProgress(
               {
                 location: ProgressLocation.Window,
-                title: "Metals: Reveal Active File in Side Bar",
+                title: "Metals: Reveal Active File in Side Bar"
               },
               (progress) => {
                 return client
@@ -1029,7 +1031,7 @@ function launchMetals(
 
       registerCommand(ClientCommands.EchoCommand, (arg: string) => {
         client.sendRequest(ExecuteCommandRequest.type, {
-          command: arg,
+          command: arg
         });
       });
 
@@ -1058,7 +1060,7 @@ function launchMetals(
         async (directory: Uri) => {
           return client.sendRequest(ExecuteCommandRequest.type, {
             command: ServerCommands.NewScalaFile,
-            arguments: [directory?.toString()],
+            arguments: [directory?.toString()]
           });
         }
       );
@@ -1068,7 +1070,7 @@ function launchMetals(
         async (directory: Uri) => {
           return client.sendRequest(ExecuteCommandRequest.type, {
             command: ServerCommands.NewJavaFile,
-            arguments: [directory?.toString()],
+            arguments: [directory?.toString()]
           });
         }
       );
@@ -1093,7 +1095,7 @@ function launchMetals(
         const sendRequest = (args: Array<string | undefined>) => {
           return client.sendRequest(ExecuteCommandRequest.type, {
             command: ServerCommands.NewScalaFile,
-            arguments: args,
+            arguments: args
           });
         };
         const currentUri = window.activeTextEditor?.document.uri;
@@ -1119,7 +1121,7 @@ function launchMetals(
 
       registerCommand(`metals.${ServerCommands.NewScalaProject}`, async () => {
         return client.sendRequest(ExecuteCommandRequest.type, {
-          command: ServerCommands.NewScalaProject,
+          command: ServerCommands.NewScalaProject
         });
       });
 
@@ -1171,15 +1173,19 @@ function launchMetals(
               {
                 location: ProgressLocation.Notification,
                 title: params.message + showLogs,
-                cancellable: true,
+                cancellable: true
               },
               (progress, progressToken) => {
                 // Update total running time every second.
                 let seconds = params.secondsElapsed || waitTime;
-                progress.report({ message: readableSeconds(seconds) });
+                progress.report({
+                  message: readableSeconds(seconds)
+                });
                 const interval = setInterval(() => {
                   seconds += 1;
-                  progress.report({ message: readableSeconds(seconds) });
+                  progress.report({
+                    message: readableSeconds(seconds)
+                  });
                 }, 1000);
 
                 // Hide logs and clean up resources on completion.
@@ -1243,7 +1249,7 @@ function launchMetals(
                   new Position(o.range.end.line, o.range.end.character)
                 ),
                 hoverMessage: o.hoverMessage?.value,
-                renderOptions: o.renderOptions,
+                renderOptions: o.renderOptions
               };
             });
             workheetEditors.forEach((editor) => {
@@ -1288,7 +1294,7 @@ function trackDownloadProgress(
     onProgress: (msg) => {
       output.appendLine(msg);
       progress.startOrContinue(title, output, download);
-    },
+    }
   });
 }
 
@@ -1314,7 +1320,7 @@ function enableScaladocIndentation() {
       // ^(.*\*/)?\s*\}.*$
       decreaseIndentPattern: /^(.*\*\/)?\s*\}.*$/,
       // ^.*\{[^}"']*$
-      increaseIndentPattern: /^.*\{[^}"']*$/,
+      increaseIndentPattern: /^.*\{[^}"']*$/
     },
     wordPattern:
       /(-?\d*\.\d\w*)|([^\`\~\!\@\#\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\?\s]+)/g,
@@ -1323,37 +1329,40 @@ function enableScaladocIndentation() {
         // e.g. /** | */
         beforeText: /^\s*\/\*\*(?!\/)([^\*]|\*(?!\/))*$/,
         afterText: /^\s*\*\/$/,
-        action: { indentAction: IndentAction.IndentOutdent, appendText: " * " },
+        action: {
+          indentAction: IndentAction.IndentOutdent,
+          appendText: " * "
+        }
       },
       {
         // indent in places with optional braces
         beforeText: increaseIndentPattern(),
-        action: { indentAction: IndentAction.Indent },
+        action: { indentAction: IndentAction.Indent }
       },
       {
         // e.g. /** ...|
         beforeText: /^\s*\/\*\*(?!\/)([^\*]|\*(?!\/))*$/,
-        action: { indentAction: IndentAction.None, appendText: " * " },
+        action: { indentAction: IndentAction.None, appendText: " * " }
       },
       {
         // e.g.  * ...| Javadoc style
         beforeText: /^(\t|(\ \ ))*\ \*(\ ([^\*]|\*(?!\/))*)?$/,
-        action: { indentAction: IndentAction.None, appendText: "* " },
+        action: { indentAction: IndentAction.None, appendText: "* " }
       },
       {
         // e.g.  * ...| Scaladoc style
         beforeText: /^(\t|(\ \ ))*\*(\ ([^\*]|\*(?!\/))*)?$/,
-        action: { indentAction: IndentAction.None, appendText: "* " },
+        action: { indentAction: IndentAction.None, appendText: "* " }
       },
       {
         // e.g.  */|
         beforeText: /^(\t|(\ \ ))*\ \*\/\s*$/,
-        action: { indentAction: IndentAction.None, removeText: 1 },
+        action: { indentAction: IndentAction.None, removeText: 1 }
       },
       {
         // e.g.  *-----*/|
         beforeText: /^(\t|(\ \ ))*\ \*[^/]*\*\/\s*$/,
-        action: { indentAction: IndentAction.None, removeText: 1 },
+        action: { indentAction: IndentAction.None, removeText: 1 }
       },
       {
         // stop vscode from indenting automatically to last known indentation
@@ -1364,9 +1373,9 @@ function enableScaladocIndentation() {
          *}
          */
         afterText: /[^\]\}\)]+/,
-        action: { indentAction: IndentAction.None },
-      },
-    ],
+        action: { indentAction: IndentAction.None }
+      }
+    ]
   });
 }
 
@@ -1428,7 +1437,7 @@ function configureSettingsDefaults() {
     "watcherExclude",
     {
       "**/.bloop": true,
-      "**/.metals": true,
+      "**/.metals": true
     },
     ConfigurationTarget.Global
   );
@@ -1436,7 +1445,7 @@ function configureSettingsDefaults() {
     "files",
     "watcherExclude",
     {
-      "**/target": true,
+      "**/target": true
     },
     ConfigurationTarget.Workspace
   );

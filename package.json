@@ -1099,8 +1099,8 @@
     "vscode:publish": "vsce publish --yarn",
     "ovsx:publish": "ovsx publish",
     "lint": "eslint . --ext .ts --fix && yarn format",
-    "format": "prettier --write **/*.{ts,js,json}",
-    "format-check": "prettier --check **/*.{ts,js,json}"
+    "format": "prettier --write '**/*.{ts,js,json}'",
+    "format-check": "prettier --check '**/*.{ts,js,json}'"
   },
   "devDependencies": {
     "@sourcegraph/scip-typescript": "^0.3.15",
@@ -1125,7 +1125,7 @@
     "glob": "^11.0.1",
     "mocha": "^10.8.2",
     "ovsx": "0.10.1",
-    "prettier": "2.8.5",
+    "prettier": "3.5.3",
     "rimraf": "^4.4.0",
     "sinon": "^19.0.2",
     "ts-mocha": "^10.0.0",

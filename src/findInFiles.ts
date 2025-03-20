@@ -14,7 +14,7 @@ import {
   TreeView,
   Uri,
   window,
-  workspace,
+  workspace
 } from "vscode";
 import { LanguageClient, Location } from "vscode-languageclient/node";
 import { MetalsFileProvider } from "./metalsContentProvider";
@@ -60,7 +60,7 @@ export function createFindInFilesTreeView(
   commands.executeCommand("setContext", "metals.showFindInFiles", false);
   const treeView = window.createTreeView("metalsFindInFiles", {
     treeDataProvider: provider,
-    showCollapseAll: true,
+    showCollapseAll: true
   });
 
   const didChangeSelection = treeView.onDidChangeSelection(async (e) => {
@@ -108,7 +108,7 @@ export async function executeFindInFiles(
     const include = await window
       .showInputBox({
         prompt: "Enter file mask",
-        placeHolder: ".conf",
+        placeHolder: ".conf"
       })
       .then((include) => {
         if (include === undefined) {
@@ -122,7 +122,7 @@ export async function executeFindInFiles(
 
     const pattern = await window
       .showInputBox({
-        prompt: "Enter search pattern",
+        prompt: "Enter search pattern"
       })
       .then((pattern) => {
         if (pattern === undefined) {
@@ -138,7 +138,7 @@ export async function executeFindInFiles(
       "metals/findTextInDependencyJars",
       {
         options: { include },
-        query: { pattern },
+        query: { pattern }
       }
     );
 
@@ -209,7 +209,7 @@ class FindInFilesProvider implements TreeDataProvider<Node> {
         const topLevelResult: TreeItem = {
           resourceUri: element.resourceUri,
           description: element.resourceUri.path,
-          collapsibleState: TreeItemCollapsibleState.Expanded,
+          collapsibleState: TreeItemCollapsibleState.Expanded
         };
 
         return topLevelResult;
@@ -229,12 +229,12 @@ class FindInFilesProvider implements TreeDataProvider<Node> {
           end.character + trimmedLabel.length - element.label.length;
         const highlightedLabel: TreeItemLabel = {
           label: trimmedLabel,
-          highlights: [[trimmedStartCol, trimmedEndCol]],
+          highlights: [[trimmedStartCol, trimmedEndCol]]
         };
         const positionResult: TreeItem = {
           label: highlightedLabel,
           description: shortDescription,
-          resourceUri: element.uri,
+          resourceUri: element.uri
         };
 
         return positionResult;

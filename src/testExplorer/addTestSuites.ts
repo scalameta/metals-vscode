@@ -6,7 +6,7 @@ import {
   TestItemPath,
   refineRunnableTestItem,
   refineTestItem,
-  toVscodeRange,
+  toVscodeRange
 } from "./util";
 
 /**

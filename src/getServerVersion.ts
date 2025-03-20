@@ -3,7 +3,7 @@ import {
   ExtensionContext,
   window,
   WorkspaceConfiguration,
-  ConfigurationTarget as VConfigurationTarget,
+  ConfigurationTarget as VConfigurationTarget
 } from "vscode";
 import * as workbenchCommands from "./workbenchCommands";
 import http from "https";
@@ -122,7 +122,7 @@ function warnIfIsOutdated(config: WorkspaceConfiguration): void {
         message,
         upgradeChoice,
         openSettingsChoice,
-        dismissChoice,
+        dismissChoice
       } = outdatedParams;
       const choice = await window.showWarningMessage(
         message,
@@ -138,7 +138,7 @@ function warnIfIsOutdated(config: WorkspaceConfiguration): void {
           commands.executeCommand(workbenchCommands.openSettings);
           break;
       }
-    },
+    }
   });
 }
 

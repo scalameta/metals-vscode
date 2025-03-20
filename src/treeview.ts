@@ -11,7 +11,7 @@ import {
   Uri,
   TreeView,
   ExtensionContext,
-  ThemeIcon,
+  ThemeIcon
 } from "vscode";
 import {
   MetalsTreeRevealResult,
@@ -21,7 +21,7 @@ import {
   MetalsTreeViewNodeCollapseDidChangeType,
   MetalsTreeViewParentType,
   MetalsTreeViews,
-  MetalsTreeViewVisibilityDidChangeType,
+  MetalsTreeViewVisibilityDidChangeType
 } from "./interfaces/TreeViewProtocol";
 
 export function startTreeView(
@@ -52,7 +52,7 @@ export function startTreeView(
     allProviders.set(viewId, provider);
     const view = window.createTreeView(viewId, {
       treeDataProvider: provider,
-      showCollapseAll: true,
+      showCollapseAll: true
     });
     allViews.set(viewId, view);
 
@@ -60,7 +60,7 @@ export function startTreeView(
     const onDidChangeVisibility = view.onDidChangeVisibility((e) => {
       client.sendNotification(MetalsTreeViewVisibilityDidChangeType, {
         viewId: viewId,
-        visible: e.visible,
+        visible: e.visible
       });
     });
     const onDidChangeExpandNode = view.onDidExpandElement((e) => {
@@ -68,7 +68,7 @@ export function startTreeView(
       client.sendNotification(MetalsTreeViewNodeCollapseDidChangeType, {
         viewId: viewId,
         nodeUri: e.element,
-        collapsed: false,
+        collapsed: false
       });
     });
     const onDidChangeCollapseNode = view.onDidCollapseElement((e) => {
@@ -76,7 +76,7 @@ export function startTreeView(
       client.sendNotification(MetalsTreeViewNodeCollapseDidChangeType, {
         viewId: viewId,
         nodeUri: e.element,
-        collapsed: true,
+        collapsed: true
       });
     });
 
@@ -84,7 +84,7 @@ export function startTreeView(
       view,
       onDidChangeVisibility,
       onDidChangeExpandNode,
-      onDidChangeCollapseNode,
+      onDidChangeCollapseNode
     ];
   });
 
@@ -122,7 +122,7 @@ export function startTreeView(
             if (isDestinationNode) {
               return view.reveal(uri, {
                 select: true,
-                focus: true,
+                focus: true
               });
             } else {
               return Promise.resolve();
@@ -140,7 +140,7 @@ export function startTreeView(
               return view.reveal(uri, {
                 expand: true,
                 select: isDestinationNode,
-                focus: isDestinationNode,
+                focus: isDestinationNode
               });
             });
           }
@@ -156,7 +156,7 @@ export function startTreeView(
           out.appendLine(`unknown view: ${params.viewId}`);
         }
       }
-    },
+    }
   };
 }
 
@@ -201,7 +201,7 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
           : undefined,
       command: item.command,
       tooltip: item.tooltip,
-      iconPath: item.icon ? this.iconPath(item.icon) : undefined,
+      iconPath: item.icon ? this.iconPath(item.icon) : undefined
     };
     result.collapsibleState;
     return result;
@@ -212,7 +212,7 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
     return this.client
       .sendRequest(MetalsTreeViewParentType, {
         viewId: this.viewId,
-        nodeUri: uri,
+        nodeUri: uri
       })
       .then((result) => {
         if (result.uri) {
@@ -230,7 +230,7 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
     return this.client
       .sendRequest(MetalsTreeViewChildrenType, {
         viewId: this.viewId,
-        nodeUri: uri,
+        nodeUri: uri
       })
       .then((result) => {
         result.nodes.forEach((n) => {

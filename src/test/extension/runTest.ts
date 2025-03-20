@@ -23,7 +23,7 @@ async function main(): Promise<void> {
       version: "1.89.1",
       reuseMachineInstall: true,
       launchArgs: ["--disable-extension"],
-      reporter,
+      reporter
     });
   } catch (err) {
     process.exit(1);

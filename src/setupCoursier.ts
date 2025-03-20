@@ -2,13 +2,13 @@ import {
   ChildProcessPromise,
   Output,
   PromisifySpawnOptions,
-  spawn,
+  spawn
 } from "promisify-child-process";
 import {
   JavaHome,
   JavaVersion,
   getJavaHome,
-  validateJavaVersion,
+  validateJavaVersion
 } from "./getJavaHome";
 import { OutputChannel } from "./interfaces/OutputChannel";
 import path from "path";
@@ -40,9 +40,8 @@ export async function setupCoursier(
     const defaultCoursier = isWindows
       ? path.resolve(coursierFetchPath, "cs.exe")
       : path.resolve(coursierFetchPath, "cs");
-    const possibleCoursier: string | undefined = await validateCoursier(
-      defaultCoursier
-    );
+    const possibleCoursier: string | undefined =
+      await validateCoursier(defaultCoursier);
 
     if (possibleCoursier) {
       return possibleCoursier;
@@ -77,7 +76,7 @@ export async function setupCoursier(
           ...nonJvmServerProperties,
           "--jvm",
           `temurin:${javaVersion}`,
-          "-version",
+          "-version"
         ],
         handleOutput
       );
@@ -91,10 +90,10 @@ export async function setupCoursier(
         "java-home",
         ...nonJvmServerProperties,
         "--jvm",
-        `temurin:${javaVersion}`,
+        `temurin:${javaVersion}`
       ],
       {
-        encoding: "utf8",
+        encoding: "utf8"
       }
     );
 
@@ -200,7 +199,7 @@ export async function fetchCoursier(
         const commandArr = curr.split(" ");
         return run(commandArr[0], commandArr.slice(1), handleOutput, {
           cwd: coursierFetchPath,
-          shell: true,
+          shell: true
         });
       };
       return acc ? acc.then(() => res()) : res();
@@ -213,7 +212,7 @@ export async function fetchCoursier(
     return runChainedCommands([
       `curl -fLo cs-x86_64-pc-win32.zip https://github.com/coursier/launchers/raw/${coursierCommit}/cs-x86_64-pc-win32.zip`,
       "tar -xf cs-x86_64-pc-win32.zip",
-      "move cs-x86_64-pc-win32.exe cs.exe",
+      "move cs-x86_64-pc-win32.exe cs.exe"
     ]);
   } else {
     const gzPath =
@@ -223,13 +222,13 @@ export async function fetchCoursier(
           ? `https://github.com/VirtusLab/coursier-m1/releases/download/${coursierVersion}/cs-aarch64-apple-darwin.gz`
           : `https://github.com/coursier/launchers/raw/${coursierCommit}/cs-x86_64-apple-darwin.gz`
         : // Linux
-        process.arch == "arm64"
-        ? `https://github.com/VirtusLab/coursier-m1/releases/download/${coursierVersion}/cs-aarch64-pc-linux.gz`
-        : `https://github.com/coursier/launchers/raw/${coursierCommit}/cs-x86_64-pc-linux.gz`;
+          process.arch == "arm64"
+          ? `https://github.com/VirtusLab/coursier-m1/releases/download/${coursierVersion}/cs-aarch64-pc-linux.gz`
+          : `https://github.com/coursier/launchers/raw/${coursierCommit}/cs-x86_64-pc-linux.gz`;
     const command = `curl -fL ${gzPath} | gzip -d > cs && chmod +x cs`;
     const result = await run(command, undefined, handleOutput, {
       shell: true,
-      cwd: coursierFetchPath,
+      cwd: coursierFetchPath
     });
     return result.code;
   }

@@ -2,7 +2,7 @@ import path from "path";
 import {
   fetchCoursier,
   setupCoursier,
-  validateCoursier,
+  validateCoursier
 } from "../../setupCoursier";
 import { OutputChannel } from "../../interfaces/OutputChannel";
 import { log } from "console";

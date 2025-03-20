@@ -5,7 +5,7 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier",
+    "prettier"
   ],
   ignorePatterns: ["out/*", "*.js", "src/test/unit/getJavaHome.test.ts"],
   overrides: [
@@ -14,7 +14,7 @@ module.exports = {
       rules: {
         "@typescript-eslint/no-explicit-any": [
           "warn",
-          { ignoreRestArgs: true },
+          { ignoreRestArgs: true }
         ],
         "no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars": [
@@ -22,16 +22,16 @@ module.exports = {
           {
             argsIgnorePattern: "^_",
             varsIgnorePattern: "^_",
-            caughtErrorsIgnorePattern: "^_",
-          },
+            caughtErrorsIgnorePattern: "^_"
+          }
         ],
         "@typescript-eslint/no-non-null-assertion": "error",
         "guard-for-in": "error",
         "no-var": "error",
         curly: "error",
         "no-useless-escape": "off",
-        "mocha/no-exclusive-tests": "error",
-      },
-    },
-  ],
+        "mocha/no-exclusive-tests": "error"
+      }
+    }
+  ]
 };

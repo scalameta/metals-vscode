@@ -77,11 +77,9 @@ suite("Test Explorer events", () => {
         {
           id: targetUri,
           label: targetName,
-          children: [
-            { id: "NoPackage", label: "NoPackage", uri, children: [] },
-          ],
-        },
-      ],
+          children: [{ id: "NoPackage", label: "NoPackage", uri, children: [] }]
+        }
+      ]
     });
     cleanup();
   });
@@ -129,20 +127,20 @@ suite("Test Explorer events", () => {
                   id: "a.Foo",
                   label: "Foo",
                   uri,
-                  children: [],
+                  children: []
                 },
                 {
                   id: "a.b",
                   label: "b",
                   children: [
-                    { id: "a.b.FooBar", label: "FooBar", uri, children: [] },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
+                    { id: "a.b.FooBar", label: "FooBar", uri, children: [] }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
     });
     cleanup();
   });
@@ -166,7 +164,7 @@ suite("Test Explorer events", () => {
     );
     removeTestItem(testController, targetUri, folderUri, {
       ...foo,
-      kind: "removeSuite",
+      kind: "removeSuite"
     });
 
     checkTestController(testController, {
@@ -176,11 +174,9 @@ suite("Test Explorer events", () => {
         {
           id: targetUri,
           label: targetName,
-          children: [
-            { id: "NoPackage", label: "NoPackage", uri, children: [] },
-          ],
-        },
-      ],
+          children: [{ id: "NoPackage", label: "NoPackage", uri, children: [] }]
+        }
+      ]
     });
     cleanup();
   });
@@ -229,14 +225,14 @@ suite("Test Explorer events", () => {
                   uri,
                   children: [
                     { id: "test1", label: "test1", uri, children: [] },
-                    { id: "test2", label: "test2", uri, children: [] },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
+                    { id: "test2", label: "test2", uri, children: [] }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
     });
     cleanup();
   });

@@ -4,7 +4,7 @@ import {
   Range,
   RequestType,
   TextDocumentIdentifier,
-  WorkDoneProgressParams,
+  WorkDoneProgressParams
 } from "vscode-languageclient";
 
 export const hover = new RequestType<HoverParams, Hover | null, void>(

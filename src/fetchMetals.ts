@@ -23,7 +23,7 @@ export async function fetchMetals({
   serverVersion,
   serverProperties,
   javaConfig: { javaOptions, coursier, extraEnv, javaPath },
-  outputChannel,
+  outputChannel
 }: FetchMetalsOptions): Promise<PackedChildPromise> {
   const serverDependency = calcServerDependency(serverVersion);
 
@@ -51,14 +51,14 @@ export async function fetchMetals({
     "sonatype:public",
     "-r",
     "sonatype:snapshots",
-    "-p",
+    "-p"
   ];
 
   const environment = {
     env: {
       ...process.env,
-      ...extraEnv,
-    },
+      ...extraEnv
+    }
   };
 
   if (coursier.endsWith(".jar")) {
@@ -67,7 +67,7 @@ export async function fetchMetals({
       ...fetchProperties,
       "-Dfile.encoding=UTF-8",
       "-jar",
-      coursier,
+      coursier
     ].concat(coursierArgs);
     return { promise: spawn(javaPath, jarArgs, environment) };
   } else {
@@ -77,7 +77,7 @@ export async function fetchMetals({
     );
 
     return {
-      promise: spawn(coursier, javaArgs.concat(coursierArgs), environment),
+      promise: spawn(coursier, javaArgs.concat(coursierArgs), environment)
     };
   }
 }

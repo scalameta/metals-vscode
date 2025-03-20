@@ -5,7 +5,7 @@ import {
   Command,
   RequestType,
   NotificationType,
-  TextDocumentPositionParams,
+  TextDocumentPositionParams
 } from "vscode-languageserver-protocol";
 
 export interface MetalsTreeViews {

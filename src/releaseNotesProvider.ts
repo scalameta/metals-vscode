@@ -73,7 +73,7 @@ async function showReleaseNotesImpl(
     );
     const releaseNotes = await Promise.race([
       getReleaseNotesMarkdown(releaseNotesUrl),
-      timeoutPromise,
+      timeoutPromise
     ]);
 
     const panel = vscode.window.createWebviewPanel(
@@ -168,8 +168,8 @@ async function getMarkdownLink(
   const releaseInfoUrl = `https://api.github.com/repos/scalameta/metals/releases/tags/v${version}`;
   const options = {
     headers: {
-      "User-Agent": "metals",
-    },
+      "User-Agent": "metals"
+    }
   };
   const stringifiedContent = await fetchFrom(releaseInfoUrl, options);
   const body = JSON.parse(stringifiedContent)["body"] as string;

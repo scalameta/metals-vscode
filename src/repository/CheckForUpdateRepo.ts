@@ -27,7 +27,7 @@ export class DefaultCheckForUpdateRepo implements CheckForUpdateRepo {
     const lastUpdatedAt = state.get<string>(this.LastUpdatedAtKey);
     return {
       prevVersion,
-      lastUpdatedAt,
+      lastUpdatedAt
     };
   }
 

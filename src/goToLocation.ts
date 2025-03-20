@@ -37,7 +37,7 @@ export function gotoLocation(
   workspace.openTextDocument(uri).then((textDocument) =>
     window.showTextDocument(textDocument, {
       selection: range,
-      viewColumn: vs,
+      viewColumn: vs
     })
   );
 }
