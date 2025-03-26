@@ -2,6 +2,8 @@ Check out the Metals release notes at [https://scalameta.org/metals/blog/](https
 
 ## VSCode Extension Changelog
 
+### v1.48.0 (2025/01/24 16:57 +00:00)
+
 ### v1.47.0 (2025/01/24 16:57 +00:00)
 - [44a687f](https://github.com/scalameta/metals-vscode/commit/44a687f34ff375602726e1414cd7eedbfbfd1481) Increase patch version for pre-release
 - [7ad8da9](https://github.com/scalameta/metals-vscode/commit/7ad8da92ed01459c4ad61336ac41ffdb6ddc99bd) chore: Metals release 1.5.1 (@kasiaMarek)

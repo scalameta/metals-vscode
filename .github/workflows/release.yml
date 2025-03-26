@@ -23,10 +23,6 @@ jobs:
           yarn install
       - run: |
           yarn version --no-git-tag-version --new-version ${{ steps.get_version.outputs.NEW_VERSION }}
-      - name: Generate changelog
-        run: |
-          npx github-changes -b main -o scalameta -r metals-vscode --no-merges -t "VSCode Extension Changelog" -k ${{ secrets.GITHUB_TOKEN }}
-          sed -i '1i Check out the Metals release notes at [https://scalameta.org/metals/blog/](https://scalameta.org/metals/blog/)\n' CHANGELOG.md
       - name: Commit changes
         run: |
           git add .
