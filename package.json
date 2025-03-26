@@ -9,7 +9,7 @@
     "ide",
     "scalameta"
   ],
-  "version": "1.47.10",
+  "version": "1.47.11",
   "publisher": "scalameta",
   "contributors": [
     {
@@ -1124,6 +1124,7 @@
     "@vscode/test-electron": "^2.3.0",
     "@vscode/vsce": "^3.3.0",
     "chai": "^4.3.7",
+    "conventional-changelog-cli": "5.0.0",
     "eslint": "^8.36.0",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-mocha": "^10.5.0",
@@ -1132,7 +1133,6 @@
     "ovsx": "0.10.1",
     "prettier": "3.5.3",
     "rimraf": "^6.0.1",
-    "conventional-changelog-cli": "5.0.0",
     "sinon": "^19.0.2",
     "ts-mocha": "^10.0.0",
     "typescript": "5.8.2"
