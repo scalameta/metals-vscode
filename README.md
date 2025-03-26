@@ -30,9 +30,17 @@ The following table shows the status of various features.
 **macOS, Linux or Windows**. Metals is developed on many operating systems and
 every PR is tested on Ubuntu, Windows and MacOS.
 
-**Scala 2.13, 2.12, 2.11 and Scala 3**. Check which specific versions are
-currently supported in
-https://scalameta.org/metals/docs/editors/vscode#requirements
+**Scala 2.13, 2.12, 2.11 and Scala 3**. Metals supports these Scala versions:
+
+Right(
+Scala 3 versions from 3.3.4 are automatically supported by Metals.
+
+Any older Scala versions will no longer get bugfixes, but should still
+work properly with newest Metals. 
+)
+
+Note that 2.11.x support is deprecated and it will be removed in future releases.
+It's recommended to upgrade to Scala 2.12 or Scala 2.13
 
 ## Installation
 
@@ -64,25 +72,25 @@ It is also possible to opt in to install the pre-release version and try out the
 latest cutting edge features from Metals server. Apart from new features,
 pre-release versions also include many bugfixes. It's encouraged to use them
 with [SNAPSHOT](#SNAPSHOT) releases of Metals server. Using pre-release versions
-may result in less stable experience and it is not indented for beginners.
+may result in less stable experience and it is not intented for beginners.
 Pre-release versions follow `major.minor.PATCH` versioning.
 
 ![Install the pre-release extension](https://imgur.com/CzOTleE.png)
 
+
 ## Importing a build
 
-The first time you open Metals in a new workspace it prompts you to import the
-build. Click "Import build" to start the installation step.
+The first time you open Metals in a new workspace it prompts you to import the build.
+Click "Import build" to start the installation step.
 
 ![Import build](https://i.imgur.com/0VqZWay.png)
 
 - "Not now" disables this prompt for 2 minutes.
-- "Don't show again" disables this prompt forever, use `rm -rf .metals/` to
-  re-enable the prompt.
+- "Don't show again" disables this prompt forever, use `rm -rf .metals/` to re-enable
+  the prompt.
 - Use `tail -f .metals/metals.log` to watch the build import progress.
-- Behind the scenes, Metals uses [Bloop](https://scalacenter.github.io/bloop/)
-  to import sbt builds, but you don't need Bloop installed on your machine to
-  run this step.
+- Behind the scenes, Metals uses [Bloop](https://scalacenter.github.io/bloop/) to
+  import sbt builds, but you don't need Bloop installed on your machine to run this step.
 
 Once the import step completes, compilation starts for your open `*.scala`
 files.
@@ -92,26 +100,24 @@ goto definition.
 
 ### Custom sbt launcher
 
-By default, Metals runs an embedded `sbt-launch.jar` launcher that respects
-`.sbtopts` and `.jvmopts`. However, the environment variables `SBT_OPTS` and
-`JAVA_OPTS` are not respected.
+By default, Metals runs an embedded `sbt-launch.jar` launcher that respects `.sbtopts` and `.jvmopts`.
+However, the environment variables `SBT_OPTS` and `JAVA_OPTS` are not respected.
 
 Update the "Sbt Script" setting to use a custom `sbt` script instead of the
-default Metals launcher if you need further customizations like reading
-environment variables.
+default Metals launcher if you need further customizations like reading environment
+variables.
 
 ![Sbt Launcher](https://i.imgur.com/NuwEBe4.png)
 
 ### Speeding up import
 
-The "Import build" step can take a long time, especially the first time you run
-it in a new build. The exact time depends on the complexity of the build and if
-library dependencies need to be downloaded. For example, this step can take
+The "Import build" step can take a long time, especially the first time you
+run it in a new build. The exact time depends on the complexity of the build and
+if library dependencies need to be downloaded. For example, this step can take
 everything from 10 seconds in small cached builds up to 10-15 minutes in large
 uncached builds.
 
-Consult the
-[Bloop documentation](https://scalacenter.github.io/bloop/docs/build-tools/sbt#speeding-up-build-export)
+Consult the [Bloop documentation](https://scalacenter.github.io/bloop/docs/build-tools/sbt#speeding-up-build-export)
 to learn how to speed up build import.
 
 ### Importing changes
@@ -120,6 +126,8 @@ When you change `build.sbt` or sources under `project/`, you will be prompted to
 re-import the build.
 
 ![Import sbt changes](https://i.imgur.com/72kdZkL.png)
+
+    
 
 ### Manually trigger build import
 
@@ -134,7 +142,7 @@ Execute the "Run Doctor" through the command palette to troubleshoot potential
 configuration problems in your workspace.
 
 ![Run doctor command](https://i.imgur.com/K02g0UM.png)
-
+    
 ## Configure Java version
 
 Metals separates JDK used for starting Metals server from the JDK used for the
@@ -212,8 +220,9 @@ following locations:
 
 ## Using latest Metals SNAPSHOT
 
-Update the "Server Version" setting to try out the latest pending Metals
-features.
+Update the "metals.serverVersion" setting to try out the latest pending Metals
+features and fixes. To open settings go to `File -> Preferences -> Settings` and
+then use the search to find the specific option.
 
 See
 https://scalameta.org/metals/docs/editors/vscode.html#using-latest-metals-snapshot
@@ -222,18 +231,19 @@ to find the latest SNAPSHOT version.
 Run the "Reload Window" command after updating the setting for the new version
 to take effect.
 
+
 ## Files and Directories to include in your Gitignore
 
 The Metals server places logs and other files in the `.metals` directory. The
 Bloop compile server places logs and compilation artifacts in the `.bloop`
-directory. The Bloop plugin that generates Bloop configuration is added in the
-`metals.sbt` file, which is added at `project/metals.sbt` as well as further
-`project` directories depending on how deep `*.sbt` files need to be supported.
-To support each `*.sbt` file Metals needs to create an additional file at
-`./project/project/metals.sbt` relative to the sbt file. Working with Scala CLI
-scripts will place compiled scripts into the `.scala-build` directory. It's
-recommended to exclude these directories and files from version control systems
-like git.
+directory. The Bloop plugin that generates Bloop configuration is added in the 
+`metals.sbt` file, which is added at `project/metals.sbt` as well as further 
+`project` directories depending on how deep `*.sbt` files need to be supported. 
+To support each `*.sbt` file Metals needs to create an additional file at 
+`./project/project/metals.sbt` relative to the sbt file.
+Working with Scala CLI scripts will place compiled scripts into the `.scala-build` directory.
+It's recommended to exclude these directories and files
+from version control systems like git.
 
 ```sh
 # ~/.gitignore
@@ -243,6 +253,7 @@ like git.
 metals.sbt
 ```
 
+     
 ## Show document symbols
 
 Run the "Explorer: Focus on Outline View" command to open the symbol outline for
@@ -260,51 +271,41 @@ As you type, the symbol outline is also visible at the top of the file.
 
 ## Go to parent code lenses
 
-Metals has the ability to display code lenses that, when invoked, will go to the
-parent class that contains the definition of the method or symbol.
-Unfortunately, it might cause some lag in larger code bases, which is why it is
-not enabled currently by default.
+Metals has the ability to display code lenses that, when invoked, 
+will go to the parent class that contains the definition of the method or symbol.
+Unfortunately, it might cause some lag in larger code bases, 
+which is why it is not enabled currently by default.
 
-To enable the feature you need to modify the setting
-`metals.superMethodLensesEnabled` to `true`.
+To enable the feature you need to modify the setting `metals.superMethodLensesEnabled` to `true`.
 
-Even without using the code lenses it's still possible to navigate the method
-hierarchy using two commands:
+Even without using the code lenses it's still possible to navigate the method hierarchy 
+using two commands:
 
-- `Metals: Go to super method` - immediately goes to the parent of the method
-  the cursor is pointing to
+ - `Metals: Go to super method` - immediately goes to the parent of the method the cursor is pointing to
 
-- `Metals: Reveal super method hierachy` - displays the full method hierachy and
-  enables to move to any parent, it is best used with the Metals Quick Pick
-  extension.
+ - `Metals: Reveal super method hierachy` - displays the full method hierachy and enables to move to any parent, 
+it is best used with the Metals Quick Pick extension.
 
 You can also bind those commands to a shortcut.
 
 ## Create new project from template
 
-It is possible using Metals to easily setup a new project using the exiting
-[giter8](https://github.com/foundweekends/giter8/wiki/giter8-templates)
-templates. This is an equivalent to the `sbt new` command, which uses the same
-mechanism. There is a great number of templates already available and it should
-be easy to find something for yourself. To start the setup you can use the
-Metals: New Scala project command, which works as following:
-
+It is possible using Metals to easily setup a new project using the exiting [giter8](https://github.com/foundweekends/giter8/wiki/giter8-templates) templates. 
+This is an equivalent to the `sbt new` command, which uses the same mechanism.
+There is a great number of templates already available and it should be easy to find something for yourself.
+To start the setup you can use the Metals: New Scala project command, which works as following:
 1. Choose the template and then:
-   1. Use the proposed templates.
-   2. Choose "Discover more" and then choose from the list downloaded from the
-      Giter8 wiki page.
-   3. Input a custom Github repository following the `organization/repo` schema.
-2. Navigate to the parent directory that you want to create your new project in.
-3. Choose the name or accept the default one.
+    1. Use the proposed templates.
+    2. Choose "Discover more" and then choose from the list downloaded from the Giter8 wiki page.
+    3. Input a custom Github repository following the `organization/repo` schema.
+3. Navigate to the parent directory that you want to create your new project in.
+4. Choose the name or accept the default one.
 
-4. Choose whether to open a new window for the created project or use the
-   existing one.
+5. Choose whether to open a new window for the created project or use the existing one.
 
-The same command will be invoked when clicking the "New Scala Project" button in
-the Metals view.
+The same command will be invoked when clicking the "New Scala Project" button in the Metals view.
 
-If you feel like a template should be included in the default displayed ones do
-not hesitate to create a
+If you feel like a template should be included in the default displayed ones do not hesitate to create a 
 [PR](https://github.com/scalameta/metals/blob/cda5b8c2029e5f201fb8d0636e0365d796407bd9/metals/src/main/scala/scala/meta/internal/builds/NewProjectProvider.scala#L308)
 or file an issue.
 
@@ -336,14 +337,15 @@ project's modules. From this panel it's possible to
 
 ![test-explorer](https://i.imgur.com/Z3VtS0O.gif)
 
-NOTE: While Metals detects test suites for most of existing testing frameworks,
-support for recognizing individual tests is more limited. Metals supports the
-current set of test frameworks when it comes to individual test discovery:
+NOTE: While Metals detects test suites for most of existing testing
+frameworks, support for recognizing individual tests is more limited.
+Metals supports the current set of test frameworks when it comes to
+individual test discovery:
 
-- Junit
-- MUnit
-- Scalatest
-- Weaver Test
+ - Junit
+ - MUnit
+ - Scalatest
+ - Weaver Test 
 
 If you encounter an error, create an
 [issue](https://github.com/scalameta/metals/issues).
@@ -461,6 +463,27 @@ options for tests. To work around that you can use:
 
 This will work for any method used to run tests.
 
+### Debugging Scala Native
+
+To debug Scala Native applications, you need to use the
+[LLDB DAP](https://marketplace.visualstudio.com/items?itemName=llvm-vs-code-extensions.lldb-dap)
+extension and modify the `launch.json` configuration according to the extension
+README.
+
+You should also us make sure all all optimizations are turned off and
+SourceLevelDebuggingConfig is fully enabled. This can be done by adding the
+following to your `build.sbt`:
+
+```
+import scala.scalanative.build._
+
+nativeConfig ~= { c =>
+  c.withSourceLevelDebuggingConfig(_.enableAll) // enable generation of debug information
+  .withOptimize(false)  // disable Scala Native optimizer
+  .withMode(Mode.debug) // compile using LLVM without optimizations
+}
+```
+
 ## On type formatting for multiline string formatting
 
 ![on-type](https://imgur.com/a0O2vCs.gif)
@@ -486,49 +509,48 @@ paste in Visual Studio Code you can check the `Editor: Format On Paste` setting:
 
 ## Worksheets
 
-Worksheets are a great way to explore an api, try out an idea, or code up an
-example and quickly see the evaluated expression or result. Behind the scenes
-worksheets are powered by the great work done in
+Worksheets are a great way to explore an api, try out an idea, or code
+up an example and quickly see the evaluated expression or result. Behind
+the scenes worksheets are powered by the great work done in
 [mdoc](https://scalameta.org/mdoc/).
 
 ### Getting started with Worksheets
 
 To get started with a worksheet you can either use the `metals.new-scala-file`
-command and select _Worksheet_ or create a file called `*.worksheet.sc`. This
-format is important since this is what tells Metals that it's meant to be
-treated as a worksheet and not just a Scala script. Where you create the script
-also matters. If you'd like to use classes and values from your project, you
-need to make sure the worksheet is created inside of your sources next to any
-existing Scala files. directory. You can still create a worksheet in other
-places, but you will only have access to the standard library and your
-dependencies.
+command and select *Worksheet* or create a file called `*.worksheet.sc`.
+This format is important since this is what tells Metals that it's meant to be
+treated as a worksheet and not just a Scala script. Where you create the
+script also matters. If you'd like to use classes and values from your
+project, you need to make sure the worksheet is created inside of your sources next to any existing Scala files.
+directory. You can still create a worksheet in other places, but you will
+only have access to the standard library and your dependencies.
 
 ### Evaluations
 
-After saving you'll see the result of the expression as a decoration at the end
-of the line. You may not see the full result for example if it's too long, so
-you are also able to hover on the decoration to expand the decoration.
+After saving you'll see the result of the expression as a inlay hint at the end of the line.
+You may not see the full result for example if it's too long, so you are also
+able to hover on the inlay hint to expand it.
 
 Keep in mind that you don't need to wrap your code in an `object`. In worksheets
 everything can be evaluated at the top level.
 
 ### Using dependencies in worksheets
 
-You are able to include an external dependency in your worksheet by including it
-in one of the following two ways.
+You are able to include an external dependency in your worksheet by including
+it in one of the following two ways.
 
 ```scala
-// $dep.`organisation`::artifact:version` style
+// $dep.`organisation::artifact:version` style
 import $dep.`com.lihaoyi::scalatags:0.7.0`
 
 // $ivy.`organisation::artifact:version` style
 import $ivy.`com.lihaoyi::scalatags:0.7.0`
 ```
 
-`::` is the same as `%%` in sbt, which will append the current Scala binary
-version to the artifact name.
+`::` is the same as `%%` in sbt, which will append the current Scala binary version
+to the artifact name.
 
-You can also import `scalac` options in a special `$scalac` import like below:
+You can also import `scalac` options in a special `$$scalac` import like below:
 
 ```scala
 import $scalac.`-Ywarn-unused`
@@ -536,33 +558,30 @@ import $scalac.`-Ywarn-unused`
 
 ### Troubleshooting
 
-Since worksheets are not standard Scala files, you may run into issues with some
-constructs. For example, you may see an error like this:
+Since worksheets are not standard Scala files, you may run into issues with some constructs.
+For example, you may see an error like this:
 
 ```
 value classes may not be a member of another class - mdoc
 ```
 
-This means that one of the classes defined in the worksheet extends AnyVal,
-which is not currently supported. You can work around this by moving the class
-to a separate file or removing the AnyVal parent.
+This means that one of the classes defined in the worksheet extends AnyVal, which is
+not currently supported. You can work around this by moving the class to a separate file or removing
+the AnyVal parent.
 
 ## Running scalafix rules
 
-Scalafix allows users to specify some refactoring and linting rules that can be
-applied to your codebase. Please checkout the
-[scalafix website](https://scalacenter.github.io/scalafix) for more information.
+Scalafix allows users to specify some refactoring and linting rules that can be applied to your
+codebase. Please checkout the [scalafix website](https://scalacenter.github.io/scalafix) for more information.
 
 Since Metals v0.11.7 it's now possible to run scalafix rules using a special
-command `metals.scalafix-run`. In VS Code can be also run using the default
-shortcut of `shift + alt + ctrl + o`. This should run all the rules defined in
-your `.scalafix.conf` file. All built-in rules and the
-[community hygiene ones](https://scalacenter.github.io/scalafix/docs/rules/community-rules.html#hygiene-rules)
-can be run without any additional settings. However, for all the other rules
-users need to add an additional dependency in the
-`metals.scalafixRulesDependencies` user setting. Those rules need to be in form
-of strings such as `com.github.liancheng::organize-imports:0.6.0`, which follows
-the same convention as [coursier dependencies](https://get-coursier.io/).
+command `metals.scalafix-run`. In VS Code can be also run using the default shortcut of `shift + alt + ctrl + o`. 
+This should run all the rules defined in your `.scalafix.conf` file. All built-in rules
+and the [community hygiene ones](https://scalacenter.github.io/scalafix/docs/rules/community-rules.html#hygiene-rules) can
+be run without any additional settings. However, for all the other rules users need to 
+add an additional dependency in the `metals.scalafixRulesDependencies` user setting.
+Those rules need to be in form of strings such as `com.github.liancheng::organize-imports:0.6.0`, which 
+follows the same convention as [coursier dependencies](https://get-coursier.io/).
 
 A sample scalafix configuration can be seen below:
 
@@ -586,6 +605,7 @@ OrganizeImports.groups = [
 ]
 
 ```
+
 
 ## Searching a symbol in the workspace
 
