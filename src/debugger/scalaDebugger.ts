@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { ResponseError } from "vscode-languageserver-protocol";
 import {
   commands,
   DebugConfiguration,
@@ -20,6 +21,8 @@ import {
 import { ServerCommands } from "../interfaces/ServerCommands";
 
 const configurationType = "scala";
+
+const workspaceHadErrors = 543; // custom code we picked to represent this
 
 export interface DebugSession {
   name: string;
@@ -134,15 +137,40 @@ export async function start(
   }
 }
 
+function handleCompileError(error: ResponseError) {
+  vscode.window
+    .showErrorMessage(error.message, { modal: true }, "View Problems")
+    .then((action) => {
+      if (action === "View Problems") {
+        vscode.commands.executeCommand("workbench.action.problems.focus");
+      }
+    });
+}
+
 async function debug(
   noDebug: boolean,
   debugParams: DebugDiscoveryParams | ScalaCodeLensesParams
 ): Promise<boolean> {
   await commands.executeCommand("workbench.action.files.save");
-  const response = await vscode.commands.executeCommand<DebugSession>(
-    ServerCommands.DebugAdapterStart,
-    debugParams
-  );
+
+  let response: DebugSession | undefined;
+  try {
+    response = await vscode.commands.executeCommand<DebugSession>(
+      ServerCommands.DebugAdapterStart,
+      debugParams
+    );
+  } catch (error) {
+    if (error instanceof ResponseError && error.code === workspaceHadErrors) {
+      handleCompileError(error);
+      // Returning false suppresses vscode's error popup wrongly suggesting to "Open launch.json".
+      // We put the responsibility to visibly show error messages in the hands
+      // of the server for compile errors.
+      // Also an error in the executeCommand still shows up in metals.log
+      return false;
+    }
+
+    throw error;
+  }
 
   if (response === undefined) {
     return false;
@@ -215,15 +243,32 @@ class ScalaDebugServerFactory implements vscode.DebugAdapterDescriptorFactory {
           '"Running in the task window"'
         ]);
       } else {
-        const debugSession = await vscode.commands.executeCommand<DebugSession>(
-          ServerCommands.DebugAdapterStart,
-          session.configuration
-        );
+        let debugSession: DebugSession | undefined;
+        try {
+          debugSession = await vscode.commands.executeCommand<DebugSession>(
+            ServerCommands.DebugAdapterStart,
+            session.configuration
+          );
+          if (debugSession === undefined) {
+            // return null makes vscode show "Couldn't find a debug adapter descriptor for debug type 'scala' (extension might have failed to activate)"
+            return null;
+          } else {
+            return debugServerFromUri(debugSession.uri);
+          }
+        } catch (error) {
+          if (
+            error instanceof ResponseError &&
+            error.code === workspaceHadErrors
+          ) {
+            handleCompileError(error);
+            // Returning a dummy suppresses vscode's error popup wrongly suggesting to "Open launch.json".
+            // We put the responsibility to visibly show error messages in the hands
+            // of the server, e.g. for compile errors.
+            // Also an error in the executeCommand still shows up in metals.log
+            return new vscode.DebugAdapterExecutable("", []);
+          }
 
-        if (debugSession === undefined) {
-          return null;
-        } else {
-          return debugServerFromUri(debugSession.uri);
+          throw error;
         }
       }
     }
