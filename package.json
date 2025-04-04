@@ -1134,7 +1134,7 @@
     "prettier": "3.5.3",
     "rimraf": "^6.0.1",
     "sinon": "^19.0.2",
-    "ts-mocha": "^10.0.0",
+    "ts-mocha": "^10.1.0",
     "typescript": "5.8.2"
   },
   "dependencies": {

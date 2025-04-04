@@ -3218,10 +3218,10 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
-ts-mocha@^10.0.0:
-  version "10.0.0"
-  resolved "https://registry.yarnpkg.com/ts-mocha/-/ts-mocha-10.0.0.tgz#41a8d099ac90dbbc64b06976c5025ffaebc53cb9"
-  integrity sha512-VRfgDO+iiuJFlNB18tzOfypJ21xn2xbuZyDvJvqpTbWgkAgD17ONGr8t+Tl8rcBtOBdjXp5e/Rk+d39f7XBHRw==
+ts-mocha@^10.1.0:
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/ts-mocha/-/ts-mocha-10.1.0.tgz#17a1c055f5f7733fd82447c4420740db87221bc8"
+  integrity sha512-T0C0Xm3/WqCuF2tpa0GNGESTBoKZaiqdUP8guNv4ZY316AFXlyidnrzQ1LUrCT0Wb1i3J0zFTgOh/55Un44WdA==
   dependencies:
     ts-node "7.0.1"
   optionalDependencies:
