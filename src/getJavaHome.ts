@@ -4,7 +4,7 @@ import { OutputChannel } from "./interfaces/OutputChannel";
 import { realpathSync } from "fs";
 import { findOnPath } from "./findOnPath";
 
-export type JavaVersion = "11" | "17" | "21";
+export type JavaVersion = "17" | "21";
 
 export interface JavaHome {
   path: string;

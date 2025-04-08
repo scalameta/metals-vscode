@@ -13,7 +13,7 @@ export enum UserConfiguration {
    */
   ServerProperties = "serverProperties",
   /**
-   * Java version. Can be one of 8, 11, 17, 21.
+   * Java version. Can be one of 17, 21.
    */
   JavaVersion = "javaVersion",
   /**
