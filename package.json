@@ -1146,7 +1146,7 @@
     "promisify-child-process": "4.1.2",
     "semver": "^7.5.2",
     "shell-quote": "^1.8.2",
-    "vscode-languageclient": "9.0.0",
+    "vscode-languageclient": "9.0.1",
     "vscode-languageserver-protocol": "3.17.5"
   },
   "extensionPack": [
