@@ -1130,7 +1130,7 @@
     "eslint-plugin-mocha": "^10.5.0",
     "glob": "^11.0.1",
     "mocha": "^10.8.2",
-    "ovsx": "0.10.1",
+    "ovsx": "0.10.2",
     "prettier": "3.5.3",
     "rimraf": "^6.0.1",
     "sinon": "^20.0.0",
