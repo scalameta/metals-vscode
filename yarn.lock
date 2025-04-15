@@ -2560,10 +2560,10 @@ optionator@^0.9.1:
     type-check "^0.4.0"
     word-wrap "^1.2.3"
 
-ovsx@0.10.1:
-  version "0.10.1"
-  resolved "https://registry.yarnpkg.com/ovsx/-/ovsx-0.10.1.tgz#444157bb2ba952b8e6e081286a5b7cf13675cc68"
-  integrity sha512-8i7+MJMMeq73m1zPEIClSFe17SNuuzU5br7G77ZIfOC24elB4pGQs0N1qRd+gnnbyhL5Qu96G21nFOVOBa2OBg==
+ovsx@0.10.2:
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/ovsx/-/ovsx-0.10.2.tgz#8b012779b751c23acfc948886a45b2948ee89b35"
+  integrity sha512-osLwIOz5Uu1ePvYYSjKw05bkCZo2j/ydQLjm3uO7bCfstyFFzmWyzMGTAL3wJpI4qpo1S47Y52+q09h9A2ZRkQ==
   dependencies:
     "@vscode/vsce" "^3.2.1"
     commander "^6.2.1"
