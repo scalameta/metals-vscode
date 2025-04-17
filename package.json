@@ -276,6 +276,10 @@
           "type": "boolean",
           "markdownDescription": "Enable/disable inlay hints in pattern matches. \n```scala \n\n case class Foo(a: Int, b: Int)\n val foo = Foo(1, 2)\n foo match {\n   case Foo(a/*: Int*/, b/*: Int*/) =>\n }\n```"
         },
+        "metals.inlayHints.byNameParameters.enable": {
+          "type": "boolean",
+          "markdownDescription": "Enable/disable inlay hints for by-name parameters. \n```scala \n\n def foo(x: => Int) = ???\n foo(/*=> */1 + 2)\n foo {/*=> */\n   val x = 1\n   x + 1\n }\n```"
+        },
         "metals.javaHome": {
           "type": "string",
           "scope": "machine-overridable",
