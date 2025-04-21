@@ -13,9 +13,10 @@ import { updateTestSuiteLocation } from "./updateTestSuiteLocation";
 
 export function createTestManager(
   client: LanguageClient,
-  isDisabled: boolean
+  isDisabled: boolean,
+  environmentVariables: Record<string, string> = {}
 ): TestManager {
-  return new TestManager(client, isDisabled);
+  return new TestManager(client, isDisabled, environmentVariables);
 }
 
 class TestManager {
@@ -26,14 +27,18 @@ class TestManager {
 
   private isDisabled = false;
   private isRunning = false;
+  private environmentVariables: Record<string, string> = {};
 
   constructor(
     private readonly client: LanguageClient,
-    isDisabled: boolean
+    isDisabled: boolean,
+    environmentVariables: Record<string, string> = {}
   ) {
     if (isDisabled) {
       this.disable();
     }
+    
+    this.environmentVariables = environmentVariables;
 
     const callback = () => (this.isRunning = false);
 
@@ -43,7 +48,7 @@ class TestManager {
       (request, token) => {
         if (!this.isRunning) {
           this.isRunning = true;
-          runHandler(this.testController, true, callback, request, token);
+          runHandler(this.testController, true, callback, request, token, this.environmentVariables);
         }
       },
       true
@@ -55,7 +60,7 @@ class TestManager {
       (request, token) => {
         if (!this.isRunning) {
           this.isRunning = true;
-          runHandler(this.testController, false, callback, request, token);
+          runHandler(this.testController, false, callback, request, token, this.environmentVariables);
         }
       },
       false
