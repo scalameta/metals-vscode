@@ -776,7 +776,7 @@ function launchMetals(
         !vscodeTextExplorer || getTestUI() === "Code Lenses";
       const testManager = createTestManager(
         client,
-        istTestManagerDisabled, 
+        istTestManagerDisabled,
         getTestEnvVars()
       );
 

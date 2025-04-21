@@ -38,7 +38,6 @@ class TestManager {
       this.disable();
     }
 
-    
     this.environmentVariables = environmentVariables;
 
     const callback = () => (this.isRunning = false);
@@ -50,11 +49,11 @@ class TestManager {
         if (!this.isRunning) {
           this.isRunning = true;
           runHandler(
-            this.testController, 
+            this.testController,
             true,
-            callback, 
-            request, 
-            token, 
+            callback,
+            request,
+            token,
             this.environmentVariables
           );
         }
@@ -69,11 +68,11 @@ class TestManager {
         if (!this.isRunning) {
           this.isRunning = true;
           runHandler(
-            this.testController, 
-            false, 
-            callback, 
-            request, 
-            token, 
+            this.testController,
+            false,
+            callback,
+            request,
+            token,
             this.environmentVariables
           );
         }

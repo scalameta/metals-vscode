@@ -122,11 +122,11 @@ export async function runHandler(
     if (!token.isCancellationRequested && queue.length > 0) {
       const targetUri = queue[0]._metalsTargetUri;
       await runDebugSession(
-        run, 
-        noDebug, 
-        targetUri, 
-        testSuiteSelection, 
-        queue, 
+        run,
+        noDebug,
+        targetUri,
+        testSuiteSelection,
+        queue,
         environmentVariables
       );
     }
@@ -148,8 +148,8 @@ async function runDebugSession(
   environmentVariables: Record<string, string> = {}
 ): Promise<void> {
   const session = await createDebugSession(
-    targetUri, 
-    testSuiteSelection, 
+    targetUri,
+    testSuiteSelection,
     environmentVariables
   );
   if (!session) {
