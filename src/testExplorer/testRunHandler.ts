@@ -121,7 +121,14 @@ export async function runHandler(
   try {
     if (!token.isCancellationRequested && queue.length > 0) {
       const targetUri = queue[0]._metalsTargetUri;
-      await runDebugSession(run, noDebug, targetUri, testSuiteSelection, queue, environmentVariables);
+      await runDebugSession(
+        run, 
+        noDebug, 
+        targetUri, 
+        testSuiteSelection, 
+        queue, 
+        environmentVariables
+      );
     }
   } finally {
     run.end();
@@ -140,7 +147,11 @@ async function runDebugSession(
   tests: RunnableMetalsTestItem[],
   environmentVariables: Record<string, string> = {}
 ): Promise<void> {
-  const session = await createDebugSession(targetUri, testSuiteSelection, environmentVariables);
+  const session = await createDebugSession(
+    targetUri, 
+    testSuiteSelection, 
+    environmentVariables
+  );
   if (!session) {
     return;
   }
@@ -166,7 +177,9 @@ async function createDebugSession(
     requestData: {
       suites,
       jvmOptions: [],
-      environmentVariables: Object.entries(environmentVariables).map(([key, value]) => `${key}=${value}`)
+      environmentVariables: Object.entries(environmentVariables).map(
+        ([key, value]) => `${key}=${value}`
+      )
     }
   };
   return vscode.commands.executeCommand<DebugSession>(

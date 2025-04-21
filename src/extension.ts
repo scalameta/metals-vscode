@@ -774,7 +774,11 @@ function launchMetals(
       // see https://github.com/scalameta/metals-vscode/discussions/1244
       const istTestManagerDisabled =
         !vscodeTextExplorer || getTestUI() === "Code Lenses";
-      const testManager = createTestManager(client, istTestManagerDisabled, getTestEnvVars());
+      const testManager = createTestManager(
+        client,
+        istTestManagerDisabled, 
+        getTestEnvVars()
+      );
 
       const disableTestExplorer = workspace.onDidChangeConfiguration(() => {
         const testUI = getTestUI();

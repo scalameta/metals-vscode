@@ -37,6 +37,7 @@ class TestManager {
     if (isDisabled) {
       this.disable();
     }
+
     
     this.environmentVariables = environmentVariables;
 
@@ -48,7 +49,14 @@ class TestManager {
       (request, token) => {
         if (!this.isRunning) {
           this.isRunning = true;
-          runHandler(this.testController, true, callback, request, token, this.environmentVariables);
+          runHandler(
+            this.testController, 
+            true,
+            callback, 
+            request, 
+            token, 
+            this.environmentVariables
+          );
         }
       },
       true
@@ -60,7 +68,14 @@ class TestManager {
       (request, token) => {
         if (!this.isRunning) {
           this.isRunning = true;
-          runHandler(this.testController, false, callback, request, token, this.environmentVariables);
+          runHandler(
+            this.testController, 
+            false, 
+            callback, 
+            request, 
+            token, 
+            this.environmentVariables
+          );
         }
       },
       false
