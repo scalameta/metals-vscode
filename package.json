@@ -459,6 +459,11 @@
             "all"
           ],
           "markdownDescription": "Automatically import builds rather than prompting the user to choose. `initial` will only automatically import a build when a project is first opened, `all` will automate build imports after subsequent changes as well."
+        },
+        "metals.startMcpServer": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "If Metals should start an HTTP MCP server."
         }
       }
     },
