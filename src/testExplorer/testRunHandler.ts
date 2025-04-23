@@ -59,7 +59,8 @@ export async function runHandler(
   noDebug: boolean,
   afterFinished: () => void,
   request: TestRunRequest,
-  token: CancellationToken
+  token: CancellationToken,
+  environmentVariables: Record<string, string> = {}
 ): Promise<void> {
   const run = testController.createTestRun(request);
   const includes = new Set((request.include as MetalsTestItem[]) ?? []);
@@ -120,7 +121,14 @@ export async function runHandler(
   try {
     if (!token.isCancellationRequested && queue.length > 0) {
       const targetUri = queue[0]._metalsTargetUri;
-      await runDebugSession(run, noDebug, targetUri, testSuiteSelection, queue);
+      await runDebugSession(
+        run,
+        noDebug,
+        targetUri,
+        testSuiteSelection,
+        queue,
+        environmentVariables
+      );
     }
   } finally {
     run.end();
@@ -136,9 +144,14 @@ async function runDebugSession(
   noDebug: boolean,
   targetUri: TargetUri,
   testSuiteSelection: ScalaTestSuiteSelection[],
-  tests: RunnableMetalsTestItem[]
+  tests: RunnableMetalsTestItem[],
+  environmentVariables: Record<string, string> = {}
 ): Promise<void> {
-  const session = await createDebugSession(targetUri, testSuiteSelection);
+  const session = await createDebugSession(
+    targetUri,
+    testSuiteSelection,
+    environmentVariables
+  );
   if (!session) {
     return;
   }
@@ -156,14 +169,17 @@ async function runDebugSession(
  */
 async function createDebugSession(
   targetUri: TargetUri,
-  suites: ScalaTestSuiteSelection[]
+  suites: ScalaTestSuiteSelection[],
+  environmentVariables: Record<string, string> = {}
 ): Promise<DebugSession | undefined> {
   const debugSessionParams: ScalaTestSuitesDebugRequest = {
     target: { uri: targetUri },
     requestData: {
       suites,
       jvmOptions: [],
-      environmentVariables: []
+      environmentVariables: Object.entries(environmentVariables).map(
+        ([key, value]) => `${key}=${value}`
+      )
     }
   };
   return vscode.commands.executeCommand<DebugSession>(

@@ -761,11 +761,24 @@ function launchMetals(
           "Test Explorer"
         );
 
+      const getTestEnvVars = () => {
+        const envVars = getValueFromConfig<Record<string, string>>(
+          config,
+          "testEnvironmentVariables",
+          {}
+        );
+        return envVars;
+      };
+
       // vscodeTextExplorer can be undefined e.g. for eclipse theia,
       // see https://github.com/scalameta/metals-vscode/discussions/1244
       const istTestManagerDisabled =
         !vscodeTextExplorer || getTestUI() === "Code Lenses";
-      const testManager = createTestManager(client, istTestManagerDisabled);
+      const testManager = createTestManager(
+        client,
+        istTestManagerDisabled,
+        getTestEnvVars()
+      );
 
       const disableTestExplorer = workspace.onDidChangeConfiguration(() => {
         const testUI = getTestUI();
