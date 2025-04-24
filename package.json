@@ -1146,7 +1146,7 @@
     "rimraf": "^6.0.1",
     "sinon": "^20.0.0",
     "ts-mocha": "^10.1.0",
-    "typescript": "5.8.2"
+    "typescript": "5.8.3"
   },
   "dependencies": {
     "ansicolor": "^2.0.3",
