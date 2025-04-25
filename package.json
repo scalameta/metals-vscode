@@ -225,6 +225,12 @@
           "scope": "machine",
           "markdownDescription": "Do not show release notes when Metals was updated."
         },
+        "metals.enableBestEffort": {
+          "type": "boolean",
+          "default": false,
+          "scope": "window",
+          "markdownDescription": "Enable best effort mode for Metals in Scala 3. If enabled, Metals will try to provide most up to date information from the codebase even if it's not compiling."
+        },
         "metals.serverVersion": {
           "type": "string",
           "default": "1.5.2",
