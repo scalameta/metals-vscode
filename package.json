@@ -754,6 +754,11 @@
         "title": "Copy worksheet output"
       },
       {
+        "command": "metals.copy-fqn",
+        "category": "Metals",
+        "title": "Copy fully qualified name of symbol"
+      },
+      {
         "command": "metals.run-current-file",
         "category": "Metals",
         "title": "Run main class or tests in the current file"
@@ -990,6 +995,13 @@
           "submenu": "metals.analyze",
           "when": "metals:enabled && resourceExtname==.java || metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.class || metals:enabled && resourceExtname==.semanticdb || metals:enabled && resourceExtname==.tasty || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc || metals:enabled && resourceExtname==.mill",
           "group": "navigation@3"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "metals.copy-fqn",
+          "when": "metals:enabled",
+          "group": "9_cutcopypaste@2"
         }
       ],
       "metals.analyze": [

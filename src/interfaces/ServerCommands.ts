@@ -58,6 +58,10 @@ export const ServerCommands = {
    * is in charge of taking that content and putting it into your local buffer.
    */
   CopyWorksheetOutput: "copy-worksheet-output",
+  /**
+   * Copy the fully qualfied name of the symbol under the cursor to the local buffer
+   */
+  CopyFQN: "copy-fqn",
   /** Start debug adapter. */
   DebugAdapterStart: "debug-adapter-start",
   /** Open the Metals doctor to troubleshoot potential problems with the build. */
