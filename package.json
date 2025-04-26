@@ -231,6 +231,12 @@
           "scope": "window",
           "markdownDescription": "Enable best effort mode for Metals in Scala 3. If enabled, Metals will try to provide most up to date information from the codebase even if it's not compiling."
         },
+        "metals.defaultShell": {
+          "type": "string",
+          "default": "",
+          "scope": "machine-overridable",
+          "markdownDescription": "Optionally provide a default shell executable to use for build operations."
+        },
         "metals.serverVersion": {
           "type": "string",
           "default": "1.5.2",
