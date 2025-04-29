@@ -1156,7 +1156,7 @@
   },
   "dependencies": {
     "ansicolor": "^2.0.3",
-    "fp-ts": "^2.4.1",
+    "fp-ts": "^2.16.10",
     "js-yaml": "4.1.0",
     "marked": "^15.0.8",
     "node-fetch": "^3.3.2",

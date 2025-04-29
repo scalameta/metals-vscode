@@ -1587,10 +1587,10 @@ formdata-polyfill@^4.0.10:
   dependencies:
     fetch-blob "^3.1.2"
 
-fp-ts@^2.4.1:
-  version "2.11.8"
-  resolved "https://registry.yarnpkg.com/fp-ts/-/fp-ts-2.11.8.tgz#411cde116c446d568f5597b03352d8b3f98e8f82"
-  integrity sha512-WQT6rP6Jt3TxMdQB3IKzvfZKLuldumntgumLhIUhvPrukTHdWNI4JgEHY04Bd0LIOR9IQRpB+7RuxgUU0Vhmcg==
+fp-ts@^2.16.10:
+  version "2.16.10"
+  resolved "https://registry.yarnpkg.com/fp-ts/-/fp-ts-2.16.10.tgz#829b82a46571c2dc202bed38a9c2eeec603e38c4"
+  integrity sha512-vuROzbNVfCmUkZSUbnWSltR1sbheyQbTzug7LB/46fEa1c0EucLeBaCEUE0gF3ZGUGBt9lVUiziGOhhj6K1ORA==
 
 fs-constants@^1.0.0:
   version "1.0.0"
