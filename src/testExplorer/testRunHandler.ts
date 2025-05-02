@@ -60,7 +60,7 @@ export async function runHandler(
   afterFinished: () => void,
   request: TestRunRequest,
   token: CancellationToken,
-  environmentVariables: Record<string, string> = {}
+  environmentVariables: () => Record<string, string>
 ): Promise<void> {
   const run = testController.createTestRun(request);
   const includes = new Set((request.include as MetalsTestItem[]) ?? []);
@@ -127,7 +127,7 @@ export async function runHandler(
         targetUri,
         testSuiteSelection,
         queue,
-        environmentVariables
+        environmentVariables()
       );
     }
   } finally {

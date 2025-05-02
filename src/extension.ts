@@ -777,7 +777,7 @@ function launchMetals(
       const testManager = createTestManager(
         client,
         istTestManagerDisabled,
-        getTestEnvVars()
+        getTestEnvVars
       );
 
       const disableTestExplorer = workspace.onDidChangeConfiguration(() => {
