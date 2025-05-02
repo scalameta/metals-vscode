@@ -25,7 +25,7 @@ export function findOnPath(names: string[]) {
           } else {
             return [p];
           }
-        } catch (e) {
+        } catch (_e) {
           return [];
         }
       })

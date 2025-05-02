@@ -162,7 +162,7 @@ export async function validateCoursier(
     try {
       const coursierVersion = await spawn(coursier, ["version"]);
       return coursierVersion.code == 0 ? coursier : undefined;
-    } catch (e) {
+    } catch (_e) {
       return undefined;
     }
   };

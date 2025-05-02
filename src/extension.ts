@@ -1203,7 +1203,6 @@ function launchMetals(
             }
           });
       });
-      languages.registerCompletionItemProvider;
 
       // Long running tasks such as "import project" trigger start a progress
       // bar with a "cancel" button.

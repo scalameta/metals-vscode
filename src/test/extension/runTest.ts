@@ -25,7 +25,7 @@ async function main(): Promise<void> {
       launchArgs: ["--disable-extension"],
       reporter
     });
-  } catch (err) {
+  } catch (_err) {
     process.exit(1);
   }
 }
