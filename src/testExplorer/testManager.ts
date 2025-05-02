@@ -14,7 +14,7 @@ import { updateTestSuiteLocation } from "./updateTestSuiteLocation";
 export function createTestManager(
   client: LanguageClient,
   isDisabled: boolean,
-  environmentVariables: Record<string, string> = {}
+  environmentVariables: () => Record<string, string>
 ): TestManager {
   return new TestManager(client, isDisabled, environmentVariables);
 }
@@ -27,12 +27,12 @@ class TestManager {
 
   private isDisabled = false;
   private isRunning = false;
-  private environmentVariables: Record<string, string> = {};
+  private environmentVariables: () => Record<string, string> = () => ({});
 
   constructor(
     private readonly client: LanguageClient,
     isDisabled: boolean,
-    environmentVariables: Record<string, string> = {}
+    environmentVariables: () => Record<string, string>
   ) {
     if (isDisabled) {
       this.disable();
