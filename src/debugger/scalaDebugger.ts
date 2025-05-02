@@ -111,7 +111,7 @@ export async function startDiscovery(
         "discover-jvm-run-command",
         debugParams
       );
-    } catch (error) {
+    } catch (_error) {
       // recovering from discover-jvm-run-command failure
       // when trying to run a main class from a dependency
       return debug(noDebug, debugParams);

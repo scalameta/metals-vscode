@@ -35,7 +35,9 @@ export function downloadProgress({
     }
   });
   return download.then(() => {
-    onComplete && onComplete();
+    if (onComplete) {
+      onComplete();
+    }
     return stdout.map((buffer) => buffer.toString().trim()).join("");
   });
 }

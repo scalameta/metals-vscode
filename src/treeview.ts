@@ -203,7 +203,6 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
       tooltip: item.tooltip,
       iconPath: item.icon ? this.iconPath(item.icon) : undefined
     };
-    result.collapsibleState;
     return result;
   }
 
@@ -215,12 +214,6 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
         nodeUri: uri
       })
       .then((result) => {
-        if (result.uri) {
-          const item = this.items.get(result.uri);
-          if (item) {
-            item.collapseState;
-          }
-        }
         return result.uri;
       });
   }
