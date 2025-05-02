@@ -9,7 +9,7 @@
     "ide",
     "scalameta"
   ],
-  "version": "1.49.5",
+  "version": "1.49.6",
   "publisher": "scalameta",
   "contributors": [
     {
@@ -1125,6 +1125,8 @@
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.25.1",
     "@sourcegraph/scip-typescript": "^0.3.15",
     "@types/chai": "^5.2.1",
     "@types/js-yaml": "4.0.9",
@@ -1144,8 +1146,6 @@
     "conventional-changelog-cli": "5.0.0",
     "eslint": "^9.25.1",
     "eslint-config-prettier": "^10.1.2",
-    "@eslint/js": "^9.25.1",
-    "@eslint/eslintrc": "^3.3.1",
     "eslint-plugin-mocha": "^10.5.0",
     "glob": "^11.0.1",
     "mocha": "^11.1.0",
