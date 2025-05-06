@@ -1139,7 +1139,7 @@
     "@types/sinon": "^17.0.4",
     "@types/vscode": "1.59.0",
     "@typescript-eslint/eslint-plugin": "^8.31.1",
-    "@typescript-eslint/parser": "^8.31.1",
+    "@typescript-eslint/parser": "^8.32.0",
     "@vscode/test-electron": "^2.3.0",
     "@vscode/vsce": "^3.3.2",
     "chai": "^5.2.0",
