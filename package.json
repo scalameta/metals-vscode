@@ -46,8 +46,6 @@
     "workspace"
   ],
   "activationEvents": [
-    "onCommand:metals.start-server",
-    "onCommand:metals.new-scala-project",
     "onDebugResolve:scala",
     "onLanguage:scala",
     "workspaceContains:build.sbt",
@@ -189,7 +187,7 @@
     "viewsWelcome": [
       {
         "view": "metalsPackages",
-        "contents": "No Scala project found. Create a new one or start Metals manually.\n[New Scala project](command:metals.new-scala-project)\n[Start Metals](command:metals.start-server)",
+        "contents": "No Scala project found. Create a new one or start Metals manually.\n[New Scala project](command:metals.new-scala-project)",
         "when": "!metals:enabled || workbenchState != empty"
       }
     ],
