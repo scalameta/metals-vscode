@@ -233,7 +233,6 @@
         },
         "metals.defaultShell": {
           "type": "string",
-          "default": "",
           "scope": "machine-overridable",
           "markdownDescription": "Optionally provide a default shell executable to use for build operations."
         },
