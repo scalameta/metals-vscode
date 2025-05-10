@@ -463,7 +463,7 @@
         "metals.startMcpServer": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "If Metals should start an HTTP MCP server."
+          "markdownDescription": "If Metals should start an HTTP Model Context Protocol server, that can be used by AI tools to provide better context about the codebase. Needs to be enabled in the client as well."
         }
       }
     },
