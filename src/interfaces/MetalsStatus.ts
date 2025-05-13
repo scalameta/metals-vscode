@@ -1,3 +1,4 @@
+import { Command } from "vscode";
 import { NotificationType } from "vscode-languageserver-protocol";
 
 /**
@@ -24,8 +25,10 @@ export interface MetalsStatusParams {
   tooltip?: string;
   /** If set, execute this command when the user clicks on the status bar item. */
   command?: string;
+  /** If set, execute this command when the user clicks on the status bar item. */
+  metalsCommand?: Command;
   /** Is this metals or bsp status. */
-  statusType?: "bsp" | "metals";
+  statusType?: "bsp" | "metals" | "module";
   /** Level: info, warn, error. */
   level?: "info" | "warn" | "error";
   /** Tooltip for the command. */

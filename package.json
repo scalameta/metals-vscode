@@ -502,7 +502,7 @@
         }
       },
       {
-        "command": "metals.restartServer",
+        "command": "metals.restart-server",
         "category": "Metals",
         "title": "Restart server"
       },
@@ -826,7 +826,7 @@
           "when": "metals:enabled"
         },
         {
-          "command": "metals.restartServer",
+          "command": "metals.restart-server",
           "when": "metals:enabled"
         },
         {
