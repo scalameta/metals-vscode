@@ -1151,7 +1151,7 @@
     "chai": "^5.2.0",
     "conventional-changelog-cli": "5.0.0",
     "eslint": "^9.26.0",
-    "eslint-config-prettier": "^10.1.2",
+    "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-mocha": "^10.5.0",
     "glob": "^11.0.2",
     "mocha": "^11.1.0",
