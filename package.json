@@ -289,6 +289,10 @@
           "type": "boolean",
           "markdownDescription": "Enable/disable inlay hints for by-name parameters. \n```scala \n\n def foo(x: => Int) = ???\n foo(/*=> */1 + 2)\n foo {/*=> */\n   val x = 1\n   x + 1\n }\n```"
         },
+        "metals.inlayHints.namedParameters.enable": {
+          "type": "boolean",
+          "markdownDescription": "Enable/disable inlay hints for named parameters. \n```scala \n\n def foo(number: Int) = ???\n foo(/*number = */1)\n```"
+        },
         "metals.javaHome": {
           "type": "string",
           "scope": "machine-overridable",
@@ -710,6 +714,16 @@
         "title": "Toggle inlay hints in pattern matches"
       },
       {
+        "command": "metals.toggle-named-parameters",
+        "category": "Metals",
+        "title": "Toggle inlay hints for named parameters"
+      },
+      {
+        "command": "metals.toggle-by-name-parameters",
+        "category": "Metals",
+        "title": "Toggle inlay hints for by-name parameters"
+      },
+      {
         "command": "metals.copy-worksheet-output",
         "category": "Metals",
         "title": "Copy worksheet output"
@@ -821,6 +835,14 @@
         },
         {
           "command": "metals.toggle-hints-in-pattern-match",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.toggle-named-parameters",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.toggle-by-name-parameters",
           "when": "metals:enabled"
         },
         {
