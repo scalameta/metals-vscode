@@ -1102,6 +1102,14 @@ function launchMetals(
         toggleInlayHintsSetting("hintsInPatternMatch");
       });
 
+      registerCommand("metals.toggle-named-parameters", () => {
+        toggleInlayHintsSetting("namedParameters");
+      });
+
+      registerCommand("metals.toggle-by-name-parameters", () => {
+        toggleInlayHintsSetting("byNameParameters");
+      });
+
       registerCommand(
         `metals.${ServerCommands.NewScalaFile}`,
         async (directory: Uri) => {
