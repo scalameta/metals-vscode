@@ -32,7 +32,6 @@ export class DoctorProvider implements Disposable {
    * We should take focus into account when doctor caching mechanism will be implemented on the server.
    */
   isOpened = false;
-  // private extensionContext: ExtensionContext | undefined;
   constructor(
     private client: LanguageClient,
     private context: ExtensionContext
@@ -48,7 +47,7 @@ export class DoctorProvider implements Disposable {
         "metals-doctor",
         "Metals Doctor",
         ViewColumn.Active,
-        { enableCommandUris: true }
+        { enableCommandUris: true, enableScripts: true }
       );
       this.doctor.iconPath = Uri.file(
         path.join(this.context.extensionPath, "icons", "doctor.svg")

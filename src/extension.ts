@@ -391,7 +391,8 @@ function launchMetals(
     testExplorerProvider: true,
     commandInHtmlFormat: "vscode",
     doctorVisibilityProvider: true,
-    bspStatusBarProvider: "on"
+    bspStatusBarProvider: "on",
+    moduleStatusBarProvider: "on"
   };
 
   const clientOptions: LanguageClientOptions = {
@@ -533,7 +534,7 @@ function launchMetals(
   });
 
   registerCommand(
-    "metals.restartServer",
+    "metals.restart-server",
     restartServer(
       // NOTE(gabro): this is due to mismatching versions of vscode-languageserver-protocol
       // which are not trivial to fix, currently
@@ -860,13 +861,22 @@ function launchMetals(
         100
       );
       const bspItem = window.createStatusBarItem(StatusBarAlignment.Right, 100);
+      const moduleItem = window.createStatusBarItem(
+        StatusBarAlignment.Right,
+        100
+      );
       metalsItem.command = ClientCommands.ToggleLogs;
       metalsItem.hide();
       bspItem.hide();
       const metalsStatusDisposable = client.onNotification(
         MetalsStatusType,
         (params) => {
-          const item = params.statusType === "bsp" ? bspItem : metalsItem;
+          const item =
+            params.statusType === "bsp"
+              ? bspItem
+              : params.statusType === "module"
+                ? moduleItem
+                : metalsItem;
           item.text = params.text;
           if (params.show) {
             item.show();
@@ -894,7 +904,7 @@ function launchMetals(
             item.backgroundColor = undefined;
           }
 
-          item.command = params.command;
+          item.command = params.metalsCommand || params.command;
         }
       );
       context.subscriptions.push(metalsStatusDisposable);
