@@ -120,6 +120,7 @@ import { MetalsSlowTaskType } from "./interfaces/MetalsSlowTask";
 import { downloadProgress } from "./downloadProgress";
 import { detectLaunchConfigurationChanges } from "./detectLaunchConfigurationChanges";
 import { registerCopyPasteHooks } from "./metalsCopyPaste";
+import { MetalsSyncStatusType, MetalsSyncType } from "./interfaces/MetalsSync";
 
 const outputChannel = window.createOutputChannel("Metals");
 
@@ -1108,6 +1109,34 @@ async function launchMetals(
       );
 
       context.subscriptions.push(executeClientCommandDisposable);
+
+      const syncItem = window.createStatusBarItem(StatusBarAlignment.Right, 100);
+      const metalsSyncDisposable = client.onNotification(
+        MetalsSyncStatusType,
+        (params) => {
+          const editor = window.activeTextEditor
+          const uri = editor?.document.uri.toString()
+          if (uri === params.document) {
+            if (params.status === "hidden") {
+              syncItem.hide();
+            } else {
+              syncItem.text = params.text;
+              syncItem.backgroundColor = new ThemeColor("statusBarItem." + params.kind + "Background");
+              syncItem.show();
+              syncItem.tooltip = params.tooltip
+              syncItem.command = params.command;
+            }
+          }
+        }
+      );
+      context.subscriptions.push(metalsSyncDisposable);
+      registerCommand(`metals.${ServerCommands.SyncFile}`, async () => {
+        if (window.activeTextEditor?.document.uri) {
+          client.sendNotification(MetalsSyncType, window.activeTextEditor.document.uri.toString());
+        }
+      });
+
+
       // The server updates the client with a brief text message about what
       // it is currently doing, for example "Compiling..".
       const metalsItem = window.createStatusBarItem(
@@ -1147,6 +1176,7 @@ async function launchMetals(
             : undefined;
 
           if (params.level == "error") {
+            syncItem.hide();
             item.backgroundColor = new ThemeColor(
               "statusBarItem.errorBackground",
             );

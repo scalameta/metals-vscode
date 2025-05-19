@@ -701,6 +701,11 @@
         "title": "Restart server"
       },
       {
+        "command": "metals.sync-file",
+        "title": "Sync File",
+        "category": "Metals"
+      },
+      {
         "command": "metals.build-restart",
         "category": "Metals",
         "title": "Restart build server"
