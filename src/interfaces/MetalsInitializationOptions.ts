@@ -37,4 +37,5 @@ export interface MetalsInitializationOptions {
   commandInHtmlFormat?: "vscode" | "sublime";
   doctorVisibilityProvider?: boolean;
   bspStatusBarProvider?: "on" | "off" | "log-message" | "show-message";
+  moduleStatusBarProvider?: "on" | "off" | "log-message" | "show-message";
 }
