@@ -1155,7 +1155,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
-    "@eslint/js": "^9.25.1",
+    "@eslint/js": "^9.27.0",
     "@sourcegraph/scip-typescript": "^0.3.15",
     "@types/chai": "^5.2.2",
     "@types/js-yaml": "4.0.9",
