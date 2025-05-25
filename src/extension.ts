@@ -132,7 +132,11 @@ const decorationType: TextEditorDecorationType =
 
 const config = workspace.getConfiguration("metals");
 
-export async function activate(context: ExtensionContext): Promise<void> {
+export interface MetalsApi {
+  currentLanguageClient(): LanguageClient | undefined;
+}
+
+export async function activate(context: ExtensionContext): Promise<MetalsApi> {
   const serverVersion = getServerVersion(config, context);
   detectConfigurationChanges();
   configureSettingsDefaults();
@@ -166,6 +170,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
       outputChannel
     );
   }
+
+  return {
+    currentLanguageClient: () => currentClient
+  };
 }
 
 function migrateOldSettings(): void {
