@@ -38,6 +38,8 @@ export const ServerCommands = {
   BuildRestart: "build-restart",
   /** Sync the current file with the build. */
   SyncFile: "sync-file",
+  /** Remove the current file from being automatically synced. */
+  SyncRemove: "sync-remove",
   /** Cancel the current ongoing compilation, if any. */
   CancelCompilation: "compile-cancel",
   /**

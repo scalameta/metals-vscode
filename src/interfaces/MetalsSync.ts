@@ -4,6 +4,10 @@ export const MetalsSyncType = new NotificationType<string>(
   "metals/sync"
 )
 
+export const MetalsSyncRemoveType = new NotificationType<string>(
+  "metals/syncRemove"
+)
+
 export const MetalsSyncStatusType = new NotificationType<MetalsSyncStatusParams>(
   "metals/syncStatus"
 );
