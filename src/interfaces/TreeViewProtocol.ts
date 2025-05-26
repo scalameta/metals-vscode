@@ -26,8 +26,6 @@ export interface MetalsTreeViewNode {
   icon?: string;
   /** An optional description of this tree node that is displayed when the user hovers over this node. */
   tooltip?: string;
-  /** An optional description of this tree node that is displayed next to the label. */
-  description?: string;
   /**
    * Whether this tree node should be collapsed, expanded or if it has no children.
    *

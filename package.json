@@ -337,10 +337,6 @@
           "name": "Packages"
         },
         {
-          "id": "metalsDocuments",
-          "name": "Documents"
-        },
-        {
           "id": "metalsBuild",
           "name": "Build commands"
         },
@@ -707,11 +703,6 @@
       {
         "command": "metals.sync-file",
         "title": "Sync File",
-        "category": "Metals"
-      },
-      {
-        "command": "metals.sync-remove",
-        "title": "Remove",
         "category": "Metals"
       },
       {
@@ -1236,11 +1227,6 @@
         {
           "command": "metals.target-info-display",
           "when": "view == metalsPackages && viewItem == project"
-        },
-        {
-          "command": "metals.sync-remove",
-          "when": "view == metalsDocuments && viewItem == documents",
-          "group": "inline"
         }
       ]
     },

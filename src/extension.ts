@@ -120,7 +120,7 @@ import { MetalsSlowTaskType } from "./interfaces/MetalsSlowTask";
 import { downloadProgress } from "./downloadProgress";
 import { detectLaunchConfigurationChanges } from "./detectLaunchConfigurationChanges";
 import { registerCopyPasteHooks } from "./metalsCopyPaste";
-import { MetalsSyncRemoveType, MetalsSyncStatusType, MetalsSyncType } from "./interfaces/MetalsSync";
+import { MetalsSyncStatusType, MetalsSyncType } from "./interfaces/MetalsSync";
 
 const outputChannel = window.createOutputChannel("Metals");
 
@@ -1134,9 +1134,6 @@ async function launchMetals(
         if (window.activeTextEditor?.document.uri) {
           client.sendNotification(MetalsSyncType, window.activeTextEditor.document.uri.toString());
         }
-      });
-      registerCommand(`metals.${ServerCommands.SyncRemove}`, async (nodeUri: string) => {
-        client.sendNotification(MetalsSyncRemoveType, nodeUri);
       });
 
 
