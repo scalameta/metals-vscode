@@ -1193,7 +1193,7 @@
     "node-fetch": "^3.3.2",
     "promisify-child-process": "4.1.2",
     "semver": "^7.7.2",
-    "shell-quote": "^1.8.2",
+    "shell-quote": "^1.8.3",
     "vscode-languageclient": "9.0.1",
     "vscode-languageserver-protocol": "3.17.5"
   },
