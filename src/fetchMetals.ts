@@ -51,6 +51,8 @@ export async function fetchMetals({
     "sonatype:public",
     "-r",
     "sonatype:snapshots",
+    "-r",
+    "https://central.sonatype.com/repository/maven-snapshots/",
     "-p"
   ];
 
