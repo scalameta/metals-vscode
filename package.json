@@ -1169,7 +1169,7 @@
     "@types/shell-quote": "^1.6.1",
     "@types/sinon": "^17.0.4",
     "@types/vscode": "1.59.0",
-    "@typescript-eslint/eslint-plugin": "^8.33.0",
+    "@typescript-eslint/eslint-plugin": "^8.33.1",
     "@typescript-eslint/parser": "^8.33.1",
     "@vscode/test-electron": "^2.3.0",
     "@vscode/vsce": "^3.4.2",
