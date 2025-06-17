@@ -1172,7 +1172,7 @@
     "@typescript-eslint/eslint-plugin": "^8.33.1",
     "@typescript-eslint/parser": "^8.33.1",
     "@vscode/test-electron": "^2.3.0",
-    "@vscode/vsce": "^3.4.2",
+    "@vscode/vsce": "^3.5.0",
     "chai": "^5.2.0",
     "conventional-changelog-cli": "5.0.0",
     "eslint": "^9.28.0",
