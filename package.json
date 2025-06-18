@@ -1163,7 +1163,7 @@
     "@types/js-yaml": "4.0.9",
     "@types/marked": "^5.0.2",
     "@types/mocha": "^10.0.10",
-    "@types/node": "22.15.30",
+    "@types/node": "24.0.3",
     "@types/node-fetch": "^2.5.4",
     "@types/semver": "^7.7.0",
     "@types/shell-quote": "^1.6.1",
