@@ -1,7 +1,6 @@
 import { window, env, ExtensionContext, commands, Position } from "vscode";
 import { LanguageClient } from "vscode-languageclient/node";
 import {
-  DidChangeTextDocumentNotification,
   ExecuteCommandRequest
 } from "vscode-languageserver-protocol";
 
@@ -55,10 +54,15 @@ export async function pasteSelection(
   }
 
   const clipboardText = await env.clipboard.readText();
-  if (!clipboardText) {
-    window.showErrorMessage("Clipboard is empty");
-    return;
-  }
+  if (!clipboardText) return;
+
+  // Get current selection for the paste range
+  const selection = editor.selection;
+
+  // First, paste the text into the document
+  await editor.edit((editBuilder) => {
+    editBuilder.replace(selection, clipboardText);
+  });
 
   // Get the origin document and position from workspace state
   const originDocumentUri = context.workspaceState.get(
@@ -73,18 +77,7 @@ export async function pasteSelection(
     !originDocumentUri ||
     originStartLine === undefined ||
     originStartCharacter === undefined
-  ) {
-    window.showErrorMessage("No previous copy operation found");
-    return;
-  }
-
-  // Get current selection for the paste range
-  const selection = editor.selection;
-
-  // First, paste the text into the document
-  await editor.edit((editBuilder) => {
-    editBuilder.replace(selection, clipboardText);
-  });
+  ) return;
 
   // Calculate the new end position after pasting
   const lines = clipboardText.split("\n");
@@ -95,21 +88,12 @@ export async function pasteSelection(
       : lines.pop()?.length || 0
   );
 
-  // It will suplicate with the other didChange notification,
-  // but I want to make sure the content or the server is updated.
-  await client.sendNotification(DidChangeTextDocumentNotification.type, {
-    textDocument: {
-      uri: editor.document.uri.toString(),
-      version: editor.document.version
-    },
-    contentChanges: [{ text: editor.document.getText() }]
-  });
-
   // Create the paste parameters
   const pasteParams = {
     textDocument: {
       uri: editor.document.uri.toString()
     },
+    text: editor.document.getText(),
     range: {
       start: selection.start,
       end: newEndPosition
