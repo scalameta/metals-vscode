@@ -68,8 +68,52 @@ function platformSpecificOptions(): vscode.ShellExecutionOptions {
   }
 }
 
+function taskFromArgs(
+  classpath: string,
+  javaBinary: string,
+  jvmOptions: string[],
+  args: string[],
+  mainClass: string,
+  shellOptions: vscode.ShellExecutionOptions
+): vscode.ShellExecution {
+  const allArgs = ["-classpath", classpath, ...jvmOptions, mainClass, ...args];
+  const shellArgs: vscode.ShellQuotedString[] = allArgs.map((arg) => ({
+    value: arg,
+    quoting: vscode.ShellQuoting.Strong
+  }));
+
+  const shellCommand: vscode.ShellQuotedString = {
+    value: javaBinary,
+    quoting: vscode.ShellQuoting.Strong
+  };
+  return new ShellExecution(shellCommand, shellArgs, shellOptions);
+}
+
+function escapedShellCommand(
+  main: ExtendedScalaRunMain,
+  shellOptions: vscode.ShellExecutionOptions
+): vscode.ShellExecution {
+  const classpath = main.data.classpath;
+  const jvmOptions = main.data.jvmOptions;
+  const javaBinary = main.data.javaBinary;
+  const mainClass = main.data.class;
+  const args = main.data.arguments;
+  if (classpath && javaBinary) {
+    return taskFromArgs(
+      classpath,
+      javaBinary,
+      jvmOptions,
+      args,
+      mainClass,
+      shellOptions
+    );
+  } else {
+    return new ShellExecution(main.data.shellCommand, shellOptions);
+  }
+}
+
 async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
-  const { environmentVariables, shellCommand } = main.data;
+  const environmentVariables = main.data.environmentVariables;
   const workspaceFolder = currentWorkspaceFolder();
   if (workspaceFolder) {
     const env = environmentVariables.reduce<Record<string, string>>(
@@ -86,7 +130,7 @@ async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
       workspaceFolder,
       "Scala run",
       "Metals",
-      new ShellExecution(shellCommand, shellOptions)
+      escapedShellCommand(main, shellOptions)
     );
 
     await tasks.executeTask(task);
