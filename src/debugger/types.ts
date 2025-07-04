@@ -6,6 +6,8 @@ export interface OldScalaMainData {
   jvmOptions: string[];
   environmentVariables: string[];
   shellCommand: undefined | string;
+  classpath: undefined | string;
+  javaBinary: undefined | string;
 }
 
 export interface ExtendedScalaMainData extends OldScalaMainData {
