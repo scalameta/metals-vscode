@@ -1,8 +1,6 @@
 import { window, env, ExtensionContext, commands, Position } from "vscode";
 import { LanguageClient } from "vscode-languageclient/node";
-import {
-  ExecuteCommandRequest
-} from "vscode-languageserver-protocol";
+import { ExecuteCommandRequest } from "vscode-languageserver-protocol";
 
 /**
  * Copies the current selection to the clipboard.
@@ -54,7 +52,9 @@ export async function pasteSelection(
   }
 
   const clipboardText = await env.clipboard.readText();
-  if (!clipboardText) return;
+  if (!clipboardText) {
+    return;
+  }
 
   // Get current selection for the paste range
   const selection = editor.selection;
@@ -77,7 +77,9 @@ export async function pasteSelection(
     !originDocumentUri ||
     originStartLine === undefined ||
     originStartCharacter === undefined
-  ) return;
+  ) {
+    return;
+  }
 
   // Calculate the new end position after pasting
   const lines = clipboardText.split("\n");
