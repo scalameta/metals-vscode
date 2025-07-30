@@ -1112,6 +1112,10 @@ function launchMetals(
         toggleInlayHintsSetting("implicitConversions");
       });
 
+      registerCommand("metals.toggle-x-ray-mode", () => {
+        toggleInlayHintsSetting("hintsXRayMode");
+      });
+
       registerCommand("metals.toggle-show-inferred-type", () => {
         toggleInlayHintsSetting("inferredTypes");
       });

@@ -294,6 +294,10 @@
           "type": "boolean",
           "markdownDescription": "Enable/disable inlay hints for named parameters. \n```scala \n\n def foo(number: Int) = ???\n foo(/*number = */1)\n```"
         },
+        "metals.inlayHints.hintsXRayMode.enable": {
+          "type": "boolean",
+          "markdownDescription": "Enable/disable inlay hints for x-ray like mode. \n```scala \n\n val finalBar: Bar = foo\n  .bar/*  : Bar*/\n  .foo()/*: Foo*/\n  .bar/*  : Bar*/\n```"
+        },
         "metals.javaHome": {
           "type": "string",
           "scope": "machine-overridable",
@@ -707,6 +711,11 @@
         "title": "Toggle inlay hints for inferred type"
       },
       {
+        "command": "metals.toggle-x-ray-mode",
+        "category": "Metals",
+        "title": "Toggle inlay hints for x-ray mode"
+      },
+      {
         "command": "metals.toggle-type-parameters",
         "category": "Metals",
         "title": "Toggle inlay hints for type parameters"
@@ -834,6 +843,10 @@
         },
         {
           "command": "metals.toggle-implicit-conversions-and-classes",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.toggle-x-ray-mode",
           "when": "metals:enabled"
         },
         {
