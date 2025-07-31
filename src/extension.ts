@@ -112,7 +112,6 @@ import { MetalsQuickPickType } from "./interfaces/MetalsQuickPick";
 import { MetalsSlowTaskType } from "./interfaces/MetalsSlowTask";
 import { downloadProgress } from "./downloadProgress";
 import { detectLaunchConfigurationChanges } from "./detectLaunchConfigurationChanges";
-import { registerCopyPasteCommands } from "./metalsCopyPaste";
 
 const outputChannel = window.createOutputChannel("Metals");
 
@@ -567,9 +566,6 @@ function launchMetals(
     () => {
       const doctorProvider = new DoctorProvider(client, context);
       let stacktrace: WebviewPanel | undefined;
-
-      // Register copy and paste commands
-      registerCopyPasteCommands(context, client);
 
       function getStacktracePanel(): WebviewPanel {
         if (!stacktrace) {
