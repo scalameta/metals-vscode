@@ -30,17 +30,8 @@ The following table shows the status of various features.
 **macOS, Linux or Windows**. Metals is developed on many operating systems and
 every PR is tested on Ubuntu, Windows and MacOS.
 
-**Scala 2.13, 2.12, 2.11 and Scala 3**. Metals supports these Scala versions:
-
-Right(
-Scala 3 versions from 3.3.4 are automatically supported by Metals.
-
-Any older Scala versions will no longer get bugfixes, but should still
-work properly with newest Metals. 
-)
-
-Note that 2.11.x support is deprecated and it will be removed in future releases.
-It's recommended to upgrade to Scala 2.12 or Scala 2.13
+**Scala 2.13, 2.12, 2.11 and Scala 3**. Check which specific versions are
+currently supported in the [Metals documentation](https://scalameta.org/metals/docs/editors/vscode#requirements).
 
 ## Installation
 
@@ -51,17 +42,6 @@ by clicking on this badge
 or via the VS Code editor:
 
 ![install stable version](https://imgur.com/Qew0fNH.png)
-
-> Make sure to disable the extensions
-> [Scala Language Server](https://marketplace.visualstudio.com/items?itemName=dragos.scala-lsp)
-> and
-> [Scala (sbt)](https://marketplace.visualstudio.com/items?itemName=lightbend.vscode-sbt-scala)
-> if they are installed. The
-> [Dotty Language Server](https://marketplace.visualstudio.com/items?itemName=lampepfl.dotty)
-> does **not** need to be disabled because the Metals and Dotty extensions don't
-> conflict with each other. However, if you want to work on Scala 3 code in a
-> workspace that was previously opened with `Dotty Language Server` you need to
-> first remove `.dotty-ide-artifact` before opening the workspace with Metals.
 
 Next, open a directory containing your Scala code. The extension activates when
 the main directory contains `build.sbt` or `build.sc` file, a Scala file is
@@ -76,7 +56,6 @@ may result in less stable experience and it is not intented for beginners.
 Pre-release versions follow `major.minor.PATCH` versioning.
 
 ![Install the pre-release extension](https://imgur.com/CzOTleE.png)
-
 
 ## Importing a build
 
@@ -127,8 +106,6 @@ re-import the build.
 
 ![Import sbt changes](https://i.imgur.com/72kdZkL.png)
 
-    
-
 ### Manually trigger build import
 
 To manually trigger a build import, execute the "Import build" command through
@@ -142,7 +119,7 @@ Execute the "Run Doctor" through the command palette to troubleshoot potential
 configuration problems in your workspace.
 
 ![Run doctor command](https://i.imgur.com/K02g0UM.png)
-    
+
 ## Configure Java version
 
 Metals separates JDK used for starting Metals server from the JDK used for the
@@ -231,15 +208,14 @@ to find the latest SNAPSHOT version.
 Run the "Reload Window" command after updating the setting for the new version
 to take effect.
 
-
 ## Files and Directories to include in your Gitignore
 
 The Metals server places logs and other files in the `.metals` directory. The
 Bloop compile server places logs and compilation artifacts in the `.bloop`
-directory. The Bloop plugin that generates Bloop configuration is added in the 
-`metals.sbt` file, which is added at `project/metals.sbt` as well as further 
-`project` directories depending on how deep `*.sbt` files need to be supported. 
-To support each `*.sbt` file Metals needs to create an additional file at 
+directory. The Bloop plugin that generates Bloop configuration is added in the
+`metals.sbt` file, which is added at `project/metals.sbt` as well as further
+`project` directories depending on how deep `*.sbt` files need to be supported.
+To support each `*.sbt` file Metals needs to create an additional file at
 `./project/project/metals.sbt` relative to the sbt file.
 Working with Scala CLI scripts will place compiled scripts into the `.scala-build` directory.
 It's recommended to exclude these directories and files
@@ -253,7 +229,6 @@ from version control systems like git.
 metals.sbt
 ```
 
-     
 ## Show document symbols
 
 Run the "Explorer: Focus on Outline View" command to open the symbol outline for
@@ -271,41 +246,42 @@ As you type, the symbol outline is also visible at the top of the file.
 
 ## Go to parent code lenses
 
-Metals has the ability to display code lenses that, when invoked, 
+Metals has the ability to display code lenses that, when invoked,
 will go to the parent class that contains the definition of the method or symbol.
-Unfortunately, it might cause some lag in larger code bases, 
+Unfortunately, it might cause some lag in larger code bases,
 which is why it is not enabled currently by default.
 
 To enable the feature you need to modify the setting `metals.superMethodLensesEnabled` to `true`.
 
-Even without using the code lenses it's still possible to navigate the method hierarchy 
+Even without using the code lenses it's still possible to navigate the method hierarchy
 using two commands:
 
- - `Metals: Go to super method` - immediately goes to the parent of the method the cursor is pointing to
+- `Metals: Go to super method` - immediately goes to the parent of the method the cursor is pointing to
 
- - `Metals: Reveal super method hierachy` - displays the full method hierachy and enables to move to any parent, 
-it is best used with the Metals Quick Pick extension.
+- `Metals: Reveal super method hierachy` - displays the full method hierachy and enables to move to any parent,
+  it is best used with the Metals Quick Pick extension.
 
 You can also bind those commands to a shortcut.
 
 ## Create new project from template
 
-It is possible using Metals to easily setup a new project using the exiting [giter8](https://github.com/foundweekends/giter8/wiki/giter8-templates) templates. 
+It is possible using Metals to easily setup a new project using the exiting [giter8](https://github.com/foundweekends/giter8/wiki/giter8-templates) templates.
 This is an equivalent to the `sbt new` command, which uses the same mechanism.
 There is a great number of templates already available and it should be easy to find something for yourself.
 To start the setup you can use the Metals: New Scala project command, which works as following:
-1. Choose the template and then:
-    1. Use the proposed templates.
-    2. Choose "Discover more" and then choose from the list downloaded from the Giter8 wiki page.
-    3. Input a custom Github repository following the `organization/repo` schema.
-3. Navigate to the parent directory that you want to create your new project in.
-4. Choose the name or accept the default one.
 
-5. Choose whether to open a new window for the created project or use the existing one.
+1. Choose the template and then:
+   1. Use the proposed templates.
+   2. Choose "Discover more" and then choose from the list downloaded from the Giter8 wiki page.
+   3. Input a custom Github repository following the `organization/repo` schema.
+2. Navigate to the parent directory that you want to create your new project in.
+3. Choose the name or accept the default one.
+
+4. Choose whether to open a new window for the created project or use the existing one.
 
 The same command will be invoked when clicking the "New Scala Project" button in the Metals view.
 
-If you feel like a template should be included in the default displayed ones do not hesitate to create a 
+If you feel like a template should be included in the default displayed ones do not hesitate to create a
 [PR](https://github.com/scalameta/metals/blob/cda5b8c2029e5f201fb8d0636e0365d796407bd9/metals/src/main/scala/scala/meta/internal/builds/NewProjectProvider.scala#L308)
 or file an issue.
 
@@ -342,10 +318,10 @@ frameworks, support for recognizing individual tests is more limited.
 Metals supports the current set of test frameworks when it comes to
 individual test discovery:
 
- - Junit
- - MUnit
- - Scalatest
- - Weaver Test 
+- Junit
+- MUnit
+- Scalatest
+- Weaver Test
 
 If you encounter an error, create an
 [issue](https://github.com/scalameta/metals/issues).
@@ -517,7 +493,7 @@ the scenes worksheets are powered by the great work done in
 ### Getting started with Worksheets
 
 To get started with a worksheet you can either use the `metals.new-scala-file`
-command and select *Worksheet* or create a file called `*.worksheet.sc`.
+command and select _Worksheet_ or create a file called `*.worksheet.sc`.
 This format is important since this is what tells Metals that it's meant to be
 treated as a worksheet and not just a Scala script. Where you create the
 script also matters. If you'd like to use classes and values from your
@@ -537,14 +513,11 @@ everything can be evaluated at the top level.
 ### Using dependencies in worksheets
 
 You are able to include an external dependency in your worksheet by including
-it in one of the following two ways.
+it with using directives:
 
 ```scala
-// $dep.`organisation::artifact:version` style
-import $dep.`com.lihaoyi::scalatags:0.7.0`
+//> using dep com.lihaoyi::scalatags:0.7.0
 
-// $ivy.`organisation::artifact:version` style
-import $ivy.`com.lihaoyi::scalatags:0.7.0`
 ```
 
 `::` is the same as `%%` in sbt, which will append the current Scala binary version
@@ -553,7 +526,7 @@ to the artifact name.
 You can also import `scalac` options in a special `$$scalac` import like below:
 
 ```scala
-import $scalac.`-Ywarn-unused`
+//> using options -Ywarn-unused
 ```
 
 ### Troubleshooting
@@ -575,12 +548,12 @@ Scalafix allows users to specify some refactoring and linting rules that can be 
 codebase. Please checkout the [scalafix website](https://scalacenter.github.io/scalafix) for more information.
 
 Since Metals v0.11.7 it's now possible to run scalafix rules using a special
-command `metals.scalafix-run`. In VS Code can be also run using the default shortcut of `shift + alt + ctrl + o`. 
+command `metals.scalafix-run`. In VS Code can be also run using the default shortcut of `shift + alt + ctrl + o`.
 This should run all the rules defined in your `.scalafix.conf` file. All built-in rules
 and the [community hygiene ones](https://scalacenter.github.io/scalafix/docs/rules/community-rules.html#hygiene-rules) can
-be run without any additional settings. However, for all the other rules users need to 
+be run without any additional settings. However, for all the other rules users need to
 add an additional dependency in the `metals.scalafixRulesDependencies` user setting.
-Those rules need to be in form of strings such as `com.github.liancheng::organize-imports:0.6.0`, which 
+Those rules need to be in form of strings such as `com.github.liancheng::organize-imports:0.6.0`, which
 follows the same convention as [coursier dependencies](https://get-coursier.io/).
 
 A sample scalafix configuration can be seen below:
@@ -605,7 +578,6 @@ OrganizeImports.groups = [
 ]
 
 ```
-
 
 ## Searching a symbol in the workspace
 
