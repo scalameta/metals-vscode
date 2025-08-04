@@ -1204,7 +1204,7 @@
     "ansicolor": "^2.0.3",
     "fp-ts": "^2.16.10",
     "js-yaml": "4.1.0",
-    "marked": "^15.0.12",
+    "marked": "^16.1.2",
     "node-fetch": "^3.3.2",
     "promisify-child-process": "4.1.2",
     "semver": "^7.7.2",
