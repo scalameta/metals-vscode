@@ -372,6 +372,20 @@ function launchMetals(
     javaConfig
   );
 
+  const commandArgs = [
+    serverOptions.run.command,
+    ...(serverOptions.run.args || [])
+  ];
+  const isDebugLogging = (serverOptions.run.args || []).some((arg) =>
+    arg.includes("-Dmetals.loglevel=debug")
+  );
+
+  if (isDebugLogging) {
+    outputChannel.appendLine(
+      `Launching Metals with command: ${commandArgs.join(" ")}`
+    );
+  }
+
   const initializationOptions: MetalsInitializationOptions = {
     compilerOptions: {
       completionCommand: "editor.action.triggerSuggest",
