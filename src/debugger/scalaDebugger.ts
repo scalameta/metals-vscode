@@ -91,7 +91,7 @@ function taskFromArgs(
 
 function escapedShellCommand(
   main: ExtendedScalaRunMain,
-  shellOptions: vscode.ShellExecutionOptions
+  env: Record<string, string>
 ): vscode.ShellExecution {
   const classpath = main.data.classpath;
   const jvmOptions = main.data.jvmOptions;
@@ -99,6 +99,7 @@ function escapedShellCommand(
   const mainClass = main.data.class;
   const args = main.data.arguments;
   if (classpath && javaBinary) {
+    const shellOptions = { env };
     return taskFromArgs(
       classpath,
       javaBinary,
@@ -108,6 +109,7 @@ function escapedShellCommand(
       shellOptions
     );
   } else {
+    const shellOptions = { ...platformSpecificOptions(), env };
     return new ShellExecution(main.data.shellCommand, shellOptions);
   }
 }
@@ -124,13 +126,12 @@ async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
       {}
     );
 
-    const shellOptions = { ...platformSpecificOptions(), env };
     const task = new Task(
       { type: "scala", task: "run", class: main.data.class },
       workspaceFolder,
       "Scala run",
       "Metals",
-      escapedShellCommand(main, shellOptions)
+      escapedShellCommand(main, env)
     );
 
     await tasks.executeTask(task);
