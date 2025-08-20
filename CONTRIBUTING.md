@@ -66,3 +66,24 @@ $ yarn run test-extension
 TypeScript and Markdown sources are formatted with
 [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode).
 It's recommended to enable "Format on save" when working in this repository.
+
+## Updating the coursier-fallback.jar launcher
+
+Getting the current launcher version:
+```text
+unzip -p coursier-fallback.jar coursier/bootstrap/launcher/bootstrap-jar-urls | grep coursier-cli
+```
+
+This should print a line like
+```text
+https://repo1.maven.org/maven2/io/get-coursier/coursier-cli_3/2.1.25-M17/coursier-cli_3-2.1.25-M17.ja
+```
+where you can read the version.
+
+Updating the launcher:
+```text
+cs bootstrap coursier -o coursier-fallback.jar -f --ttl 0
+```
+
+`--ttl 0` ensure the version listing for the coursier CLI is up-to-date, and
+we use the latest version.
