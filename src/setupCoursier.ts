@@ -52,6 +52,10 @@ export async function setupCoursier(
     return fetchCoursier(coursierFetchPath, handleOutput)
       .then(() => defaultCoursier)
       .catch((_) => {
+        // the file might be broken if the download failed
+        if (fs.existsSync(defaultCoursier)) {
+          fs.rmSync(defaultCoursier, { force: true });
+        }
         output.appendLine(
           "Failed to fetch coursier. You may want to try installing coursier manually and adding it to PATH."
         );
