@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: "🚀 Feature request"
+    url: https://github.com/scalameta/metals-feature-requests
+    about: "This issue tracker is not for feature requests. Please suggest your idea on metals-feature-requests"
