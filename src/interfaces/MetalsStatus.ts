@@ -11,7 +11,7 @@ import { NotificationType } from "vscode-languageserver-protocol";
  * that they should not demand too much attention from the user.
  */
 export const MetalsStatusType = new NotificationType<MetalsStatusParams>(
-  "metals/status"
+  "metals/status",
 );
 
 export interface MetalsStatusParams {

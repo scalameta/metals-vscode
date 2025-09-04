@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { TestRunProfileKind, tests } from "vscode";
 import {
   ExecuteCommandRequest,
-  LanguageClient
+  LanguageClient,
 } from "vscode-languageclient/node";
 import { addTestCases } from "./addTestCases";
 import { addTestSuite } from "./addTestSuites";
@@ -14,7 +14,7 @@ import { updateTestSuiteLocation } from "./updateTestSuiteLocation";
 export function createTestManager(
   client: LanguageClient,
   isDisabled: boolean,
-  environmentVariables: () => Record<string, string>
+  environmentVariables: () => Record<string, string>,
 ): TestManager {
   return new TestManager(client, isDisabled, environmentVariables);
 }
@@ -22,7 +22,7 @@ export function createTestManager(
 class TestManager {
   readonly testController = tests.createTestController(
     "metalsTestController",
-    "Metals Test Explorer"
+    "Metals Test Explorer",
   );
 
   private isDisabled = false;
@@ -32,7 +32,7 @@ class TestManager {
   constructor(
     private readonly client: LanguageClient,
     isDisabled: boolean,
-    environmentVariables: () => Record<string, string>
+    environmentVariables: () => Record<string, string>,
   ) {
     if (isDisabled) {
       this.disable();
@@ -54,11 +54,11 @@ class TestManager {
             callback,
             request,
             token,
-            this.environmentVariables
+            this.environmentVariables,
           );
         }
       },
-      true
+      true,
     );
 
     this.testController.createRunProfile(
@@ -73,11 +73,11 @@ class TestManager {
             callback,
             request,
             token,
-            this.environmentVariables
+            this.environmentVariables,
           );
         }
       },
-      false
+      false,
     );
 
     this.testController.resolveHandler = async (item?: vscode.TestItem) => {
@@ -98,7 +98,7 @@ class TestManager {
    */
   disable(): void {
     this.testController.items.forEach((item) =>
-      this.testController.items.delete(item.id)
+      this.testController.items.delete(item.id),
     );
     this.isDisabled = true;
   }
@@ -109,7 +109,7 @@ class TestManager {
       targetName,
       folderUri,
       folderName,
-      events
+      events,
     } of updates) {
       const folderUri_ = folderUri || ("root" as FolderUri);
       const folderName_ = folderName || ("root" as FolderName);
@@ -123,14 +123,14 @@ class TestManager {
             targetUri,
             folderName_,
             folderUri_,
-            event
+            event,
           );
         } else if (event.kind === "updateSuiteLocation") {
           updateTestSuiteLocation(
             this.testController,
             targetUri,
             folderUri_,
-            event
+            event,
           );
         } else if (event.kind === "addTestCases") {
           addTestCases(
@@ -138,7 +138,7 @@ class TestManager {
             targetName,
             targetUri,
             folderUri_,
-            event
+            event,
           );
         }
       }
@@ -155,13 +155,13 @@ class TestManager {
     return this.client
       .sendRequest(ExecuteCommandRequest.type, {
         command: "discover-tests",
-        arguments: args
+        arguments: args,
       })
       .then(
         (updates: BuildTargetUpdate[]) => {
           this.updateTestExplorer(updates);
         },
-        (err) => console.error(err)
+        (err) => console.error(err),
       );
   }
 }

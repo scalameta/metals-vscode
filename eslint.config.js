@@ -9,30 +9,30 @@ const { FlatCompat } = require("@eslint/eslintrc");
 const compat = new FlatCompat({
   baseDirectory: __dirname,
   recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all
+  allConfig: js.configs.all,
 });
 
 module.exports = defineConfig([
   {
     languageOptions: {
-      parser: tsParser
+      parser: tsParser,
     },
 
     plugins: {
-      "@typescript-eslint": typescriptEslint
+      "@typescript-eslint": typescriptEslint,
     },
 
     extends: compat.extends(
       "eslint:recommended",
       "plugin:@typescript-eslint/recommended",
-      "prettier"
-    )
+      "prettier",
+    ),
   },
   globalIgnores([
     "out/*",
     "**/*.js",
     "src/test/unit/getJavaHome.test.ts",
-    "src/test/unit/checkForUpdate.test.ts"
+    "src/test/unit/checkForUpdate.test.ts",
   ]),
   {
     files: ["**/*.ts"],
@@ -40,8 +40,8 @@ module.exports = defineConfig([
       "@typescript-eslint/no-explicit-any": [
         "warn",
         {
-          ignoreRestArgs: true
-        }
+          ignoreRestArgs: true,
+        },
       ],
 
       "no-unused-vars": "off",
@@ -51,15 +51,15 @@ module.exports = defineConfig([
         {
           argsIgnorePattern: "^_",
           varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_"
-        }
+          caughtErrorsIgnorePattern: "^_",
+        },
       ],
 
       "@typescript-eslint/no-non-null-assertion": "error",
       "guard-for-in": "error",
       "no-var": "error",
       curly: "error",
-      "no-useless-escape": "off"
-    }
-  }
+      "no-useless-escape": "off",
+    },
+  },
 ]);

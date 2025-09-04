@@ -19,7 +19,7 @@ export function initializeHotCodeReplace() {
     vscode.commands.executeCommand(
       "setContext",
       HCR_ACTIVE,
-      session && !session.configuration.noDebug
+      session && !session.configuration.noDebug,
     );
   });
 }
@@ -35,7 +35,7 @@ export async function applyHCR() {
     vscode.window
       .showWarningMessage(
         "Failed to apply the changes because hot code replace is not supported by run mode, " +
-          "would you like to restart the program?"
+          "would you like to restart the program?",
       )
       .then((res) => {
         if (res === "Yes") {
@@ -50,7 +50,7 @@ export async function applyHCR() {
   const redefineRequest = debugSession.customRequest("redefineClasses");
   vscode.window.setStatusBarMessage(
     "$(sync~spin) Applying code changes...",
-    redefineRequest
+    redefineRequest,
   );
   const response = await redefineRequest;
 
@@ -61,7 +61,7 @@ export async function applyHCR() {
 
   if (!response?.changedClasses?.length) {
     vscode.window.showWarningMessage(
-      "No classes were reloaded, please check the logs"
+      "No classes were reloaded, please check the logs",
     );
     return;
   }
@@ -69,6 +69,6 @@ export async function applyHCR() {
   const changed = response.changedClasses.length;
   vscode.window.setStatusBarMessage(
     `$(check) ${changed} Class${changed > 1 ? "es" : ""} reloaded`,
-    5 * 1000
+    5 * 1000,
   );
 }

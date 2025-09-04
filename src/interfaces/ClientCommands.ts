@@ -48,7 +48,7 @@ export const ClientCommands = {
   /**
    * Connect or reconnect to build server.
    */
-  BuildConnect: "metals-build-connect"
+  BuildConnect: "metals-build-connect",
 } as const;
 
 export type ClientCommands = typeof ClientCommands;

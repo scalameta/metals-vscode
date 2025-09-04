@@ -3,7 +3,7 @@ import { CancellationToken, TestController, TestRunRequest } from "vscode";
 import { debugServerFromUri, DebugSession } from "../debugger/scalaDebugger";
 import {
   ScalaTestSuitesDebugRequest,
-  ScalaTestSuiteSelection
+  ScalaTestSuiteSelection,
 } from "../debugger/types";
 import { TargetUri } from "../types";
 import { analyzeTestRun } from "./analyzeTestRun";
@@ -11,7 +11,7 @@ import {
   DapEvent,
   MetalsTestItem,
   RunnableMetalsTestItem,
-  TestSuiteResult
+  TestSuiteResult,
 } from "./types";
 import { gatherTestItems } from "./util";
 import { ServerCommands } from "../interfaces/ServerCommands";
@@ -42,10 +42,10 @@ vscode.debug.registerDebugAdapterTrackerFactory("scala", {
           ) {
             suiteResults.get(session.id)?.push(msg.body.data);
           }
-        }
+        },
       };
     }
-  }
+  },
 });
 
 /**
@@ -60,7 +60,7 @@ export async function runHandler(
   afterFinished: () => void,
   request: TestRunRequest,
   token: CancellationToken,
-  environmentVariables: () => Record<string, string>
+  environmentVariables: () => Record<string, string>,
 ): Promise<void> {
   const run = testController.createTestRun(request);
   const includes = new Set((request.include as MetalsTestItem[]) ?? []);
@@ -108,12 +108,12 @@ export async function runHandler(
     if (kind === "suite") {
       return {
         className: test.id,
-        tests: []
+        tests: [],
       };
     } else {
       return {
         className: test._metalsParent.id,
-        tests: [test.id]
+        tests: [test.id],
       };
     }
   });
@@ -127,7 +127,7 @@ export async function runHandler(
         targetUri,
         testSuiteSelection,
         queue,
-        environmentVariables()
+        environmentVariables(),
       );
     }
   } finally {
@@ -145,12 +145,12 @@ async function runDebugSession(
   targetUri: TargetUri,
   testSuiteSelection: ScalaTestSuiteSelection[],
   tests: RunnableMetalsTestItem[],
-  environmentVariables: Record<string, string> = {}
+  environmentVariables: Record<string, string> = {},
 ): Promise<void> {
   const session = await createDebugSession(
     targetUri,
     testSuiteSelection,
-    environmentVariables
+    environmentVariables,
   );
   if (!session) {
     return;
@@ -170,7 +170,7 @@ async function runDebugSession(
 async function createDebugSession(
   targetUri: TargetUri,
   suites: ScalaTestSuiteSelection[],
-  environmentVariables: Record<string, string> = {}
+  environmentVariables: Record<string, string> = {},
 ): Promise<DebugSession | undefined> {
   const debugSessionParams: ScalaTestSuitesDebugRequest = {
     target: { uri: targetUri },
@@ -178,13 +178,13 @@ async function createDebugSession(
       suites,
       jvmOptions: [],
       environmentVariables: Object.entries(environmentVariables).map(
-        ([key, value]) => `${key}=${value}`
-      )
-    }
+        ([key, value]) => `${key}=${value}`,
+      ),
+    },
   };
   return vscode.commands.executeCommand<DebugSession>(
     ServerCommands.DebugAdapterStart,
-    debugSessionParams
+    debugSessionParams,
   );
 }
 
@@ -202,7 +202,7 @@ async function startDebugging(session: DebugSession, noDebug: boolean) {
     noDebug,
     request: "launch",
     debugServer: port,
-    kind: testRunnerId
+    kind: testRunnerId,
   };
   return vscode.debug.startDebugging(undefined, configuration);
 }
@@ -214,7 +214,7 @@ async function startDebugging(session: DebugSession, noDebug: boolean) {
  */
 async function analyzeResults(
   run: vscode.TestRun,
-  tests: RunnableMetalsTestItem[]
+  tests: RunnableMetalsTestItem[],
 ) {
   return new Promise<void>((resolve) => {
     const disposable = vscode.debug.onDidTerminateDebugSession(
@@ -231,7 +231,7 @@ async function analyzeResults(
         analyzeTestRun(run, tests, testSuitesResult, teardown);
         run.end();
         return resolve();
-      }
+      },
     );
   });
 }

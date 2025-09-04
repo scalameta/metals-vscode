@@ -5,7 +5,7 @@ import {
   prefixesOf,
   refineRunnableTestItem,
   TestItemPath,
-  toVscodeRange
+  toVscodeRange,
 } from "./util";
 
 /**
@@ -21,11 +21,11 @@ export function addTestCases(
   targetName: TargetName,
   targetUri: TargetUri,
   folderUri: FolderUri,
-  event: AddTestCases
+  event: AddTestCases,
 ): void {
   function addTestCasesLoop(
     parent: vscode.TestItem,
-    testPrefix: TestItemPath | null
+    testPrefix: TestItemPath | null,
   ): void {
     if (testPrefix) {
       const child = parent.children.get(testPrefix.id);
@@ -33,7 +33,7 @@ export function addTestCases(
         addTestCasesLoop(child, testPrefix.next());
       } else {
         console.error(
-          "Cannot find test item for " + event.fullyQualifiedClassName
+          "Cannot find test item for " + event.fullyQualifiedClassName,
         );
       }
     } else {
@@ -44,14 +44,14 @@ export function addTestCases(
         const testItem = testController.createTestItem(
           name,
           displayName || name,
-          parsedUri
+          parsedUri,
         );
         refineRunnableTestItem(
           "testcase",
           testItem,
           targetUri,
           targetName,
-          parent
+          parent,
         );
         testItem.range = parsedRange;
         parent.children.add(testItem);

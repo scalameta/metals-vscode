@@ -3,7 +3,7 @@ import Mocha from "mocha";
 import { glob } from "glob";
 export function run(
   testsRoot: string,
-  cb: (error: unknown, failures?: number) => void
+  cb: (error: unknown, failures?: number) => void,
 ): void {
   // Create the mocha test
   const mocha = new Mocha({ ui: "tdd" });

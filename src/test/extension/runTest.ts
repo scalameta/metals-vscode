@@ -7,7 +7,7 @@ async function main(): Promise<void> {
     // Passed to `--extensionDevelopmentPath`
     const extensionDevelopmentPath: string = path.resolve(
       __dirname,
-      "../../../"
+      "../../../",
     );
 
     // The path to the extension test script
@@ -23,7 +23,7 @@ async function main(): Promise<void> {
       version: "1.89.1",
       reuseMachineInstall: true,
       launchArgs: ["--disable-extension"],
-      reporter
+      reporter,
     });
   } catch (_err) {
     process.exit(1);

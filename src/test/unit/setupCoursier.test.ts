@@ -2,7 +2,7 @@ import path from "path";
 import {
   fetchCoursier,
   setupCoursier,
-  validateCoursier
+  validateCoursier,
 } from "../../setupCoursier";
 import { OutputChannel } from "../../interfaces/OutputChannel";
 import { log } from "console";
@@ -44,7 +44,7 @@ describe("setupCoursier", () => {
       await fetchCoursier(tmpDir, (out) => {
         log(out.toString().trim());
       }),
-      0
+      0,
     );
   });
 
@@ -57,7 +57,7 @@ describe("setupCoursier", () => {
       process.cwd(),
       new LogOutputChannel(),
       false,
-      ["-Xmx1000M", "-XX-fake!"]
+      ["-Xmx1000M", "-XX-fake!"],
     );
     assert.isTrue(fs.existsSync(coursier));
     assert.isTrue(fs.existsSync(javaHome.path));

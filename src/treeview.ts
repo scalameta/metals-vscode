@@ -11,7 +11,7 @@ import {
   Uri,
   TreeView,
   ExtensionContext,
-  ThemeIcon
+  ThemeIcon,
 } from "vscode";
 import {
   MetalsTreeRevealResult,
@@ -21,14 +21,14 @@ import {
   MetalsTreeViewNodeCollapseDidChangeType,
   MetalsTreeViewParentType,
   MetalsTreeViews,
-  MetalsTreeViewVisibilityDidChangeType
+  MetalsTreeViewVisibilityDidChangeType,
 } from "./interfaces/TreeViewProtocol";
 
 export function startTreeView(
   client: LanguageClient,
   out: OutputChannel,
   context: ExtensionContext,
-  viewIds: string[]
+  viewIds: string[],
 ): MetalsTreeViews {
   const allProviders: Map<string, MetalsTreeDataProvider> = new Map();
   const allViews: Map<string, TreeView<string>> = new Map();
@@ -47,12 +47,12 @@ export function startTreeView(
       out,
       viewId,
       allProviders,
-      context
+      context,
     );
     allProviders.set(viewId, provider);
     const view = window.createTreeView(viewId, {
       treeDataProvider: provider,
-      showCollapseAll: true
+      showCollapseAll: true,
     });
     allViews.set(viewId, view);
 
@@ -60,7 +60,7 @@ export function startTreeView(
     const onDidChangeVisibility = view.onDidChangeVisibility((e) => {
       client.sendNotification(MetalsTreeViewVisibilityDidChangeType, {
         viewId: viewId,
-        visible: e.visible
+        visible: e.visible,
       });
     });
     const onDidChangeExpandNode = view.onDidExpandElement((e) => {
@@ -68,7 +68,7 @@ export function startTreeView(
       client.sendNotification(MetalsTreeViewNodeCollapseDidChangeType, {
         viewId: viewId,
         nodeUri: e.element,
-        collapsed: false
+        collapsed: false,
       });
     });
     const onDidChangeCollapseNode = view.onDidCollapseElement((e) => {
@@ -76,7 +76,7 @@ export function startTreeView(
       client.sendNotification(MetalsTreeViewNodeCollapseDidChangeType, {
         viewId: viewId,
         nodeUri: e.element,
-        collapsed: true
+        collapsed: true,
       });
     });
 
@@ -84,7 +84,7 @@ export function startTreeView(
       view,
       onDidChangeVisibility,
       onDidChangeExpandNode,
-      onDidChangeCollapseNode
+      onDidChangeCollapseNode,
     ];
   });
 
@@ -106,7 +106,7 @@ export function startTreeView(
           provider.didChange.fire(undefined);
         }
       });
-    }
+    },
   );
   context.subscriptions.push(metalsTreeViewDidChangeDispoasble);
 
@@ -122,7 +122,7 @@ export function startTreeView(
             if (isDestinationNode) {
               return view.reveal(uri, {
                 select: true,
-                focus: true
+                focus: true,
               });
             } else {
               return Promise.resolve();
@@ -140,7 +140,7 @@ export function startTreeView(
               return view.reveal(uri, {
                 expand: true,
                 select: isDestinationNode,
-                focus: isDestinationNode
+                focus: isDestinationNode,
               });
             });
           }
@@ -156,7 +156,7 @@ export function startTreeView(
           out.appendLine(`unknown view: ${params.viewId}`);
         }
       }
-    }
+    },
   };
 }
 
@@ -178,7 +178,7 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
     readonly out: OutputChannel,
     readonly viewId: string,
     readonly views: Map<string, MetalsTreeDataProvider>,
-    readonly context: ExtensionContext
+    readonly context: ExtensionContext,
   ) {}
 
   // Populate TreeItem based on cached children response from the server.
@@ -201,7 +201,7 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
           : undefined,
       command: item.command,
       tooltip: item.tooltip,
-      iconPath: item.icon ? this.iconPath(item.icon) : undefined
+      iconPath: item.icon ? this.iconPath(item.icon) : undefined,
     };
     return result;
   }
@@ -211,7 +211,7 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
     return this.client
       .sendRequest(MetalsTreeViewParentType, {
         viewId: this.viewId,
-        nodeUri: uri
+        nodeUri: uri,
       })
       .then((result) => {
         return result.uri;
@@ -223,7 +223,7 @@ class MetalsTreeDataProvider implements TreeDataProvider<string> {
     return this.client
       .sendRequest(MetalsTreeViewChildrenType, {
         viewId: this.viewId,
-        nodeUri: uri
+        nodeUri: uri,
       })
       .then((result) => {
         result.nodes.forEach((n) => {
@@ -274,7 +274,7 @@ function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
 }
 
 function toTreeItemCollapsibleState(
-  s: MetalsTreeViewNode["collapseState"]
+  s: MetalsTreeViewNode["collapseState"],
 ): TreeItemCollapsibleState {
   switch (s) {
     case "expanded":

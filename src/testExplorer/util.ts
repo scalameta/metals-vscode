@@ -10,7 +10,7 @@ import {
   TestCaseMetalsTestItem,
   RunnableMetalsTestItem,
   WorkSpaceFolderTestItem,
-  MetalsTestItemKind
+  MetalsTestItemKind,
 } from "./types";
 
 // https://www.typescriptlang.org/docs/handbook/2/functions.html#function-overloads
@@ -33,7 +33,7 @@ export function refineTestItem(kind: "package", test: vscode.TestItem, parent: v
 export function refineTestItem(
   kind: MetalsTestItemKind,
   test: vscode.TestItem,
-  parent?: vscode.TestItem
+  parent?: vscode.TestItem,
 ): MetalsTestItem {
   return refineTestItemAux(kind, test as MetalsTestItem, parent);
 }
@@ -41,7 +41,7 @@ export function refineTestItem(
 export function refineTestItemAux(
   kind: MetalsTestItemKind,
   test: MetalsTestItem,
-  parent?: vscode.TestItem
+  parent?: vscode.TestItem,
 ): MetalsTestItem {
   test._metalsKind = kind;
   if (kind !== "workspaceFolder") {
@@ -60,7 +60,7 @@ export function refineRunnableTestItem(
   test: vscode.TestItem,
   targetUri: TargetUri,
   targetName: TargetName,
-  parent?: vscode.TestItem
+  parent?: vscode.TestItem,
 ): MetalsTestItem {
   const cast = test as RunnableMetalsTestItem;
   cast._metalsTargetName = targetName;
@@ -73,12 +73,12 @@ export function toVscodeRange(range: Range): vscode.Range {
     range.start.line,
     range.start.character,
     range.end.line,
-    range.end.character
+    range.end.character,
   );
 }
 
 export function gatherTestItems(
-  testCollection: vscode.TestItemCollection
+  testCollection: vscode.TestItemCollection,
 ): MetalsTestItem[] {
   const tests: MetalsTestItem[] = [];
   testCollection.forEach((test) => tests.push(test as MetalsTestItem));
@@ -114,7 +114,7 @@ export interface TestItemPath {
  */
 export function prefixesOf(
   fullyQualifiedName: FullyQualifiedClassName,
-  includeSelf = false
+  includeSelf = false,
 ): TestItemPath | null {
   const partitioned = fullyQualifiedName.split(".");
   const parts = includeSelf
@@ -130,13 +130,13 @@ export function prefixesOf(
   function makeTestPrefix(
     idx: number,
     parts: string[],
-    prefixes: string[]
+    prefixes: string[],
   ): TestItemPath | null {
     if (prefixes[idx] != null) {
       return {
         id: prefixes[idx],
         label: parts[idx],
-        next: () => makeTestPrefix(idx + 1, parts, prefixes)
+        next: () => makeTestPrefix(idx + 1, parts, prefixes),
       };
     } else {
       return null;

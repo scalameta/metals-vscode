@@ -5,7 +5,7 @@ export function getServerOptions(
   metalsClasspath: string,
   serverProperties: string[],
   clientName: string,
-  javaConfig: JavaConfig
+  javaConfig: JavaConfig,
 ): ServerOptions {
   const baseProperties = ["-Xss4m", "-Xms100m"];
 
@@ -36,7 +36,7 @@ export function getServerOptions(
     ...baseProperties,
     ...javaConfig.javaOptions,
     ...filteredServerProperties,
-    ...mainArgs
+    ...mainArgs,
   ];
 
   const env = () => ({ ...process.env, ...javaConfig.extraEnv });
@@ -45,12 +45,12 @@ export function getServerOptions(
     run: {
       command: javaConfig.javaPath,
       args: launchArgs,
-      options: { env: env() }
+      options: { env: env() },
     },
     debug: {
       command: javaConfig.javaPath,
       args: launchArgs,
-      options: { env: env() }
-    }
+      options: { env: env() },
+    },
   };
 }

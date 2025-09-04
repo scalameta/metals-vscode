@@ -10,7 +10,7 @@ export async function needCheckForUpdates(
   currentVersion: string,
   today: string,
   target: ConfigurationTarget,
-  repo: CheckForUpdateRepo
+  repo: CheckForUpdateRepo,
 ): Promise<boolean> {
   const { prevVersion, lastUpdatedAt } = repo.getLastUpdated(target);
 

@@ -15,7 +15,7 @@ export const MetalsInputBoxType = new RequestType<
 >("metals/inputBox");
 
 export const MetalsInputBoxHandle = function (
-  result: string | undefined
+  result: string | undefined,
 ): MetalsInputBoxResult {
   if (result === undefined || result.trim() === "") {
     return { cancelled: true };
@@ -43,7 +43,7 @@ export interface InputBoxOptions {
   value?: string;
   /** * Selection of the prefilled [`value`](#InputBoxOptions.value). Defined as tuple of two number where the * first is the inclusive start index and the second the exclusive end index. When `undefined` the whole * word will be selected, when empty (start equals end) only the cursor will be set, * otherwise the defined range will be selected.  */ valueSelection?: [
     number,
-    number
+    number,
   ];
 
   /**
@@ -75,6 +75,6 @@ export interface InputBoxOptions {
    * Return `undefined`, `null`, or the empty string when 'value' is valid.
    */
   validateInput?(
-    value: string
+    value: string,
   ): string | undefined | null | Thenable<string | undefined | null>;
 }

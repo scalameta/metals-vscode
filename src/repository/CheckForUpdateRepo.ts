@@ -11,7 +11,7 @@ export interface CheckForUpdateRepo {
   saveLastUpdated(
     serverVersion: string,
     lastUpdatedAt: string,
-    target: ConfigurationTarget
+    target: ConfigurationTarget,
   ): void;
 }
 
@@ -27,14 +27,14 @@ export class DefaultCheckForUpdateRepo implements CheckForUpdateRepo {
     const lastUpdatedAt = state.get<string>(this.LastUpdatedAtKey);
     return {
       prevVersion,
-      lastUpdatedAt
+      lastUpdatedAt,
     };
   }
 
   saveLastUpdated(
     serverVersion: string,
     lastUpdatedAt: string,
-    target: ConfigurationTarget
+    target: ConfigurationTarget,
   ): void {
     const state = this.storage(target);
     state.update(this.CurrentVersionKey, serverVersion);

@@ -5,7 +5,7 @@ import {
   Command,
   RequestType,
   NotificationType,
-  TextDocumentPositionParams
+  TextDocumentPositionParams,
 } from "vscode-languageserver-protocol";
 
 export interface MetalsTreeViews {
@@ -61,7 +61,7 @@ export interface MetalsTreeViewDidChangeParams {
 }
 export const MetalsTreeViewDidChangeType =
   new NotificationType<MetalsTreeViewDidChangeParams>(
-    "metals/treeViewDidChange"
+    "metals/treeViewDidChange",
   );
 
 export interface MetalsTreeViewParentParams {
@@ -88,7 +88,7 @@ export interface MetalsTreeViewVisibilityDidChangeParams {
 
 export const MetalsTreeViewVisibilityDidChangeType =
   new NotificationType<MetalsTreeViewVisibilityDidChangeParams>(
-    "metals/treeViewVisibilityDidChange"
+    "metals/treeViewVisibilityDidChange",
   );
 
 export interface MetalsTreeViewNodeCollapseDidChangeParams {
@@ -102,7 +102,7 @@ export interface MetalsTreeViewNodeCollapseDidChangeParams {
 
 export const MetalsTreeViewNodeCollapseDidChangeType =
   new NotificationType<MetalsTreeViewNodeCollapseDidChangeParams>(
-    "metals/treeViewNodeCollapseDidChange"
+    "metals/treeViewNodeCollapseDidChange",
   );
 
 export interface MetalsTreeRevealResult {

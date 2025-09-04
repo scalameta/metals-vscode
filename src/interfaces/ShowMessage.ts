@@ -46,7 +46,7 @@ export function normalize(showMessage: ShowMessage): VSCodeShowMessage {
       showErrorMessage(message) {
         showMessage.showMessage(message, "error");
         return Promise.resolve(undefined);
-      }
+      },
     };
   }
   return showMessage;

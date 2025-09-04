@@ -17,13 +17,13 @@ class MockRepo implements CheckForUpdateRepo {
   } {
     return {
       prevVersion: this.prevVersion,
-      lastUpdatedAt: this.lastUpdatedAt
+      lastUpdatedAt: this.lastUpdatedAt,
     };
   }
   saveLastUpdated(
     _serverVersion: string,
     _lastUpdatedAt: string,
-    _target: ConfigurationTarget
+    _target: ConfigurationTarget,
   ): void {
     return;
   }
@@ -39,13 +39,13 @@ describe("needCheckForUpdates", () => {
       currentVersion,
       today,
       ConfigurationTarget.Global,
-      repo
+      repo,
     );
     expect(actual).false;
     expect(spy.getCall(0).args).to.eql([
       currentVersion,
       today,
-      ConfigurationTarget.Global
+      ConfigurationTarget.Global,
     ]);
   });
 
@@ -59,13 +59,13 @@ describe("needCheckForUpdates", () => {
       currentVersion,
       today,
       ConfigurationTarget.Global,
-      repo
+      repo,
     );
     expect(actual).false;
     expect(spy.getCall(0).args).to.eql([
       currentVersion,
       today,
-      ConfigurationTarget.Global
+      ConfigurationTarget.Global,
     ]);
   });
 
@@ -78,7 +78,7 @@ describe("needCheckForUpdates", () => {
       currentVersion,
       today,
       ConfigurationTarget.Global,
-      repo
+      repo,
     );
     expect(actual).false;
     expect(spy.notCalled).true;
@@ -94,7 +94,7 @@ describe("needCheckForUpdates", () => {
       currentVersion,
       today,
       ConfigurationTarget.Global,
-      repo
+      repo,
     );
     expect(actual).true;
     expect(spy.notCalled).true;
