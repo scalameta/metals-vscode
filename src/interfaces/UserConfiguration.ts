@@ -28,5 +28,5 @@ export enum UserConfiguration {
   /**
    * Repository to use instead of maven central for example `https://jcenter.bintray.com`
    */
-  CoursierMirror = "coursierMirror"
+  CoursierMirror = "coursierMirror",
 }

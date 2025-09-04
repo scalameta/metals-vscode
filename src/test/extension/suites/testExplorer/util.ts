@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import {
   FolderName,
   FolderUri,
-  TargetName
+  TargetName,
 } from "../../../../testExplorer/types";
 import { TargetUri } from "../../../../types";
 
@@ -12,14 +12,14 @@ export function randomString(): string {
 
 export function buildFolder(
   folderName: string,
-  folderUri: string
+  folderUri: string,
 ): [FolderName, FolderUri] {
   return [folderName, folderUri] as [FolderName, FolderUri];
 }
 
 export function buildTarget(
   targetName: string,
-  targetUri: string
+  targetUri: string,
 ): [TargetName, TargetUri] {
   return [targetName, targetUri] as [TargetName, TargetUri];
 }
@@ -30,7 +30,7 @@ function traverse(items: vscode.TestItemCollection): unknown[] {
     testItems.push({
       id: c.id,
       label: c.label,
-      children: traverse(c.children)
+      children: traverse(c.children),
     });
   });
   return testItems;

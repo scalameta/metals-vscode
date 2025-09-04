@@ -29,5 +29,5 @@ export interface CompileResult {
 export enum BuildStatusCode {
   Ok = 1,
   Error = 2,
-  Cancelled = 3
+  Cancelled = 3,
 }

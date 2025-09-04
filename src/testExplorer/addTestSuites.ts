@@ -6,7 +6,7 @@ import {
   TestItemPath,
   refineRunnableTestItem,
   refineTestItem,
-  toVscodeRange
+  toVscodeRange,
 } from "./util";
 
 /**
@@ -24,24 +24,24 @@ export function addTestSuite(
   targetUri: TargetUri,
   folderName: FolderName,
   folderUri: FolderUri,
-  event: AddTestSuite
+  event: AddTestSuite,
 ): void {
   const workspaceFolderItem = getOrCreateWorkspaceFolderItem(
     testController,
     folderName,
-    folderUri
+    folderUri,
   );
 
   const buildTargetItem = getOrCreateBuildTargetItem(
     testController,
     workspaceFolderItem,
     targetUri,
-    targetName
+    targetName,
   );
 
   function addTestSuiteLoop(
     parent: vscode.TestItem,
-    testPrefix: TestItemPath | null
+    testPrefix: TestItemPath | null,
   ) {
     if (testPrefix) {
       const child = parent.children.get(testPrefix.id);
@@ -62,7 +62,7 @@ export function addTestSuite(
       const testItem = testController.createTestItem(
         fullyQualifiedClassName,
         className,
-        parsedUri
+        parsedUri,
       );
       refineRunnableTestItem("suite", testItem, targetUri, targetName, parent);
       // if canResolveChildren is true then test item is shown as expandable in the Test Explorer view
@@ -84,7 +84,7 @@ function getOrCreateBuildTargetItem(
   testController: vscode.TestController,
   workspaceFolderItem: vscode.TestItem,
   targetUri: TargetUri,
-  targetName: TargetName
+  targetName: TargetName,
 ): vscode.TestItem {
   const buildTarget = workspaceFolderItem.children.get(targetUri);
   if (buildTarget) {
@@ -105,7 +105,7 @@ function getOrCreateBuildTargetItem(
 function getOrCreateWorkspaceFolderItem(
   testController: vscode.TestController,
   folderName: FolderName,
-  folderUri: FolderUri
+  folderUri: FolderUri,
 ): vscode.TestItem {
   const workspaceFolder = testController.items.get(folderUri);
   if (workspaceFolder) {

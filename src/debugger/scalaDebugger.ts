@@ -9,14 +9,14 @@ import {
   DebugConfigurationProviderTriggerKind,
   tasks,
   Task,
-  ShellExecution
+  ShellExecution,
 } from "vscode";
 import { ExtendedScalaRunMain, ScalaCodeLensesParams } from "./types";
 import { platform } from "os";
 import { currentWorkspaceFolder } from "../util";
 import {
   DebugDiscoveryParams,
-  RunType
+  RunType,
 } from "../interfaces/DebugDiscoveryParams";
 import { ServerCommands } from "../interfaces/ServerCommands";
 
@@ -35,17 +35,17 @@ export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
     vscode.debug.registerDebugConfigurationProvider(
       configurationType,
       new ScalaMainConfigProvider(),
-      DebugConfigurationProviderTriggerKind.Initial
+      DebugConfigurationProviderTriggerKind.Initial,
     ),
     vscode.debug.registerDebugAdapterDescriptorFactory(
       configurationType,
-      new ScalaDebugServerFactory()
-    )
+      new ScalaDebugServerFactory(),
+    ),
   ];
 }
 
 function isExtendedScalaRunMain(
-  runMain: ScalaCodeLensesParams
+  runMain: ScalaCodeLensesParams,
 ): runMain is ExtendedScalaRunMain {
   return (
     runMain.dataKind === "scala-main-class" &&
@@ -74,24 +74,24 @@ function taskFromArgs(
   jvmOptions: string[],
   args: string[],
   mainClass: string,
-  shellOptions: vscode.ShellExecutionOptions
+  shellOptions: vscode.ShellExecutionOptions,
 ): vscode.ShellExecution {
   const allArgs = ["-classpath", classpath, ...jvmOptions, mainClass, ...args];
   const shellArgs: vscode.ShellQuotedString[] = allArgs.map((arg) => ({
     value: arg,
-    quoting: vscode.ShellQuoting.Strong
+    quoting: vscode.ShellQuoting.Strong,
   }));
 
   const shellCommand: vscode.ShellQuotedString = {
     value: javaBinary,
-    quoting: vscode.ShellQuoting.Strong
+    quoting: vscode.ShellQuoting.Strong,
   };
   return new ShellExecution(shellCommand, shellArgs, shellOptions);
 }
 
 function escapedShellCommand(
   main: ExtendedScalaRunMain,
-  env: Record<string, string>
+  env: Record<string, string>,
 ): vscode.ShellExecution {
   const classpath = main.data.classpath;
   const jvmOptions = main.data.jvmOptions;
@@ -106,7 +106,7 @@ function escapedShellCommand(
       jvmOptions,
       args,
       mainClass,
-      shellOptions
+      shellOptions,
     );
   } else {
     const shellOptions = { ...platformSpecificOptions(), env };
@@ -123,7 +123,7 @@ async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
         const [key, value] = envKeyValue.split("=");
         return { ...acc, [key]: value };
       },
-      {}
+      {},
     );
 
     const task = new Task(
@@ -131,7 +131,7 @@ async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
       workspaceFolder,
       "Scala run",
       "Metals",
-      escapedShellCommand(main, env)
+      escapedShellCommand(main, env),
     );
 
     await tasks.executeTask(task);
@@ -143,7 +143,7 @@ async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
 
 export async function startDiscovery(
   noDebug: boolean,
-  debugParams: DebugDiscoveryParams
+  debugParams: DebugDiscoveryParams,
 ): Promise<boolean> {
   if (
     noDebug &&
@@ -154,7 +154,7 @@ export async function startDiscovery(
     try {
       response = await vscode.commands.executeCommand<ScalaCodeLensesParams>(
         "discover-jvm-run-command",
-        debugParams
+        debugParams,
       );
     } catch (_error) {
       // recovering from discover-jvm-run-command failure
@@ -173,7 +173,7 @@ export async function startDiscovery(
 
 export async function start(
   noDebug: boolean,
-  debugParams: ScalaCodeLensesParams
+  debugParams: ScalaCodeLensesParams,
 ): Promise<boolean> {
   if (noDebug && isExtendedScalaRunMain(debugParams)) {
     return runMain(debugParams);
@@ -194,7 +194,7 @@ function handleCompileError(error: ResponseError) {
 
 async function debug(
   noDebug: boolean,
-  debugParams: DebugDiscoveryParams | ScalaCodeLensesParams
+  debugParams: DebugDiscoveryParams | ScalaCodeLensesParams,
 ): Promise<boolean> {
   await commands.executeCommand("workbench.action.files.save");
 
@@ -202,7 +202,7 @@ async function debug(
   try {
     response = await vscode.commands.executeCommand<DebugSession>(
       ServerCommands.DebugAdapterStart,
-      debugParams
+      debugParams,
     );
   } catch (error) {
     if (error instanceof ResponseError && error.code === workspaceHadErrors) {
@@ -228,7 +228,7 @@ async function debug(
     name: response.name,
     noDebug: noDebug,
     request: "launch",
-    debugServer: port // note: MUST be a number. vscode magic - automatically connects to the server
+    debugServer: port, // note: MUST be a number. vscode magic - automatically connects to the server
   };
   commands.executeCommand("workbench.panel.repl.view.focus");
   return vscode.debug.startDebugging(undefined, configuration);
@@ -237,7 +237,7 @@ async function debug(
 class ScalaMainConfigProvider implements vscode.DebugConfigurationProvider {
   async resolveDebugConfiguration(
     _folder: WorkspaceFolder | undefined,
-    debugConfiguration: DebugConfiguration
+    debugConfiguration: DebugConfiguration,
   ): Promise<DebugConfiguration | null> {
     const editor = vscode.window.activeTextEditor;
     // debugConfiguration.type is undefined if there are no configurations
@@ -251,7 +251,7 @@ class ScalaMainConfigProvider implements vscode.DebugConfigurationProvider {
         args: undefined,
         jvmOptions: undefined,
         env: undefined,
-        envFile: undefined
+        envFile: undefined,
       };
       await startDiscovery(debugConfiguration.noDebug, args);
       return debugConfiguration;
@@ -263,7 +263,7 @@ class ScalaMainConfigProvider implements vscode.DebugConfigurationProvider {
 
 class ScalaDebugServerFactory implements vscode.DebugAdapterDescriptorFactory {
   async createDebugAdapterDescriptor(
-    session: vscode.DebugSession
+    session: vscode.DebugSession,
   ): Promise<DebugAdapterDescriptor | null> {
     if (
       session.configuration.mainClass !== undefined ||
@@ -279,20 +279,20 @@ class ScalaDebugServerFactory implements vscode.DebugAdapterDescriptorFactory {
           args: session.configuration.args,
           jvmOptions: session.configuration.jvmOptions,
           env: session.configuration.env,
-          envFile: session.configuration.envFile
+          envFile: session.configuration.envFile,
         };
         await startDiscovery(session.configuration.noDebug, args);
 
         // This is the only way not to have to run full fledged DAP server
         return new vscode.DebugAdapterExecutable("echo", [
-          '"Running in the task window"'
+          '"Running in the task window"',
         ]);
       } else {
         let debugSession: DebugSession | undefined;
         try {
           debugSession = await vscode.commands.executeCommand<DebugSession>(
             ServerCommands.DebugAdapterStart,
-            session.configuration
+            session.configuration,
           );
           if (debugSession === undefined) {
             // return null makes vscode show "Couldn't find a debug adapter descriptor for debug type 'scala' (extension might have failed to activate)"

@@ -28,7 +28,7 @@ interface CheckServerVersionParams {
 export async function checkServerVersion({
   config,
   updateConfig,
-  onOutdated
+  onOutdated,
 }: CheckServerVersionParams) {
   const { serverVersion, latestServerVersion, configurationTarget } =
     serverVersionInfo(config);
@@ -56,7 +56,7 @@ export async function checkServerVersion({
         updateConfig({
           configSection,
           latestServerVersion,
-          configurationTarget
+          configurationTarget,
         });
       }
     };
@@ -65,7 +65,7 @@ export async function checkServerVersion({
       upgradeChoice,
       openSettingsChoice,
       dismissChoice,
-      upgrade
+      upgrade,
     });
   }
 }
@@ -90,6 +90,6 @@ function serverVersionInfo(config: WorkspaceConfiguration): {
   return {
     serverVersion: computedVersion,
     latestServerVersion: defaultAndGlobal?.defaultValue,
-    configurationTarget
+    configurationTarget,
   };
 }

@@ -1,6 +1,6 @@
 import {
   NotificationType,
-  ExecuteCommandParams
+  ExecuteCommandParams,
 } from "vscode-languageserver-protocol";
 
 /**
@@ -24,7 +24,7 @@ export const ExecuteClientCommandType =
  * - https://scalameta.org/metals/docs/editors/new-editor.html#metalsdidfocustextdocument
  */
 export const MetalsDidFocusTypeType = new NotificationType<string>(
-  "metals/didFocusTextDocument"
+  "metals/didFocusTextDocument",
 );
 
 /**

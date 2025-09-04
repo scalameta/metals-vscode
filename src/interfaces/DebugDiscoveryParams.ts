@@ -13,5 +13,5 @@ export enum RunType {
   Run = "run",
   RunOrTestFile = "runOrTestFile",
   TestFile = "testFile",
-  TestTarget = "testTarget"
+  TestTarget = "testTarget",
 }

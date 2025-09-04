@@ -7,7 +7,7 @@ import {
   SuiteName,
   TestName,
   TestRunActions,
-  TestSuiteResult
+  TestSuiteResult,
 } from "./types";
 import { gatherTestItems } from "./util";
 
@@ -24,7 +24,7 @@ export function analyzeTestRun(
   run: TestRunActions,
   tests: RunnableMetalsTestItem[],
   testSuitesResults: TestSuiteResult[],
-  teardown?: () => void
+  teardown?: () => void,
 ): void {
   const results = createResultsMap(testSuitesResults);
   for (const test of tests) {
@@ -58,10 +58,10 @@ export function analyzeTestRun(
  * Transforms array of suite results into mapping between suite name and suite result.
  */
 function createResultsMap(
-  testSuitesResults: TestSuiteResult[]
+  testSuitesResults: TestSuiteResult[],
 ): Map<SuiteName, TestSuiteResult> {
   const resultsTuples: [SuiteName, TestSuiteResult][] = testSuitesResults.map(
-    (result) => [result.suiteName, result]
+    (result) => [result.suiteName, result],
   );
   const results = new Map(resultsTuples);
   return results;
@@ -74,7 +74,7 @@ function analyzeTestCases(
   run: TestRunActions,
   result: TestSuiteResult,
   testCases: vscode.TestItem[],
-  parent?: vscode.TestItem
+  parent?: vscode.TestItem,
 ) {
   const parentName = parent?.id || "";
   const testCasesResults = createTestCasesMap(result, parentName);
@@ -114,7 +114,7 @@ function analyzeTestCases(
  */
 function createTestCasesMap(
   testSuiteResult: TestSuiteResult,
-  parentName: string
+  parentName: string,
 ): Map<TestName, SingleTestResult> {
   const tuples: [TestName, SingleTestResult][] = testSuiteResult.tests.map(
     (test) => {
@@ -123,7 +123,7 @@ function createTestCasesMap(
           ? test.testName.slice(parentName.length + 1)
           : test.testName;
       return [name as TestName, test];
-    }
+    },
   );
   const testCasesResult = new Map(tuples);
   return testCasesResult;
@@ -136,7 +136,7 @@ function createTestCasesMap(
 function analyzeTestSuite(
   run: TestRunActions,
   result: TestSuiteResult,
-  testSuite: vscode.TestItem
+  testSuite: vscode.TestItem,
 ) {
   const failed = result.tests.filter(isFailed);
   if (failed.length > 0) {
@@ -167,8 +167,8 @@ function toTestMessage(failed: Failed): vscode.TestMessage {
       message: ansicolor.strip(failed.error),
       location: new vscode.Location(
         vscode.Uri.parse(failed.location.file),
-        new vscode.Position(failed.location.line, 0)
-      )
+        new vscode.Position(failed.location.line, 0),
+      ),
     };
   }
   return { message: ansicolor.strip(failed.error) };

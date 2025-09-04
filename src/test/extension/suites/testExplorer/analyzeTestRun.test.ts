@@ -5,7 +5,7 @@ import {
   SuiteName,
   TestName,
   TestRunActions,
-  TestSuiteResult
+  TestSuiteResult,
 } from "../../../../testExplorer/types";
 import { refineRunnableTestItem } from "../../../../testExplorer/util";
 import { buildTarget } from "./util";
@@ -18,9 +18,9 @@ const passed: TestSuiteResult[] = [
     duration: 100,
     tests: [
       { kind: "passed", testName: "TestSuite.test1" as TestName, duration: 10 },
-      { kind: "passed", testName: "TestSuite.test2" as TestName, duration: 90 }
-    ]
-  }
+      { kind: "passed", testName: "TestSuite.test2" as TestName, duration: 90 },
+    ],
+  },
 ];
 
 const failed: TestSuiteResult[] = [
@@ -33,12 +33,12 @@ const failed: TestSuiteResult[] = [
         testName: "TestSuite.test1" as TestName,
         error: "Error",
         duration: 10,
-        location: { file: "file://test", line: 1 }
+        location: { file: "file://test", line: 1 },
       },
       { kind: "passed", testName: "TestSuite.test2" as TestName, duration: 90 },
-      { kind: "skipped", testName: "TestSuite.test3" as TestName }
-    ]
-  }
+      { kind: "skipped", testName: "TestSuite.test3" as TestName },
+    ],
+  },
 ];
 
 interface TestResults {
@@ -58,7 +58,7 @@ function getRunActions(): [TestRunActions, TestResults] {
     failed: (
       test: vscode.TestItem,
       msg: vscode.TestMessage | readonly vscode.TestMessage[],
-      duration?: number
+      duration?: number,
     ) => {
       results.failed.push({ id: test.id, duration, msg });
     },
@@ -69,7 +69,7 @@ function getRunActions(): [TestRunActions, TestResults] {
 
     skipped: (test: vscode.TestItem) => {
       results.skipped.push({ id: test.id });
-    }
+    },
   };
 
   return [actions, results];
@@ -82,7 +82,7 @@ function arrayEqual<T>(actual: T[], expected: T[]): void {
 suite("Analyze tests results", () => {
   const testController = vscode.tests.createTestController(
     "testController",
-    "Test Explorer"
+    "Test Explorer",
   );
 
   test("suite passed", () => {
@@ -93,7 +93,7 @@ suite("Analyze tests results", () => {
       testItem,
       targetUri,
       targetName,
-      testItem
+      testItem,
     );
     analyzeTestRun(action, [refined], passed);
     arrayEqual(results.failed, []);
@@ -111,7 +111,7 @@ suite("Analyze tests results", () => {
       testItem,
       targetUri,
       targetName,
-      testItem
+      testItem,
     );
 
     analyzeTestRun(action, [refined], failed);
@@ -124,11 +124,11 @@ suite("Analyze tests results", () => {
             message: "Error",
             location: new vscode.Location(
               vscode.Uri.parse("file://test"),
-              new vscode.Position(1, 0)
-            )
-          }
-        ]
-      }
+              new vscode.Position(1, 0),
+            ),
+          },
+        ],
+      },
     ]);
     arrayEqual(results.skipped, []);
     arrayEqual(results.passed, []);
@@ -142,7 +142,7 @@ suite("Analyze tests results", () => {
       testItem,
       targetUri,
       targetName,
-      testItem
+      testItem,
     );
     const child1 = testController.createTestItem("test1", "test1");
     const child2 = testController.createTestItem("test2", "test2");
@@ -153,16 +153,22 @@ suite("Analyze tests results", () => {
         child1,
         targetUri,
         targetName,
-        refined
+        refined,
       ),
       refineRunnableTestItem(
         "testcase",
         child2,
         targetUri,
         targetName,
-        refined
+        refined,
       ),
-      refineRunnableTestItem("testcase", child3, targetUri, targetName, refined)
+      refineRunnableTestItem(
+        "testcase",
+        child3,
+        targetUri,
+        targetName,
+        refined,
+      ),
     ]);
 
     analyzeTestRun(action, [refined], failed);
@@ -174,10 +180,10 @@ suite("Analyze tests results", () => {
           message: "Error",
           location: new vscode.Location(
             vscode.Uri.parse("file://test"),
-            new vscode.Position(1, 0)
-          )
-        }
-      }
+            new vscode.Position(1, 0),
+          ),
+        },
+      },
     ]);
     arrayEqual(results.passed, [{ id: "test2", duration: 90 }]);
     arrayEqual(results.skipped, [{ id: "test3" }]);
@@ -191,7 +197,7 @@ suite("Analyze tests results", () => {
       testItem,
       targetUri,
       targetName,
-      testItem
+      testItem,
     );
     const child1 = testController.createTestItem("test1", "test1");
     const child2 = testController.createTestItem("test2", "test2");
@@ -201,7 +207,7 @@ suite("Analyze tests results", () => {
       child1,
       targetUri,
       targetName,
-      refined
+      refined,
     );
     [
       refinedChild,
@@ -210,9 +216,15 @@ suite("Analyze tests results", () => {
         child2,
         targetUri,
         targetName,
-        refined
+        refined,
       ),
-      refineRunnableTestItem("testcase", child3, targetUri, targetName, refined)
+      refineRunnableTestItem(
+        "testcase",
+        child3,
+        targetUri,
+        targetName,
+        refined,
+      ),
     ].forEach((c) => refined.children.add(c));
 
     analyzeTestRun(action, [refinedChild], failed);
@@ -224,10 +236,10 @@ suite("Analyze tests results", () => {
           message: "Error",
           location: new vscode.Location(
             vscode.Uri.parse("file://test"),
-            new vscode.Position(1, 0)
-          )
-        }
-      }
+            new vscode.Position(1, 0),
+          ),
+        },
+      },
     ]);
     arrayEqual(results.passed, []);
     arrayEqual(results.skipped, []);

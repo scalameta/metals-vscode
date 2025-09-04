@@ -1,4 +1,4 @@
 export enum ConfigurationTarget {
   Global,
-  Workspace
+  Workspace,
 }

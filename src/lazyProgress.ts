@@ -8,7 +8,7 @@ export class LazyProgress {
   startOrContinue(
     title: string,
     output: OutputChannel,
-    download: Promise<unknown>
+    download: Promise<unknown>,
   ): void {
     if (!this.progress) {
       this.progress = window.withProgress(
@@ -28,7 +28,7 @@ export class LazyProgress {
                 output.hide();
               })
               .then(complete, complete);
-          })
+          }),
       );
     }
   }

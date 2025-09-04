@@ -11,7 +11,7 @@ function checkFunctions(indentPattern: RegExp) {
 
 describe("IncreaseIndentPattern Test Suite", () => {
   const [checkIncrease, checkNotIncrease] = checkFunctions(
-    increaseIndentPattern()
+    increaseIndentPattern(),
   );
 
   it("Scala3", () => {

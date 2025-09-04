@@ -26,7 +26,7 @@ export function getJavaConfig({
   javaHome,
   coursier,
   coursierMirrorFilePath,
-  customRepositories = []
+  customRepositories = [],
 }: GetJavaConfigOptions): JavaConfig {
   const javaOptions = getJavaOptions(workspaceRoot);
   const javaPath = path.join(javaHome.path, "bin", "java");
@@ -41,7 +41,7 @@ export function getJavaConfig({
 
   const extraEnv = {
     ...coursierRepositories,
-    ...coursierMirrors
+    ...coursierMirrors,
   };
 
   return {
@@ -50,6 +50,6 @@ export function getJavaConfig({
     javaHome,
     coursier,
     coursierMirrorFilePath,
-    extraEnv
+    extraEnv,
   };
 }

@@ -7,13 +7,13 @@ export function removeTestItem(
   testController: vscode.TestController,
   targetUri: TargetUri,
   folderUri: FolderUri,
-  event: RemoveTestSuite
+  event: RemoveTestSuite,
 ): void {
   const { fullyQualifiedClassName } = event;
 
   function removeTestItemLoop(
     parent: vscode.TestItem,
-    testPrefix: TestItemPath | null
+    testPrefix: TestItemPath | null,
   ): void {
     if (testPrefix) {
       const child = parent.children.get(testPrefix.id);

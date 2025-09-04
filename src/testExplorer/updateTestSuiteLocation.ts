@@ -14,11 +14,11 @@ export function updateTestSuiteLocation(
   testController: vscode.TestController,
   targetUri: TargetUri,
   folderUri: FolderUri,
-  event: UpdateSuiteLocation
+  event: UpdateSuiteLocation,
 ): void {
   function updateTestSuiteLocationLoop(
     parent: vscode.TestItem,
-    testPrefix: TestItemPath | null
+    testPrefix: TestItemPath | null,
   ): void {
     if (testPrefix) {
       const child = parent.children.get(testPrefix.id);
@@ -26,7 +26,7 @@ export function updateTestSuiteLocation(
         updateTestSuiteLocationLoop(child, testPrefix.next());
       } else {
         console.error(
-          "Cannot find test item for " + event.fullyQualifiedClassName
+          "Cannot find test item for " + event.fullyQualifiedClassName,
         );
       }
     } else {

@@ -128,7 +128,7 @@ export interface TestRunActions {
   failed?(
     test: vscode.TestItem,
     message: vscode.TestMessage | readonly vscode.TestMessage[],
-    duration?: number
+    duration?: number,
   ): void;
   passed?(test: vscode.TestItem, duration?: number): void;
   skipped?(test: vscode.TestItem): void;

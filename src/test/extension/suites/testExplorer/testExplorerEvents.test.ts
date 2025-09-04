@@ -25,17 +25,17 @@ function compareTestItem(item: vscode.TestItem, expected: TestItem) {
 
 function checkTestController(
   controller: vscode.TestController,
-  expectedRoot: TestItem
+  expectedRoot: TestItem,
 ): void {
   function checkTestItem(
     node: vscode.TestItem | undefined,
-    expected: TestItem
+    expected: TestItem,
   ) {
     assert(
       node != null,
       `There is no test item for id ${expected.id}\n${prettyPrint(
-        controller.items
-      )}`
+        controller.items,
+      )}`,
     );
     if (node) {
       compareTestItem(node, expected);
@@ -51,7 +51,7 @@ function checkTestController(
 suite("Test Explorer events", () => {
   const testController = vscode.tests.createTestController(
     "testController" + randomString(),
-    "Test Explorer"
+    "Test Explorer",
   );
 
   const cleanup = () => {
@@ -67,7 +67,7 @@ suite("Test Explorer events", () => {
       targetUri,
       folderName,
       folderUri,
-      noPackage
+      noPackage,
     );
 
     checkTestController(testController, {
@@ -77,9 +77,11 @@ suite("Test Explorer events", () => {
         {
           id: targetUri,
           label: targetName,
-          children: [{ id: "NoPackage", label: "NoPackage", uri, children: [] }]
-        }
-      ]
+          children: [
+            { id: "NoPackage", label: "NoPackage", uri, children: [] },
+          ],
+        },
+      ],
     });
     cleanup();
   });
@@ -91,7 +93,7 @@ suite("Test Explorer events", () => {
       targetUri,
       folderName,
       folderUri,
-      noPackage
+      noPackage,
     );
     addTestSuite(
       testController,
@@ -99,7 +101,7 @@ suite("Test Explorer events", () => {
       targetUri,
       folderName,
       folderUri,
-      foo
+      foo,
     );
     addTestSuite(
       testController,
@@ -107,7 +109,7 @@ suite("Test Explorer events", () => {
       targetUri,
       folderName,
       folderUri,
-      fooBar
+      fooBar,
     );
 
     checkTestController(testController, {
@@ -127,20 +129,20 @@ suite("Test Explorer events", () => {
                   id: "a.Foo",
                   label: "Foo",
                   uri,
-                  children: []
+                  children: [],
                 },
                 {
                   id: "a.b",
                   label: "b",
                   children: [
-                    { id: "a.b.FooBar", label: "FooBar", uri, children: [] }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
+                    { id: "a.b.FooBar", label: "FooBar", uri, children: [] },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
     });
     cleanup();
   });
@@ -152,7 +154,7 @@ suite("Test Explorer events", () => {
       targetUri,
       folderName,
       folderUri,
-      noPackage
+      noPackage,
     );
     addTestSuite(
       testController,
@@ -160,11 +162,11 @@ suite("Test Explorer events", () => {
       targetUri,
       folderName,
       folderUri,
-      foo
+      foo,
     );
     removeTestItem(testController, targetUri, folderUri, {
       ...foo,
-      kind: "removeSuite"
+      kind: "removeSuite",
     });
 
     checkTestController(testController, {
@@ -174,9 +176,11 @@ suite("Test Explorer events", () => {
         {
           id: targetUri,
           label: targetName,
-          children: [{ id: "NoPackage", label: "NoPackage", uri, children: [] }]
-        }
-      ]
+          children: [
+            { id: "NoPackage", label: "NoPackage", uri, children: [] },
+          ],
+        },
+      ],
     });
     cleanup();
   });
@@ -188,7 +192,7 @@ suite("Test Explorer events", () => {
       targetUri,
       folderName,
       folderUri,
-      noPackage
+      noPackage,
     );
     addTestSuite(
       testController,
@@ -196,14 +200,14 @@ suite("Test Explorer events", () => {
       targetUri,
       folderName,
       folderUri,
-      foo
+      foo,
     );
     addTestCases(
       testController,
       targetName,
       targetUri,
       folderUri,
-      fooTestCases
+      fooTestCases,
     );
 
     checkTestController(testController, {
@@ -225,14 +229,14 @@ suite("Test Explorer events", () => {
                   uri,
                   children: [
                     { id: "test1", label: "test1", uri, children: [] },
-                    { id: "test2", label: "test2", uri, children: [] }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
+                    { id: "test2", label: "test2", uri, children: [] },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
     });
     cleanup();
   });
