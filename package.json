@@ -468,9 +468,19 @@
           "markdownDescription": "Optional path to Scala CLI launcher to use."
         },
         "metals.suggestLatestUpgrade": {
-          "type": "boolean",
-          "default": false,
-          "markdownDescription": "Once in a day, notify if there are new server releases (including snapshots)"
+          "type": "string",
+          "enum": [
+            "off",
+            "on",
+            "install"
+          ],
+          "default": "off",
+          "enumDescriptions": [
+            "Never suggest upgrades",
+            "Suggest upgrades with a notification popup",
+            "Automatically install latest version without asking"
+          ],
+          "markdownDescription": "How to handle server version upgrades when a new version is available"
         },
         "metals.defaultBspToBuildTool": {
           "type": "boolean",
