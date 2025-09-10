@@ -12,6 +12,7 @@ import { DefaultCheckForUpdateRepo } from "./repository/CheckForUpdateRepo";
 import { needCheckForUpdates } from "./service/checkForUpdate";
 import { ConfigurationTarget } from "./ConfigurationTarget";
 import { checkServerVersion } from "./checkServerVersion";
+import { SuggestLatestUpgrade } from "./interfaces/SuggestLatestUpgrade";
 
 const serverVersionSection = "serverVersion";
 const suggestLatestUpgrade = "suggestLatestUpgrade";
@@ -26,6 +27,8 @@ export function getServerVersion(
     config.inspect<string>(serverVersionSection)!.defaultValue!;
   const serverVersion = serverVersionConfig?.trim() || defaultServerVersion;
 
+  migrateSuggestLatestUpgradeSetting(config);
+
   validateCurrentVersion(serverVersion, config, context);
   return serverVersion;
 }
@@ -35,7 +38,7 @@ async function validateCurrentVersion(
   config: WorkspaceConfiguration,
   context: ExtensionContext,
 ): Promise<void> {
-  const suggestUpgradeSetting = getConfigValue<boolean>(
+  const suggestUpgradeSetting = getConfigValue<string>(
     config,
     suggestLatestUpgrade,
   );
@@ -43,7 +46,10 @@ async function validateCurrentVersion(
   const checkForUpdateRepo = new DefaultCheckForUpdateRepo(context);
 
   const checkForUpdate = async () => {
-    if (suggestUpgradeSetting?.value) {
+    if (
+      suggestUpgradeSetting?.value &&
+      suggestUpgradeSetting.value !== SuggestLatestUpgrade.Off
+    ) {
       return needCheckForUpdates(
         serverVersion,
         todayString(),
@@ -56,35 +62,49 @@ async function validateCurrentVersion(
   };
   const isUpdateAvailable = await checkForUpdate();
 
-  if (suggestUpgradeSetting && isUpdateAvailable) {
+  if (
+    isUpdateAvailable &&
+    suggestUpgradeSetting &&
+    suggestUpgradeSetting.value !== SuggestLatestUpgrade.Off
+  ) {
     const nextVersion = await fetchLatest();
     if (nextVersion != serverVersion) {
-      const message = `The latest server version is: ${nextVersion} while you are on ${serverVersion}. Do upgrade?`;
-      const upgradeChoice = "Yes";
-      const ignoreChoice = "No";
-      window
-        .showInformationMessage(message, upgradeChoice, ignoreChoice)
-        .then((result) => {
-          if (result == upgradeChoice) {
-            config.update(
-              serverVersionSection,
-              nextVersion,
-              suggestUpgradeSetting.target,
-            );
-            checkForUpdateRepo.saveLastUpdated(
-              nextVersion,
-              todayString(),
-              fromVSCode(suggestUpgradeSetting.target),
-            );
-          } else if (result == ignoreChoice) {
-            // extend the current version expiration date
-            checkForUpdateRepo.saveLastUpdated(
-              serverVersion,
-              todayString(),
-              fromVSCode(suggestUpgradeSetting.target),
-            );
-          }
-        });
+      const doUpgrade = () => {
+        config.update(
+          serverVersionSection,
+          nextVersion,
+          suggestUpgradeSetting.target,
+        );
+        checkForUpdateRepo.saveLastUpdated(
+          nextVersion,
+          todayString(),
+          fromVSCode(suggestUpgradeSetting.target),
+        );
+      };
+      if (suggestUpgradeSetting.value === SuggestLatestUpgrade.Install) {
+        doUpgrade();
+        window.showInformationMessage(
+          `Metals server automatically upgraded from ${serverVersion} to ${nextVersion}`,
+        );
+      } else {
+        const message = `The latest server version is: ${nextVersion} while you are on ${serverVersion}. Do upgrade?`;
+        const upgradeChoice = "Yes";
+        const ignoreChoice = "No";
+        window
+          .showInformationMessage(message, upgradeChoice, ignoreChoice)
+          .then((result) => {
+            if (result == upgradeChoice) {
+              doUpgrade();
+            } else if (result == ignoreChoice) {
+              // extend the current version expiration date
+              checkForUpdateRepo.saveLastUpdated(
+                serverVersion,
+                todayString(),
+                fromVSCode(suggestUpgradeSetting.target),
+              );
+            }
+          });
+      }
     }
   } else {
     warnIfIsOutdated(config);
@@ -151,6 +171,31 @@ export function todayString(): string {
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const day = date.getDate().toString().padStart(2, "0");
   return [year, month, day].join("-");
+}
+
+function migrateSuggestLatestUpgradeSetting(
+  config: WorkspaceConfiguration,
+): void {
+  const currentValue = config.get(suggestLatestUpgrade);
+  if (typeof currentValue !== "boolean") {
+    return;
+  }
+
+  const newValue = currentValue
+    ? SuggestLatestUpgrade.On
+    : SuggestLatestUpgrade.Off;
+
+  const inspectedValue = config.inspect(suggestLatestUpgrade);
+
+  if (inspectedValue?.workspaceValue !== undefined) {
+    config.update(
+      suggestLatestUpgrade,
+      newValue,
+      VConfigurationTarget.Workspace,
+    );
+  } else if (inspectedValue?.globalValue !== undefined) {
+    config.update(suggestLatestUpgrade, newValue, VConfigurationTarget.Global);
+  }
 }
 
 function fromVSCode(target: VConfigurationTarget): ConfigurationTarget {
