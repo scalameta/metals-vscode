@@ -99,6 +99,18 @@
         }
       },
       {
+        "id": "scala",
+        "extensions": [
+          ".scala.html"
+        ]
+      },
+      {
+        "id": "routes",
+        "extensions": [
+          "routes"
+        ]
+      },
+      {
         "id": "tasty",
         "aliases": [
           "TASTy",
@@ -151,6 +163,11 @@
         "language": "tasty",
         "scopeName": "source.tasty",
         "path": "./syntaxes/tasty.json"
+      },
+      {
+        "language": "routes",
+        "scopeName": "source.routes",
+        "path": "./syntaxes/routes.json"
       },
       {
         "language": "buildtarget",
