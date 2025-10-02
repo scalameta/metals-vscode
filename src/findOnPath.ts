@@ -1,6 +1,6 @@
-import { TaskEither } from "fp-ts/lib/TaskEither";
-import { pipe } from "fp-ts/lib/function";
-import * as E from "fp-ts/lib/Either";
+import { TaskEither } from "fp-ts/TaskEither";
+import { pipe } from "fp-ts/function";
+import * as E from "fp-ts/Either";
 import fs from "fs";
 import * as path from "path";
 
