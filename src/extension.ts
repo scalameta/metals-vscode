@@ -1050,17 +1050,19 @@ function launchMetals(
       registerTextEditorCommand(
         `metals.${ServerCommands.CopyFQN}`,
         (editor) => {
-          client.sendRequest(ExecuteCommandRequest.type, {
-            command: ServerCommands.CopyFQN,
-            arguments: [getTextDocumentPositionParams(editor)],
-          }).then((result) => {
-            if (result.value) {
-              env.clipboard.writeText(result.value);
-              window.showInformationMessage(
-                `Copied fully qualified name of the symbol to clipboard: ${result.value}`
-              );
-            }
-          });
+          client
+            .sendRequest(ExecuteCommandRequest.type, {
+              command: ServerCommands.CopyFQN,
+              arguments: [getTextDocumentPositionParams(editor)]
+            })
+            .then((result) => {
+              if (result.value) {
+                env.clipboard.writeText(result.value);
+                window.showInformationMessage(
+                  `Copied fully qualified name of the symbol to clipboard: ${result.value}`
+                );
+              }
+            });
         }
       );
 
