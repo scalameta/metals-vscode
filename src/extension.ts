@@ -1053,17 +1053,17 @@ function launchMetals(
           client
             .sendRequest(ExecuteCommandRequest.type, {
               command: ServerCommands.CopyFQN,
-              arguments: [getTextDocumentPositionParams(editor)]
+              arguments: [getTextDocumentPositionParams(editor)],
             })
             .then((result) => {
               if (result.value) {
                 env.clipboard.writeText(result.value);
                 window.showInformationMessage(
-                  `Copied fully qualified name of the symbol to clipboard: ${result.value}`
+                  `Copied fully qualified name of the symbol to clipboard: ${result.value}`,
                 );
               }
             });
-        }
+        },
       );
 
       registerCommand(`metals.${ServerCommands.ResetChoice}`, (args = []) => {
