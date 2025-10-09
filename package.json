@@ -298,6 +298,10 @@
           "type": "boolean",
           "markdownDescription": "Enable/disable inlay hints for x-ray like mode. \n```scala \n\n val finalBar: Bar = foo\n  .bar/*  : Bar*/\n  .foo()/*: Foo*/\n  .bar/*  : Bar*/\n```"
         },
+        "metals.inlayHints.closingLabels.enable": {
+          "type": "boolean",
+          "markdownDescription": "Enable/disable inlay hints for closing labels. \n```scala \n\ndef number: Bar = {\n  println(\"This is a long function\"\n}/*number*/\n```"
+        },
         "metals.javaHome": {
           "type": "string",
           "scope": "machine-overridable",
