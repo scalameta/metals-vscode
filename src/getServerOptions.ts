@@ -9,7 +9,23 @@ export function getServerOptions(
   requiredVmOptions: string[] = [],
   activeClientExtensions: string[] = [],
 ): ServerOptions {
-  const baseProperties = ["-Xss4m", "-Xms100m"];
+  const baseProperties = [
+    "-Xss4m",
+    "-Xms100m",
+    // For openjdk/jol support
+    "-Djol.magicFieldOffset=true",
+    "-Djol.tryWithSudo=true",
+    "-Djdk.attach.allowAttachSelf",
+    // For LMDB support
+    "--add-opens=java.base/java.nio=ALL-UNNAMED",
+    "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+    // For Java support
+    "--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
+    "--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
+    "--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
+    "--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
+    "--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED"
+  ];
 
   if (clientName) {
     baseProperties.push(`-Dmetals.client=${clientName}`);
