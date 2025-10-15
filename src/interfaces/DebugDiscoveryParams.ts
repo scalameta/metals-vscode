@@ -7,6 +7,7 @@ export interface DebugDiscoveryParams {
   jvmOptions: string[] | undefined;
   env: Map<string, string> | undefined;
   envFile: string | undefined;
+  position?: { line: number; character: number };
 }
 
 export enum RunType {
@@ -14,4 +15,5 @@ export enum RunType {
   RunOrTestFile = "runOrTestFile",
   TestFile = "testFile",
   TestTarget = "testTarget",
+  RunClosest = "runClosest",
 }
