@@ -971,6 +971,26 @@ function launchMetals(
         });
       });
 
+      registerTextEditorCommand(`metals.run-closest`, (editor) => {
+        const position = editor.selection.active;
+        const args: DebugDiscoveryParams = {
+          path: editor.document.uri.toString(true),
+          runType: RunType.RunClosest,
+          buildTarget: undefined,
+          mainClass: undefined,
+          args: undefined,
+          jvmOptions: undefined,
+          env: undefined,
+          envFile: undefined,
+          position: { line: position.line, character: position.character },
+        };
+        scalaDebugger.startDiscovery(true, args).then((wasStarted) => {
+          if (!wasStarted) {
+            window.showErrorMessage("Debug session not started");
+          }
+        });
+      });
+
       registerTextEditorCommand(
         `metals.${ServerCommands.GotoSuperMethod}`,
         (editor) => {

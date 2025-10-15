@@ -773,6 +773,11 @@
         "title": "Run all test in the current project"
       },
       {
+        "command": "metals.run-closest",
+        "category": "Metals",
+        "title": "Run closest test to the current cursor position"
+      },
+      {
         "command": "metals.symbol-search",
         "category": "Metals",
         "title": "Search symbol in workspace"
