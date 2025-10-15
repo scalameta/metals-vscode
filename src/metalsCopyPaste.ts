@@ -27,11 +27,11 @@ export async function copySelection(context: ExtensionContext): Promise<void> {
   context.workspaceState.update("copyStartLine", selection.start.line);
   context.workspaceState.update(
     "copyStartCharacter",
-    selection.start.character
+    selection.start.character,
   );
   context.workspaceState.update(
     "copyDocumentUri",
-    editor.document.uri.toString()
+    editor.document.uri.toString(),
   );
 }
 
@@ -42,7 +42,7 @@ export async function copySelection(context: ExtensionContext): Promise<void> {
  */
 export async function pasteSelection(
   client: LanguageClient,
-  context: ExtensionContext
+  context: ExtensionContext,
 ): Promise<void> {
   const editor = window.activeTextEditor;
 
@@ -66,11 +66,11 @@ export async function pasteSelection(
 
   // Get the origin document and position from workspace state
   const originDocumentUri = context.workspaceState.get(
-    "copyDocumentUri"
+    "copyDocumentUri",
   ) as string;
   const originStartLine = context.workspaceState.get("copyStartLine") as number;
   const originStartCharacter = context.workspaceState.get(
-    "copyStartCharacter"
+    "copyStartCharacter",
   ) as number;
 
   if (
@@ -87,32 +87,32 @@ export async function pasteSelection(
     selection.start.line + lines.length - 1,
     lines.length === 1
       ? selection.start.character + clipboardText.length
-      : lines.pop()?.length || 0
+      : lines.pop()?.length || 0,
   );
 
   // Create the paste parameters
   const pasteParams = {
     textDocument: {
-      uri: editor.document.uri.toString()
+      uri: editor.document.uri.toString(),
     },
     text: editor.document.getText(),
     range: {
       start: selection.start,
-      end: newEndPosition
+      end: newEndPosition,
     },
     originDocument: {
-      uri: originDocumentUri
+      uri: originDocumentUri,
     },
     originOffset: {
       line: originStartLine,
-      character: originStartCharacter
-    }
+      character: originStartCharacter,
+    },
   };
 
   // Send the paste command to the LSP server
   await client.sendRequest(ExecuteCommandRequest.type, {
     command: "metals-did-paste",
-    arguments: [pasteParams]
+    arguments: [pasteParams],
   });
 }
 
@@ -123,19 +123,19 @@ export async function pasteSelection(
  */
 export function registerCopyPasteCommands(
   context: ExtensionContext,
-  client: LanguageClient
+  client: LanguageClient,
 ): void {
   // Register the copy command
   context.subscriptions.push(
     commands.registerCommand("metals.copy-selection", () =>
-      copySelection(context)
-    )
+      copySelection(context),
+    ),
   );
 
   // Register the paste command
   context.subscriptions.push(
     commands.registerCommand("metals.paste-selection", () =>
-      pasteSelection(client, context)
-    )
+      pasteSelection(client, context),
+    ),
   );
 }
