@@ -1,5 +1,7 @@
+import * as vscode from "vscode";
 import { ServerOptions } from "./interfaces/ServerOptions";
 import { JavaConfig } from "./getJavaConfig";
+import { Executable } from "vscode-languageclient/node";
 
 export function getServerOptions(
   metalsClasspath: string,
@@ -48,18 +50,43 @@ export function getServerOptions(
     ...mainArgs,
   ];
 
-  const env = () => ({ ...process.env, ...javaConfig.extraEnv });
+  const argsEscaped = launchArgs.map((arg) =>
+    arg.includes(" ") ? `"${arg}"` : arg
+  );
+  const env = () => ({
+    ...process.env,
+    ...javaConfig.extraEnv,
+    METALS_COMMAND: javaConfig.javaPath,
+    METALS_ARGS: argsEscaped.join(" ")
+  });
+
+  const run: Executable = {
+    command: javaConfig.javaPath,
+    args: launchArgs,
+    options: { env: env() }
+  };
+
+  const launchCommand = vscode.workspace
+    .getConfiguration("metals")
+    .get<Executable>("launchCommand");
+  if (launchCommand) {
+    if (!launchCommand.options) {
+      launchCommand.options = {};
+    }
+    return {
+      run: {
+        ...launchCommand,
+        options: {
+          ...launchCommand.options,
+          env: env()
+        }
+      },
+      debug: run
+    };
+  }
 
   return {
-    run: {
-      command: javaConfig.javaPath,
-      args: launchArgs,
-      options: { env: env() },
-    },
-    debug: {
-      command: javaConfig.javaPath,
-      args: launchArgs,
-      options: { env: env() },
-    },
+    run,
+    debug: run
   };
 }

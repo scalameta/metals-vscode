@@ -349,6 +349,25 @@
     "configuration": {
       "title": "Metals",
       "properties": {
+        "metals.launchCommand": {
+          "type": "object",
+          "default": null,
+          "scope": "window",
+          "markdownDescription": "Override the launch command used to start the Metals server. The environment variables METALS_COMMAND and METALS_ARGS include the launch command that would have run otherwise. Useful together with tools like Langoustine Tracer https://neandertech.github.io/langoustine/tracer.html",
+          "properties": {
+            "command": {
+              "type": "string",
+              "markdownDescription": "The command to launch the Metals server. This is normally the `java` executable."
+            },
+            "args": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "markdownDescription": "The arguments to pass to the Metals server command. This is normally the classpath and the main class along with VM options."
+            }
+          }
+        },
         "metals.disableReleaseNotes": {
           "type": "boolean",
           "default": false,
