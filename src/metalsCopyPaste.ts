@@ -61,7 +61,14 @@ export async function pasteSelection(
 
   // First, paste the text into the document
   await editor.edit((editBuilder) => {
-    editBuilder.replace(selection, clipboardText);
+    // When clipboard contains a full line (ends with newline) and there's no selection,
+    // VS Code inserts it as a new line at the current position
+    if (selection.isEmpty && clipboardText.endsWith("\n")) {
+      const lineStart = new Position(selection.start.line, 0);
+      editBuilder.insert(lineStart, clipboardText);
+    } else {
+      editBuilder.replace(selection, clipboardText);
+    }
   });
 
   // Get the origin document and position from workspace state
