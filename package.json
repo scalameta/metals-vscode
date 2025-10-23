@@ -808,18 +808,6 @@
         "mac": "cmd+alt+shift+o",
         "command": "metals.scalafix-run",
         "when": "editorLangId == scala"
-      },
-      {
-        "command": "metals.copy-selection",
-        "key": "ctrl+c",
-        "mac": "cmd+c",
-        "when": "editorTextFocus && editorHasSelection && editorLangId == 'scala'"
-      },
-      {
-        "command": "metals.paste-selection",
-        "key": "ctrl+v",
-        "mac": "cmd+v",
-        "when": "editorTextFocus && editorLangId == 'scala'"
       }
     ],
     "menus": {
