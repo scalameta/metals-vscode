@@ -39,7 +39,7 @@ jobs:
         id: get_upload_url
         run: |
           URL=$(curl --silent "https://api.github.com/repos/scalameta/metals-vscode/releases/latest" | jq -r '.upload_url')
-          echo ::set-output name=UPLOAD_URL::$URL
+          echo "{UPLOAD_URL}={$URL} >> $GITHUB_OUTPUT
       - name: Upload VSIX package to release
         uses: actions/upload-release-asset@v1.0.1
         env:
