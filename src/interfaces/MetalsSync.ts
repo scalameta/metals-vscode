@@ -1,12 +1,9 @@
 import { NotificationType } from "vscode-languageserver-protocol";
 
-export const MetalsSyncType = new NotificationType<string>(
-  "metals/sync"
-)
+export const MetalsSyncType = new NotificationType<string>("metals/sync");
 
-export const MetalsSyncStatusType = new NotificationType<MetalsSyncStatusParams>(
-  "metals/syncStatus"
-);
+export const MetalsSyncStatusType =
+  new NotificationType<MetalsSyncStatusParams>("metals/syncStatus");
 
 export interface MetalsSyncStatusParams {
   /** The document uri. */
