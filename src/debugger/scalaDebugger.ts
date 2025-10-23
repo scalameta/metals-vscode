@@ -30,8 +30,7 @@ export interface DebugSession {
   uri: string;
 }
 
-export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
-  outputChannel.appendLine("Initializing Scala Debugger");
+export function initialize(): Disposable[] {
   return [
     vscode.debug.registerDebugConfigurationProvider(
       configurationType,

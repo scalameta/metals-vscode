@@ -1637,7 +1637,7 @@ async function launchMetals(
       );
       treeViews = startTreeView(client, outputChannel, context, viewIds);
       context.subscriptions.concat(treeViews.disposables);
-      scalaDebugger.initialize(outputChannel).forEach((disposable) => {
+      scalaDebugger.initialize().forEach((disposable) => {
         context.subscriptions.push(disposable);
       });
       const decorationsRangesDidChangeDispoasable = client.onNotification(
