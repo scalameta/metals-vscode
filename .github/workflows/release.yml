@@ -20,19 +20,18 @@ jobs:
         id: get_version
         run: |
           NEW_VERSION=${GITHUB_REF#refs/tags/v}
+          echo $NEW_VERSION
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
       - name: Yarn install
         run: |
           yarn install
       - name: Yarn set version
-        needs: get_version
         run: |
-          yarn version --no-git-tag-version --new-version ${{ needs.get_version.outputs.NEW_VERSION }}
+          yarn version --no-git-tag-version --new-version ${{ steps.get_version.outputs.NEW_VERSION }}
       - name: Commit changes
-        needs: get_version
         run: |
           git add .
-          git commit -m "v${{ needs.get_version.outputs.NEW_VERSION }}"
+          git commit -m "v${{ steps.get_version.outputs.NEW_VERSION }}"
       - name: Push changes
         run: git push origin HEAD:main
       - name: Publish extension
@@ -43,24 +42,23 @@ jobs:
           yarn build
       - name: Publish on Open VSX
         id: open_vsx
-        needs: get_version
         env:
           OVSX_PAT: ${{ secrets.OVSX_TOKEN }}
         run: |
-          yarn ovsx:publish --pat $OVSX_PAT ./metals-${{ needs.get_version.outputs.NEW_VERSION }}.vsix
+          yarn ovsx:publish --pat $OVSX_PAT ./metals-${{ steps.get_version.outputs.NEW_VERSION }}.vsix
       - name: Get upload url
         id: get_upload_url
         run: |
           URL=$(curl --silent "https://api.github.com/repos/scalameta/metals-vscode/releases/latest" | jq -r '.upload_url')
+          echo $URL
           echo "UPLOAD_URL=$URL" >> $GITHUB_OUTPUT
       - name: Upload VSIX package to release
         uses: actions/upload-release-asset@v1.0.1
-        needs: [get_upload_url, get_version]
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{needs.get_upload_url.outputs.UPLOAD_URL}}
-          asset_path: ./metals-${{ needs.get_version.outputs.NEW_VERSION }}.vsix
+          upload_url: ${{steps.get_upload_url.outputs.UPLOAD_URL}}
+          asset_path: ./metals-${{ steps.get_version.outputs.NEW_VERSION }}.vsix
           asset_name: |
-            scalameta.metals-${{ needs.get_version.outputs.NEW_VERSION }}.vsix
+            scalameta.metals-${{ steps.get_version.outputs.NEW_VERSION }}.vsix
           asset_content_type: application/octet-stream
