@@ -40,6 +40,12 @@ jobs:
         run: |
           URL=$(curl --silent "https://api.github.com/repos/scalameta/metals-vscode/releases/latest" | jq -r '.upload_url')
           echo "{UPLOAD_URL}={$URL} >> $GITHUB_OUTPUT
+      - name: Publish on Open VSX
+        id: open_vsx
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_TOKEN }}
+        run: |
+          yarn ovsx:publish --pat $OVSX_PAT ./metals-${{ steps.get_version.outputs.NEW_VERSION }}.vsix
       - name: Upload VSIX package to release
         uses: actions/upload-release-asset@v1.0.1
         env:
@@ -50,9 +56,3 @@ jobs:
           asset_name: |
             scalameta.metals-${{ steps.get_version.outputs.NEW_VERSION }}.vsix
           asset_content_type: application/octet-stream
-      - name: Publish on Open VSX
-        id: open_vsx
-        env:
-          OVSX_PAT: ${{ secrets.OVSX_TOKEN }}
-        run: |
-          yarn ovsx:publish --pat $OVSX_PAT ./metals-${{ steps.get_version.outputs.NEW_VERSION }}.vsix
