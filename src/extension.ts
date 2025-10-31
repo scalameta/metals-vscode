@@ -45,6 +45,7 @@ import * as fs from "fs";
 import { startTreeView } from "./treeview";
 import { BuildStatusCode, CompileResult } from "./types";
 import * as scalaDebugger from "./debugger/scalaDebugger";
+import { generateLaunchConfigFromMainClass } from "./debugger/generateLaunchConfig";
 import { DecorationsRangesDidChange } from "./decorationProtocol";
 import { clearTimeout } from "timers";
 import { increaseIndentPattern } from "./indentPattern";
@@ -700,6 +701,7 @@ function launchMetals(
       registerCommand(
         ClientCommands.StartDebugSession,
         (param: ScalaCodeLensesParams) => {
+          generateLaunchConfigFromMainClass(param);
           scalaDebugger.start(false, param).then(
             (wasStarted) => {
               if (!wasStarted) {
@@ -718,6 +720,7 @@ function launchMetals(
       registerCommand(
         ClientCommands.StartRunSession,
         async (param: ScalaCodeLensesParams) => {
+          generateLaunchConfigFromMainClass(param);
           await commands.executeCommand("workbench.action.files.save");
           const compileResult: CompileResult | null | undefined =
             await commands.executeCommand(
