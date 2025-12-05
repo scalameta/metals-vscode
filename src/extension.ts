@@ -1536,6 +1536,8 @@ async function launchMetals(
             MetalsDidFocusType,
             editor.document.uri.toString(),
           );
+        } else {
+          syncItem.hide();
         }
       });
 
