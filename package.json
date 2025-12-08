@@ -1223,7 +1223,7 @@
     "@typescript-eslint/eslint-plugin": "^8.47.0",
     "@typescript-eslint/parser": "^8.47.0",
     "@vscode/test-electron": "^2.3.0",
-    "@vscode/vsce": "^3.6.0",
+    "@vscode/vsce": "^3.7.1",
     "chai": "^5.2.0",
     "conventional-changelog-cli": "5.0.0",
     "eslint": "^9.29.0",
