@@ -56,18 +56,24 @@ export async function pasteSelection(
     return;
   }
 
-  // Get current selection for the paste range
-  const selection = editor.selection;
+  // Get all selections and sort them in reverse order (bottom to top)
+  // to avoid position shifting issues when modifying the document
+  const selections = [...editor.selections].sort(
+    (a, b) =>
+      b.start.line - a.start.line || b.start.character - a.start.character,
+  );
 
-  // First, paste the text into the document
+  // First, paste the text into the document at all selection positions
   await editor.edit((editBuilder) => {
-    // When clipboard contains a full line (ends with newline) and there's no selection,
-    // VS Code inserts it as a new line at the current position
-    if (selection.isEmpty && clipboardText.endsWith("\n")) {
-      const lineStart = new Position(selection.start.line, 0);
-      editBuilder.insert(lineStart, clipboardText);
-    } else {
-      editBuilder.replace(selection, clipboardText);
+    for (const selection of selections) {
+      // When clipboard contains a full line (ends with newline) and there's no selection,
+      // VS Code inserts it as a new line at the current position
+      if (selection.isEmpty && clipboardText.endsWith("\n")) {
+        const lineStart = new Position(selection.start.line, 0);
+        editBuilder.insert(lineStart, clipboardText);
+      } else {
+        editBuilder.replace(selection, clipboardText);
+      }
     }
   });
 
@@ -88,39 +94,49 @@ export async function pasteSelection(
     return;
   }
 
-  // Calculate the new end position after pasting
-  const lines = clipboardText.split("\n");
-  const newEndPosition = new Position(
-    selection.start.line + lines.length - 1,
-    lines.length === 1
-      ? selection.start.character + clipboardText.length
-      : lines.pop()?.length || 0,
+  // Process selections in original order (top to bottom) for LSP notifications
+  // We need to track cumulative line offset as each paste shifts subsequent positions
+  const sortedSelectionsTopToBottom = [...editor.selections].sort(
+    (a, b) =>
+      a.start.line - b.start.line || a.start.character - b.start.character,
   );
 
-  // Create the paste parameters
-  const pasteParams = {
-    textDocument: {
-      uri: editor.document.uri.toString(),
-    },
-    text: editor.document.getText(),
-    range: {
-      start: selection.start,
-      end: newEndPosition,
-    },
-    originDocument: {
-      uri: originDocumentUri,
-    },
-    originOffset: {
-      line: originStartLine,
-      character: originStartCharacter,
-    },
-  };
+  const lines = clipboardText.split("\n");
 
-  // Send the paste command to the LSP server
-  await client.sendRequest(ExecuteCommandRequest.type, {
-    command: "metals-did-paste",
-    arguments: [pasteParams],
-  });
+  for (const selection of sortedSelectionsTopToBottom) {
+    const newEndPosition = selection.end;
+
+    const newStartPosition = new Position(
+      selection.start.line + lines.length - 1,
+      lines.length === 1
+        ? selection.start.character - clipboardText.length
+        : lines.pop?.length || 0,
+    );
+    // Create the paste parameters
+    const pasteParams = {
+      textDocument: {
+        uri: editor.document.uri.toString(),
+      },
+      text: editor.document.getText(),
+      range: {
+        start: newStartPosition,
+        end: newEndPosition,
+      },
+      originDocument: {
+        uri: originDocumentUri,
+      },
+      originOffset: {
+        line: originStartLine,
+        character: originStartCharacter,
+      },
+    };
+
+    // Send the paste command to the LSP server
+    await client.sendRequest(ExecuteCommandRequest.type, {
+      command: "metals-did-paste",
+      arguments: [pasteParams],
+    });
+  }
 }
 
 /**
