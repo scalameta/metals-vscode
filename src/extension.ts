@@ -139,11 +139,14 @@ export interface MetalsApi {
 }
 
 export async function activate(context: ExtensionContext): Promise<MetalsApi> {
+  // Register copy and paste commands
+  registerCopyPasteCommands(context, () => currentClient);
   const serverVersion = getServerVersion(config, context);
   detectConfigurationChanges();
   configureSettingsDefaults();
   registerDebugEventListener(context);
   migrateOldSettings();
+
   await window.withProgress(
     {
       location: ProgressLocation.Window,
@@ -582,9 +585,6 @@ function launchMetals(
     () => {
       const doctorProvider = new DoctorProvider(client, context);
       let stacktrace: WebviewPanel | undefined;
-
-      // Register copy and paste commands
-      registerCopyPasteCommands(context, client);
 
       function getStacktracePanel(): WebviewPanel {
         if (!stacktrace) {
