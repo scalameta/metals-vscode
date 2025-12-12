@@ -41,7 +41,7 @@ export async function copySelection(context: ExtensionContext): Promise<void> {
  * @param context The extension context to access workspace state
  */
 export async function pasteSelection(
-  client: LanguageClient,
+  client: LanguageClient | undefined,
   context: ExtensionContext,
 ): Promise<void> {
   const editor = window.activeTextEditor;
@@ -103,39 +103,41 @@ export async function pasteSelection(
 
   const lines = clipboardText.split("\n");
 
-  for (const selection of sortedSelectionsTopToBottom) {
-    const newEndPosition = selection.end;
+  if (client) {
+    for (const selection of sortedSelectionsTopToBottom) {
+      const newEndPosition = selection.end;
 
-    const newStartPosition = new Position(
-      selection.start.line + lines.length - 1,
-      lines.length === 1
-        ? selection.start.character - clipboardText.length
-        : lines.pop?.length || 0,
-    );
-    // Create the paste parameters
-    const pasteParams = {
-      textDocument: {
-        uri: editor.document.uri.toString(),
-      },
-      text: editor.document.getText(),
-      range: {
-        start: newStartPosition,
-        end: newEndPosition,
-      },
-      originDocument: {
-        uri: originDocumentUri,
-      },
-      originOffset: {
-        line: originStartLine,
-        character: originStartCharacter,
-      },
-    };
+      const newStartPosition = new Position(
+        selection.start.line + lines.length - 1,
+        lines.length === 1
+          ? selection.start.character - clipboardText.length
+          : lines.pop?.length || 0,
+      );
+      // Create the paste parameters
+      const pasteParams = {
+        textDocument: {
+          uri: editor.document.uri.toString(),
+        },
+        text: editor.document.getText(),
+        range: {
+          start: newStartPosition,
+          end: newEndPosition,
+        },
+        originDocument: {
+          uri: originDocumentUri,
+        },
+        originOffset: {
+          line: originStartLine,
+          character: originStartCharacter,
+        },
+      };
 
-    // Send the paste command to the LSP server
-    await client.sendRequest(ExecuteCommandRequest.type, {
-      command: "metals-did-paste",
-      arguments: [pasteParams],
-    });
+      // Send the paste command to the LSP server
+      await client.sendRequest(ExecuteCommandRequest.type, {
+        command: "metals-did-paste",
+        arguments: [pasteParams],
+      });
+    }
   }
 }
 
@@ -146,7 +148,7 @@ export async function pasteSelection(
  */
 export function registerCopyPasteCommands(
   context: ExtensionContext,
-  client: LanguageClient,
+  client: () => LanguageClient | undefined,
 ): void {
   // Register the copy command
   context.subscriptions.push(
@@ -158,7 +160,7 @@ export function registerCopyPasteCommands(
   // Register the paste command
   context.subscriptions.push(
     commands.registerCommand("metals.paste-selection", () =>
-      pasteSelection(client, context),
+      pasteSelection(client(), context),
     ),
   );
 }
