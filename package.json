@@ -1226,7 +1226,7 @@
     "@vscode/vsce": "^3.7.1",
     "chai": "^5.2.0",
     "conventional-changelog-cli": "5.0.0",
-    "eslint": "^9.29.0",
+    "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-mocha": "^11.2.0",
     "glob": "^13.0.0",
