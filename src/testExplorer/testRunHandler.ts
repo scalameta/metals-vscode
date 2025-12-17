@@ -26,6 +26,12 @@ export const testRunnerId = "scala-dap-test-runner";
 const suiteResults = new Map<string, TestSuiteResult[]>();
 
 /**
+ * Stores active TestRun instances for each debug session.
+ * Used to redirect test output to the Test Results panel.
+ */
+const activeRuns = new Map<string, vscode.TestRun>();
+
+/**
  * Register tracker which tracks all DAP sessions which are started with @constant {testRunnerId} kind.
  * Dap sends execution result for every suite included in TestRun in a special event of kind 'testResult'.
  * Tracker has to capture these events and store them all in map under debug session id as a key.
@@ -42,6 +48,16 @@ vscode.debug.registerDebugAdapterTrackerFactory("scala", {
           ) {
             suiteResults.get(session.id)?.push(msg.body.data);
           }
+
+          if (msg.event === "output" && msg.body?.output) {
+            const run = activeRuns.get(session.id);
+            if (run) {
+              run.appendOutput(msg.body.output.replace(/\n/g, "\r\n"));
+            }
+          }
+        },
+        onWillStopSession: () => {
+          activeRuns.delete(session.id);
         },
       };
     }
@@ -155,8 +171,19 @@ async function runDebugSession(
   if (!session) {
     return;
   }
+
+  const startDisposable = vscode.debug.onDidStartDebugSession(
+    (debugSession: vscode.DebugSession) => {
+      if (debugSession.configuration.kind === testRunnerId) {
+        activeRuns.set(debugSession.id, run);
+        startDisposable.dispose();
+      }
+    },
+  );
+
   const wasStarted = await startDebugging(session, noDebug);
   if (!wasStarted) {
+    startDisposable.dispose();
     vscode.window.showErrorMessage("Debug session not started");
     return;
   }
