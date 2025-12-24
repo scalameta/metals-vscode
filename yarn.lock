@@ -550,10 +550,10 @@
     "@sinonjs/commons" "^3.0.1"
     type-detect "^4.1.0"
 
-"@sourcegraph/scip-typescript@^0.3.15":
-  version "0.3.15"
-  resolved "https://registry.yarnpkg.com/@sourcegraph/scip-typescript/-/scip-typescript-0.3.15.tgz#ce7d15fca945eb2ed9af30f1992df3e3d86d5b18"
-  integrity sha512-U5+MDUvWw9niDjXXj9GqWQN2hclOaIFOjmmH8AR56nc2/7f6eq0rVQvno4Hsz5MnbN1Su/vCT1UnInqfmYdwKw==
+"@sourcegraph/scip-typescript@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@sourcegraph/scip-typescript/-/scip-typescript-0.4.0.tgz#0ec6ae61fc116a9ed33cd57197693c0cfcce6aa0"
+  integrity sha512-k+AtsrqmS41Sd5qjkZlHcmvoSQIvBOonRj4jpgp0KNFM6aqvMGpdSuPUqrUcg8ENTKjUbfaUVszgQwq3bCOvwA==
   dependencies:
     commander "^12.1.0"
     google-protobuf "^3.21.4"
