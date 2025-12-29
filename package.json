@@ -532,7 +532,7 @@
       {
         "command": "metals.build-import",
         "category": "Metals",
-        "title": "Import build"
+        "title": "Import or reload build"
       },
       {
         "command": "metals.build-connect",
