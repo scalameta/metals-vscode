@@ -1018,6 +1018,10 @@
       ],
       "commandPalette": [
         {
+          "command": "metals.sync-file",
+          "when": "metals:enabled && metals.syncEnabled"
+        },
+        {
           "command": "metals.show-tasty",
           "when": "metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.tasty || metals:enabled && resourceExtname==.tasty-decoded || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc || metals:enabled && resourceExtname==.mill"
         },

@@ -1114,6 +1114,18 @@ async function launchMetals(
         StatusBarAlignment.Right,
         100
       );
+      const enableSync = (enabled: boolean) => {
+        if (enabled) {
+          syncItem.show()
+        } else {
+          syncItem.hide();
+        }
+        commands.executeCommand(
+          'setContext',
+          'metals.syncEnabled',
+          enabled
+        );
+      }
       const metalsSyncDisposable = client.onNotification(
         MetalsSyncStatusType,
         (params) => {
@@ -1121,15 +1133,15 @@ async function launchMetals(
           const uri = editor?.document.uri.toString();
           if (uri === params.document) {
             if (params.status === "hidden") {
-              syncItem.hide();
+              enableSync(false)
             } else {
               syncItem.text = params.text;
               syncItem.backgroundColor = new ThemeColor(
                 "statusBarItem." + params.kind + "Background"
               );
-              syncItem.show();
               syncItem.tooltip = params.tooltip;
               syncItem.command = params.command;
+              enableSync(true)
             }
           }
         }
@@ -1183,7 +1195,6 @@ async function launchMetals(
             : undefined;
 
           if (params.level == "error") {
-            syncItem.hide();
             item.backgroundColor = new ThemeColor(
               "statusBarItem.errorBackground",
             );
@@ -1537,7 +1548,7 @@ async function launchMetals(
             editor.document.uri.toString(),
           );
         } else {
-          syncItem.hide();
+          enableSync(false)
         }
       });
 
