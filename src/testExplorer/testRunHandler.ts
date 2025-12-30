@@ -50,6 +50,9 @@ vscode.debug.registerDebugAdapterTrackerFactory("scala", {
           }
 
           if (msg.event === "output" && msg.body?.output) {
+            if (msg.body.category !== "stdout" && msg.body.category !== "stderr") {
+              return;
+            }
             const run = activeRuns.get(session.id);
             if (run) {
               run.appendOutput(msg.body.output.replace(/\n/g, "\r\n"));
