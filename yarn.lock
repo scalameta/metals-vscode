@@ -2929,10 +2929,10 @@ optionator@^0.9.3:
     type-check "^0.4.0"
     word-wrap "^1.2.5"
 
-ovsx@0.10.4:
-  version "0.10.4"
-  resolved "https://registry.yarnpkg.com/ovsx/-/ovsx-0.10.4.tgz#963861d9138f6aa1da80aa25b3b4d5c45ab3b178"
-  integrity sha512-9HY9TsFpL31EqhPZSdal7k3sTOfrFvj2GEnXKF2PYKukQpiAilOaPhW8K0NSGCiVh9MQYr2IyhX74PKMVlcJ5g==
+ovsx@0.10.7:
+  version "0.10.7"
+  resolved "https://registry.yarnpkg.com/ovsx/-/ovsx-0.10.7.tgz#e45034636064acbf7d915ff33025659cdc576236"
+  integrity sha512-UjBQlB5xSDD+biAylCZ8Q/k3An9K3y9FYa+hT/HTbJkzOQP+gaNHX20CaOo4lrYT1iJXdiePH9zS2uvCXdDNDA==
   dependencies:
     "@vscode/vsce" "^3.2.1"
     commander "^6.2.1"
