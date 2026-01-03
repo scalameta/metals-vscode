@@ -158,7 +158,14 @@ export async function activate(context: ExtensionContext): Promise<MetalsApi> {
       commands.executeCommand("setContext", "metals:enabled", true);
       try {
         const javaVersion = getJavaVersionFromConfig() || "17";
-        await fetchAndLaunchMetals(context, serverVersion, javaVersion);
+        const forceCoursierJar =
+          config.get<boolean>("forceCoursierJar") ?? false;
+        await fetchAndLaunchMetals(
+          context,
+          serverVersion,
+          javaVersion,
+          forceCoursierJar,
+        );
       } catch (err) {
         outputChannel.appendLine(`${err}`);
         window.showErrorMessage(`${err}`);

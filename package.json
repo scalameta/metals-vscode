@@ -225,6 +225,12 @@
           "scope": "machine",
           "markdownDescription": "Do not show release notes when Metals was updated."
         },
+        "metals.forceCoursierJar": {
+          "type": "boolean",
+          "default": false,
+          "scope": "machine",
+          "markdownDescription": "Do not attempt to download/use Coursier executable and instead use fallback JAR (Offers capability to override mirrors & credentials in corporate envionrments.)"
+        },
         "metals.enableBestEffort": {
           "type": "boolean",
           "default": false,
