@@ -1233,7 +1233,7 @@
     "mocha": "^11.7.5",
     "ovsx": "0.10.7",
     "prettier": "3.7.4",
-    "rimraf": "^6.0.1",
+    "rimraf": "^6.1.2",
     "sinon": "^21.0.1",
     "ts-mocha": "^10.1.0",
     "typescript": "5.9.3"
