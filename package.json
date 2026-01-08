@@ -1221,6 +1221,7 @@
     "@types/shell-quote": "^1.6.1",
     "@types/sinon": "^21.0.0",
     "@types/vscode": "1.59.0",
+    "@types/yauzl": "^2.10.3",
     "@typescript-eslint/eslint-plugin": "^8.47.0",
     "@typescript-eslint/parser": "^8.52.0",
     "@vscode/test-electron": "^2.3.0",
@@ -1249,7 +1250,8 @@
     "semver": "^7.7.3",
     "shell-quote": "^1.8.3",
     "vscode-languageclient": "9.0.1",
-    "vscode-languageserver-protocol": "3.17.5"
+    "vscode-languageserver-protocol": "3.17.5",
+    "yauzl": "^3.2.0"
   },
   "extensionPack": [
     "scala-lang.scala"
