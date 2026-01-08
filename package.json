@@ -48,6 +48,7 @@
   "activationEvents": [
     "onDebugResolve:scala",
     "onLanguage:scala",
+    "onLanguage:java",
     "workspaceContains:build.sbt",
     "workspaceContains:build.sc",
     "workspaceContains:build.mill",
