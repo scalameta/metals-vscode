@@ -6,6 +6,7 @@ export function getServerOptions(
   serverProperties: string[],
   clientName: string,
   javaConfig: JavaConfig,
+  requiredVmOptions: string[] = [],
 ): ServerOptions {
   const baseProperties = ["-Xss4m", "-Xms100m"];
 
@@ -31,8 +32,10 @@ export function getServerOptions(
   }
   const mainArgs = ["-classpath", metalsClasspath, "scala.meta.metals.Main"];
 
-  // let user properties override base properties
+  // Required VM options from Metals JAR are added first,
+  // then base properties, java options, and user server properties can override them
   const launchArgs = [
+    ...requiredVmOptions,
     ...baseProperties,
     ...javaConfig.javaOptions,
     ...filteredServerProperties,

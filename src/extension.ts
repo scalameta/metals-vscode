@@ -90,6 +90,7 @@ import { getJavaOptions } from "./getJavaOptions";
 import { getJavaConfig, JavaConfig } from "./getJavaConfig";
 import { fetchMetals } from "./fetchMetals";
 import { getServerOptions } from "./getServerOptions";
+import { readRequiredVmOptions } from "./readRequiredVmOptions";
 import { MetalsInitializationOptions } from "./interfaces/MetalsInitializationOptions";
 import { restartServer } from "./commands/restartServer";
 import { ServerCommands } from "./interfaces/ServerCommands";
@@ -359,7 +360,7 @@ async function fetchAndLaunchMetals(
     );
 }
 
-function launchMetals(
+async function launchMetals(
   outputChannel: OutputChannel,
   context: ExtensionContext,
   metalsClasspath: string,
@@ -370,11 +371,20 @@ function launchMetals(
   // Make editing Scala docstrings slightly nicer.
   enableScaladocIndentation();
 
+  // Read required VM options from the Metals JAR (META-INF/metals-required-vm-options.txt)
+  const requiredVmOptions = await readRequiredVmOptions(metalsClasspath);
+  if (requiredVmOptions.length > 0) {
+    outputChannel.appendLine(
+      `Using required VM options from Metals JAR: ${requiredVmOptions.join(" ")}`,
+    );
+  }
+
   const serverOptions = getServerOptions(
     metalsClasspath,
     serverProperties,
     "vscode",
     javaConfig,
+    requiredVmOptions,
   );
 
   const commandArgs = [
