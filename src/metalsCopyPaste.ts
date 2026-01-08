@@ -1,166 +1,193 @@
-import { window, env, ExtensionContext, commands, Position } from "vscode";
+import {
+  window,
+  env,
+  ExtensionContext,
+  workspace,
+  Position,
+  TextDocumentChangeEvent,
+  Disposable,
+  TextEditor,
+} from "vscode";
 import { LanguageClient } from "vscode-languageclient/node";
 import { ExecuteCommandRequest } from "vscode-languageserver-protocol";
 
 /**
- * Copies the current selection to the clipboard.
- * If there is no selection, shows an error message.
+ * Checks if the given language ID is a Scala language.
  */
-export async function copySelection(context: ExtensionContext): Promise<void> {
-  const editor = window.activeTextEditor;
+function isScalaLanguage(languageId: string): boolean {
+  return languageId === "scala" || languageId === "sc";
+}
 
-  if (!editor) {
-    window.showErrorMessage("No active editor found");
+/**
+ * Tracks the current selection in Scala files for potential copy operations.
+ * Called when the editor selection changes.
+ */
+function trackSelectionForCopy(
+  editor: TextEditor,
+  context: ExtensionContext,
+): void {
+  if (!isScalaLanguage(editor.document.languageId)) {
     return;
   }
 
   const selection = editor.selection;
-  const text = editor.document.getText(selection);
-
-  if (!text) {
-    window.showErrorMessage("No text selected");
+  if (selection.isEmpty) {
     return;
   }
 
-  await env.clipboard.writeText(text);
+  const selectedText = editor.document.getText(selection);
+  if (!selectedText) {
+    return;
+  }
 
-  context.workspaceState.update("copyStartLine", selection.start.line);
-  context.workspaceState.update(
-    "copyStartCharacter",
-    selection.start.character,
-  );
-  context.workspaceState.update(
-    "copyDocumentUri",
-    editor.document.uri.toString(),
-  );
+  context.workspaceState.update("documentUri", editor.document.uri.toString());
+  context.workspaceState.update("startLine", selection.start.line);
+  context.workspaceState.update("startCharacter", selection.start.character);
+  context.workspaceState.update("copiedText", selectedText);
 }
 
 /**
- * Pastes the text from clipboard and notifies the LSP server about the paste operation.
- * @param client The LSP client to send notifications to
- * @param context The extension context to access workspace state
+ * Handles text document changes to detect paste operations.
+ * When text is inserted that matches the clipboard content, we notify the LSP server.
  */
-export async function pasteSelection(
-  client: LanguageClient | undefined,
+async function handleTextChange(
+  event: TextDocumentChangeEvent,
+  client: () => LanguageClient | undefined,
   context: ExtensionContext,
 ): Promise<void> {
-  const editor = window.activeTextEditor;
+  const document = event.document;
 
-  if (!editor) {
-    window.showErrorMessage("No active editor found");
+  // Only handle Scala files
+  if (!isScalaLanguage(document.languageId)) {
     return;
   }
 
+  // Skip if no changes
+  if (event.contentChanges.length === 0) {
+    return;
+  }
+
+  // Get clipboard content and check if it matches the copied text
   const clipboardText = await env.clipboard.readText();
   if (!clipboardText) {
     return;
   }
 
-  // Get all selections and sort them in reverse order (bottom to top)
-  // to avoid position shifting issues when modifying the document
-  const selections = [...editor.selections].sort(
-    (a, b) =>
-      b.start.line - a.start.line || b.start.character - a.start.character,
-  );
-
-  // First, paste the text into the document at all selection positions
-  await editor.edit((editBuilder) => {
-    for (const selection of selections) {
-      // When clipboard contains a full line (ends with newline) and there's no selection,
-      // VS Code inserts it as a new line at the current position
-      if (selection.isEmpty && clipboardText.endsWith("\n")) {
-        const lineStart = new Position(selection.start.line, 0);
-        editBuilder.insert(lineStart, clipboardText);
-      } else {
-        editBuilder.replace(selection, clipboardText);
-      }
+  // Check each change to see if it matches the clipboard (indicating a paste)
+  for (const change of event.contentChanges) {
+    // Skip if no text was inserted or if it doesn't match clipboard
+    if (!change.text || change.text !== clipboardText) {
+      continue;
     }
-  });
 
-  // Get the origin document and position from workspace state
-  const originDocumentUri = context.workspaceState.get(
-    "copyDocumentUri",
-  ) as string;
-  const originStartLine = context.workspaceState.get("copyStartLine") as number;
-  const originStartCharacter = context.workspaceState.get(
-    "copyStartCharacter",
-  ) as number;
-
-  if (
-    !originDocumentUri ||
-    originStartLine === undefined ||
-    originStartCharacter === undefined
-  ) {
-    return;
+    // This looks like a paste operation - notify the LSP server
+    await notifyPaste(document, change, clipboardText, client(), context);
   }
+}
 
-  // Process selections in original order (top to bottom) for LSP notifications
-  // We need to track cumulative line offset as each paste shifts subsequent positions
-  const sortedSelectionsTopToBottom = [...editor.selections].sort(
-    (a, b) =>
-      a.start.line - b.start.line || a.start.character - b.start.character,
-  );
-
-  const lines = clipboardText.split("\n");
-
+/**
+ * Notifies the LSP server about a paste operation.
+ */
+async function notifyPaste(
+  document: { uri: { toString(): string }; getText(): string },
+  change: { range: { start: Position; end: Position }; text: string },
+  clipboardText: string,
+  client: LanguageClient | undefined,
+  context: ExtensionContext,
+): Promise<void> {
   if (client) {
-    for (const selection of sortedSelectionsTopToBottom) {
-      const newEndPosition = selection.end;
+    // Calculate where the pasted text ends up
+    const lines = clipboardText.split("\n");
+    const pasteStartLine = change.range.start.line;
+    const pasteStartCharacter = change.range.start.character;
 
-      const newStartPosition = new Position(
-        selection.start.line + lines.length - 1,
-        lines.length === 1
-          ? selection.start.character - clipboardText.length
-          : lines.pop?.length || 0,
-      );
-      // Create the paste parameters
-      const pasteParams = {
-        textDocument: {
-          uri: editor.document.uri.toString(),
+    // Calculate end position after paste
+    const pasteEndLine = pasteStartLine + lines.length - 1;
+    const pasteEndCharacter =
+      lines.length === 1
+        ? pasteStartCharacter + clipboardText.length
+        : lines[lines.length - 1].length;
+    const copiedText = context.workspaceState.get("copiedText");
+    // Only include origin info if the copied text matches what we tracked
+    const hasValidOrigin = copiedText && copiedText === clipboardText;
+    const documentUri = context.workspaceState.get("documentUri");
+    const startLine = context.workspaceState.get("startLine");
+    const startCharacter = context.workspaceState.get("startCharacter");
+    const pasteParams = {
+      textDocument: {
+        uri: document.uri.toString(),
+      },
+      text: document.getText(),
+      range: {
+        start: {
+          line: pasteStartLine,
+          character: pasteStartCharacter,
         },
-        text: editor.document.getText(),
-        range: {
-          start: newStartPosition,
-          end: newEndPosition,
+        end: {
+          line: pasteEndLine,
+          character: pasteEndCharacter,
         },
-        originDocument: {
-          uri: originDocumentUri,
-        },
-        originOffset: {
-          line: originStartLine,
-          character: originStartCharacter,
-        },
-      };
-
-      // Send the paste command to the LSP server
-      await client.sendRequest(ExecuteCommandRequest.type, {
-        command: "metals-did-paste",
-        arguments: [pasteParams],
-      });
+      },
+      originDocument: {
+        uri: documentUri,
+      },
+      originOffset: {
+        line: startLine,
+        character: startCharacter,
+      },
+    };
+    if (hasValidOrigin) {
+      try {
+        await client.sendRequest(ExecuteCommandRequest.type, {
+          command: "metals-did-paste",
+          arguments: [pasteParams],
+        });
+      } catch (error) {
+        // Silently ignore errors - paste notification is not critical
+        console.error("Failed to notify LSP about paste:", error);
+      }
     }
   }
 }
 
 /**
- * Registers the copy and paste commands for the extension.
+ * Registers event-based hooks for copy and paste detection in Scala files.
+ * This approach doesn't override native copy/paste commands, allowing them to work normally.
+ *
  * @param context The extension context
- * @param client The LSP client
+ * @param client A function that returns the current LSP client
+ */
+export function registerCopyPasteHooks(
+  context: ExtensionContext,
+  client: () => LanguageClient | undefined,
+): void {
+  const disposables: Disposable[] = [];
+
+  // Track selection changes to capture potential copy origins
+  disposables.push(
+    window.onDidChangeTextEditorSelection((event) => {
+      trackSelectionForCopy(event.textEditor, context);
+    }),
+  );
+
+  // Listen for text document changes to detect paste operations
+  disposables.push(
+    workspace.onDidChangeTextDocument((event) => {
+      handleTextChange(event, client, context);
+    }),
+  );
+
+  // Register all disposables
+  disposables.forEach((d) => context.subscriptions.push(d));
+}
+
+/**
+ * @deprecated Use registerCopyPasteHooks instead.
+ * This function is kept for backwards compatibility but now just calls registerCopyPasteHooks.
  */
 export function registerCopyPasteCommands(
   context: ExtensionContext,
   client: () => LanguageClient | undefined,
 ): void {
-  // Register the copy command
-  context.subscriptions.push(
-    commands.registerCommand("metals.copy-selection", () =>
-      copySelection(context),
-    ),
-  );
-
-  // Register the paste command
-  context.subscriptions.push(
-    commands.registerCommand("metals.paste-selection", () =>
-      pasteSelection(client(), context),
-    ),
-  );
+  registerCopyPasteHooks(context, client);
 }

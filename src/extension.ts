@@ -113,7 +113,7 @@ import { MetalsQuickPickType } from "./interfaces/MetalsQuickPick";
 import { MetalsSlowTaskType } from "./interfaces/MetalsSlowTask";
 import { downloadProgress } from "./downloadProgress";
 import { detectLaunchConfigurationChanges } from "./detectLaunchConfigurationChanges";
-import { registerCopyPasteCommands } from "./metalsCopyPaste";
+import { registerCopyPasteHooks } from "./metalsCopyPaste";
 
 const outputChannel = window.createOutputChannel("Metals");
 
@@ -139,8 +139,8 @@ export interface MetalsApi {
 }
 
 export async function activate(context: ExtensionContext): Promise<MetalsApi> {
-  // Register copy and paste commands
-  registerCopyPasteCommands(context, () => currentClient);
+  // Register copy and paste hooks for Scala files
+  registerCopyPasteHooks(context, () => currentClient);
   const serverVersion = getServerVersion(config, context);
   detectConfigurationChanges();
   configureSettingsDefaults();
