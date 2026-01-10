@@ -115,7 +115,6 @@ export async function setupCoursier(
   } else {
     coursier = await resolveCoursier();
   }
-  output.appendLine(`Using coursier located at ${coursier}`);
 
   let javaHome: JavaHome | undefined;
 
@@ -127,7 +126,7 @@ export async function setupCoursier(
 
   if (!javaHome && coursier) {
     output.appendLine(
-      `No installed java with version ${javaVersion} found. Will fetch one using coursier:`,
+      `No installed java with version ${javaVersion} found. Will fetch one using coursier: ${coursier}`,
     );
     const coursierJavaHome = await resolveJavaHomeWithCoursier(coursier);
     const validatedJavaHome = await validateJavaVersion(
@@ -150,6 +149,7 @@ export async function setupCoursier(
   }
 
   if (javaHome && coursier) {
+    output.appendLine(`Using coursier located at ${coursier}`);
     return { coursier, javaHome };
   } else {
     throw Error(
