@@ -325,7 +325,7 @@
           "enum": [
             "17",
             "21",
-            "24"
+            "25"
           ],
           "scope": "machine",
           "markdownDescription": "JDK version used for running the Metals's server.\n\nShould be greater or equal to the JDK version used for the project (look: Java Home)."
