@@ -30,8 +30,15 @@ The following table shows the status of various features.
 **macOS, Linux or Windows**. Metals is developed on many operating systems and
 every PR is tested on Ubuntu, Windows and MacOS.
 
-**Scala 2.13, 2.12, 2.11 and Scala 3**. Check which specific versions are
-currently supported in the [Metals documentation](https://scalameta.org/metals/docs/editors/vscode#requirements).
+**Scala 2.13, 2.12, 2.11 and Scala 3**. Metals supports these Scala versions:
+
+Scala 3 versions from 3.3.4 are automatically supported by Metals.
+
+Any older Scala versions will no longer get bugfixes, but should still
+work properly with newest Metals.
+
+Note that 2.11.x support is deprecated and it will be removed in future releases.
+It's recommended to upgrade to Scala 2.12 or Scala 2.13
 
 ## Installation
 
@@ -56,7 +63,6 @@ may result in less stable experience and it is not intented for beginners.
 Pre-release versions follow `major.minor.PATCH` versioning.
 
 ![Install the pre-release extension](https://github.com/scalameta/gh-pages-images/blob/master/metals/vscode/CzOTleE.png?raw=true)
-
 
 ## Importing a build
 
@@ -107,8 +113,6 @@ re-import the build.
 
 ![Import sbt changes](https://github.com/scalameta/gh-pages-images/blob/master/metals/Image/72kdZkL.png?raw=true)
 
-    
-
 ### Manually trigger build import
 
 To manually trigger a build import, execute the "Import build" command through
@@ -122,7 +126,7 @@ Execute the "Run Doctor" through the command palette to troubleshoot potential
 configuration problems in your workspace.
 
 ![Run doctor command](https://github.com/scalameta/gh-pages-images/blob/master/metals/Image/K02g0UM.png?raw=true)
-    
+
 ## Configure Java version
 
 Metals separates JDK used for starting Metals server from the JDK used for the
@@ -137,7 +141,7 @@ environment variable (via
 If no matching Java found, a JDK will be downloaded using
 [coursier](https://get-coursier.io).
 
-#### Settings:
+#### Settings
 
 - `Java Version` - minimum JDK version accepted for running Metals server. If
   none found, this is also the version that will be downloaded using coursier.
@@ -151,7 +155,7 @@ for running the build server but appropriate `-release` flags are added for
 compilation. By default Metals uses JDK defined by `JAVA_HOME` environment
 variable, if the variable is not set is falls to using the Metals's JDK.
 
-#### Settings:
+#### Settings
 
 - `Java Home` - path to project's JDK's Home. Note: this setting isn't respected
   for `Bazel`.
@@ -180,7 +184,7 @@ Use the 'Custom Repositories' setting for the Metals VS Code extension to tell
 artifacts from your private artifact repository.
 
 Use `.jvmopts` to set sbt options
-(https://www.scala-sbt.org/1.0/docs/Proxy-Repositories.html) for
+(<https://www.scala-sbt.org/1.0/docs/Proxy-Repositories.html>) for
 `sbt bloopInstall` which resolves library dependencies. You can also provide a
 custom sbt script (see 'Custom sbt launcher').
 
@@ -198,14 +202,14 @@ following locations:
 - "Server Properties" setting for the Metals VS Code extension, which can be
   configured per-workspace or per-user.
 
-## Using latest Metals SNAPSHOT
+## Using latest Metals <a name="SNAPSHOT">SNAPSHOT</a>
 
 Update the "metals.serverVersion" setting to try out the latest pending Metals
 features and fixes. To open settings go to `File -> Preferences -> Settings` and
 then use the search to find the specific option.
 
 See
-https://scalameta.org/metals/docs/editors/vscode.html#using-latest-metals-snapshot
+<https://scalameta.org/metals/docs/editors/vscode.html#using-latest-metals-snapshot>
 to find the latest SNAPSHOT version.
 
 Run the "Reload Window" command after updating the setting for the new version
@@ -262,7 +266,7 @@ using two commands:
 - `Metals: Go to super method` - immediately goes to the parent of the method the cursor is pointing to
 
 - `Metals: Reveal super method hierachy` - displays the full method hierachy and enables to move to any parent,
-  it is best used with the Metals Quick Pick extension.
+it is best used with the Metals Quick Pick extension.
 
 You can also bind those commands to a shortcut.
 
@@ -274,11 +278,12 @@ There is a great number of templates already available and it should be easy to 
 To start the setup you can use the Metals: New Scala project command, which works as following:
 
 1. Choose the template and then:
-   1. Use the proposed templates.
-   2. Choose "Discover more" and then choose from the list downloaded from the Giter8 wiki page.
-   3. Input a custom Github repository following the `organization/repo` schema.
+    1. Use the proposed templates.
+    2. Choose "Discover more" and then choose from the list downloaded from the Giter8 wiki page.
+    3. Input a custom Github repository following the `organization/repo` schema.
 2. Navigate to the parent directory that you want to create your new project in.
 3. Choose the name or accept the default one.
+
 4. Choose whether to open a new window for the created project or use the existing one.
 
 The same command will be invoked when clicking the "New Scala Project" button in the Metals view.
@@ -495,7 +500,7 @@ the scenes worksheets are powered by the great work done in
 ### Getting started with Worksheets
 
 To get started with a worksheet you can either use the `metals.new-scala-file`
-command and select _Worksheet_ or create a file called `*.worksheet.sc`.
+command and select *Worksheet* or create a file called `*.worksheet.sc`.
 This format is important since this is what tells Metals that it's meant to be
 treated as a worksheet and not just a Scala script. Where you create the
 script also matters. If you'd like to use classes and values from your
@@ -619,4 +624,4 @@ extension to use default IntelliJ shortcuts with VS Code.
 ## GitHub Codespaces and GitHub.dev support
 
 See
-https://scalameta.org/metals/docs/editors/online-ides#github-codespaces-and-githubdev
+<https://scalameta.org/metals/docs/editors/online-ides#github-codespaces-and-githubdev>
