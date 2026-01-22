@@ -48,6 +48,7 @@
   "activationEvents": [
     "onDebugResolve:scala",
     "onLanguage:java",
+    "onLanguage:proto",
     "onLanguage:scala",
     "onLanguage:java",
     "onLanguage:twirl-html",

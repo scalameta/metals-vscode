@@ -121,9 +121,12 @@ import { downloadProgress } from "./downloadProgress";
 import { detectLaunchConfigurationChanges } from "./detectLaunchConfigurationChanges";
 import { registerCopyPasteHooks } from "./metalsCopyPaste";
 import { MetalsSyncStatusType, MetalsSyncType } from "./interfaces/MetalsSync";
+import { isProtobufEnabled } from "./protobufSupport";
+import { DocumentSelector } from "vscode-languageclient";
 
 const outputChannel = window.createOutputChannel("Metals");
 
+let protobufEnabled = false;
 let treeViews: MetalsTreeViews | undefined;
 let currentClient: LanguageClient | undefined;
 
@@ -152,6 +155,29 @@ export interface MetalsApi {
 
 const BLOOP_INSTANCES_DIR_NAME = "bloop-instances";
 
+function buildDocumentSelectors(protobufEnabled: boolean): DocumentSelector {
+  const baseSelectors: DocumentSelector = [
+    { scheme: "file", language: "scala" },
+    { scheme: "file", language: "java" },
+    { scheme: "file", language: "twirl-html" },
+    { scheme: "file", language: "twirl-xml" },
+    { scheme: "file", language: "twirl-js" },
+    { scheme: "file", language: "twirl-txt" },
+    { scheme: "jar", language: "scala" },
+    { scheme: "jar", language: "java" },
+  ];
+
+  if (protobufEnabled) {
+    return [
+      ...baseSelectors,
+      { scheme: "file", language: "proto" },
+      { scheme: "jar", language: "proto" },
+    ];
+  }
+
+  return baseSelectors;
+}
+
 export async function activate(context: ExtensionContext): Promise<MetalsApi> {
   bloopInstancesDir = path.join(
     context.globalStorageUri.fsPath,
@@ -160,6 +186,13 @@ export async function activate(context: ExtensionContext): Promise<MetalsApi> {
   // Register copy and paste hooks for Scala files
   registerCopyPasteHooks(context, () => currentClient);
   const serverVersion = getServerVersion(config, context);
+
+  // Check if proto support is enabled via activation events in package.json
+  protobufEnabled = isProtobufEnabled(context);
+  if (protobufEnabled) {
+    outputChannel.appendLine("Protobuf language support: enabled");
+  }
+
   detectConfigurationChanges();
   configureSettingsDefaults();
   registerDebugEventListener(context);
@@ -642,16 +675,7 @@ async function launchMetals(
   };
 
   const clientOptions: LanguageClientOptions = {
-    documentSelector: [
-      { scheme: "file", language: "scala" },
-      { scheme: "file", language: "java" },
-      { scheme: "file", language: "twirl-html" },
-      { scheme: "file", language: "twirl-xml" },
-      { scheme: "file", language: "twirl-js" },
-      { scheme: "file", language: "twirl-txt" },
-      { scheme: "jar", language: "scala" },
-      { scheme: "jar", language: "java" },
-    ],
+    documentSelector: buildDocumentSelectors(protobufEnabled),
     synchronize: {
       configurationSection: "metals",
     },
@@ -1116,16 +1140,12 @@ async function launchMetals(
       );
       const enableSync = (enabled: boolean) => {
         if (enabled) {
-          syncItem.show()
+          syncItem.show();
         } else {
           syncItem.hide();
         }
-        commands.executeCommand(
-          'setContext',
-          'metals.syncEnabled',
-          enabled
-        );
-      }
+        commands.executeCommand("setContext", "metals.syncEnabled", enabled);
+      };
       const metalsSyncDisposable = client.onNotification(
         MetalsSyncStatusType,
         (params) => {
@@ -1133,7 +1153,7 @@ async function launchMetals(
           const uri = editor?.document.uri.toString();
           if (uri === params.document) {
             if (params.status === "hidden") {
-              enableSync(false)
+              enableSync(false);
             } else {
               syncItem.text = params.text;
               syncItem.backgroundColor = new ThemeColor(
@@ -1141,7 +1161,7 @@ async function launchMetals(
               );
               syncItem.tooltip = params.tooltip;
               syncItem.command = params.command;
-              enableSync(true)
+              enableSync(true);
             }
           }
         }
@@ -1548,7 +1568,7 @@ async function launchMetals(
             editor.document.uri.toString(),
           );
         } else {
-          enableSync(false)
+          enableSync(false);
         }
       });
 
