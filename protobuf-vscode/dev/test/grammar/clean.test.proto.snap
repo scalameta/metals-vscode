@@ -1,0 +1,31 @@
+>// SYNTAX TEST "source.proto" "Clean test"
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.proto comment.line.double-slash.proto
+>
+>service TestService {
+#^^^^^^^ source.proto keyword.other.service.proto
+#       ^ source.proto
+#        ^^^^^^^^^^^ source.proto entity.name.type.service.proto
+#                   ^^ source.proto
+>  rpc Method1(Request) returns (Response) {
+#^^ source.proto
+#  ^^^ source.proto keyword.other.rpc.proto
+#     ^ source.proto
+#      ^^^^^^^ source.proto entity.name.function.proto
+#             ^ source.proto
+#              ^^^^^^^ source.proto entity.name.type.proto
+#                     ^^ source.proto
+#                       ^^^^^^^ source.proto keyword.other.returns.proto
+#                              ^^ source.proto
+#                                ^^^^^^^^ source.proto entity.name.type.proto
+#                                        ^^ source.proto
+#                                          ^ source.proto
+>  }
+#^^ source.proto
+#  ^ source.proto
+>  rpc Method2(Request) returns (Response);
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.proto
+>//^^^ keyword.other.rpc.proto
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.proto comment.line.double-slash.proto
+>}
+#^^ source.proto
+>

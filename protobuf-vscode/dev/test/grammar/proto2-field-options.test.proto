@@ -1,0 +1,13 @@
+// SYNTAX TEST "source.proto" "Proto2 field options (multi-line)"
+
+syntax = "proto2";
+
+message Example {
+  optional string platform_subscription_id = 2 [
+//^^^^^^^ keyword.other.field.modifier.proto
+//         ^^^^^^ storage.type.proto
+    (validate_required) = true,
+    (scalapb.field).type = "SubscriptionId"
+  ];
+}
+

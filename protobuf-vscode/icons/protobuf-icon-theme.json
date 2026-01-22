@@ -1,0 +1,10 @@
+{
+  "iconDefinitions": {
+    "protobuf": {
+      "iconPath": "./images/protobuf.svg"
+    }
+  },
+  "fileExtensions": {
+    "proto": "protobuf"
+  }
+}

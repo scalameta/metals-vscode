@@ -1,0 +1,8 @@
+// SYNTAX TEST "source.proto" "Clean test"
+
+service TestService {
+  rpc Method1(Request) returns (Response) {
+  }
+  rpc Method2(Request) returns (Response);
+//^^^ keyword.other.rpc.proto
+}

@@ -1,0 +1,15 @@
+// SYNTAX TEST "source.proto" "No nested braces test"
+
+service TestService {
+// <--- keyword.other.service.proto
+
+  rpc ListContracts(Request) returns (Response) {
+//^^^ keyword.other.rpc.proto
+    option (google.api.http) = {
+      get: "/contracts"
+    };
+  }
+
+  rpc NextMethod(Request) returns (Response);
+//^^^ keyword.other.rpc.proto
+}

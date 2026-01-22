@@ -1,0 +1,18 @@
+// SYNTAX TEST "source.proto" "Keyword coverage"
+
+syntax = "proto3";
+
+message Example
+{
+  optional string name = 1;
+//^^^^^^^ keyword.other.field.modifier.proto
+//         ^^^^^^ storage.type.proto
+}
+
+service BillingCreditsService {
+  rpc CreateCredit(CreateCreditRequest) returns (CreateCreditResponse) {
+//^^^ keyword.other.rpc.proto
+//                                      ^^^^^^^ keyword.other.returns.proto
+  }
+}
+

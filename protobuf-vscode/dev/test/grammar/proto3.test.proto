@@ -1,0 +1,61 @@
+// SYNTAX TEST "source.proto" "Protocol Buffer 3 Grammar Tests"
+
+syntax = "proto3";
+// <--- keyword.other.syntax.proto
+
+package example.api;
+// <--- keyword.other.package.proto
+
+import "google/api/http.proto";
+// <--- keyword.control.import.proto
+
+// Service-level option with nested braces
+service ExampleService {
+// <--- keyword.other.service.proto
+
+  // Service-level option
+  option (example.service) = {
+    name: "Example Service",
+    owner: "example-team",
+  };
+
+  // Simple RPC without body - should work
+  rpc SimpleMethod(Request) returns (Response);
+//^^^ keyword.other.rpc.proto
+
+  // RPC with body containing single option - THIS BREAKS subsequent RPCs
+  rpc GetItem(GetItemRequest) returns (Item) {
+//^^^ keyword.other.rpc.proto
+    option (rpc) = {
+      visibility: PUBLIC,
+    };
+  }
+
+  // This RPC should be highlighted but currently ISN'T
+  rpc ListItems(ListItemsRequest) returns (ListItemsResponse) {
+//^^^ keyword.other.rpc.proto
+    option (google.api.http) = {
+      get: "/v1/items"
+      body: "*"
+      additional_bindings {
+        post: "/v1/items:search"
+        body: "*"
+      }
+    };
+    option (rpc) = {
+      visibility: PUBLIC,
+    };
+  }
+
+  // This RPC should also be highlighted but currently ISN'T
+  rpc UpdateItem(UpdateItemRequest) returns (Item) {
+//^^^ keyword.other.rpc.proto
+    option (rpc) = {
+      visibility: PUBLIC,
+    };
+  }
+
+  // Simple RPC at the end - should work if previous RPCs worked
+  rpc DeleteItem(DeleteItemRequest) returns (Empty);
+//^^^ keyword.other.rpc.proto
+}

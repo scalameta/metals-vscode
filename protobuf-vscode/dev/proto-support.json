@@ -1,0 +1,55 @@
+{
+  "$schema": "https://raw.githubusercontent.com/AdisonCavani/vscode-extension-updater/main/schemas/package.schema.json",
+  "_description": "Proto/Protobuf support configuration for Metals VS Code extension. To enable protobuf support, merge these entries into the main package.json file. This enables syntax highlighting and LSP features for .proto files.",
+  
+  "activationEvents_to_add": [
+    "onLanguage:proto"
+  ],
+  
+  "languages_to_add": [
+    {
+      "id": "proto",
+      "aliases": ["Protocol Buffers", "protobuf", "proto3"],
+      "extensions": [".proto"],
+      "configuration": "./protobuf/language-configuration.json"
+    }
+  ],
+  
+  "grammars_to_add": [
+    {
+      "language": "proto",
+      "scopeName": "source.proto",
+      "path": "./protobuf/syntaxes/proto3.json"
+    }
+  ],
+  
+  "_instructions": {
+    "step1": "Add 'onLanguage:proto' to the 'activationEvents' array in package.json",
+    "step2": "Add the language object from 'languages_to_add' to 'contributes.languages' array",
+    "step3": "Add the grammar object from 'grammars_to_add' to 'contributes.grammars' array",
+    "step4": "Reload VS Code or the extension to apply changes"
+  },
+
+  "_example_enabled_package_json_snippet": {
+    "activationEvents": [
+      "onLanguage:proto"
+    ],
+    "contributes": {
+      "languages": [
+        {
+          "id": "proto",
+          "aliases": ["Protocol Buffers", "protobuf", "proto3"],
+          "extensions": [".proto"],
+          "configuration": "./protobuf/language-configuration.json"
+        }
+      ],
+      "grammars": [
+        {
+          "language": "proto",
+          "scopeName": "source.proto",
+          "path": "./protobuf/syntaxes/proto3.json"
+        }
+      ]
+    }
+  }
+}

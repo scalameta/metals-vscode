@@ -1,0 +1,15 @@
+// SYNTAX TEST "source.proto" "Simple test"
+
+service TestService {
+// <--- keyword.other.service.proto
+
+  rpc ListContracts(Request) returns (Response) {
+//^^^ keyword.other.rpc.proto
+    option (rpc) = {
+      visibility: PUBLIC,
+    };
+  }
+
+  rpc NextMethod(Request) returns (Response);
+//^^^ keyword.other.rpc.proto
+}
