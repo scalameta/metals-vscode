@@ -27,6 +27,8 @@ export const ServerCommands = {
   BuildConnect: "build-connect",
   /** Disconnect the build server and without re-connecting. */
   BuildDisconnect: "build-disconnect",
+  /** Disconnect from the build server and shut it down so its process exits. */
+  BuildDisconnectAndShutdown: "build-disconnect-and-shutdown",
   /** Import the latest changes from the build. */
   BuildImport: "build-import",
   /**

@@ -218,8 +218,37 @@ function migrateOldSettings(): void {
     }
   });
 }
+const BLOOP_DISCONNECT_TIMEOUT_MS = 5000;
+
 export function deactivate(): Thenable<void> | undefined {
-  return currentClient?.stop();
+  const client = currentClient;
+  if (!client) {
+    return undefined;
+  }
+  const shutdownBloop =
+    workspace
+      .getConfiguration("metals")
+      .get<boolean>("shutdownBloopOnEditorClose") ?? false;
+  if (!shutdownBloop) {
+    return client.stop();
+  }
+  const timeout = (ms: number) =>
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("timeout")), ms),
+    );
+  const disconnectAndShutdown = client.sendRequest(ExecuteCommandRequest.type, {
+    command: ServerCommands.BuildDisconnectAndShutdown,
+  });
+  return Promise.race([
+    disconnectAndShutdown,
+    timeout(BLOOP_DISCONNECT_TIMEOUT_MS),
+  ])
+    .catch(() => {
+      outputChannel.appendLine(
+        "Metals: build-disconnect-and-shutdown timed out or failed during shutdown.",
+      );
+    })
+    .finally(() => client.stop());
 }
 
 function debugInformation(
