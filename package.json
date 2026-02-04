@@ -1225,7 +1225,7 @@
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-mocha": "^11.2.0",
-    "glob": "^13.0.0",
+    "glob": "^13.0.1",
     "mocha": "^11.7.5",
     "ovsx": "0.10.8",
     "prettier": "3.8.1",
