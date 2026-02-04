@@ -365,7 +365,7 @@
         "metals.bloopVersion": {
           "type": "string",
           "scope": "machine",
-          "default": "2.0.18",
+          "default": "2.0.19",
           "markdownDescription": "This version will be used for the Bloop build tool plugin, for any supported build tool,while importing in Metals as well as for running the embedded server"
         },
         "metals.bloopJvmProperties": {
