@@ -293,9 +293,26 @@ async function fetchAndLaunchMetals(
     coursierMirrorFilePath: coursierMirror,
   });
 
+  /**
+   * GraalVM for JDK 17-20 prints additional warnings that breaks things.
+   * Looks like JDK on Window is also affected.
+   */
+  const skipZGC =
+    (+javaConfig.javaHome.version < 21 &&
+      (javaConfig.javaHome.description.indexOf("GraalVM") > -1 ||
+        process.platform == "win32")) ||
+    process.platform.endsWith("bsd");
+
+  let filteredServerProperties = serverProperties;
+  if (skipZGC) {
+    filteredServerProperties = serverProperties.filter(function (prop) {
+      return prop.indexOf("UseZGC") === -1;
+    });
+  }
+
   const fetchProcess = fetchMetals({
     serverVersion,
-    serverProperties,
+    serverProperties: filteredServerProperties,
     javaConfig,
     outputChannel,
   });
@@ -311,7 +328,7 @@ async function fetchAndLaunchMetals(
           outputChannel,
           context,
           classpath,
-          serverProperties,
+          filteredServerProperties,
           javaConfig,
           serverVersion,
         ).catch((reason): Promise<any> => {
@@ -320,7 +337,11 @@ async function fetchAndLaunchMetals(
           );
           outputChannel.appendLine(reason.message);
           outputChannel.appendLine(
-            debugInformation(serverVersion, serverProperties, javaConfig),
+            debugInformation(
+              serverVersion,
+              filteredServerProperties,
+              javaConfig,
+            ),
           );
           return retry(reason);
         });
@@ -332,7 +353,11 @@ async function fetchAndLaunchMetals(
           );
           outputChannel.appendLine(reason.message);
           outputChannel.appendLine(
-            debugInformation(serverVersion, serverProperties, javaConfig),
+            debugInformation(
+              serverVersion,
+              filteredServerProperties,
+              javaConfig,
+            ),
           );
         }
         if (canRetryWithJar) {

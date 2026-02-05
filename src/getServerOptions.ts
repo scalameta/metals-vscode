@@ -14,22 +14,6 @@ export function getServerOptions(
     baseProperties.push(`-Dmetals.client=${clientName}`);
   }
 
-  /**
-   * GraalVM for JDK 17-20 prints additional warnings that breaks things.
-   * Looks like JDK on Window is also affected.
-   */
-  const skipZGC =
-    (+javaConfig.javaHome.version < 21 &&
-      (javaConfig.javaHome.description.indexOf("GraalVM") > -1 ||
-        process.platform == "win32")) ||
-    process.platform == "openbsd";
-
-  let filteredServerProperties = serverProperties;
-  if (skipZGC) {
-    filteredServerProperties = serverProperties.filter(function (prop) {
-      return prop.indexOf("UseZGC") === -1;
-    });
-  }
   const mainArgs = ["-classpath", metalsClasspath, "scala.meta.metals.Main"];
 
   // Required VM options from Metals JAR are added first,
@@ -38,7 +22,7 @@ export function getServerOptions(
     ...requiredVmOptions,
     ...baseProperties,
     ...javaConfig.javaOptions,
-    ...filteredServerProperties,
+    ...serverProperties,
     ...mainArgs,
   ];
 
