@@ -11,6 +11,7 @@ import {
   DapEvent,
   MetalsTestItem,
   RunnableMetalsTestItem,
+  SuiteMetalsTestItem,
   TestSuiteResult,
 } from "./types";
 import { gatherTestItems } from "./util";
@@ -19,6 +20,108 @@ import { ServerCommands } from "../interfaces/ServerCommands";
 // this id is used to mark DAP sessions created by TestController
 // thanks to that debug tracker knows which requests it should track and gather results
 export const testRunnerId = "scala-dap-test-runner";
+
+/**
+ * Run test suites through the test explorer.
+ * This is used by launch configurations with request type "test".
+ *
+ * @param testController the test controller to create runs with
+ * @param noDebug whether to run without debugging
+ * @param targetUri the build target URI
+ * @param suites the test suites to run
+ * @param environmentVariables environment variables to pass to the test runner
+ * @returns true if tests were started successfully
+ */
+export async function runTestSuites(
+  testController: TestController,
+  noDebug: boolean,
+  targetUri: TargetUri,
+  suites: ScalaTestSuiteSelection[],
+  environmentVariables: Record<string, string> = {}
+): Promise<boolean> {
+  // Find the test items that match the suites in the launch config
+  const testsToRun: MetalsTestItem[] = [];
+
+  testController.items.forEach((item) => {
+    let module = item.children.get(targetUri)
+    if (module) {
+      if (suites.length === 0) {
+        let suite = findSuite(module.children, targetUri);
+        if (suite?.uri) vscode.window.showTextDocument(suite.uri);
+        testsToRun.push(module as MetalsTestItem);
+        return;
+      }
+      let focused = false;
+      for (const suite of suites) {
+        const testItem = findSuite(module.children, targetUri, suite.className);
+        if (testItem) {
+          if (testItem.uri && !focused) {
+            vscode.window.showTextDocument(testItem.uri);
+            focused = true;
+          }
+          if (suite.tests.length === 0) {
+            // Run entire suite
+            testsToRun.push(testItem as MetalsTestItem);
+            return;
+          }
+          for (const testName of suite.tests) {
+            const testCase = testItem.children.get(testName);
+            if (testCase) {
+              testsToRun.push(testCase as MetalsTestItem);
+            }
+          }
+        }
+      }
+    }
+  });
+
+  if (testsToRun.length === 0) {
+    return false;
+  }
+
+  // Delegate to runHandler with a TestRunRequest
+  const request = new TestRunRequest(testsToRun);
+  const cancellationTokenSource = new vscode.CancellationTokenSource();
+  await runHandler(
+    testController,
+    noDebug,
+    () => { }, // no afterFinished callback needed
+    request,
+    cancellationTokenSource.token,
+    () => environmentVariables
+  );
+
+  return true;
+}
+
+/**
+ * Find a test item (suite) by target URI and class name.
+ */
+function findSuite(
+  items: vscode.TestItemCollection,
+  targetUri: TargetUri,
+  className?: string
+): SuiteMetalsTestItem | undefined {
+  // Traverse the test controller hierarchy to find the test item
+  let result: SuiteMetalsTestItem | undefined;
+  items.forEach((item) => {
+    if (result) return;
+    const metalsItem = item as MetalsTestItem;
+    switch (metalsItem._metalsKind) {
+      case "suite":
+        if (metalsItem._metalsTargetUri === targetUri) {
+          result = metalsItem as SuiteMetalsTestItem;
+        }
+        break;
+      case "package":
+        if (className === undefined || className.startsWith(metalsItem.id + ".")) {
+          result = findSuite(metalsItem.children, targetUri, className);
+        }
+        break;
+    }
+  });
+  return result;
+}
 
 /**
  * Stores results from executed test suites.

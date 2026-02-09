@@ -71,6 +71,7 @@ import {
 } from "./util";
 import { createTestManager } from "./testExplorer/testManager";
 import { BuildTargetUpdate } from "./testExplorer/types";
+import { createLaunchConfig } from "./testExplorer/launchConfig";
 import * as workbenchCommands from "./workbenchCommands";
 import { getServerVersion } from "./getServerVersion";
 import { getCoursierMirrorPath } from "./mirrors";
@@ -1073,6 +1074,8 @@ async function launchMetals(
       context.subscriptions.push(disableTestExplorer);
       context.subscriptions.push(testManager.testController);
 
+      registerCommand("metals.create-launch-configuration", async (testItem) => await createLaunchConfig(testItem));
+
       // Handle the metals/executeClientCommand extension notification.
       const executeClientCommandDisposable = client.onNotification(
         ExecuteClientCommandType,
@@ -1670,9 +1673,11 @@ async function launchMetals(
       );
       treeViews = startTreeView(client, outputChannel, context, viewIds);
       context.subscriptions.concat(treeViews.disposables);
-      scalaDebugger.initialize().forEach((disposable) => {
-        context.subscriptions.push(disposable);
-      });
+      scalaDebugger
+        .initialize(testManager.testController)
+        .forEach((disposable) => {
+          context.subscriptions.push(disposable);
+        });
       const decorationsRangesDidChangeDispoasable = client.onNotification(
         DecorationsRangesDidChange.type,
         (params) => {
