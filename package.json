@@ -1241,7 +1241,7 @@
     "marked": "^15.0.12",
     "node-fetch": "^3.3.2",
     "promisify-child-process": "4.1.2",
-    "semver": "^7.7.3",
+    "semver": "^7.7.4",
     "shell-quote": "^1.8.3",
     "vscode-languageclient": "9.0.1",
     "vscode-languageserver-protocol": "3.17.5",
