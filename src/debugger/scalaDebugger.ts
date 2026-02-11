@@ -329,9 +329,14 @@ class ScalaDebugServerFactory implements vscode.DebugAdapterDescriptorFactory {
         ]);
       }
 
-      const suites = session.configuration.suites as ScalaTestSuiteSelection[];
+      const suites: ScalaTestSuiteSelection[] = (session.configuration.suites ?? [])
+       .map((s: any) => ({
+        className: s.className,
+        tests: s.tests ?? []
+       }))
       const targetUri = session.configuration.buildTarget as TargetUri;
       const noDebug = !(session.configuration.debug ?? true);
+      const flags = session.configuration.flags as string[] | undefined;
 
       // Parse environment variables from launch config
       const environmentVariables: Record<string, string> = {};
@@ -349,6 +354,7 @@ class ScalaDebugServerFactory implements vscode.DebugAdapterDescriptorFactory {
         noDebug,
         targetUri,
         suites,
+        flags,
         environmentVariables
       );
 

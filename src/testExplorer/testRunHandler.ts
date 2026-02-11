@@ -4,6 +4,7 @@ import { debugServerFromUri, DebugSession } from "../debugger/scalaDebugger";
 import {
   ScalaTestSuitesDebugRequest,
   ScalaTestSuiteSelection,
+  ScalaTestSuites,
 } from "../debugger/types";
 import { TargetUri } from "../types";
 import { analyzeTestRun } from "./analyzeTestRun";
@@ -37,6 +38,7 @@ export async function runTestSuites(
   noDebug: boolean,
   targetUri: TargetUri,
   suites: ScalaTestSuiteSelection[],
+  flags: string[] | undefined,
   environmentVariables: Record<string, string> = {}
 ): Promise<boolean> {
   // Find the test items that match the suites in the launch config
@@ -88,7 +90,8 @@ export async function runTestSuites(
     () => { }, // no afterFinished callback needed
     request,
     cancellationTokenSource.token,
-    () => environmentVariables
+    () => environmentVariables,
+    flags,
   );
 
   return true;
@@ -183,6 +186,7 @@ export async function runHandler(
   request: TestRunRequest,
   token: CancellationToken,
   environmentVariables: () => Record<string, string>,
+  flags?: string[],
 ): Promise<void> {
   const run = testController.createTestRun(request);
   const includes = new Set((request.include as MetalsTestItem[]) ?? []);
@@ -240,6 +244,15 @@ export async function runHandler(
     }
   });
 
+  const testSuites: ScalaTestSuites = {
+    suites: testSuiteSelection,
+    jvmOptions: [],
+    flags: flags ?? [],
+    environmentVariables: Object.entries(environmentVariables()).map(
+      ([key, value]) => `${key}=${value}`
+    )
+  };
+
   try {
     if (!token.isCancellationRequested && queue.length > 0) {
       const targetUri = queue[0]._metalsTargetUri;
@@ -247,9 +260,8 @@ export async function runHandler(
         run,
         noDebug,
         targetUri,
-        testSuiteSelection,
+        testSuites,
         queue,
-        environmentVariables(),
       );
     }
   } finally {
@@ -265,14 +277,12 @@ async function runDebugSession(
   run: vscode.TestRun,
   noDebug: boolean,
   targetUri: TargetUri,
-  testSuiteSelection: ScalaTestSuiteSelection[],
+  testSuites: ScalaTestSuites,
   tests: RunnableMetalsTestItem[],
-  environmentVariables: Record<string, string> = {},
 ): Promise<void> {
   const session = await createDebugSession(
     targetUri,
-    testSuiteSelection,
-    environmentVariables,
+    testSuites,
   );
   if (!session) {
     return;
@@ -302,18 +312,11 @@ async function runDebugSession(
  */
 async function createDebugSession(
   targetUri: TargetUri,
-  suites: ScalaTestSuiteSelection[],
-  environmentVariables: Record<string, string> = {},
+  data: ScalaTestSuites,
 ): Promise<DebugSession | undefined> {
   const debugSessionParams: ScalaTestSuitesDebugRequest = {
     target: { uri: targetUri },
-    requestData: {
-      suites,
-      jvmOptions: [],
-      environmentVariables: Object.entries(environmentVariables).map(
-        ([key, value]) => `${key}=${value}`,
-      ),
-    },
+    requestData: data,
   };
   return vscode.commands.executeCommand<DebugSession>(
     ServerCommands.DebugAdapterStart,
