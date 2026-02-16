@@ -7,11 +7,15 @@ export function getServerOptions(
   clientName: string,
   javaConfig: JavaConfig,
   requiredVmOptions: string[] = [],
+  activeClientExtensions: string[] = []
 ): ServerOptions {
   const baseProperties = ["-Xss4m", "-Xms100m"];
 
   if (clientName) {
     baseProperties.push(`-Dmetals.client=${clientName}`);
+    if (activeClientExtensions.length > 0) {
+      baseProperties.push(`-Dmetals.client-extensions=${activeClientExtensions.join(",")}`);
+    }
   }
 
   const mainArgs = ["-classpath", metalsClasspath, "scala.meta.metals.Main"];
