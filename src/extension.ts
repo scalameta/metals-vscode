@@ -412,12 +412,12 @@ async function launchMetals(
     );
   }
 
-  const allClientExtenssions = new Set<string>(["kilocode.kilo-code"]);
+  const allClientExtensions = new Set<string>(["kilocode.kilo-code"]);
 
   const activeClientExtensions = extensions.all
     .filter((e) => e.isActive)
     .map((e) => e.id)
-    .filter((e) => allClientExtenssions.has(e));
+    .filter((e) => allClientExtensions.has(e));
 
   const serverOptions = getServerOptions(
     metalsClasspath,
