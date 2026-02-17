@@ -1530,7 +1530,7 @@
     "watch": "tsc -watch -p ./",
     "test": "ts-mocha src/test/unit/*.test.ts",
     "test-extension": "rimraf out/ && tsc -p ./ && node out/test/extension/runTest.js",
-    "build": "yarn clean && vsce package --yarn",
+    "build": "yarn clean && vsce package --yarn --follow-symlinks",
     "vscode:publish": "vsce publish --yarn",
     "ovsx:publish": "ovsx publish",
     "lint": "eslint . --ext .ts --fix && yarn format",
