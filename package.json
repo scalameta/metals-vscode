@@ -400,8 +400,8 @@
         "metals.shutdownBloopOnEditorClose": {
           "type": "boolean",
           "default": false,
-          "scope": "window",
-          "markdownDescription": "When enabled, on editor close the extension will ask Metals to disconnect from the build server (Bloop). If Metals supports it, this will shut down the Bloop server when you close VS Code. Disable if you run Bloop manually or want it to keep running after closing the editor."
+          "scope": "machine",
+          "markdownDescription": "When enabled, when the last VS Code window with Metals is closed the extension will ask Metals to shut down the build server (Bloop). With multiple windows open, Bloop is only shut down when the last one closes. Machine-scoped because there is one Bloop process per machine. Disable if you run Bloop manually or want it to keep running after closing the editor."
         },
         "metals.customRepositories": {
           "type": "array",

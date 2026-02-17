@@ -1,3 +1,4 @@
+import * as crypto from "crypto";
 import * as path from "path";
 import { ChildProcessPromise } from "promisify-child-process";
 import {
@@ -124,6 +125,11 @@ const outputChannel = window.createOutputChannel("Metals");
 let treeViews: MetalsTreeViews | undefined;
 let currentClient: LanguageClient | undefined;
 
+/** Machine-scoped directory for tracking VS Code instances that have Metals (Bloop) running. */
+let bloopInstancesDir: string | undefined;
+/** This window's instance id; used in deactivate to remove our marker and detect last instance. */
+let currentBloopInstanceId: string | undefined;
+
 // Inline needs to be first to be shown always first
 const inlineDecorationType: TextEditorDecorationType =
   window.createTextEditorDecorationType({
@@ -142,7 +148,13 @@ export interface MetalsApi {
   currentLanguageClient(): LanguageClient | undefined;
 }
 
+const BLOOP_INSTANCES_DIR_NAME = "bloop-instances";
+
 export async function activate(context: ExtensionContext): Promise<MetalsApi> {
+  bloopInstancesDir = path.join(
+    context.globalStorageUri.fsPath,
+    BLOOP_INSTANCES_DIR_NAME,
+  );
   // Register copy and paste hooks for Scala files
   registerCopyPasteHooks(context, () => currentClient);
   const serverVersion = getServerVersion(config, context);
@@ -223,6 +235,48 @@ function migrateOldSettings(): void {
 }
 const BLOOP_DISCONNECT_TIMEOUT_MS = 5000;
 
+/**
+ * Register this window as an instance that has Metals (and possibly Bloop) running.
+ * Call once when the language client is set (machine-scoped: one Bloop per user).
+ */
+function registerBloopInstance(): void {
+  if (!bloopInstancesDir || currentBloopInstanceId) {
+    return;
+  }
+  try {
+    if (!fs.existsSync(bloopInstancesDir)) {
+      fs.mkdirSync(bloopInstancesDir, { recursive: true });
+    }
+    currentBloopInstanceId = crypto.randomBytes(16).toString("hex");
+    const markerPath = path.join(bloopInstancesDir, currentBloopInstanceId);
+    fs.writeFileSync(markerPath, "", "utf8");
+  } catch {
+    currentBloopInstanceId = undefined;
+  }
+}
+
+/**
+ * Remove this window's instance marker and return true if no other instances remain.
+ * Only then should we shut down Bloop (last editor closed).
+ */
+function unregisterBloopInstanceAndCheckIfLast(): boolean {
+  if (!bloopInstancesDir || !currentBloopInstanceId) {
+    return false;
+  }
+  const markerPath = path.join(bloopInstancesDir, currentBloopInstanceId);
+  try {
+    if (fs.existsSync(markerPath)) {
+      fs.unlinkSync(markerPath);
+    }
+    currentBloopInstanceId = undefined;
+    const remaining = fs.readdirSync(bloopInstancesDir);
+    return remaining.length === 0;
+  } catch {
+    currentBloopInstanceId = undefined;
+    return false;
+  }
+}
+
 export function deactivate(): Thenable<void> | undefined {
   const client = currentClient;
   if (!client) {
@@ -232,7 +286,8 @@ export function deactivate(): Thenable<void> | undefined {
     workspace
       .getConfiguration("metals")
       .get<boolean>("shutdownBloopOnEditorClose") ?? false;
-  if (!shutdownBloop) {
+  const isLastInstance = unregisterBloopInstanceAndCheckIfLast();
+  if (!shutdownBloop || !isLastInstance) {
     return client.stop();
   }
   const timeout = (ms: number) =>
@@ -567,6 +622,7 @@ async function launchMetals(
   );
 
   currentClient = client;
+  registerBloopInstance();
   function registerCommand(
     command: string,
     callback: (...args: any[]) => unknown,
