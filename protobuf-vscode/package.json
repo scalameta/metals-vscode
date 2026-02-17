@@ -64,3 +64,62 @@
     "vscode-tmgrammar-test": "^0.1.3"
   }
 }
+{
+  "name": "protobuf-syntax",
+  "displayName": "Protobuf Syntax",
+  "description": "Syntax highlighting and language support for Protocol Buffers (.proto files)",
+  "version": "0.1.0",
+  "publisher": "scalameta",
+  "license": "Apache-2.0",
+  "icon": "images/protobuf.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/scalameta/metals-vscode.git",
+    "directory": "protobuf-vscode"
+  },
+  "engines": {
+    "vscode": "^1.59.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "keywords": [
+    "protobuf",
+    "protocol buffers",
+    "proto",
+    "grpc",
+    "syntax highlighting"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "proto",
+        "aliases": [
+          "Protocol Buffers",
+          "protobuf"
+        ],
+        "extensions": [
+          ".proto"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "proto",
+        "scopeName": "source.proto",
+        "path": "./syntaxes/proto3.json"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "echo 'No build needed'",
+    "test:grammar": "npx vscode-tmgrammar-test --config language-configuration.json -g syntaxes/proto3.json 'dev/test/grammar/*.test.proto'",
+    "build": "vsce package --yarn",
+    "vscode:publish": "vsce publish --yarn"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.4.0",
+    "vscode-tmgrammar-test": "^0.1.3"
+  }
+}

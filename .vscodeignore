@@ -13,3 +13,4 @@ vsc-extension-quickstart.md
 .prettierignore
 .update-version.js
 package.json.bkp
+protobuf-vscode/

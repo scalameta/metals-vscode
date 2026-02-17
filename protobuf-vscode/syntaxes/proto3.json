@@ -419,3 +419,424 @@
     }
   }
 }
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Protocol Buffer 3",
+  "scopeName": "source.proto",
+  "fileTypes": ["proto"],
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#fieldModifier" },
+    { "include": "#builtinTypes" },
+    { "include": "#syntax" },
+    { "include": "#package" },
+    { "include": "#import" },
+    { "include": "#option" },
+    { "include": "#message" },
+    { "include": "#enum" },
+    { "include": "#service" },
+    { "include": "#rpcDeclaration" },
+    { "include": "#extend" },
+    { "include": "#reserved" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.proto",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.proto",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "syntax": {
+      "begin": "\\b(syntax)\\s*=\\s*",
+      "beginCaptures": {
+        "1": { "name": "keyword.other.syntax.proto" }
+      },
+      "end": ";",
+      "patterns": [{ "include": "#strings" }]
+    },
+    "package": {
+      "match": "\\b(package)\\s+([\\w.]+)\\s*;",
+      "captures": {
+        "1": { "name": "keyword.other.package.proto" },
+        "2": { "name": "entity.name.namespace.proto" }
+      }
+    },
+    "import": {
+      "match": "\\b(import)\\s+(weak|public)?\\s*([\"'][^\"']+[\"'])\\s*;",
+      "captures": {
+        "1": { "name": "keyword.control.import.proto" },
+        "2": { "name": "keyword.other.import.modifier.proto" },
+        "3": { "name": "string.quoted.proto" }
+      }
+    },
+    "option": {
+      "patterns": [
+        {
+          "begin": "\\b(option)\\s+",
+          "beginCaptures": {
+            "1": { "name": "keyword.other.option.proto" }
+          },
+          "end": ";",
+          "patterns": [
+            { "include": "#optionName" },
+            { "include": "#optionBody" },
+            { "include": "#constants" },
+            { "include": "#strings" }
+          ]
+        }
+      ]
+    },
+    "optionBody": {
+      "begin": "\\{",
+      "end": "\\}",
+      "patterns": [
+        { "include": "#comments" },
+        { "include": "#optionBody" },
+        { "include": "#strings" },
+        { "include": "#numbers" },
+        { "include": "#constants" }
+      ]
+    },
+    "optionName": {
+      "patterns": [
+        {
+          "match": "\\b(java_package|java_outer_classname|java_multiple_files|java_generate_equals_and_hash|java_string_check_utf8|optimize_for|go_package|cc_generic_services|java_generic_services|py_generic_services|php_generic_services|deprecated|cc_enable_arenas|objc_class_prefix|csharp_namespace|swift_prefix|php_class_prefix|php_namespace|php_metadata_namespace|ruby_package)\\b",
+          "name": "support.other.option.proto"
+        },
+        {
+          "match": "\\([\\w.]+\\)",
+          "name": "variable.other.option.proto"
+        }
+      ]
+    },
+    "message": {
+      "begin": "\\b(message)\\s+(\\w+)\\s*\\{",
+      "beginCaptures": {
+        "1": { "name": "keyword.other.message.proto" },
+        "2": { "name": "entity.name.type.message.proto" }
+      },
+      "end": "\\}",
+      "patterns": [
+        { "include": "#comments" },
+        { "include": "#fieldWithOptions" },
+        { "include": "#field" },
+        { "include": "#message" },
+        { "include": "#enum" },
+        { "include": "#oneof" },
+        { "include": "#map" },
+        { "include": "#reserved" },
+        { "include": "#extensions" },
+        { "include": "#option" }
+      ]
+    },
+    "enum": {
+      "begin": "\\b(enum)\\s+(\\w+)\\s*\\{",
+      "beginCaptures": {
+        "1": { "name": "keyword.other.enum.proto" },
+        "2": { "name": "entity.name.type.enum.proto" }
+      },
+      "end": "\\}",
+      "patterns": [
+        { "include": "#comments" },
+        { "include": "#enumField" },
+        { "include": "#option" },
+        { "include": "#reserved" }
+      ]
+    },
+    "enumField": {
+      "match": "\\b(\\w+)\\s*=\\s*(-?\\d+)\\s*(\\[.*\\])?\\s*;",
+      "captures": {
+        "1": { "name": "variable.other.enummember.proto" },
+        "2": { "name": "constant.numeric.proto" },
+        "3": {
+          "patterns": [{ "include": "#fieldOptions" }]
+        }
+      }
+    },
+    "service": {
+      "match": "\\b(service)\\s+(\\w+)\\s*\\{",
+      "captures": {
+        "1": { "name": "keyword.other.service.proto" },
+        "2": { "name": "entity.name.type.service.proto" }
+      }
+    },
+    "serviceOption": {
+      "begin": "\\b(option)\\s+",
+      "beginCaptures": {
+        "1": { "name": "keyword.other.option.proto" }
+      },
+      "end": ";",
+      "patterns": [
+        { "include": "#optionName" },
+        { "include": "#serviceOptionBody" },
+        { "include": "#constants" },
+        { "include": "#strings" }
+      ]
+    },
+    "serviceOptionBody": {
+      "begin": "\\{",
+      "end": "\\}",
+      "patterns": [
+        { "include": "#comments" },
+        { "include": "#serviceOptionBody" },
+        { "include": "#strings" },
+        { "include": "#numbers" },
+        { "include": "#constants" }
+      ]
+    },
+    "rpcDeclaration": {
+      "match": "\\b(rpc)\\s+(\\w+)\\s*\\(\\s*(stream\\s+)?([\\w.]+)\\s*\\)\\s*(returns)\\s*\\(\\s*(stream\\s+)?([\\w.]+)\\s*\\)",
+      "captures": {
+        "1": { "name": "keyword.other.rpc.proto" },
+        "2": { "name": "entity.name.function.proto" },
+        "3": { "name": "keyword.other.stream.proto" },
+        "4": {
+          "patterns": [
+            { "include": "#builtinTypes" },
+            { "include": "#typeName" }
+          ]
+        },
+        "5": { "name": "keyword.other.returns.proto" },
+        "6": { "name": "keyword.other.stream.proto" },
+        "7": {
+          "patterns": [
+            { "include": "#builtinTypes" },
+            { "include": "#typeName" }
+          ]
+        }
+      }
+    },
+    "rpcBodyBraces": {
+      "name": "meta.rpc.body.proto",
+      "begin": "\\{",
+      "end": "\\}",
+      "patterns": [{ "include": "#comments" }, { "include": "#rpcOption" }]
+    },
+    "rpcOption": {
+      "begin": "\\b(option)\\s+",
+      "beginCaptures": {
+        "1": { "name": "keyword.other.option.proto" }
+      },
+      "end": ";",
+      "patterns": [
+        { "include": "#optionName" },
+        { "include": "#rpcOptionBody" },
+        { "include": "#constants" },
+        { "include": "#strings" }
+      ]
+    },
+    "rpcOptionBody": {
+      "begin": "\\{",
+      "end": "\\}",
+      "patterns": [
+        { "include": "#comments" },
+        { "include": "#rpcOptionBody" },
+        { "include": "#strings" },
+        { "include": "#numbers" },
+        { "include": "#constants" }
+      ]
+    },
+    "extend": {
+      "begin": "\\b(extend)\\s+([\\w.]+)\\s*\\{",
+      "beginCaptures": {
+        "1": { "name": "keyword.other.extend.proto" },
+        "2": { "name": "entity.name.type.proto" }
+      },
+      "end": "\\}",
+      "patterns": [
+        { "include": "#comments" },
+        { "include": "#fieldWithOptions" },
+        { "include": "#field" }
+      ]
+    },
+    "oneof": {
+      "begin": "\\b(oneof)\\s+(\\w+)\\s*\\{",
+      "beginCaptures": {
+        "1": { "name": "keyword.other.oneof.proto" },
+        "2": { "name": "entity.name.type.oneof.proto" }
+      },
+      "end": "\\}",
+      "patterns": [
+        { "include": "#comments" },
+        { "include": "#fieldWithOptions" },
+        { "include": "#field" },
+        { "include": "#option" }
+      ]
+    },
+    "map": {
+      "match": "\\b(map)\\s*<\\s*(\\w+)\\s*,\\s*([\\w.]+)\\s*>\\s+(\\w+)\\s*=\\s*(\\d+)\\s*(\\[.*\\])?\\s*;",
+      "captures": {
+        "1": { "name": "keyword.other.map.proto" },
+        "2": { "name": "storage.type.proto" },
+        "3": { "name": "entity.name.type.proto" },
+        "4": { "name": "variable.other.field.proto" },
+        "5": { "name": "constant.numeric.proto" },
+        "6": {
+          "patterns": [{ "include": "#fieldOptions" }]
+        }
+      }
+    },
+    "field": {
+      "match": "\\b(repeated|optional|required)?\\s*([\\w.]+)\\s+(\\w+)\\s*=\\s*(\\d+)\\s*(\\[.*\\])?\\s*;",
+      "captures": {
+        "1": { "name": "keyword.other.field.modifier.proto" },
+        "2": {
+          "patterns": [
+            { "include": "#builtinTypes" },
+            { "include": "#typeName" }
+          ]
+        },
+        "3": { "name": "variable.other.field.proto" },
+        "4": { "name": "constant.numeric.proto" },
+        "5": {
+          "patterns": [{ "include": "#fieldOptions" }]
+        }
+      }
+    },
+    "fieldWithOptions": {
+      "begin": "\\b(repeated|optional|required)?\\s*([\\w.]+)\\s+(\\w+)\\s*=\\s*(\\d+)\\s*\\[",
+      "beginCaptures": {
+        "1": { "name": "keyword.other.field.modifier.proto" },
+        "2": {
+          "patterns": [
+            { "include": "#builtinTypes" },
+            { "include": "#typeName" }
+          ]
+        },
+        "3": { "name": "variable.other.field.proto" },
+        "4": { "name": "constant.numeric.proto" }
+      },
+      "end": "\\]\\s*;",
+      "patterns": [
+        { "include": "#comments" },
+        { "include": "#optionName" },
+        { "include": "#constants" },
+        { "include": "#strings" },
+        { "include": "#numbers" }
+      ]
+    },
+    "fieldModifier": {
+      "match": "\\b(repeated|optional|required)\\b",
+      "name": "keyword.other.field.modifier.proto"
+    },
+    "reserved": {
+      "match": "\\b(reserved)\\s+(.+);",
+      "captures": {
+        "1": { "name": "keyword.other.reserved.proto" },
+        "2": {
+          "patterns": [
+            { "include": "#strings" },
+            { "include": "#numbers" },
+            {
+              "match": "\\bto\\b",
+              "name": "keyword.other.to.proto"
+            },
+            {
+              "match": "\\bmax\\b",
+              "name": "keyword.other.max.proto"
+            }
+          ]
+        }
+      }
+    },
+    "extensions": {
+      "match": "\\b(extensions)\\s+(.+);",
+      "captures": {
+        "1": { "name": "keyword.other.extensions.proto" },
+        "2": {
+          "patterns": [
+            { "include": "#numbers" },
+            {
+              "match": "\\bto\\b",
+              "name": "keyword.other.to.proto"
+            },
+            {
+              "match": "\\bmax\\b",
+              "name": "keyword.other.max.proto"
+            }
+          ]
+        }
+      }
+    },
+    "fieldOptions": {
+      "patterns": [
+        {
+          "match": "\\b(default|packed|deprecated|json_name)\\b",
+          "name": "support.other.field-option.proto"
+        },
+        { "include": "#constants" },
+        { "include": "#strings" },
+        { "include": "#numbers" }
+      ]
+    },
+    "builtinTypes": {
+      "match": "\\b(double|float|int32|int64|uint32|uint64|sint32|sint64|fixed32|fixed64|sfixed32|sfixed64|bool|string|bytes)\\b",
+      "name": "storage.type.proto"
+    },
+    "typeName": {
+      "match": "\\.?[A-Z]\\w*(\\.\\w+)*",
+      "name": "entity.name.type.proto"
+    },
+    "constants": {
+      "patterns": [
+        {
+          "match": "\\b(true|false)\\b",
+          "name": "constant.language.boolean.proto"
+        },
+        {
+          "match": "\\b(SPEED|CODE_SIZE|LITE_RUNTIME)\\b",
+          "name": "constant.language.optimize.proto"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.proto",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.proto",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.single.proto",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            {
+              "name": "constant.character.escape.proto",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "match": "\\b0[xX][0-9a-fA-F]+\\b",
+          "name": "constant.numeric.hex.proto"
+        },
+        {
+          "match": "\\b0[0-7]+\\b",
+          "name": "constant.numeric.octal.proto"
+        },
+        {
+          "match": "\\b-?\\d+(\\.\\d+)?([eE][+-]?\\d+)?\\b",
+          "name": "constant.numeric.proto"
+        }
+      ]
+    }
+  }
+}
