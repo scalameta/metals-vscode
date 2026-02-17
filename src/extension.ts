@@ -243,15 +243,67 @@ function registerBloopInstance(): void {
   if (!bloopInstancesDir || currentBloopInstanceId) {
     return;
   }
+  pruneStaleBloopInstances();
   try {
     if (!fs.existsSync(bloopInstancesDir)) {
       fs.mkdirSync(bloopInstancesDir, { recursive: true });
     }
     currentBloopInstanceId = crypto.randomBytes(16).toString("hex");
     const markerPath = path.join(bloopInstancesDir, currentBloopInstanceId);
-    fs.writeFileSync(markerPath, "", "utf8");
+    fs.writeFileSync(markerPath, process.pid.toString(), "utf8");
   } catch {
     currentBloopInstanceId = undefined;
+  }
+}
+
+/**
+ * Prune stale marker files from crashed VS Code instances.
+ */
+function pruneStaleBloopInstances(): void {
+  if (!bloopInstancesDir || !fs.existsSync(bloopInstancesDir)) {
+    return;
+  }
+  try {
+    const files = fs.readdirSync(bloopInstancesDir);
+    for (const file of files) {
+      const markerPath = path.join(bloopInstancesDir, file);
+      if (file === currentBloopInstanceId) {
+        continue;
+      }
+      try {
+        const pidStr = fs.readFileSync(markerPath, "utf8").trim();
+        const pid = Number(pidStr);
+        if (isNaN(pid)) {
+          fs.unlinkSync(markerPath);
+        } else {
+          // process.kill(pid, 0) tests the existence of the process and throws an error if it does not exist
+          process.kill(pid, 0);
+        }
+      } catch (err: unknown) {
+        const code =
+          err instanceof Error
+            ? (err as NodeJS.ErrnoException).code
+            : undefined;
+        // ESRCH means the process does not exist
+        // EACCES or EPERM means the process exists but we lack permission to query it (e.g., system process on Windows)
+        if (
+          code === "ESRCH" ||
+          code === "ENOENT" ||
+          code === "EACCES" ||
+          code === "EPERM"
+        ) {
+          try {
+            if (fs.existsSync(markerPath)) {
+              fs.unlinkSync(markerPath);
+            }
+          } catch {
+            // ignore
+          }
+        }
+      }
+    }
+  } catch {
+    // ignore readdir errors
   }
 }
 
@@ -269,6 +321,7 @@ function unregisterBloopInstanceAndCheckIfLast(): boolean {
       fs.unlinkSync(markerPath);
     }
     currentBloopInstanceId = undefined;
+    pruneStaleBloopInstances();
     const remaining = fs.readdirSync(bloopInstancesDir);
     return remaining.length === 0;
   } catch {
@@ -622,7 +675,6 @@ async function launchMetals(
   );
 
   currentClient = client;
-  registerBloopInstance();
   function registerCommand(
     command: string,
     callback: (...args: any[]) => unknown,
@@ -723,6 +775,7 @@ async function launchMetals(
 
   return client.start().then(
     () => {
+      registerBloopInstance();
       const doctorProvider = new DoctorProvider(client, context);
       let stacktrace: WebviewPanel | undefined;
 
