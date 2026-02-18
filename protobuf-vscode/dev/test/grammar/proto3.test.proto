@@ -63,7 +63,7 @@ service ExampleService {
 
 syntax = "proto3";
 // <--- keyword.other.syntax.proto
-//          ^^^^^^^^^ string.quoted.double.proto
+//        ^^^^^^ string.quoted.double.proto
 
 package example.api;
 // <--- keyword.other.package.proto
