@@ -49,6 +49,7 @@
     "onDebugResolve:scala",
     "onLanguage:scala",
     "onLanguage:java",
+    "onLanguage:twirl",
     "workspaceContains:build.sbt",
     "workspaceContains:build.sc",
     "workspaceContains:build.mill",
@@ -134,6 +135,22 @@
         "icon": {
           "dark": "icons/scalameta-logo.png",
           "light": "icons/scalameta-logo.png"
+        }
+      },
+      {
+        "id": "twirl",
+        "aliases": [
+          "Twirl"
+        ],
+        "extensions": [
+          ".scala.html",
+          ".scala.xml",
+          ".scala.js",
+          ".scala.txt"
+        ],
+        "icon": {
+          "dark": "icons/file_type_scala.svg",
+          "light": "icons/file_type_scala.svg"
         }
       }
     ],

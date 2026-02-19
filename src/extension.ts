@@ -477,6 +477,7 @@ async function launchMetals(
     documentSelector: [
       { scheme: "file", language: "scala" },
       { scheme: "file", language: "java" },
+      { scheme: "file", language: "twirl" },
       { scheme: "jar", language: "scala" },
       { scheme: "jar", language: "java" },
     ],
@@ -1585,6 +1586,7 @@ function isSupportedLanguage(languageId: TextDocument["languageId"]): boolean {
     case "scala":
     case "sc":
     case "java":
+    case "twirl":
       return true;
     default:
       return false;
