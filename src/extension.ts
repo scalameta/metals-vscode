@@ -90,6 +90,7 @@ import { getJavaOptions } from "./getJavaOptions";
 import { getJavaConfig, JavaConfig } from "./getJavaConfig";
 import { fetchMetals } from "./fetchMetals";
 import { getServerOptions } from "./getServerOptions";
+import { isSupportedLanguage } from "./isSupportedLanguage";
 import { readRequiredVmOptions } from "./readRequiredVmOptions";
 import { MetalsInitializationOptions } from "./interfaces/MetalsInitializationOptions";
 import { restartServer } from "./commands/restartServer";
@@ -1570,18 +1571,6 @@ function detectConfigurationChanges() {
           }
         }),
   );
-}
-
-function isSupportedLanguage(languageId: TextDocument["languageId"]): boolean {
-  switch (languageId) {
-    case "scala":
-    case "sc":
-    case "java":
-    case "twirl":
-      return true;
-    default:
-      return false;
-  }
 }
 
 // NOTE(gabro): we would normally use the `configurationDefaults` contribution point in the
