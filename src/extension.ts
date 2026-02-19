@@ -97,6 +97,7 @@ import { getServerOptions } from "./getServerOptions";
 import { isSupportedLanguage } from "./isSupportedLanguage";
 import { readRequiredVmOptions } from "./readRequiredVmOptions";
 import { MetalsInitializationOptions } from "./interfaces/MetalsInitializationOptions";
+import { ServerOptions } from "./interfaces/ServerOptions";
 import { restartServer } from "./commands/restartServer";
 import { ServerCommands } from "./interfaces/ServerCommands";
 import { ClientCommands } from "./interfaces/ClientCommands";
@@ -180,6 +181,7 @@ function buildDocumentSelectors(protobufEnabled: boolean): DocumentSelector {
 }
 
 export async function activate(context: ExtensionContext): Promise<MetalsApi> {
+  const activationTimestamp = new Date().toISOString();
   bloopInstancesDir = path.join(
     context.globalStorageUri.fsPath,
     BLOOP_INSTANCES_DIR_NAME,
@@ -215,6 +217,7 @@ export async function activate(context: ExtensionContext): Promise<MetalsApi> {
           context,
           serverVersion,
           javaVersion,
+          activationTimestamp,
           forceCoursierJar,
         );
       } catch (err) {
@@ -444,16 +447,76 @@ async function fetchAndLaunchMetals(
   context: ExtensionContext,
   serverVersion: string,
   javaVersion: JavaVersion,
+  activationTimestamp?: string,
   forceCoursierJar = false,
 ) {
+  const resolvedServerOptions = await fetchServerOptions(
+    context,
+    serverVersion,
+    javaVersion,
+    activationTimestamp,
+    forceCoursierJar
+  );
+  if (!resolvedServerOptions) {
+    return;
+  }
+  const { serverOptions, canRetryWithJar, javaConfig, serverProperties } =
+    resolvedServerOptions;
+
+  return launchMetals(
+    outputChannel,
+    context,
+    serverOptions,
+    serverVersion
+  ).catch((reason): Promise<any> => {
+    outputChannel.appendLine("Launching Metals failed with the following:");
+    outputChannel.appendLine(reason.message);
+    outputChannel.appendLine(
+      debugInformation(serverVersion, serverProperties, javaConfig)
+    );
+
+    if (canRetryWithJar) {
+      outputChannel.appendLine(
+        "Trying again with the embedded coursier. This might take longer."
+      );
+      return fetchAndLaunchMetals(
+        context,
+        serverVersion,
+        javaVersion,
+        activationTimestamp,
+        true
+      );
+    } else {
+      return Promise.reject(reason);
+    }
+  });
+}
+
+interface ResolvedServerOptions {
+  canRetryWithJar: boolean;
+  javaConfig: JavaConfig;
+  serverProperties: string[];
+  serverOptions: ServerOptions;
+}
+
+async function fetchServerOptions(
+  context: ExtensionContext,
+  serverVersion: string,
+  javaVersion: JavaVersion,
+  activationTimestamp?: string,
+  forceCoursierJar = false,
+  fetchTtl = "Inf"
+): Promise<ResolvedServerOptions | undefined> {
   outputChannel.appendLine(`Metals version: ${serverVersion}`);
 
+  const currentConfig = workspace.getConfiguration("metals");
+
   /* eslint-disable @typescript-eslint/no-non-null-assertion */
-  const serverProperties = config.get<string[]>("serverProperties")!;
-  const customRepositories = config.get<string[]>("customRepositories")!;
+  const serverProperties = currentConfig.get<string[]>("serverProperties")!;
+  const customRepositories = currentConfig.get<string[]>("customRepositories")!;
   /* eslint-enable @typescript-eslint/no-non-null-assertion */
 
-  const coursierMirror = getCoursierMirrorPath(config);
+  const coursierMirror = getCoursierMirrorPath(currentConfig);
 
   const metalsDirPath = metalsDir(ConfigurationTarget.Global);
   const workspaceRoot = workspace.workspaceFolders
@@ -481,7 +544,14 @@ async function fetchAndLaunchMetals(
       outputChannel.appendLine(
         "Trying again with the embedded coursier. This might take longer.",
       );
-      return fetchAndLaunchMetals(context, serverVersion, javaVersion, true);
+      return fetchServerOptions(
+        context,
+        serverVersion,
+        javaVersion,
+        activationTimestamp,
+        true,
+        fetchTtl
+      );
     } else {
       return Promise.reject(error);
     }
@@ -517,6 +587,7 @@ async function fetchAndLaunchMetals(
     serverProperties: filteredServerProperties,
     javaConfig,
     outputChannel,
+    ttl: fetchTtl,
   });
 
   const title = `Downloading Metals v${serverVersion}`;
@@ -525,28 +596,51 @@ async function fetchAndLaunchMetals(
       return trackDownloadProgress(title, outputChannel, childProcess.promise);
     })
     .then(
-      (classpath) => {
-        return launchMetals(
-          outputChannel,
-          context,
+      async (classpath) => {
+        const requiredVmOptions = await readRequiredVmOptions(classpath);
+        if (requiredVmOptions.length > 0) {
+          outputChannel.appendLine(
+            `Using required VM options from Metals JAR: ${requiredVmOptions.join(" ")}`,
+          );
+        }
+
+        const allClientExtensions = new Set<string>(["kilocode.kilo-code"]);
+
+        const activeClientExtensions = extensions.all
+          .filter((e) => e.isActive)
+          .map((e) => e.id)
+          .filter((e) => allClientExtensions.has(e));
+
+        const serverOptions = getServerOptions(
           classpath,
           filteredServerProperties,
+          "vscode",
           javaConfig,
-          serverVersion,
-        ).catch((reason): Promise<any> => {
+          requiredVmOptions,
+          activeClientExtensions,
+          activationTimestamp,
+        );
+
+        const commandArgs = [
+          serverOptions.run.command,
+          ...(serverOptions.run.args || []),
+        ];
+        const isDebugLogging = (serverOptions.run.args || []).some((arg) =>
+          arg.includes("-Dmetals.loglevel=debug"),
+        );
+
+        if (isDebugLogging) {
           outputChannel.appendLine(
-            "Launching Metals failed with the following:",
+            `Launching Metals with command: ${commandArgs.join(" ")}`,
           );
-          outputChannel.appendLine(reason.message);
-          outputChannel.appendLine(
-            debugInformation(
-              serverVersion,
-              filteredServerProperties,
-              javaConfig,
-            ),
-          );
-          return retry(reason);
-        });
+        }
+
+        return {
+          canRetryWithJar,
+          javaConfig,
+          serverProperties: filteredServerProperties,
+          serverOptions,
+        };
       },
       (reason) => {
         if (reason instanceof Error) {
@@ -597,51 +691,12 @@ async function fetchAndLaunchMetals(
 async function launchMetals(
   outputChannel: OutputChannel,
   context: ExtensionContext,
-  metalsClasspath: string,
-  serverProperties: string[],
-  javaConfig: JavaConfig,
+  serverOptions: ServerOptions,
   serverVersion: string,
 ) {
   // Make editing Scala docstrings slightly nicer.
   enableScaladocIndentation();
 
-  // Read required VM options from the Metals JAR (META-INF/metals-required-vm-options.txt)
-  const requiredVmOptions = await readRequiredVmOptions(metalsClasspath);
-  if (requiredVmOptions.length > 0) {
-    outputChannel.appendLine(
-      `Using required VM options from Metals JAR: ${requiredVmOptions.join(" ")}`,
-    );
-  }
-
-  const allClientExtensions = new Set<string>(["kilocode.kilo-code"]);
-
-  const activeClientExtensions = extensions.all
-    .filter((e) => e.isActive)
-    .map((e) => e.id)
-    .filter((e) => allClientExtensions.has(e));
-
-  const serverOptions = getServerOptions(
-    metalsClasspath,
-    serverProperties,
-    "vscode",
-    javaConfig,
-    requiredVmOptions,
-    activeClientExtensions,
-  );
-
-  const commandArgs = [
-    serverOptions.run.command,
-    ...(serverOptions.run.args || []),
-  ];
-  const isDebugLogging = (serverOptions.run.args || []).some((arg) =>
-    arg.includes("-Dmetals.loglevel=debug"),
-  );
-
-  if (isDebugLogging) {
-    outputChannel.appendLine(
-      `Launching Metals with command: ${commandArgs.join(" ")}`,
-    );
-  }
 
   const initializationOptions: MetalsInitializationOptions = {
     compilerOptions: {
@@ -810,15 +865,39 @@ async function launchMetals(
     await decodeAndShowFile(client, metalsFileProvider, uri, "tasty-decoded");
   });
 
-  registerCommand(
-    "metals.restart-server",
-    restartServer(
-      // NOTE(gabro): this is due to mismatching versions of vscode-languageserver-protocol
-      // which are not trivial to fix, currently
-      client,
-      window,
-    ),
+  const restartMetals = restartServer(
+    // NOTE(gabro): this is due to mismatching versions of vscode-languageserver-protocol
+    // which are not trivial to fix, currently
+    client,
+    window,
   );
+  registerCommand("metals.restartServer", async () => {
+    const refreshedConfig = workspace.getConfiguration("metals");
+    const refreshedServerVersion = getServerVersion(refreshedConfig, context);
+    const refreshedJavaVersion = getJavaVersionFromConfig() || "17";
+    const refreshedServerOptions = await window.withProgress(
+      {
+        location: ProgressLocation.Window,
+        title: `Restarting Metals server...`,
+        cancellable: false
+      },
+      () =>
+        fetchServerOptions(
+          context,
+          refreshedServerVersion,
+          refreshedJavaVersion,
+          /* activationTimestamp */ undefined, // Not relevant for restart
+          false,
+          "0s"
+        )
+    );
+    if (!refreshedServerOptions) {
+      return;
+    }
+    serverOptions.run = refreshedServerOptions.serverOptions.run;
+    serverOptions.debug = refreshedServerOptions.serverOptions.debug;
+    await restartMetals();
+  });
 
   registerCommand(
     "metals.show-release-notes",
@@ -1074,7 +1153,10 @@ async function launchMetals(
       context.subscriptions.push(disableTestExplorer);
       context.subscriptions.push(testManager.testController);
 
-      registerCommand("metals.create-launch-configuration", async (testItem) => await createLaunchConfig(testItem));
+      registerCommand(
+        "metals.create-launch-configuration",
+        async (testItem) => await createLaunchConfig(testItem)
+      );
 
       // Handle the metals/executeClientCommand extension notification.
       const executeClientCommandDisposable = client.onNotification(

@@ -10,6 +10,7 @@ export function getServerOptions(
   javaConfig: JavaConfig,
   requiredVmOptions: string[] = [],
   activeClientExtensions: string[] = [],
+  activationTimestamp?: string,
 ): ServerOptions {
   const baseProperties = [
     "-Xss4m",
@@ -36,6 +37,9 @@ export function getServerOptions(
         `-Dmetals.client-extensions=${activeClientExtensions.join(",")}`,
       );
     }
+  }
+  if (activationTimestamp) {
+    baseProperties.push(`-Dmetals.activation-timestamp=${activationTimestamp}`);
   }
 
   const mainArgs = ["-classpath", metalsClasspath, "scala.meta.metals.Main"];
