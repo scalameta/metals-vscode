@@ -70,6 +70,12 @@ export const ServerCommands = {
   DoctorRun: "doctor-run",
   /** Decode a file to human readable format.  E.g. class, semanticdb */
   DecodeFile: "file-decode",
+  /** Get file system stat for the specified uri. */
+  FileSystemStat: "filesystem-stat",
+  /** Read directory for the specified uri. */
+  FileSystemReadDirectory: "filesystem-read-directory",
+  /** Read file for the specified uri. */
+  FileSystemReadFile: "filesystem-read-file",
   /** Retrieve a list of all build targets */
   ListBuildTargets: "list-build-targets",
   /**

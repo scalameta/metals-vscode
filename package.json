@@ -53,6 +53,7 @@
     "onLanguage:twirl-xml",
     "onLanguage:twirl-js",
     "onLanguage:twirl-txt",
+    "onFileSystem:metalsfs",
     "workspaceContains:build.sbt",
     "workspaceContains:build.sc",
     "workspaceContains:build.mill",
@@ -366,6 +367,12 @@
           "default": false,
           "scope": "window",
           "markdownDescription": "Enable best effort mode for Metals in Scala 3. If enabled, Metals will try to provide most up to date information from the codebase even if it's not compiling."
+        },
+        "metals.experimental.librariesFileSystem": {
+          "type": "boolean",
+          "default": false,
+          "scope": "window",
+          "markdownDescription": "(Experimental) Show project dependency JARs and JDK sources as a virtual folder in the Explorer view. Restart Metals after toggling."
         },
         "metals.defaultShell": {
           "type": "string",
@@ -777,6 +784,11 @@
         "title": "Show release notes"
       },
       {
+        "command": "metals.show-libraries-folder",
+        "category": "Metals",
+        "title": "Show libraries folder in file explorer"
+      },
+      {
         "command": "metals.scalafix-run",
         "category": "Metals",
         "title": "Run all Scalafix rules"
@@ -1109,6 +1121,10 @@
         {
           "command": "metals.show-release-notes",
           "when": "metals:enabled"
+        },
+        {
+          "command": "metals.show-libraries-folder",
+          "when": "metals:enabled && config.metals.experimental.librariesFileSystem"
         },
         {
           "command": "metals.scalafix-run",
