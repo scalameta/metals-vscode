@@ -397,6 +397,12 @@
           "type": "boolean",
           "markdownDescription": "If true, Metals will not generate a `project/metals.sbt` file under the assumption that sbt-bloop is already manually installed in the sbt build. Build import will fail with a 'not valid command bloopInstall' error in case Bloop is not manually installed in the build when using this option."
         },
+        "metals.shutdownBloopOnEditorClose": {
+          "type": "boolean",
+          "default": false,
+          "scope": "machine",
+          "markdownDescription": "When enabled, when the last VS Code window with Metals is closed the extension will ask Metals to shut down the build server (Bloop). With multiple windows open, Bloop is only shut down when the last one closes. Machine-scoped because there is one Bloop process per machine. Disable if you run Bloop manually or want it to keep running after closing the editor."
+        },
         "metals.customRepositories": {
           "type": "array",
           "items": {

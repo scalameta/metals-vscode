@@ -1,3 +1,4 @@
+import * as crypto from "crypto";
 import * as path from "path";
 import { ChildProcessPromise } from "promisify-child-process";
 import {
@@ -123,6 +124,11 @@ const outputChannel = window.createOutputChannel("Metals");
 let treeViews: MetalsTreeViews | undefined;
 let currentClient: LanguageClient | undefined;
 
+/** Machine-scoped directory for tracking VS Code instances that have Metals (Bloop) running. */
+let bloopInstancesDir: string | undefined;
+/** This window's instance id; used in deactivate to remove our marker and detect last instance. */
+let currentBloopInstanceId: string | undefined;
+
 // Inline needs to be first to be shown always first
 const inlineDecorationType: TextEditorDecorationType =
   window.createTextEditorDecorationType({
@@ -141,7 +147,13 @@ export interface MetalsApi {
   currentLanguageClient(): LanguageClient | undefined;
 }
 
+const BLOOP_INSTANCES_DIR_NAME = "bloop-instances";
+
 export async function activate(context: ExtensionContext): Promise<MetalsApi> {
+  bloopInstancesDir = path.join(
+    context.globalStorageUri.fsPath,
+    BLOOP_INSTANCES_DIR_NAME,
+  );
   // Register copy and paste hooks for Scala files
   registerCopyPasteHooks(context, () => currentClient);
   const serverVersion = getServerVersion(config, context);
@@ -220,8 +232,159 @@ function migrateOldSettings(): void {
     }
   });
 }
+const BLOOP_DISCONNECT_TIMEOUT_MS = 5000;
+
+/**
+ * Register this window as an instance that has Metals (and possibly Bloop) running.
+ * Call once when the language client is set (machine-scoped: one Bloop per user).
+ */
+function registerBloopInstance(): void {
+  const shutdownBloop =
+    workspace
+      .getConfiguration("metals")
+      .get<boolean>("shutdownBloopOnEditorClose") ?? false;
+  if (!shutdownBloop || !bloopInstancesDir || currentBloopInstanceId) {
+    return;
+  }
+  pruneStaleBloopInstances();
+  try {
+    if (!fs.existsSync(bloopInstancesDir)) {
+      fs.mkdirSync(bloopInstancesDir, { recursive: true });
+    }
+    currentBloopInstanceId = crypto.randomBytes(16).toString("hex");
+    const markerPath = path.join(bloopInstancesDir, currentBloopInstanceId);
+    fs.writeFileSync(markerPath, process.pid.toString(), "utf8");
+  } catch {
+    currentBloopInstanceId = undefined;
+  }
+}
+
+/**
+ * Prune stale marker files from crashed VS Code instances.
+ * @returns the number of remaining instance markers.
+ */
+function pruneStaleBloopInstances(): number {
+  if (!bloopInstancesDir || !fs.existsSync(bloopInstancesDir)) {
+    return 0;
+  }
+  try {
+    const files = fs.readdirSync(bloopInstancesDir);
+    for (const file of files) {
+      const markerPath = path.join(bloopInstancesDir, file);
+      if (file === currentBloopInstanceId) {
+        continue;
+      }
+      let pidStr = "unknown";
+      try {
+        pidStr = fs.readFileSync(markerPath, "utf8").trim();
+        const pid = Number(pidStr);
+        if (isNaN(pid) || pid <= 0) {
+          fs.unlinkSync(markerPath);
+        } else {
+          // process.kill(pid, 0) tests the existence of the process and throws an error if it does not exist
+          process.kill(pid, 0);
+        }
+      } catch (err: unknown) {
+        const code =
+          err instanceof Error
+            ? (err as NodeJS.ErrnoException).code
+            : undefined;
+        // ESRCH means the process does not exist
+        // EACCES or EPERM means the process exists but we lack permission to query it (e.g., system process on Windows)
+        if (
+          code === "ESRCH" ||
+          code === "ENOENT" ||
+          code === "EACCES" ||
+          code === "EPERM"
+        ) {
+          try {
+            if (fs.existsSync(markerPath)) {
+              fs.unlinkSync(markerPath);
+            }
+          } catch (unlinkErr) {
+            outputChannel.appendLine(
+              `Metals: Failed to remove stale Bloop instance marker ${markerPath}: ${unlinkErr}`,
+            );
+          }
+        } else {
+          outputChannel.appendLine(
+            `Metals: Error checking Bloop instance process ${pidStr}: ${err}`,
+          );
+        }
+      }
+    }
+    return fs.readdirSync(bloopInstancesDir).length;
+  } catch (err) {
+    outputChannel.appendLine(
+      `Metals: Failed to prune stale Bloop instances: ${err}`,
+    );
+    return 0;
+  }
+}
+
+/**
+ * Remove this window's instance marker and return true if no other instances remain.
+ * Only then should we shut down Bloop (last editor closed).
+ */
+function unregisterBloopInstanceAndCheckIfLast(): boolean {
+  if (!bloopInstancesDir || !currentBloopInstanceId) {
+    return false;
+  }
+  const markerPath = path.join(bloopInstancesDir, currentBloopInstanceId);
+  try {
+    if (fs.existsSync(markerPath)) {
+      fs.unlinkSync(markerPath);
+    }
+    currentBloopInstanceId = undefined;
+    const remainingCount = pruneStaleBloopInstances();
+    return remainingCount === 0;
+  } catch {
+    currentBloopInstanceId = undefined;
+    return false;
+  }
+}
+
 export function deactivate(): Thenable<void> | undefined {
-  return currentClient?.stop();
+  const client = currentClient;
+  if (!client) {
+    return undefined;
+  }
+  const shutdownBloop =
+    workspace
+      .getConfiguration("metals")
+      .get<boolean>("shutdownBloopOnEditorClose") ?? false;
+
+  const isLastInstance = unregisterBloopInstanceAndCheckIfLast();
+
+  if (!shutdownBloop || !isLastInstance) {
+    return client.stop();
+  }
+
+  let timerId: NodeJS.Timeout | undefined;
+  const timeout = (ms: number) =>
+    new Promise<never>((_, reject) => {
+      timerId = setTimeout(() => reject(new Error("timeout")), ms);
+    });
+
+  const disconnectAndShutdown = client.sendRequest(ExecuteCommandRequest.type, {
+    command: ServerCommands.BuildDisconnectAndShutdown,
+  });
+
+  return Promise.race([
+    disconnectAndShutdown,
+    timeout(BLOOP_DISCONNECT_TIMEOUT_MS),
+  ])
+    .catch(() => {
+      outputChannel.appendLine(
+        "Metals: build-disconnect-and-shutdown timed out or failed during shutdown.",
+      );
+    })
+    .finally(() => {
+      if (timerId) {
+        clearTimeout(timerId);
+      }
+      return client.stop();
+    });
 }
 
 function debugInformation(
@@ -636,6 +799,7 @@ async function launchMetals(
 
   return client.start().then(
     () => {
+      registerBloopInstance();
       const doctorProvider = new DoctorProvider(client, context);
       let stacktrace: WebviewPanel | undefined;
 
