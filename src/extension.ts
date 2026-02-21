@@ -240,7 +240,11 @@ const BLOOP_DISCONNECT_TIMEOUT_MS = 5000;
  * Call once when the language client is set (machine-scoped: one Bloop per user).
  */
 function registerBloopInstance(): void {
-  if (!bloopInstancesDir || currentBloopInstanceId) {
+  const shutdownBloop =
+    workspace
+      .getConfiguration("metals")
+      .get<boolean>("shutdownBloopOnEditorClose") ?? false;
+  if (!shutdownBloop || !bloopInstancesDir || currentBloopInstanceId) {
     return;
   }
   pruneStaleBloopInstances();
@@ -258,10 +262,11 @@ function registerBloopInstance(): void {
 
 /**
  * Prune stale marker files from crashed VS Code instances.
+ * @returns the number of remaining instance markers.
  */
-function pruneStaleBloopInstances(): void {
+function pruneStaleBloopInstances(): number {
   if (!bloopInstancesDir || !fs.existsSync(bloopInstancesDir)) {
-    return;
+    return 0;
   }
   try {
     const files = fs.readdirSync(bloopInstancesDir);
@@ -270,10 +275,11 @@ function pruneStaleBloopInstances(): void {
       if (file === currentBloopInstanceId) {
         continue;
       }
+      let pidStr = "unknown";
       try {
-        const pidStr = fs.readFileSync(markerPath, "utf8").trim();
+        pidStr = fs.readFileSync(markerPath, "utf8").trim();
         const pid = Number(pidStr);
-        if (isNaN(pid)) {
+        if (isNaN(pid) || pid <= 0) {
           fs.unlinkSync(markerPath);
         } else {
           // process.kill(pid, 0) tests the existence of the process and throws an error if it does not exist
@@ -296,14 +302,24 @@ function pruneStaleBloopInstances(): void {
             if (fs.existsSync(markerPath)) {
               fs.unlinkSync(markerPath);
             }
-          } catch {
-            // ignore
+          } catch (unlinkErr) {
+            outputChannel.appendLine(
+              `Metals: Failed to remove stale Bloop instance marker ${markerPath}: ${unlinkErr}`,
+            );
           }
+        } else {
+          outputChannel.appendLine(
+            `Metals: Error checking Bloop instance process ${pidStr}: ${err}`,
+          );
         }
       }
     }
-  } catch {
-    // ignore readdir errors
+    return fs.readdirSync(bloopInstancesDir).length;
+  } catch (err) {
+    outputChannel.appendLine(
+      `Metals: Failed to prune stale Bloop instances: ${err}`,
+    );
+    return 0;
   }
 }
 
@@ -321,9 +337,8 @@ function unregisterBloopInstanceAndCheckIfLast(): boolean {
       fs.unlinkSync(markerPath);
     }
     currentBloopInstanceId = undefined;
-    pruneStaleBloopInstances();
-    const remaining = fs.readdirSync(bloopInstancesDir);
-    return remaining.length === 0;
+    const remainingCount = pruneStaleBloopInstances();
+    return remainingCount === 0;
   } catch {
     currentBloopInstanceId = undefined;
     return false;
@@ -339,17 +354,23 @@ export function deactivate(): Thenable<void> | undefined {
     workspace
       .getConfiguration("metals")
       .get<boolean>("shutdownBloopOnEditorClose") ?? false;
+
   const isLastInstance = unregisterBloopInstanceAndCheckIfLast();
+
   if (!shutdownBloop || !isLastInstance) {
     return client.stop();
   }
+
+  let timerId: NodeJS.Timeout | undefined;
   const timeout = (ms: number) =>
-    new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error("timeout")), ms),
-    );
+    new Promise<never>((_, reject) => {
+      timerId = setTimeout(() => reject(new Error("timeout")), ms);
+    });
+
   const disconnectAndShutdown = client.sendRequest(ExecuteCommandRequest.type, {
     command: ServerCommands.BuildDisconnectAndShutdown,
   });
+
   return Promise.race([
     disconnectAndShutdown,
     timeout(BLOOP_DISCONNECT_TIMEOUT_MS),
@@ -359,7 +380,12 @@ export function deactivate(): Thenable<void> | undefined {
         "Metals: build-disconnect-and-shutdown timed out or failed during shutdown.",
       );
     })
-    .finally(() => client.stop());
+    .finally(() => {
+      if (timerId) {
+        clearTimeout(timerId);
+      }
+      return client.stop();
+    });
 }
 
 function debugInformation(
