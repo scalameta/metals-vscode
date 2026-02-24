@@ -113,6 +113,7 @@ import {
   MetalsInputBoxType,
 } from "./interfaces/MetalsInputBox";
 import { MetalsQuickPickType } from "./interfaces/MetalsQuickPick";
+import { MetalsReadClipboardType } from "./interfaces/MetalsReadClipboard";
 import { MetalsSlowTaskType } from "./interfaces/MetalsSlowTask";
 import { downloadProgress } from "./downloadProgress";
 import { detectLaunchConfigurationChanges } from "./detectLaunchConfigurationChanges";
@@ -464,6 +465,7 @@ async function launchMetals(
     openFilesOnRenameProvider: true,
     openNewWindowProvider: true,
     quickPickProvider: true,
+    readClipboardProvider: true,
     slowTaskProvider: true,
     statusBarProvider: "on",
     treeViewProvider: true,
@@ -1346,6 +1348,15 @@ async function launchMetals(
               return { itemId: result.id };
             }
           });
+      });
+
+      client.onRequest(MetalsReadClipboardType, async () => {
+        try {
+          const text = await env.clipboard.readText();
+          return { value: text ?? null };
+        } catch {
+          return { value: null };
+        }
       });
 
       // Long running tasks such as "import project" trigger start a progress
