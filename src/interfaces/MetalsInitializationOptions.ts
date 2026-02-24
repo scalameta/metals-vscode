@@ -27,6 +27,7 @@ export interface MetalsInitializationOptions {
   isHttpEnabled?: boolean;
   openFilesOnRenameProvider?: boolean;
   quickPickProvider?: boolean;
+  readClipboardProvider?: boolean;
   renameFileThreshold?: number;
   slowTaskProvider?: boolean;
   statusBarProvider?: "on" | "off" | "log-message" | "show-message";
