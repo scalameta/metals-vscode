@@ -81,6 +81,12 @@
         ]
       },
       {
+        "id": "markdown",
+        "extensions": [
+          ".explain"
+        ]
+      },
+      {
         "id": "javap",
         "extensions": [
           ".javap"
