@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
   "name": "routes",
   "scopeName": "source.routes",
-  "extensions": ["routes"],
+  "fileTypes": ["routes"],
   "patterns": [
     { "include": "#comments" },
     { "include": "#modifiers" },
@@ -51,6 +51,50 @@
         }
       ]
     },
+    "parentheses-group": {
+      "begin": "\\(",
+      "end": "\\)",
+      "name": "meta.group.arguments.routes",
+      "patterns": [
+        { "include": "#parentheses-group" },
+        { "include": "#bracket-generic" },
+        {
+          "match": "\\b[A-Za-z_][A-Za-z0-9_]*\\s*=",
+          "name": "variable.parameter.routes"
+        },
+        {
+          "match": "\\\".*?\\\"|'.*?'",
+          "name": "string.quoted.routes"
+        },
+        {
+          "match": "\\b([A-Za-z_][A-Za-z0-9_]*)(\\.[A-Za-z_][A-Za-z0-9_]*)+(?!\\s*=)",
+          "name": "entity.name.type.class.routes"
+        },
+        {
+          "match": "\\b[A-Za-z_][A-Za-z0-9_]*\\b(?!\\s*=)",
+          "name": "variable.other.argument.routes"
+        }
+      ]
+    },
+    "bracket-generic": {
+      "begin": "\\b([A-Za-z_][A-Za-z0-9_]*)\\[",
+      "beginCaptures": {
+        "1": { "name": "storage.type.generic.routes" }
+      },
+      "end": "\\]",
+      "patterns": [
+        { "include": "#bracket-generic" },
+        { "include": "#parentheses-group" },
+        {
+          "match": "\\b[A-Za-z_][A-Za-z0-9_]*\\b",
+          "name": "storage.type.parameter.routes"
+        },
+        {
+          "match": ",",
+          "name": "punctuation.separator.comma.routes"
+        }
+      ]
+    },
     "controller-routes": {
       "patterns": [
         {
@@ -61,46 +105,7 @@
           "match": "\\b[A-Za-z_][A-Za-z0-9_]*\\s*(?=\\()",
           "name": "entity.name.function.routes"
         },
-        {
-          "begin": "\\(",
-          "end": "\\)",
-          "name": "meta.group.arguments.routes",
-          "patterns": [
-            {
-              "match": "\\b[A-Za-z_][A-Za-z0-9_]*\\s*=",
-              "name": "variable.parameter.routes"
-            },
-            {
-              "match": "\\\".*?\\\"|'.*?'",
-              "name": "string.quoted.routes"
-            },
-            {
-              "begin": "\\b([A-Za-z_][A-Za-z0-9_]*)\\[",
-              "beginCaptures": {
-                "1": { "name": "storage.type.generic.routes" }
-              },
-              "end": "\\]",
-              "patterns": [
-                {
-                  "match": "\\b[A-Za-z_][A-Za-z0-9_]*\\b",
-                  "name": "storage.type.parameter.routes"
-                },
-                {
-                  "match": ",",
-                  "name": "punctuation.separator.comma.routes"
-                }
-              ]
-            },
-            {
-              "match": "\\b([A-Za-z_][A-Za-z0-9_]*)(\\.[A-Za-z_][A-Za-z0-9_]*)+(?!\\s*=)",
-              "name": "entity.name.type.class.routes"
-            },
-            {
-              "match": "\\b[A-Za-z_][A-Za-z0-9_]*\\b(?!\\s*=)",
-              "name": "variable.other.argument.routes"
-            }
-          ]
-        }
+        { "include": "#parentheses-group" }
       ]
     }
   }
