@@ -643,7 +643,10 @@ async function launchMetals(
     documentSelector: [
       { scheme: "file", language: "scala" },
       { scheme: "file", language: "java" },
-      { scheme: "file", language: "twirl" },
+      { scheme: "file", language: "twirl-html" },
+      { scheme: "file", language: "twirl-xml" },
+      { scheme: "file", language: "twirl-js" },
+      { scheme: "file", language: "twirl-txt" },
       { scheme: "jar", language: "scala" },
       { scheme: "jar", language: "java" },
     ],

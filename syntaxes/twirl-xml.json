@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Twirl XML",
+  "scopeName": "text.xml.twirl",
+  "patterns": [
+    {
+      "include": "text.xml"
+    }
+  ]
+}
