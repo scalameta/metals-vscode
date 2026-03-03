@@ -49,7 +49,10 @@
     "onDebugResolve:scala",
     "onLanguage:scala",
     "onLanguage:java",
-    "onLanguage:twirl",
+    "onLanguage:twirl-html",
+    "onLanguage:twirl-xml",
+    "onLanguage:twirl-js",
+    "onLanguage:twirl-txt",
     "workspaceContains:build.sbt",
     "workspaceContains:build.sc",
     "workspaceContains:build.mill",
@@ -144,14 +147,50 @@
         }
       },
       {
-        "id": "twirl",
+        "id": "twirl-html",
         "aliases": [
-          "Twirl"
+          "Twirl HTML"
         ],
         "extensions": [
-          ".scala.html",
-          ".scala.xml",
-          ".scala.js",
+          ".scala.html"
+        ],
+        "icon": {
+          "dark": "icons/file_type_scala.svg",
+          "light": "icons/file_type_scala.svg"
+        }
+      },
+      {
+        "id": "twirl-xml",
+        "aliases": [
+          "Twirl XML"
+        ],
+        "extensions": [
+          ".scala.xml"
+        ],
+        "icon": {
+          "dark": "icons/file_type_scala.svg",
+          "light": "icons/file_type_scala.svg"
+        }
+      },
+      {
+        "id": "twirl-js",
+        "aliases": [
+          "Twirl JavaScript"
+        ],
+        "extensions": [
+          ".scala.js"
+        ],
+        "icon": {
+          "dark": "icons/file_type_scala.svg",
+          "light": "icons/file_type_scala.svg"
+        }
+      },
+      {
+        "id": "twirl-txt",
+        "aliases": [
+          "Twirl Text"
+        ],
+        "extensions": [
           ".scala.txt"
         ],
         "icon": {
@@ -185,6 +224,30 @@
         "language": "semanticdb",
         "scopeName": "source.semanticdb",
         "path": "./syntaxes/semanticdb.json"
+      },
+      {
+        "language": "twirl-html",
+        "scopeName": "text.html.twirl",
+        "path": "./syntaxes/twirl-html.json",
+        "embeddedLanguages": {
+          "text.html.basic": "html"
+        }
+      },
+      {
+        "language": "twirl-xml",
+        "scopeName": "text.xml.twirl",
+        "path": "./syntaxes/twirl-xml.json",
+        "embeddedLanguages": {
+          "text.xml": "xml"
+        }
+      },
+      {
+        "language": "twirl-js",
+        "scopeName": "source.js.twirl",
+        "path": "./syntaxes/twirl-js.json",
+        "embeddedLanguages": {
+          "source.js": "javascript"
+        }
       }
     ],
     "configurationDefaults": {

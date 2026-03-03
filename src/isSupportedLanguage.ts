@@ -8,7 +8,10 @@ export function isSupportedLanguage(languageId: string): boolean {
     case "scala":
     case "sc":
     case "java":
-    case "twirl":
+    case "twirl-html":
+    case "twirl-xml":
+    case "twirl-js":
+    case "twirl-txt":
       return true;
     default:
       return false;
