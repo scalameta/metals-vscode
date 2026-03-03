@@ -117,9 +117,13 @@
       },
       {
         "id": "routes",
-        "extensions": [
+        "filenames": [
           "routes"
-        ]
+        ],
+        "icon": {
+          "dark": "icons/file_type_play.svg",
+          "light": "icons/file_type_play.svg"
+        }
       },
       {
         "id": "tasty",
@@ -167,8 +171,8 @@
           ".scala.html"
         ],
         "icon": {
-          "dark": "icons/file_type_scala.svg",
-          "light": "icons/file_type_scala.svg"
+          "dark": "icons/file_type_play.svg",
+          "light": "icons/file_type_play.svg"
         }
       },
       {
@@ -180,8 +184,8 @@
           ".scala.xml"
         ],
         "icon": {
-          "dark": "icons/file_type_scala.svg",
-          "light": "icons/file_type_scala.svg"
+          "dark": "icons/file_type_play.svg",
+          "light": "icons/file_type_play.svg"
         }
       },
       {
@@ -193,8 +197,8 @@
           ".scala.js"
         ],
         "icon": {
-          "dark": "icons/file_type_scala.svg",
-          "light": "icons/file_type_scala.svg"
+          "dark": "icons/file_type_play.svg",
+          "light": "icons/file_type_play.svg"
         }
       },
       {
@@ -206,8 +210,8 @@
           ".scala.txt"
         ],
         "icon": {
-          "dark": "icons/file_type_scala.svg",
-          "light": "icons/file_type_scala.svg"
+          "dark": "icons/file_type_play.svg",
+          "light": "icons/file_type_play.svg"
         }
       }
     ],
