@@ -4,7 +4,7 @@ import * as semver from "semver";
 import path from "path";
 import { fetchFrom } from "./util";
 import { Either, makeLeft, makeRight } from "./types";
-import { marked } from "marked";
+
 import { load } from "js-yaml";
 
 const versionKey = "metals-server-version";
@@ -242,6 +242,7 @@ async function getReleaseNotesMarkdown(
   const authorLogin = metadata[0].slice("authors: ".length);
   const currentAuthor = authors[authorLogin];
   const title = metadata[1].slice("title: ".length);
+  const { marked } = await import("marked");
   const renderedNotes = marked.parse(releaseNotes);
 
   return (stylesUri: vscode.Uri) => `
