@@ -1315,7 +1315,7 @@
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.4",
+    "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^10.0.1",
     "@sourcegraph/scip-typescript": "^0.4.0",
     "@types/chai": "^5.2.3",
