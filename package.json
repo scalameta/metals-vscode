@@ -1320,7 +1320,7 @@
     "@sourcegraph/scip-typescript": "^0.4.0",
     "@types/chai": "^5.2.3",
     "@types/js-yaml": "4.0.9",
-    "@types/marked": "^5.0.2",
+    "@types/marked": "^6.0.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "25.3.5",
     "@types/node-fetch": "^2.6.13",
