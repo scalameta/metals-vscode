@@ -20,7 +20,7 @@
       "include": "#values"
     },
     {
-      "include": "#constructors"
+      "include": "#constructor"
     },
     {
       "include": "#methods"
