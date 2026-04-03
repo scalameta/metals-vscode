@@ -216,6 +216,24 @@
         }
       }
     ],
+    "customEditors": [
+      {
+        "viewType": "metals.classDecoder",
+        "displayName": "Metals (decoded class file)",
+        "selector": [
+          {
+            "filenamePattern": "*.class"
+          },
+          {
+            "filenamePattern": "*.tasty"
+          },
+          {
+            "filenamePattern": "*.semanticdb"
+          }
+        ],
+        "priority": "option"
+      }
+    ],
     "grammars": [
       {
         "language": "javap-verbose",
@@ -525,6 +543,24 @@
           "type": "boolean",
           "default": true,
           "markdownDescription": "When this option is enabled, Metals will provide semantic tokens for clients that support it. The feature is still experimental and does not work for all sources."
+        },
+        "metals.classFileOpenEncoding": {
+          "type": "string",
+          "default": "cfr",
+          "enum": [
+            "none",
+            "cfr",
+            "javap",
+            "javap-verbose"
+          ],
+          "enumDescriptions": [
+            "Open `.class` files in the editor as usual.",
+            "Open with CFR decompiled Java (same as **Metals: Show decompiled Java**).",
+            "Open with javap disassembly (same as **Metals: Show javap**).",
+            "Open with javap verbose disassembly (same as **Metals: Show javap verbose**)."
+          ],
+          "scope": "window",
+          "markdownDescription": "When not `none`, opening a `.class` file uses a Metals custom editor and together with `workbench.editorAssociations` set VS Code does not treat the file as binary (no “Open anyway” prompt). The decoded view uses the same `metalsDecode:` pipeline as **Show decompiled Java** / **Show javap**."
         },
         "metals.testUserInterface": {
           "type": "string",

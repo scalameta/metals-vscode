@@ -60,6 +60,7 @@ import {
 } from "./findInFiles";
 import * as ext from "./hoverExtension";
 import { decodeAndShowFile, MetalsFileProvider } from "./metalsContentProvider";
+import { registerMetalsClassFileCustomEditor } from "./classFileCustomEditor";
 import {
   currentWorkspaceFolder,
   getJavaVersionFromConfig,
@@ -737,6 +738,8 @@ async function launchMetals(
 
   registerTextDocumentContentProvider("metalsDecode", metalsFileProvider);
   registerTextDocumentContentProvider("jar", metalsFileProvider);
+
+  registerMetalsClassFileCustomEditor(context, client, metalsFileProvider);
 
   registerCommand("metals.show-cfr", async (uri: Uri) => {
     await decodeAndShowFile(client, metalsFileProvider, uri, "cfr");
