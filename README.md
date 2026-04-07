@@ -48,7 +48,7 @@ by clicking on this badge
 [![Install Metals extension](https://img.shields.io/badge/metals-vscode-blue.png)](vscode:extension/scalameta.metals)
 or via the VS Code editor:
 
-![install stable version](https://github.com/scalameta/gh-pages-images/blob/master/metals/vscode/Qew0fNH.png?raw=true)
+![install stable version](https://raw.githubusercontent.com/scalameta/gh-pages-images/main/metals/vscode/Qew0fNH.png)
 
 Next, open a directory containing your Scala code. The extension activates when
 the main directory contains `build.sbt` or `build.sc` file, a Scala file is
@@ -62,14 +62,14 @@ with [SNAPSHOT](#SNAPSHOT) releases of Metals server. Using pre-release versions
 may result in less stable experience and it is not intented for beginners.
 Pre-release versions follow `major.minor.PATCH` versioning.
 
-![Install the pre-release extension](https://github.com/scalameta/gh-pages-images/blob/master/metals/vscode/CzOTleE.png?raw=true)
+![Install the pre-release extension](https://raw.githubusercontent.com/scalameta/gh-pages-images/main/metals/vscode/CzOTleE.png)
 
 ## Importing a build
 
 The first time you open Metals in a new workspace it prompts you to import the build.
 Click "Import build" to start the installation step.
 
-![Import build](https://github.com/scalameta/gh-pages-images/blob/master/metals/Image/0VqZWay.png?raw=true)
+![Import build](https://raw.githubusercontent.com/scalameta/gh-pages-images/main/metals/Image/0VqZWay.png)
 
 - "Not now" disables this prompt for 2 minutes.
 - "Don't show again" disables this prompt forever, use `rm -rf .metals/` to re-enable
@@ -93,7 +93,7 @@ Update the "Sbt Script" setting to use a custom `sbt` script instead of the
 default Metals launcher if you need further customizations like reading environment
 variables.
 
-![Sbt Launcher](https://github.com/scalameta/gh-pages-images/blob/master/metals/vscode/NuwEBe4.png?raw=true)
+![Sbt Launcher](https://raw.githubusercontent.com/scalameta/gh-pages-images/main/metals/vscode/NuwEBe4.png)
 
 ### Speeding up import
 
@@ -111,21 +111,21 @@ to learn how to speed up build import.
 When you change `build.sbt` or sources under `project/`, you will be prompted to
 re-import the build.
 
-![Import sbt changes](https://github.com/scalameta/gh-pages-images/blob/master/metals/Image/72kdZkL.png?raw=true)
+![Import sbt changes](https://raw.githubusercontent.com/scalameta/gh-pages-images/main/metals/Image/72kdZkL.png)
 
 ### Manually trigger build import
 
 To manually trigger a build import, execute the "Import build" command through
 the command palette (`Cmd + Shift + P`).
 
-![Import build command](https://github.com/scalameta/gh-pages-images/blob/master/metals/Image/QHLKt8u.png?raw=true)
+![Import build command](https://raw.githubusercontent.com/scalameta/gh-pages-images/main/metals/Image/QHLKt8u.png)
 
 ## Run doctor
 
 Execute the "Run Doctor" through the command palette to troubleshoot potential
 configuration problems in your workspace.
 
-![Run doctor command](https://github.com/scalameta/gh-pages-images/blob/master/metals/Image/K02g0UM.png?raw=true)
+![Run doctor command](https://raw.githubusercontent.com/scalameta/gh-pages-images/main/metals/Image/K02g0UM.png)
 
 ## Configure Java version
 
@@ -141,7 +141,7 @@ environment variable (via
 If no matching Java found, a JDK will be downloaded using
 [coursier](https://get-coursier.io).
 
-#### Settings
+#### Settings:
 
 - `Java Version` - minimum JDK version accepted for running Metals server. If
   none found, this is also the version that will be downloaded using coursier.
@@ -155,12 +155,12 @@ for running the build server but appropriate `-release` flags are added for
 compilation. By default Metals uses JDK defined by `JAVA_HOME` environment
 variable, if the variable is not set is falls to using the Metals's JDK.
 
-#### Settings
+#### Settings:
 
 - `Java Home` - path to project's JDK's Home. Note: this setting isn't respected
   for `Bazel`.
 
-![Java Home setting](https://github.com/scalameta/gh-pages-images/blob/master/metals/vscode/sKrPKk2.png?raw=true)
+![Java Home setting](https://raw.githubusercontent.com/scalameta/gh-pages-images/main/metals/vscode/sKrPKk2.png)
 
 Note: Project's JDK version should be greater or equal to Metals's server JDK
 version for features like completions to work correctly.
@@ -184,7 +184,7 @@ Use the 'Custom Repositories' setting for the Metals VS Code extension to tell
 artifacts from your private artifact repository.
 
 Use `.jvmopts` to set sbt options
-(<https://www.scala-sbt.org/1.0/docs/Proxy-Repositories.html>) for
+(https://www.scala-sbt.org/1.0/docs/Proxy-Repositories.html) for
 `sbt bloopInstall` which resolves library dependencies. You can also provide a
 custom sbt script (see 'Custom sbt launcher').
 
@@ -248,15 +248,15 @@ for more context.
 Run the "Explorer: Focus on Outline View" command to open the symbol outline for
 the current file in the sidebar.
 
-![Document Symbols Outline](https://github.com/scalameta/gh-pages-images/blob/master/metals/vscode/T0kVJsr.gif?raw=true)
+![Document Symbols Outline](https://raw.githubusercontent.com/scalameta/gh-pages-images/main/metals/vscode/T0kVJsr.gif)
 
 Run the "Open Symbol in File" command to search for a symbol in the current file
 without opening the sidebar.
 
-![Document Symbols Command](https://github.com/scalameta/gh-pages-images/blob/master/metals/vscode/0PJ4brd.png?raw=true)
+![Document Symbols Command](https://raw.githubusercontent.com/scalameta/gh-pages-images/main/metals/vscode/0PJ4brd.png)
 
 As you type, the symbol outline is also visible at the top of the file.
-![Document Symbols Outline](https://github.com/scalameta/gh-pages-images/blob/master/metals/vscode/L217n4q.png?raw=true)
+![Document Symbols Outline](https://raw.githubusercontent.com/scalameta/gh-pages-images/main/metals/vscode/L217n4q.png)
 
 ## Go to parent code lenses
 
@@ -273,7 +273,7 @@ using two commands:
 - `Metals: Go to super method` - immediately goes to the parent of the method the cursor is pointing to
 
 - `Metals: Reveal super method hierachy` - displays the full method hierachy and enables to move to any parent,
-it is best used with the Metals Quick Pick extension.
+  it is best used with the Metals Quick Pick extension.
 
 You can also bind those commands to a shortcut.
 
@@ -285,9 +285,9 @@ There is a great number of templates already available and it should be easy to 
 To start the setup you can use the Metals: New Scala project command, which works as following:
 
 1. Choose the template and then:
-    1. Use the proposed templates.
-    2. Choose "Discover more" and then choose from the list downloaded from the Giter8 wiki page.
-    3. Input a custom Github repository following the `organization/repo` schema.
+   1. Use the proposed templates.
+   2. Choose "Discover more" and then choose from the list downloaded from the Giter8 wiki page.
+   3. Input a custom Github repository following the `organization/repo` schema.
 2. Navigate to the parent directory that you want to create your new project in.
 3. Choose the name or accept the default one.
 
@@ -325,7 +325,7 @@ project's modules. From this panel it's possible to
 - run/debug test
 - navigate to test's definition.
 
-![test-explorer](https://github.com/scalameta/gh-pages-images/blob/master/metals/vscode/Z3VtS0O.gif?raw=true)
+![test-explorer](https://raw.githubusercontent.com/scalameta/gh-pages-images/main/metals/vscode/Z3VtS0O.gif)
 
 NOTE: While Metals detects test suites for most of existing testing
 frameworks, support for recognizing individual tests is more limited.
@@ -340,11 +340,11 @@ individual test discovery:
 If you encounter an error, create an
 [issue](https://github.com/scalameta/metals/issues).
 
-![test-explorer](https://github.com/scalameta/gh-pages-images/blob/master/metals/vscode/Z3VtS0O.gif?raw=true)
+![test-explorer](https://raw.githubusercontent.com/scalameta/gh-pages-images/main/metals/vscode/Z3VtS0O.gif)
 
 ### via code lenses
 
-![lenses](https://github.com/scalameta/gh-pages-images/blob/master/metals/vscode/5nTnrcS.png?raw=true)
+![lenses](https://raw.githubusercontent.com/scalameta/gh-pages-images/main/metals/vscode/5nTnrcS.png)
 
 For each main or test class Metals shows two code lenses `run | debug` or
 `test | test debug`, which show up above the definition as a kind of virtual
@@ -476,26 +476,26 @@ nativeConfig ~= { c =>
 
 ## On type formatting for multiline string formatting
 
-![on-type](https://github.com/scalameta/gh-pages-images/blob/master/metals/vscode/a0O2vCs.gif?raw=true)
+![on-type](https://raw.githubusercontent.com/scalameta/gh-pages-images/main/metals/vscode/a0O2vCs.gif)
 
 To properly support adding `|` in multiline strings we are using the
 `onTypeFormatting` method. The functionality is enabled by default, but you can
 disable/enable `onTypeFormatting` inside Visual Studio Code settings by checking
 `Editor: Format On Type`:
 
-![on-type-setting](https://github.com/scalameta/gh-pages-images/blob/master/metals/vscode/s6nT9rC.png?raw=true)
+![on-type-setting](https://raw.githubusercontent.com/scalameta/gh-pages-images/main/metals/vscode/s6nT9rC.png)
 
 ## Formatting on paste for multiline strings
 
 Whenever text is paste into a multiline string with `|` it will be properly
 formatted by Metals:
 
-![format-on-paste](https://github.com/scalameta/gh-pages-images/blob/master/metals/vscode/fF0XWYC.gif?raw=true)
+![format-on-paste](https://raw.githubusercontent.com/scalameta/gh-pages-images/main/metals/vscode/fF0XWYC.gif)
 
 This feature is enabled by default. If you need to disable/enable formatting on
 paste in Visual Studio Code you can check the `Editor: Format On Paste` setting:
 
-![format-on-paste-setting](https://github.com/scalameta/gh-pages-images/blob/master/metals/vscode/rMrk27F.png?raw=true)
+![format-on-paste-setting](https://raw.githubusercontent.com/scalameta/gh-pages-images/main/metals/vscode/rMrk27F.png)
 
 ## Worksheets
 
@@ -507,7 +507,7 @@ the scenes worksheets are powered by the great work done in
 ### Getting started with Worksheets
 
 To get started with a worksheet you can either use the `metals.new-scala-file`
-command and select *Worksheet* or create a file called `*.worksheet.sc`.
+command and select _Worksheet_ or create a file called `*.worksheet.sc`.
 This format is important since this is what tells Metals that it's meant to be
 treated as a worksheet and not just a Scala script. Where you create the
 script also matters. If you'd like to use classes and values from your
@@ -631,4 +631,4 @@ extension to use default IntelliJ shortcuts with VS Code.
 ## GitHub Codespaces and GitHub.dev support
 
 See
-<https://scalameta.org/metals/docs/editors/online-ides#github-codespaces-and-githubdev>
+https://scalameta.org/metals/docs/editors/online-ides#github-codespaces-and-githubdev
