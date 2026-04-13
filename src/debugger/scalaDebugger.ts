@@ -19,6 +19,7 @@ import {
   RunType,
 } from "../interfaces/DebugDiscoveryParams";
 import { ServerCommands } from "../interfaces/ServerCommands";
+import { parseEnvVariables } from "./parseEnvVariables";
 
 const configurationType = "scala";
 
@@ -118,13 +119,7 @@ async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
   const environmentVariables = main.data.environmentVariables;
   const workspaceFolder = currentWorkspaceFolder();
   if (workspaceFolder) {
-    const env = environmentVariables.reduce<Record<string, string>>(
-      (acc, envKeyValue) => {
-        const [key, value] = envKeyValue.split("=");
-        return { ...acc, [key]: value };
-      },
-      {},
-    );
+    const env = parseEnvVariables(environmentVariables);
 
     const task = new Task(
       { type: "scala", task: "run", class: main.data.class },
