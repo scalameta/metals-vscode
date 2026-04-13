@@ -115,6 +115,10 @@ function escapedShellCommand(
   }
 }
 
+/**
+ * Run a Scala main class as a VS Code task with the given environment variables.
+ * Falls back to a debug session if no workspace folder is available.
+ */
 async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
   const environmentVariables = main.data.environmentVariables;
   const workspaceFolder = currentWorkspaceFolder();
