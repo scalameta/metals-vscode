@@ -2940,10 +2940,10 @@ optionator@^0.9.3:
     type-check "^0.4.0"
     word-wrap "^1.2.5"
 
-ovsx@0.10.10:
-  version "0.10.10"
-  resolved "https://registry.yarnpkg.com/ovsx/-/ovsx-0.10.10.tgz#011db3ddcc68a3b447b5f4ad2a4547b3b06803d1"
-  integrity sha512-/X5J4VLKPUGGaMynW9hgvsGg9jmwsK/3RhODeA2yzdeDbb8PUSNcg5GQ9aPDJW/znlqNvAwQcXAyE+Cq0RRvAQ==
+ovsx@0.10.11:
+  version "0.10.11"
+  resolved "https://registry.yarnpkg.com/ovsx/-/ovsx-0.10.11.tgz#b653462dc2eadfee1fea3ebd939cee7041ca04c7"
+  integrity sha512-VYYlAWO7hvcrP0EIM/Q5lCdXTumXIiGyDnSXm8ztNbGN9zCSNW6iGiJMMMUNhPRWqJjNKpo/Vc2+B4uFRy8ACg==
   dependencies:
     "@vscode/vsce" "^3.7.1"
     commander "^6.2.1"
