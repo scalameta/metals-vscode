@@ -4,6 +4,7 @@ import { debugServerFromUri, DebugSession } from "../debugger/scalaDebugger";
 import {
   ScalaTestSuitesDebugRequest,
   ScalaTestSuiteSelection,
+  ScalaTestSuites,
 } from "../debugger/types";
 import { TargetUri } from "../types";
 import { analyzeTestRun } from "./analyzeTestRun";
@@ -11,6 +12,7 @@ import {
   DapEvent,
   MetalsTestItem,
   RunnableMetalsTestItem,
+  SuiteMetalsTestItem,
   TestSuiteResult,
 } from "./types";
 import { gatherTestItems } from "./util";
@@ -19,6 +21,110 @@ import { ServerCommands } from "../interfaces/ServerCommands";
 // this id is used to mark DAP sessions created by TestController
 // thanks to that debug tracker knows which requests it should track and gather results
 export const testRunnerId = "scala-dap-test-runner";
+
+/**
+ * Run test suites through the test explorer.
+ * This is used by launch configurations with request type "test".
+ *
+ * @param testController the test controller to create runs with
+ * @param noDebug whether to run without debugging
+ * @param targetUri the build target URI
+ * @param suites the test suites to run
+ * @param environmentVariables environment variables to pass to the test runner
+ * @returns true if tests were started successfully
+ */
+export async function runTestSuites(
+  testController: TestController,
+  noDebug: boolean,
+  targetUri: TargetUri,
+  suites: ScalaTestSuiteSelection[],
+  flags: string[] | undefined,
+  environmentVariables: Record<string, string> = {}
+): Promise<boolean> {
+  // Find the test items that match the suites in the launch config
+  const testsToRun: MetalsTestItem[] = [];
+
+  testController.items.forEach((item) => {
+    let module = item.children.get(targetUri)
+    if (module) {
+      if (suites.length === 0) {
+        let suite = findSuite(module.children, targetUri);
+        if (suite?.uri) vscode.window.showTextDocument(suite.uri);
+        testsToRun.push(module as MetalsTestItem);
+        return;
+      }
+      let focused = false;
+      for (const suite of suites) {
+        const testItem = findSuite(module.children, targetUri, suite.className);
+        if (testItem) {
+          if (testItem.uri && !focused) {
+            vscode.window.showTextDocument(testItem.uri);
+            focused = true;
+          }
+          if (suite.tests.length === 0) {
+            // Run entire suite
+            testsToRun.push(testItem as MetalsTestItem);
+            return;
+          }
+          for (const testName of suite.tests) {
+            const testCase = testItem.children.get(testName);
+            if (testCase) {
+              testsToRun.push(testCase as MetalsTestItem);
+            }
+          }
+        }
+      }
+    }
+  });
+
+  if (testsToRun.length === 0) {
+    return false;
+  }
+
+  // Delegate to runHandler with a TestRunRequest
+  const request = new TestRunRequest(testsToRun);
+  const cancellationTokenSource = new vscode.CancellationTokenSource();
+  await runHandler(
+    testController,
+    noDebug,
+    () => { }, // no afterFinished callback needed
+    request,
+    cancellationTokenSource.token,
+    () => environmentVariables,
+    flags,
+  );
+
+  return true;
+}
+
+/**
+ * Find a test item (suite) by target URI and class name.
+ */
+function findSuite(
+  items: vscode.TestItemCollection,
+  targetUri: TargetUri,
+  className?: string
+): SuiteMetalsTestItem | undefined {
+  // Traverse the test controller hierarchy to find the test item
+  let result: SuiteMetalsTestItem | undefined;
+  items.forEach((item) => {
+    if (result) return;
+    const metalsItem = item as MetalsTestItem;
+    switch (metalsItem._metalsKind) {
+      case "suite":
+        if (metalsItem._metalsTargetUri === targetUri) {
+          result = metalsItem as SuiteMetalsTestItem;
+        }
+        break;
+      case "package":
+        if (className === undefined || className.startsWith(metalsItem.id + ".")) {
+          result = findSuite(metalsItem.children, targetUri, className);
+        }
+        break;
+    }
+  });
+  return result;
+}
 
 /**
  * Stores results from executed test suites.
@@ -50,6 +156,9 @@ vscode.debug.registerDebugAdapterTrackerFactory("scala", {
           }
 
           if (msg.event === "output" && msg.body?.output) {
+            if (msg.body.category !== "stdout" && msg.body.category !== "stderr") {
+              return;
+            }
             const run = activeRuns.get(session.id);
             if (run) {
               run.appendOutput(msg.body.output.replace(/\n/g, "\r\n"));
@@ -77,6 +186,7 @@ export async function runHandler(
   request: TestRunRequest,
   token: CancellationToken,
   environmentVariables: () => Record<string, string>,
+  flags?: string[],
 ): Promise<void> {
   const run = testController.createTestRun(request);
   const includes = new Set((request.include as MetalsTestItem[]) ?? []);
@@ -134,6 +244,15 @@ export async function runHandler(
     }
   });
 
+  const testSuites: ScalaTestSuites = {
+    suites: testSuiteSelection,
+    jvmOptions: [],
+    flags: flags ?? [],
+    environmentVariables: Object.entries(environmentVariables()).map(
+      ([key, value]) => `${key}=${value}`
+    )
+  };
+
   try {
     if (!token.isCancellationRequested && queue.length > 0) {
       const targetUri = queue[0]._metalsTargetUri;
@@ -141,9 +260,8 @@ export async function runHandler(
         run,
         noDebug,
         targetUri,
-        testSuiteSelection,
+        testSuites,
         queue,
-        environmentVariables(),
       );
     }
   } finally {
@@ -159,14 +277,12 @@ async function runDebugSession(
   run: vscode.TestRun,
   noDebug: boolean,
   targetUri: TargetUri,
-  testSuiteSelection: ScalaTestSuiteSelection[],
+  testSuites: ScalaTestSuites,
   tests: RunnableMetalsTestItem[],
-  environmentVariables: Record<string, string> = {},
 ): Promise<void> {
   const session = await createDebugSession(
     targetUri,
-    testSuiteSelection,
-    environmentVariables,
+    testSuites,
   );
   if (!session) {
     return;
@@ -196,18 +312,11 @@ async function runDebugSession(
  */
 async function createDebugSession(
   targetUri: TargetUri,
-  suites: ScalaTestSuiteSelection[],
-  environmentVariables: Record<string, string> = {},
+  data: ScalaTestSuites,
 ): Promise<DebugSession | undefined> {
   const debugSessionParams: ScalaTestSuitesDebugRequest = {
     target: { uri: targetUri },
-    requestData: {
-      suites,
-      jvmOptions: [],
-      environmentVariables: Object.entries(environmentVariables).map(
-        ([key, value]) => `${key}=${value}`,
-      ),
-    },
+    requestData: data,
   };
   return vscode.commands.executeCommand<DebugSession>(
     ServerCommands.DebugAdapterStart,

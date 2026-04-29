@@ -25,11 +25,7 @@ export async function showReleaseNotes(
   outputChannel: vscode.OutputChannel,
 ): Promise<void> {
   try {
-    const result = await showReleaseNotesImpl(calledOn, context, serverVersion);
-    if (result.kind === "left") {
-      const msg = `Release notes was not shown: ${result.value}`;
-      outputChannel.appendLine(msg);
-    }
+    await showReleaseNotesImpl(calledOn, context, serverVersion);
   } catch (error) {
     outputChannel.appendLine(
       `Error, couldn't show release notes for Metals ${serverVersion}`,

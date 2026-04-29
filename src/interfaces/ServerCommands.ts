@@ -36,6 +36,8 @@ export const ServerCommands = {
    * one using Bloop launcher.
    */
   BuildRestart: "build-restart",
+  /** Sync the current file with the build. */
+  SyncFile: "sync-file",
   /** Cancel the current ongoing compilation, if any. */
   CancelCompilation: "compile-cancel",
   /**

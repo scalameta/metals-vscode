@@ -1,0 +1,12 @@
+[project]
+name = "proto-grammar-tools"
+version = "0.1.0"
+description = "Small helper scripts to debug the protobuf TextMate grammar (run via uv)."
+requires-python = ">=3.10"
+dependencies = [
+  "regex==2024.11.6",
+]
+
+[dependency-groups]
+dev = []
+

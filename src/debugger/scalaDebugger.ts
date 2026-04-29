@@ -7,11 +7,12 @@ import {
   WorkspaceFolder,
   DebugAdapterDescriptor,
   DebugConfigurationProviderTriggerKind,
+  TestController,
   tasks,
   Task,
   ShellExecution,
 } from "vscode";
-import { ExtendedScalaRunMain, ScalaCodeLensesParams } from "./types";
+import { ExtendedScalaRunMain, ScalaCodeLensesParams, ScalaTestSuiteSelection } from "./types";
 import { platform } from "os";
 import { currentWorkspaceFolder } from "../util";
 import {
@@ -20,6 +21,8 @@ import {
 } from "../interfaces/DebugDiscoveryParams";
 import { ServerCommands } from "../interfaces/ServerCommands";
 import { parseEnvVariables } from "./parseEnvVariables";
+import { TargetUri } from "../types";
+import { runTestSuites } from "../testExplorer/testRunHandler";
 
 const configurationType = "scala";
 
@@ -30,8 +33,7 @@ export interface DebugSession {
   uri: string;
 }
 
-export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
-  outputChannel.appendLine("Initializing Scala Debugger");
+export function initialize(testController?: TestController): Disposable[] {
   return [
     vscode.debug.registerDebugConfigurationProvider(
       configurationType,
@@ -40,7 +42,7 @@ export function initialize(outputChannel: vscode.OutputChannel): Disposable[] {
     ),
     vscode.debug.registerDebugAdapterDescriptorFactory(
       configurationType,
-      new ScalaDebugServerFactory(),
+      new ScalaDebugServerFactory(testController),
     ),
   ];
 }
@@ -261,6 +263,8 @@ class ScalaMainConfigProvider implements vscode.DebugConfigurationProvider {
 }
 
 class ScalaDebugServerFactory implements vscode.DebugAdapterDescriptorFactory {
+  constructor(private readonly testController?: TestController) { }
+
   async createDebugAdapterDescriptor(
     session: vscode.DebugSession,
   ): Promise<DebugAdapterDescriptor | null> {
@@ -315,8 +319,60 @@ class ScalaDebugServerFactory implements vscode.DebugAdapterDescriptorFactory {
           throw error;
         }
       }
+    } else {
+      if (!this.testController) {
+        vscode.window.showErrorMessage(
+          "Test Explorer is not available. Cannot run tests from launch configuration."
+        );
+        return new vscode.DebugAdapterExecutable("echo", [
+          '"Test Explorer not available"'
+        ]);
+      }
+
+      const suites: ScalaTestSuiteSelection[] = (session.configuration.suites ?? [])
+       .map((s: any) => ({
+        className: s.className,
+        tests: s.tests ?? []
+       }))
+      const targetUri = session.configuration.buildTarget as TargetUri;
+      const noDebug = !(session.configuration.debug ?? true);
+      const flags = session.configuration.flags as string[] | undefined;
+
+      // Parse environment variables from launch config
+      const environmentVariables: Record<string, string> = {};
+      const envArray = session.configuration.env as string[] | undefined;
+      if (envArray) {
+        for (const envKeyValue of envArray) {
+          const [key, ...valueParts] = envKeyValue.split("=");
+          environmentVariables[key] = valueParts.join("=");
+        }
+      }
+
+      // Try to run through test explorer
+      const started = await runTestSuites(
+        this.testController,
+        noDebug,
+        targetUri,
+        suites,
+        flags,
+        environmentVariables
+      );
+
+      if (started) {
+        // Return a dummy adapter - the test explorer handles everything
+        return new vscode.DebugAdapterExecutable("echo", [
+          '"Running through Test Explorer"'
+        ]);
+      }
+
+      // If test explorer couldn't handle it, show an error
+      vscode.window.showErrorMessage(
+        "Could not run tests through Test Explorer. Make sure the test classes exist in the Test Explorer."
+      );
+      return new vscode.DebugAdapterExecutable("echo", [
+        '"Test Explorer could not run tests"'
+      ]);
     }
-    return null;
   }
 }
 

@@ -1,0 +1,11 @@
+// SYNTAX TEST "source.proto" "No body test"
+
+service TestService {
+// <--- keyword.other.service.proto
+
+  rpc Method1(Request) returns (Response);
+//^^^ keyword.other.rpc.proto
+
+  rpc Method2(Request) returns (Response);
+//^^^ keyword.other.rpc.proto
+}

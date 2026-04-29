@@ -1,5 +1,7 @@
+import * as vscode from "vscode";
 import { ServerOptions } from "./interfaces/ServerOptions";
 import { JavaConfig } from "./getJavaConfig";
+import { Executable } from "vscode-languageclient/node";
 
 export function getServerOptions(
   metalsClasspath: string,
@@ -8,8 +10,25 @@ export function getServerOptions(
   javaConfig: JavaConfig,
   requiredVmOptions: string[] = [],
   activeClientExtensions: string[] = [],
+  activationTimestamp?: string,
 ): ServerOptions {
-  const baseProperties = ["-Xss4m", "-Xms100m"];
+  const baseProperties = [
+    "-Xss4m",
+    "-Xms100m",
+    // For openjdk/jol support
+    "-Djol.magicFieldOffset=true",
+    "-Djol.tryWithSudo=true",
+    "-Djdk.attach.allowAttachSelf",
+    // For LMDB support
+    "--add-opens=java.base/java.nio=ALL-UNNAMED",
+    "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+    // For Java support
+    "--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
+    "--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
+    "--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
+    "--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
+    "--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED"
+  ];
 
   if (clientName) {
     baseProperties.push(`-Dmetals.client=${clientName}`);
@@ -18,6 +37,9 @@ export function getServerOptions(
         `-Dmetals.client-extensions=${activeClientExtensions.join(",")}`,
       );
     }
+  }
+  if (activationTimestamp) {
+    baseProperties.push(`-Dmetals.activation-timestamp=${activationTimestamp}`);
   }
 
   const mainArgs = ["-classpath", metalsClasspath, "scala.meta.metals.Main"];
@@ -32,18 +54,43 @@ export function getServerOptions(
     ...mainArgs,
   ];
 
-  const env = () => ({ ...process.env, ...javaConfig.extraEnv });
+  const argsEscaped = launchArgs.map((arg) =>
+    arg.includes(" ") ? `"${arg}"` : arg
+  );
+  const env = () => ({
+    ...process.env,
+    ...javaConfig.extraEnv,
+    METALS_COMMAND: javaConfig.javaPath,
+    METALS_ARGS: argsEscaped.join(" ")
+  });
+
+  const run: Executable = {
+    command: javaConfig.javaPath,
+    args: launchArgs,
+    options: { env: env() }
+  };
+
+  const launchCommand = vscode.workspace
+    .getConfiguration("metals")
+    .get<Executable>("launchCommand");
+  if (launchCommand) {
+    if (!launchCommand.options) {
+      launchCommand.options = {};
+    }
+    return {
+      run: {
+        ...launchCommand,
+        options: {
+          ...launchCommand.options,
+          env: env()
+        }
+      },
+      debug: run
+    };
+  }
 
   return {
-    run: {
-      command: javaConfig.javaPath,
-      args: launchArgs,
-      options: { env: env() },
-    },
-    debug: {
-      command: javaConfig.javaPath,
-      args: launchArgs,
-      options: { env: env() },
-    },
+    run,
+    debug: run
   };
 }

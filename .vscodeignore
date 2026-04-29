@@ -1,3 +1,4 @@
+.jj
 .vscode/**
 .vscode-test/**
 out/test/**
@@ -11,3 +12,5 @@ vsc-extension-quickstart.md
 .eslintrc.js
 .prettierignore
 .update-version.js
+package.json.bkp
+protobuf-vscode/

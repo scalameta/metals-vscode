@@ -9,7 +9,7 @@
     "ide",
     "scalameta"
   ],
-  "version": "1.65.3",
+  "version": "1.65.4",
   "publisher": "scalameta",
   "contributors": [
     {
@@ -47,6 +47,8 @@
   ],
   "activationEvents": [
     "onDebugResolve:scala",
+    "onLanguage:java",
+    "onLanguage:proto",
     "onLanguage:scala",
     "onLanguage:java",
     "onLanguage:twirl-html",
@@ -349,6 +351,25 @@
     "configuration": {
       "title": "Metals",
       "properties": {
+        "metals.launchCommand": {
+          "type": "object",
+          "default": null,
+          "scope": "window",
+          "markdownDescription": "Override the launch command used to start the Metals server. The environment variables METALS_COMMAND and METALS_ARGS include the launch command that would have run otherwise. Useful together with tools like Langoustine Tracer https://neandertech.github.io/langoustine/tracer.html",
+          "properties": {
+            "command": {
+              "type": "string",
+              "markdownDescription": "The command to launch the Metals server. This is normally the `java` executable."
+            },
+            "args": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "markdownDescription": "The arguments to pass to the Metals server command. This is normally the classpath and the main class along with VM options."
+            }
+          }
+        },
         "metals.disableReleaseNotes": {
           "type": "boolean",
           "default": false,
@@ -701,6 +722,11 @@
         "title": "Restart server"
       },
       {
+        "command": "metals.sync-file",
+        "title": "Sync File",
+        "category": "Metals"
+      },
+      {
         "command": "metals.build-restart",
         "category": "Metals",
         "title": "Restart build server"
@@ -954,6 +980,12 @@
         "command": "metals.find-text-in-dependency-jars",
         "category": "Metals",
         "title": "Find text in dependency JAR files"
+      },
+      {
+        "command": "metals.create-launch-configuration",
+        "title": "Create Launch Config...",
+        "category": "Metals",
+        "icon": "$(gear)"
       }
     ],
     "submenus": [
@@ -977,6 +1009,19 @@
       }
     ],
     "menus": {
+      "testing/item/context": [
+        {
+          "command": "metals.create-launch-configuration",
+          "when": "metals:enabled",
+          "group": "inline"
+        }
+      ],
+      "testing/item/gutter": [
+        {
+          "command": "metals.create-launch-configuration",
+          "when": "metals:enabled"
+        }
+      ],
       "view/title": [
         {
           "command": "metals.reveal-active-file",
@@ -992,6 +1037,10 @@
         }
       ],
       "commandPalette": [
+        {
+          "command": "metals.sync-file",
+          "when": "metals:enabled && metals.syncEnabled"
+        },
         {
           "command": "metals.show-tasty",
           "when": "metals:enabled && resourceExtname==.scala || metals:enabled && resourceExtname==.tasty || metals:enabled && resourceExtname==.tasty-decoded || metals:enabled && resourceExtname==.sbt || metals:enabled && resourceExtname==.sc || metals:enabled && resourceExtname==.mill"
@@ -1242,6 +1291,7 @@
         ],
         "configurationAttributes": {
           "launch": {
+            "type": "object",
             "properties": {
               "mainClass": {
                 "type": "string",
@@ -1254,6 +1304,19 @@
               "buildTarget": {
                 "type": "string",
                 "description": "Name of the build target of the class to run, can be found in the projects section of the Metals tab"
+              },
+              "flags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Flags passed to the build system running the build target",
+                "default": []
+              },
+              "debug": {
+                "type": "boolean",
+                "description": "Whether to debug the test target or simply run the test",
+                "default": true
               },
               "args": {
                 "type": "array",
@@ -1281,8 +1344,96 @@
                 "type": "string",
                 "description": "Name of a .env file with additional environment variables",
                 "default": null
+              },
+              "suites": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "className": {
+                      "type": "string"
+                    },
+                    "tests": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
               }
-            }
+            },
+            "required": [
+              "buildTarget"
+            ],
+            "oneOf": [
+              {
+                "title": "Class execution",
+                "oneOf": [
+                  {
+                    "required": [
+                      "mainClass"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "testClass"
+                    ]
+                  }
+                ],
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "flags"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "noDebug"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "suites"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "title": "Test target execution",
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "mainClass"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "testClass"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "args"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "jvmOptions"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "envFile"
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
           },
           "attach": {
             "properties": {
@@ -1326,6 +1477,23 @@
             }
           },
           {
+            "label": "Scala: Run test target",
+            "description": "A new configuration for running specific test suites through Test Explorer",
+            "body": {
+              "type": "scala",
+              "request": "launch",
+              "name": "Run ???",
+              "buildTarget": "???",
+              "flags": [],
+              "suites": [
+                {
+                  "className": "???",
+                  "tests": []
+                }
+              ]
+            }
+          },
+          {
             "label": "Scala: Attach debugger",
             "description": "A new configuration for running a debug session of a remote JVM",
             "body": {
@@ -1362,7 +1530,7 @@
     "watch": "tsc -watch -p ./",
     "test": "ts-mocha src/test/unit/*.test.ts",
     "test-extension": "rimraf out/ && tsc -p ./ && node out/test/extension/runTest.js",
-    "build": "yarn clean && vsce package --yarn",
+    "build": "yarn clean && vsce package --yarn --follow-symlinks",
     "vscode:publish": "vsce publish --yarn",
     "ovsx:publish": "ovsx publish",
     "lint": "eslint . --ext .ts --fix && yarn format",
@@ -1407,6 +1575,7 @@
     "ansicolor": "^2.0.3",
     "fp-ts": "^2.16.11",
     "js-yaml": "4.1.1",
+    "jsonc-parser": "^3.3.1",
     "marked": "^18.0.2",
     "node-fetch": "^3.3.2",
     "promisify-child-process": "4.1.2",

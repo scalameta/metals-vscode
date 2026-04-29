@@ -1,0 +1,11 @@
+// SYNTAX TEST "source.proto" "No option test"
+
+service TestService {
+//                  ^ source.proto
+  rpc ListContracts(Request) returns (Response) {
+//^^^ keyword.other.rpc.proto
+//                                              ^ source.proto
+  }
+//^ source.proto
+}
+// <--- source.proto

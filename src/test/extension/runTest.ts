@@ -1,5 +1,5 @@
 import * as path from "path";
-import { ConsoleReporter, runTests } from "@vscode/test-electron";
+import { makeConsoleReporter, runTests } from "@vscode/test-electron";
 
 async function main(): Promise<void> {
   try {
@@ -14,7 +14,7 @@ async function main(): Promise<void> {
     // Passed to --extensionTestsPath
     const extensionTestsPath: string = path.resolve(__dirname, "./suites");
 
-    const reporter = new ConsoleReporter(true);
+    const reporter = await makeConsoleReporter();
 
     // Download VS Code, unzip it and run the integration test
     await runTests({

@@ -41,6 +41,8 @@ export interface ScalaTestSuites {
   jvmOptions: string[];
   /** The environment variables for the application. */
   environmentVariables: string[];
+  /** Additional flags passed to the debug provider. */
+  flags?: string[];
 }
 
 export interface ScalaTestSuiteSelection {

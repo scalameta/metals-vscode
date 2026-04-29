@@ -1,0 +1,18 @@
+// SYNTAX TEST "source.proto" "Minimal test"
+
+service TestService {
+// <--- keyword.other.service.proto
+
+  rpc ListContracts(Request) returns (Response) {
+//^^^ keyword.other.rpc.proto
+    option (google.api.http) = {
+      get: "/contracts"
+      additional_bindings {
+        post: "/contracts:search"
+      }
+    };
+  }
+
+  rpc NextMethod(Request) returns (Response);
+//^^^ keyword.other.rpc.proto
+}

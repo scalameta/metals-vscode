@@ -1,0 +1,43 @@
+// SYNTAX TEST "source.proto" "Proto2 staticconf option body"
+
+// See go/mantle-static-conf for instructions on how to modify this file.
+
+syntax = "proto2";
+// <--- keyword.other.syntax.proto
+
+import "bazel/jsonnet/options.proto";
+// <--- keyword.control.import.proto
+import "bazel/jsonnet/static_conf_options.proto";
+// <--- keyword.control.import.proto
+package example.staticconf.proto.forgejavastarterservice;
+// <--- keyword.other.package.proto
+import "scalapb/scalapb.proto";
+// <--- keyword.control.import.proto
+
+option java_package = "com.example.staticconf.forgejavastarterservice.jproto";
+// <--- keyword.other.option.proto
+option java_generate_equals_and_hash = true;
+// <--- keyword.other.option.proto
+option java_multiple_files = true;
+// <--- keyword.other.option.proto
+option java_outer_classname = "ConfProto";
+// <--- keyword.other.option.proto
+
+option (scalapb.options) = {
+// <--- keyword.other.option.proto
+//     ^^^^^^^^^^^^^^^^^ variable.other.option.proto
+  flat_package: true,
+  package_name: "com.example.staticconf.forgejavastarterservice.sproto",
+};
+
+// Next ID: 2
+message StaticConf {
+// <--- keyword.other.message.proto
+  /**
+   * Enable the GetTestMessage method. When set to false or not set, GetTestMessage
+   * will return an error.
+   */
+  optional bool enable_get_request = 1;
+//^^^^^^^^ keyword.other.field.modifier.proto
+//         ^^^^ storage.type.proto
+}

@@ -9,6 +9,7 @@ interface FetchMetalsOptions {
   serverProperties: string[];
   javaConfig: JavaConfig;
   outputChannel: OutputChannel;
+  ttl?: string;
 }
 
 /**
@@ -24,6 +25,7 @@ export async function fetchMetals({
   serverProperties,
   javaConfig: { javaOptions, coursier, extraEnv, javaPath },
   outputChannel,
+  ttl = "Inf",
 }: FetchMetalsOptions): Promise<PackedChildPromise> {
   const serverDependency = calcServerDependency(serverVersion);
 
@@ -40,10 +42,9 @@ export async function fetchMetals({
     "fetch",
     "-p",
     "--ttl",
-    // Use infinite ttl to avoid redundant "Checking..." logs when using SNAPSHOT
-    // versions. Metals SNAPSHOT releases are effectively immutable since we
-    // never publish the same version twice.
-    "Inf",
+    // Startup keeps infinite ttl to avoid redundant "Checking..." logs.
+    // Restart can override this to force fresh resolution.
+    ttl,
     serverDependency,
     "-r",
     "bintray:scalacenter/releases",
