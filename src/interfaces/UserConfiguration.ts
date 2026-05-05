@@ -29,4 +29,8 @@ export enum UserConfiguration {
    * Repository to use instead of maven central for example `https://jcenter.bintray.com`
    */
   CoursierMirror = "coursierMirror",
+  /**
+   * Additional initialization settings passed to the server before indexing starts.
+   */
+  InitializationSettings = "initializationSettings",
 }

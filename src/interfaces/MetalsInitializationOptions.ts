@@ -39,4 +39,5 @@ export interface MetalsInitializationOptions {
   doctorVisibilityProvider?: boolean;
   bspStatusBarProvider?: "on" | "off" | "log-message" | "show-message";
   moduleStatusBarProvider?: "on" | "off" | "log-message" | "show-message";
+  initializationSettings?: Record<string, unknown>;
 }

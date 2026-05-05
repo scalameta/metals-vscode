@@ -608,6 +608,9 @@ async function launchMetals(
     );
   }
 
+  const initializationSettings =
+    config.get<Record<string, unknown>>("initializationSettings") ?? {};
+
   const initializationOptions: MetalsInitializationOptions = {
     compilerOptions: {
       completionCommand: "editor.action.triggerSuggest",
@@ -638,6 +641,7 @@ async function launchMetals(
     doctorVisibilityProvider: true,
     bspStatusBarProvider: "on",
     moduleStatusBarProvider: "on",
+    initializationSettings,
   };
 
   const clientOptions: LanguageClientOptions = {
