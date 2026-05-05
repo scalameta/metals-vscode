@@ -102,7 +102,10 @@ import { fetchMetals } from "./fetchMetals";
 import { getCustomServerOptions, getServerOptions } from "./getServerOptions";
 import { isSupportedLanguage } from "./isSupportedLanguage";
 import { readRequiredVmOptions } from "./readRequiredVmOptions";
-import { MetalsInitializationOptions } from "./interfaces/MetalsInitializationOptions";
+import {
+  InitializationSettings,
+  MetalsInitializationOptions,
+} from "./interfaces/MetalsInitializationOptions";
 import { ServerOptions } from "./interfaces/ServerOptions";
 import { restartServer } from "./commands/restartServer";
 import { ServerCommands } from "./interfaces/ServerCommands";
@@ -655,6 +658,9 @@ async function launchMetalsWithServerOptions(
     );
   }
 
+  const initializationSettings =
+    config.get<InitializationSettings>("initializationSettings") ?? {};
+
   const initializationOptions: MetalsInitializationOptions = {
     compilerOptions: {
       completionCommand: "editor.action.triggerSuggest",
@@ -685,6 +691,7 @@ async function launchMetalsWithServerOptions(
     doctorVisibilityProvider: true,
     bspStatusBarProvider: "on",
     moduleStatusBarProvider: "on",
+    ...initializationSettings,
   };
 
   const protobufLsp = config.get<boolean>("protobufLsp") ?? true;
