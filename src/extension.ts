@@ -581,7 +581,6 @@ async function launchMetals(
   const allClientExtensions = new Set<string>(["kilocode.kilo-code"]);
 
   const activeClientExtensions = extensions.all
-    .filter((e) => e.isActive)
     .map((e) => e.id)
     .filter((e) => allClientExtensions.has(e));
 
