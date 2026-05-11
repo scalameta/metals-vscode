@@ -1926,7 +1926,7 @@ flatted@^3.2.9:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.4.2.tgz#f5c23c107f0f37de8dbdf24f13722b3b98d52726"
   integrity sha512-PjDse7RzhcPkIJwy5t7KPWQSZ9cAbzQXcafsetQoD7sOJRQlGikNbx7yZp2OotDnJyrDcbyRq3Ttb18iYOqkxA==
 
-follow-redirects@^1.14.6:
+follow-redirects@^1.16.0:
   version "1.16.0"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.16.0.tgz#28474a159d3b9d11ef62050a14ed60e4df6d61bc"
   integrity sha512-y5rN/uOsadFT/JfYwhxRS5R7Qce+g3zG97+JrtFZlC9klX/W5hD7iiLzScI4nZqUS7DNUdhPgw4xI8W2LuXlUw==
@@ -2933,14 +2933,14 @@ optionator@^0.9.3:
     type-check "^0.4.0"
     word-wrap "^1.2.5"
 
-ovsx@0.10.11:
-  version "0.10.11"
-  resolved "https://registry.yarnpkg.com/ovsx/-/ovsx-0.10.11.tgz#b653462dc2eadfee1fea3ebd939cee7041ca04c7"
-  integrity sha512-VYYlAWO7hvcrP0EIM/Q5lCdXTumXIiGyDnSXm8ztNbGN9zCSNW6iGiJMMMUNhPRWqJjNKpo/Vc2+B4uFRy8ACg==
+ovsx@0.10.12:
+  version "0.10.12"
+  resolved "https://registry.yarnpkg.com/ovsx/-/ovsx-0.10.12.tgz#01064789142149080702bde158ca84f19e63ea32"
+  integrity sha512-WwMj1iQDvCk02029oxPnkFXsPrHZ+WzmoNW5pJ8JGepHtL30i2JE4s3C3wqzQqj6a35vx2hp0gV3TdfefGmvMg==
   dependencies:
     "@vscode/vsce" "^3.7.1"
     commander "^6.2.1"
-    follow-redirects "^1.14.6"
+    follow-redirects "^1.16.0"
     is-ci "^2.0.0"
     leven "^3.1.0"
     semver "^7.6.0"
