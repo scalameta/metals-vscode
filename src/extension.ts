@@ -90,7 +90,7 @@ import {
 import { JavaVersion } from "./getJavaHome";
 import { setupCoursier } from "./setupCoursier";
 import { getJavaOptions } from "./getJavaOptions";
-import { formatExtraEnv, getJavaConfig, JavaConfig } from "./getJavaConfig";
+import { getJavaConfig, JavaConfig } from "./getJavaConfig";
 import { fetchMetals } from "./fetchMetals";
 import { getServerOptions } from "./getServerOptions";
 import { isSupportedLanguage } from "./isSupportedLanguage";
@@ -399,7 +399,7 @@ function debugInformation(
   Java configuration: 
     - coursier: ${javaConfig.coursier}
     - coursier mirror: ${javaConfig.coursierMirrorFilePath}
-    - extra environment: ${formatExtraEnv(javaConfig.extraEnv)}
+    - extra environment: ${JSON.stringify(javaConfig.extraEnv ?? {})}
     - java options: ${javaConfig.javaOptions}
     - java path: ${javaConfig.javaPath}
     `;

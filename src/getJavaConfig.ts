@@ -13,10 +13,6 @@ export interface JavaConfig {
   };
 }
 
-export function formatExtraEnv(extraEnv: JavaConfig["extraEnv"]): string {
-  return JSON.stringify(extraEnv ?? {});
-}
-
 interface GetJavaConfigOptions {
   workspaceRoot: string | undefined;
   javaHome: JavaHome;
