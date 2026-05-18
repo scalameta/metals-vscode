@@ -92,10 +92,11 @@ import { setupCoursier } from "./setupCoursier";
 import { getJavaOptions } from "./getJavaOptions";
 import { getJavaConfig, JavaConfig } from "./getJavaConfig";
 import { fetchMetals } from "./fetchMetals";
-import { getServerOptions } from "./getServerOptions";
+import { getCustomServerOptions, getServerOptions } from "./getServerOptions";
 import { isSupportedLanguage } from "./isSupportedLanguage";
 import { readRequiredVmOptions } from "./readRequiredVmOptions";
 import { MetalsInitializationOptions } from "./interfaces/MetalsInitializationOptions";
+import { ServerOptions } from "./interfaces/ServerOptions";
 import { restartServer } from "./commands/restartServer";
 import { ServerCommands } from "./interfaces/ServerCommands";
 import { ClientCommands } from "./interfaces/ClientCommands";
@@ -405,12 +406,32 @@ function debugInformation(
     `;
 }
 
+function getConfiguredServerOptions(): ServerOptions | undefined {
+  const command = config.get<string>("customServerLauncher")?.trim();
+  if (!command) {
+    return undefined;
+  }
+
+  return getCustomServerOptions(command);
+}
+
 async function fetchAndLaunchMetals(
   context: ExtensionContext,
   serverVersion: string,
   javaVersion: JavaVersion,
   forceCoursierJar = false,
 ) {
+  const configuredServerOptions = getConfiguredServerOptions();
+  if (configuredServerOptions) {
+    outputChannel.appendLine("Using custom Metals server launcher.");
+    return launchMetalsWithServerOptions(
+      outputChannel,
+      context,
+      configuredServerOptions,
+      serverVersion,
+    );
+  }
+
   outputChannel.appendLine(`Metals version: ${serverVersion}`);
 
   /* eslint-disable @typescript-eslint/no-non-null-assertion */
@@ -567,9 +588,6 @@ async function launchMetals(
   javaConfig: JavaConfig,
   serverVersion: string,
 ) {
-  // Make editing Scala docstrings slightly nicer.
-  enableScaladocIndentation();
-
   // Read required VM options from the Metals JAR (META-INF/metals-required-vm-options.txt)
   const requiredVmOptions = await readRequiredVmOptions(metalsClasspath);
   if (requiredVmOptions.length > 0) {
@@ -592,6 +610,23 @@ async function launchMetals(
     requiredVmOptions,
     activeClientExtensions,
   );
+
+  return launchMetalsWithServerOptions(
+    outputChannel,
+    context,
+    serverOptions,
+    serverVersion,
+  );
+}
+
+async function launchMetalsWithServerOptions(
+  outputChannel: OutputChannel,
+  context: ExtensionContext,
+  serverOptions: ServerOptions,
+  serverVersion: string,
+) {
+  // Make editing Scala docstrings slightly nicer.
+  enableScaladocIndentation();
 
   const commandArgs = [
     serverOptions.run.command,

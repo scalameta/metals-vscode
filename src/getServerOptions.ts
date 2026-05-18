@@ -1,6 +1,19 @@
 import { ServerOptions } from "./interfaces/ServerOptions";
 import { JavaConfig } from "./getJavaConfig";
 
+export function getCustomServerOptions(command: string): ServerOptions {
+  return {
+    run: {
+      command,
+      options: { env: process.env },
+    },
+    debug: {
+      command,
+      options: { env: process.env },
+    },
+  };
+}
+
 export function getServerOptions(
   metalsClasspath: string,
   serverProperties: string[],
