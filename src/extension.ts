@@ -1819,6 +1819,9 @@ function configureSettingsDefaults() {
           return configProperty?.workspaceValue ?? {};
       }
     })();
+    delete currentValues["**/.bloop"];
+    delete currentValues["**/.metals"];
+    delete currentValues["**/target"];
     config.update(
       propertyKey,
       { ...currentValues, ...newValues },
@@ -1829,8 +1832,8 @@ function configureSettingsDefaults() {
     "files",
     "watcherExclude",
     {
-      "**/.bloop": true,
-      "**/.metals": true,
+      "**/.bloop/**": true,
+      "**/.metals/**": true,
     },
     ConfigurationTarget.Global,
   );
@@ -1838,7 +1841,7 @@ function configureSettingsDefaults() {
     "files",
     "watcherExclude",
     {
-      "**/target": true,
+      "**/target/**": true,
     },
     ConfigurationTarget.Workspace,
   );
