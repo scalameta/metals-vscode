@@ -1821,6 +1821,7 @@ function configureSettingsDefaults() {
     })();
     delete currentValues["**/.bloop"];
     delete currentValues["**/.metals"];
+    delete currentValues["**/.metals/**"];
     delete currentValues["**/target"];
     config.update(
       propertyKey,
@@ -1833,7 +1834,7 @@ function configureSettingsDefaults() {
     "watcherExclude",
     {
       "**/.bloop/**": true,
-      "**/.metals/**": true,
+      "**/.metals/**/*.{java,scala}": true,
     },
     ConfigurationTarget.Global,
   );
