@@ -1391,7 +1391,7 @@
     "@types/sinon": "^21.0.1",
     "@types/vscode": "1.59.0",
     "@types/yauzl": "^2.10.3",
-    "@typescript-eslint/eslint-plugin": "^8.59.4",
+    "@typescript-eslint/eslint-plugin": "^8.60.0",
     "@typescript-eslint/parser": "^8.60.0",
     "@vscode/test-electron": "^2.3.0",
     "@vscode/vsce": "^3.9.1",
