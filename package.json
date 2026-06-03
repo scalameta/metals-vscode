@@ -1420,7 +1420,7 @@
     "shell-quote": "^1.8.4",
     "vscode-languageclient": "9.0.1",
     "vscode-languageserver-protocol": "3.17.5",
-    "yauzl": "^3.3.1"
+    "yauzl": "^3.3.2"
   },
   "extensionPack": [
     "scala-lang.scala"
