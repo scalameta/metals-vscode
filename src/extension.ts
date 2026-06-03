@@ -1026,6 +1026,10 @@ async function launchMetalsWithServerOptions(
         },
       );
 
+      registerCommand(`metals.open-metals-log`, async () => {
+        commands.executeCommand(ServerCommands.GotoLog);
+      });
+
       // should be the compilation of a currently opened file
       // but some race conditions may apply
       const compilationDoneEmitter = new EventEmitter<void>();

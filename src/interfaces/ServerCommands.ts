@@ -123,6 +123,8 @@ export const ServerCommands = {
    * Delete all directories in .bloop and restart the Bloop server.
    */
   ResetWorkspace: "reset-workspace",
+  /** Focus on the logs in .metals/metals.log */
+  GotoLog: "goto-log",
 } as const;
 
 type ServerCommands = typeof ServerCommands;

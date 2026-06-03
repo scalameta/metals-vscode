@@ -960,6 +960,11 @@
         "command": "metals.find-text-in-dependency-jars",
         "category": "Metals",
         "title": "Find text in dependency JAR files"
+      },
+      {
+        "command": "metals.open-metals-log",
+        "category": "Metals",
+        "title": "Open Metals Log"
       }
     ],
     "submenus": [
@@ -1160,6 +1165,10 @@
         },
         {
           "command": "metals.scala-cli-stop",
+          "when": "metals:enabled"
+        },
+        {
+          "command": "metals.open-metals-log",
           "when": "metals:enabled"
         }
       ],
