@@ -35,7 +35,7 @@
   },
   "homepage": "https://scalameta.org/metals/",
   "engines": {
-    "vscode": "^1.59.0"
+    "vscode": "^1.89.0"
   },
   "icon": "images/logo.png",
   "categories": [
@@ -1398,7 +1398,7 @@
     "@types/semver": "^7.7.1",
     "@types/shell-quote": "^1.6.1",
     "@types/sinon": "^21.0.1",
-    "@types/vscode": "1.59.0",
+    "@types/vscode": "1.89.0",
     "@types/yauzl": "^2.10.3",
     "@typescript-eslint/eslint-plugin": "^8.60.0",
     "@typescript-eslint/parser": "^8.60.1",
