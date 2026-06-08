@@ -34,7 +34,6 @@ import {
   debug,
   DebugSessionCustomEvent,
   ThemeColor,
-  LogOutputChannel,
 } from "vscode";
 import {
   LanguageClient,
@@ -123,7 +122,18 @@ import { downloadProgress } from "./downloadProgress";
 import { detectLaunchConfigurationChanges } from "./detectLaunchConfigurationChanges";
 import { registerCopyPasteHooks } from "./metalsCopyPaste";
 
-const outputChannel = window.createOutputChannel("Metals", { log: true });
+const outputChannel: OutputChannel = (() => {
+  try {
+    return (
+      window.createOutputChannel as unknown as (
+        name: string,
+        options: { log: boolean },
+      ) => OutputChannel
+    )("Metals", { log: true });
+  } catch {
+    return window.createOutputChannel("Metals");
+  }
+})();
 
 let treeViews: MetalsTreeViews | undefined;
 let currentClient: LanguageClient | undefined;
@@ -690,7 +700,8 @@ async function launchMetalsWithServerOptions(
       configurationSection: "metals",
     },
     revealOutputChannelOn: RevealOutputChannelOn.Never,
-    outputChannel: outputChannel as LogOutputChannel,
+    outputChannel:
+      outputChannel as unknown as LanguageClientOptions["outputChannel"],
     initializationOptions,
     middleware: {
       provideHover: hoverLinksMiddlewareHook,
