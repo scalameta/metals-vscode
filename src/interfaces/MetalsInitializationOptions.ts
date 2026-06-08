@@ -23,6 +23,7 @@ export interface MetalsInitializationOptions {
   icons?: "vscode" | "octicons" | "atom" | "unicode";
   inputBoxProvider?: boolean;
   isVirtualDocumentSupported?: boolean;
+  isLibraryFileSystemSupported?: boolean;
   isExitOnShutdown?: boolean;
   isHttpEnabled?: boolean;
   openFilesOnRenameProvider?: boolean;

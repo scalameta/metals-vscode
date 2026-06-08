@@ -34,6 +34,7 @@ import {
   debug,
   DebugSessionCustomEvent,
   ThemeColor,
+  FileSystemProvider,
 } from "vscode";
 import {
   LanguageClient,
@@ -121,8 +122,11 @@ import { MetalsSlowTaskType } from "./interfaces/MetalsSlowTask";
 import { downloadProgress } from "./downloadProgress";
 import { detectLaunchConfigurationChanges } from "./detectLaunchConfigurationChanges";
 import { registerCopyPasteHooks } from "./metalsCopyPaste";
+import MetalsFileSystemProvider from "./MetalsFileSystemProvider";
 
 const outputChannel = window.createOutputChannel("Metals");
+
+const librariesURI = Uri.parse("metalsfs:/metalsLibraries");
 
 let treeViews: MetalsTreeViews | undefined;
 let currentClient: LanguageClient | undefined;
@@ -628,6 +632,10 @@ async function launchMetalsWithServerOptions(
   // Make editing Scala docstrings slightly nicer.
   enableScaladocIndentation();
 
+  const librariesFileSystemEnabled = workspace
+    .getConfiguration("metals")
+    .get<boolean>("experimental.librariesFileSystem", false);
+
   const commandArgs = [
     serverOptions.run.command,
     ...(serverOptions.run.args || []),
@@ -660,6 +668,7 @@ async function launchMetalsWithServerOptions(
     icons: "vscode",
     inputBoxProvider: true,
     isVirtualDocumentSupported: true,
+    isLibraryFileSystemSupported: librariesFileSystemEnabled,
     openFilesOnRenameProvider: true,
     openNewWindowProvider: true,
     quickPickProvider: true,
@@ -684,6 +693,12 @@ async function launchMetalsWithServerOptions(
       { scheme: "file", language: "twirl-txt" },
       { scheme: "jar", language: "scala" },
       { scheme: "jar", language: "java" },
+      ...(librariesFileSystemEnabled
+        ? [
+          { scheme: "metalsfs", language: "scala" },
+          { scheme: "metalsfs", language: "java" },
+        ]
+        : []),
     ],
     synchronize: {
       configurationSection: "metals",
@@ -756,6 +771,18 @@ async function launchMetalsWithServerOptions(
   ) {
     context.subscriptions.push(
       commands.registerTextEditorCommand(command, callback),
+    );
+  }
+
+  function registerFileSystemProvider(
+    scheme: string,
+    provider: FileSystemProvider,
+  ) {
+    context.subscriptions.push(
+      workspace.registerFileSystemProvider(scheme, provider, {
+        isCaseSensitive: true,
+        isReadonly: true,
+      }),
     );
   }
 
@@ -843,6 +870,7 @@ async function launchMetalsWithServerOptions(
     () => {
       registerBloopInstance();
       const doctorProvider = new DoctorProvider(client, context);
+      let metalsFileSystemProvider: MetalsFileSystemProvider | undefined;
       let stacktrace: WebviewPanel | undefined;
 
       function getStacktracePanel(): WebviewPanel {
@@ -1137,6 +1165,24 @@ async function launchMetalsWithServerOptions(
             }
             case ClientCommands.BuildConnect: {
               commands.executeCommand(ServerCommands.BuildConnect);
+              break;
+            }
+            case ClientCommands.LibraryFileSystemReady: {
+              if (!metalsFileSystemProvider) {
+                metalsFileSystemProvider = new MetalsFileSystemProvider(
+                  client,
+                  librariesURI,
+                );
+                registerFileSystemProvider(
+                  librariesURI.scheme,
+                  metalsFileSystemProvider,
+                );
+                registerCommand("metals.show-libraries-folder", async () =>
+                  addLibrariesFolder(),
+                );
+              }
+              metalsFileSystemProvider.reinitialiseURI(librariesURI);
+              addLibrariesFolder();
               break;
             }
             default:
@@ -1799,6 +1845,40 @@ function detectConfigurationChanges() {
           }
         }),
   );
+}
+
+function addLibrariesFolder() {
+  const libraryFolderName = "Metals - Libraries";
+
+  const newLibraryFolder = {
+    uri: librariesURI,
+    name: libraryFolderName,
+  };
+  const folderByUri = workspace.getWorkspaceFolder(librariesURI);
+  if (folderByUri && folderByUri.name !== libraryFolderName) {
+    workspace.updateWorkspaceFolders(folderByUri.index, 1, newLibraryFolder);
+  } else {
+    const folderByName = workspace.workspaceFolders?.find(
+      (folder) => folder.name === libraryFolderName,
+    );
+    if (
+      folderByName &&
+      folderByName.uri.toString() !== librariesURI.toString()
+    ) {
+      if (folderByUri) {
+        workspace.updateWorkspaceFolders(folderByName.index, 1);
+      } else {
+        workspace.updateWorkspaceFolders(
+          folderByName.index,
+          1,
+          newLibraryFolder,
+        );
+      }
+    } else if (!folderByUri) {
+      const workspaceCount = workspace.workspaceFolders?.length ?? 0;
+      workspace.updateWorkspaceFolders(workspaceCount, null, newLibraryFolder);
+    }
+  }
 }
 
 // NOTE(gabro): we would normally use the `configurationDefaults` contribution point in the

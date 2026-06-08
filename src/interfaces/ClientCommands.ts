@@ -40,6 +40,8 @@ export const ClientCommands = {
   StartDebugSession: "metals-debug-session-start",
   /** Command to run the codev via a code lens in the editor. */
   StartRunSession: "metals-run-session-start",
+  /** Notifies the client that library filesystem is ready. */
+  LibraryFileSystemReady: "metals-library-filesystem-ready",
   /**
    * Focus or remove focus on the output logs reported by the server via
    * `window/logMessage`.
