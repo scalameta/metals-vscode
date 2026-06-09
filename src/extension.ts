@@ -122,6 +122,7 @@ import { MetalsSlowTaskType } from "./interfaces/MetalsSlowTask";
 import { downloadProgress } from "./downloadProgress";
 import { detectLaunchConfigurationChanges } from "./detectLaunchConfigurationChanges";
 import { registerCopyPasteHooks } from "./metalsCopyPaste";
+import { buildDocumentSelector } from "./documentSelector";
 
 const outputChannel = window.createOutputChannel("Metals", { log: true });
 
@@ -676,16 +677,10 @@ async function launchMetalsWithServerOptions(
   };
 
   const clientOptions: LanguageClientOptions = {
-    documentSelector: [
-      { scheme: "file", language: "scala" },
-      { scheme: "file", language: "java" },
-      { scheme: "file", language: "twirl-html" },
-      { scheme: "file", language: "twirl-xml" },
-      { scheme: "file", language: "twirl-js" },
-      { scheme: "file", language: "twirl-txt" },
-      { scheme: "jar", language: "scala" },
-      { scheme: "jar", language: "java" },
-    ],
+    documentSelector: buildDocumentSelector({
+      protobuf: config.get<boolean>("protobufLsp") ?? false,
+      prototext: false,
+    }),
     synchronize: {
       configurationSection: "metals",
     },
