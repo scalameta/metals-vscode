@@ -367,6 +367,12 @@
           "scope": "window",
           "markdownDescription": "Enable best effort mode for Metals in Scala 3. If enabled, Metals will try to provide most up to date information from the codebase even if it's not compiling."
         },
+        "metals.protobufLsp": {
+          "type": "boolean",
+          "default": false,
+          "scope": "window",
+          "markdownDescription": "Enable Metals language server support for Protocol Buffers files. Requires another extension to contribute the `proto` language and reloading the window."
+        },
         "metals.defaultShell": {
           "type": "string",
           "scope": "machine-overridable",
