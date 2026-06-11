@@ -30,8 +30,8 @@ jobs:
         run: |
           git add .
           git commit -m "Increase patch version for pre-release"
-      # Pre release version requires vscode ^1.63
-      # but we don't want to force normal users to update, modify it
+      # Pre release version requires vscode ^1.74 (minimum for LogOutputChannel)
+      # but we don't want to force normal users to update to ^1.89, modify it
       - name: Update required vs code version
         run: |
           node ./update-version.js
