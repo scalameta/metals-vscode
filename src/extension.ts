@@ -676,10 +676,12 @@ async function launchMetalsWithServerOptions(
     moduleStatusBarProvider: "on",
   };
 
+  const protobufLsp = config.get<boolean>("protobufLsp") ?? true;
+
   const clientOptions: LanguageClientOptions = {
     documentSelector: buildDocumentSelector({
-      protobuf: config.get<boolean>("protobufLsp") ?? true,
-      prototext: false,
+      protobuf: protobufLsp,
+      prototext: protobufLsp,
     }),
     synchronize: {
       configurationSection: "metals",
