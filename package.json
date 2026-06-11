@@ -369,7 +369,7 @@
         },
         "metals.protobufLsp": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "scope": "window",
           "markdownDescription": "Enable Metals language server support for Protocol Buffers files. Requires another extension to contribute the `proto` language and reloading the window."
         },

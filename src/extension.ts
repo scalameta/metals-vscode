@@ -678,7 +678,7 @@ async function launchMetalsWithServerOptions(
 
   const clientOptions: LanguageClientOptions = {
     documentSelector: buildDocumentSelector({
-      protobuf: config.get<boolean>("protobufLsp") ?? false,
+      protobuf: config.get<boolean>("protobufLsp") ?? true,
       prototext: false,
     }),
     synchronize: {
