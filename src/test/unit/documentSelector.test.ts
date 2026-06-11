@@ -2,7 +2,7 @@ import * as assert from "assert";
 import { buildDocumentSelector } from "../../documentSelector";
 
 describe("buildDocumentSelector", () => {
-  it("does not include proto documents by default", () => {
+  it("does not include proto documents when protobuf LSP is disabled", () => {
     assert.deepStrictEqual(
       buildDocumentSelector({ protobuf: false, prototext: false }),
       [
