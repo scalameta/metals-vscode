@@ -81,7 +81,13 @@ class TestManager {
     );
 
     this.testController.resolveHandler = async (item?: vscode.TestItem) => {
-      const uri = item?.uri?.toString();
+      // if item is undefined, it means the test explorer is being initialized
+      if (!item) {
+        await this.discoverTestSuites(undefined, true);
+        return;
+      }
+
+      const uri = item.uri?.toString();
       if (uri) {
         await this.discoverTestSuites(uri);
       }
@@ -145,12 +151,19 @@ class TestManager {
     }
   }
 
-  discoverTestSuites(uri?: string): Promise<void> {
+  discoverTestSuites(uri?: string, forceAll = false): Promise<void> {
     if (this.isDisabled) {
       return Promise.resolve();
     }
 
-    const args = uri ? [{ uri }] : [{}];
+    const arg: { uri?: string; forceAll?: boolean } = {};
+    if (uri) {
+      arg.uri = uri;
+    }
+    if (forceAll) {
+      arg.forceAll = true;
+    }
+    const args = [arg];
 
     return this.client
       .sendRequest(ExecuteCommandRequest.type, {
