@@ -394,7 +394,8 @@
         "metals.serverProperties": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "string",
+            "pattern": "^-(X[a-zA-Z0-9:]+|D[a-zA-Z0-9._-]+(=[^\\s]*)?|XX:[+-]?[a-zA-Z0-9]+(=[a-zA-Z0-9.,]+)?|[a-zA-Z0-9]+)$"
           },
           "default": [
             "-Xmx2G",
