@@ -493,7 +493,11 @@ async function fetchAndLaunchMetals(
         process.platform == "win32")) ||
     process.platform.endsWith("bsd");
 
-  let filteredServerProperties = serverProperties;
+  const jvmPattern =
+    /^-(X[a-zA-Z0-9:]+|D[a-zA-Z0-9._-]+(=[^\s]*)?|XX:[+-]?[a-zA-Z0-9]+(=[a-zA-Z0-9.,]+)?|[a-zA-Z0-9]+)$/;
+  let filteredServerProperties = serverProperties
+    .map((arg) => arg.trim())
+    .filter((arg) => arg !== "" && jvmPattern.test(arg));
   if (skipZGC) {
     filteredServerProperties = serverProperties.filter(function (prop) {
       return prop.indexOf("UseZGC") === -1;
