@@ -1408,7 +1408,7 @@
     "@types/shell-quote": "^1.6.1",
     "@types/sinon": "^21.0.1",
     "@types/vscode": "1.89.0",
-    "@types/yauzl": "^2.10.3",
+    "@types/yauzl": "^3.4.0",
     "@typescript-eslint/eslint-plugin": "^8.61.1",
     "@typescript-eslint/parser": "^8.61.1",
     "@vscode/test-electron": "^3.0.0",
@@ -1438,7 +1438,7 @@
     "shell-quote": "^1.8.4",
     "vscode-languageclient": "10.0.0",
     "vscode-languageserver-protocol": "3.18.0",
-    "yauzl": "^3.3.2"
+    "yauzl": "^3.4.0"
   },
   "extensionPack": [
     "scala-lang.scala"
