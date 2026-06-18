@@ -167,6 +167,7 @@ async function runDebugSession(
     targetUri,
     testSuiteSelection,
     environmentVariables,
+    noDebug,
   );
   if (!session) {
     return;
@@ -198,6 +199,7 @@ async function createDebugSession(
   targetUri: TargetUri,
   suites: ScalaTestSuiteSelection[],
   environmentVariables: Record<string, string> = {},
+  noDebug = false,
 ): Promise<DebugSession | undefined> {
   const debugSessionParams: ScalaTestSuitesDebugRequest = {
     target: { uri: targetUri },
@@ -208,6 +210,7 @@ async function createDebugSession(
         ([key, value]) => `${key}=${value}`,
       ),
     },
+    noDebug,
   };
   return vscode.commands.executeCommand<DebugSession>(
     ServerCommands.DebugAdapterStart,

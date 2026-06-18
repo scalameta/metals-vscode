@@ -33,6 +33,7 @@ export interface ScalaTestSuitesDebugRequest {
   /** The build target that contains the test classes. */
   target: BuildTargetIdentifier;
   requestData: ScalaTestSuites;
+  noDebug?: boolean;
 }
 export interface ScalaTestSuites {
   /** The fully qualified names of the test classes in this target and the tests in this test classes */
