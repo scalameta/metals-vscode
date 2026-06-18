@@ -100,7 +100,7 @@ function escapedShellCommand(
   const mainClass = main.data.class;
   const args = main.data.arguments;
   if (classpath && javaBinary) {
-    const shellOptions = { env };
+    const shellOptions = { ...platformSpecificOptions(), env };
     return taskFromArgs(
       classpath,
       javaBinary,
