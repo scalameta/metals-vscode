@@ -132,6 +132,9 @@ async function runMain(main: ExtendedScalaRunMain): Promise<boolean> {
       "Metals",
       escapedShellCommand(main, env),
     );
+    // Don't echo the fully-resolved java command line (full JVM path +
+    // classpath jar) into the task terminal; it's long and noisy.
+    task.presentationOptions = { echo: false };
 
     await tasks.executeTask(task);
     return true;
