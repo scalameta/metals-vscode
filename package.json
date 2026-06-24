@@ -1410,7 +1410,7 @@
     "@types/vscode": "1.89.0",
     "@types/yauzl": "^3.4.0",
     "@typescript-eslint/eslint-plugin": "^8.61.1",
-    "@typescript-eslint/parser": "^8.61.1",
+    "@typescript-eslint/parser": "^8.62.0",
     "@vscode/test-electron": "^3.0.0",
     "@vscode/vsce": "^3.9.2",
     "chai": "^6.2.2",
