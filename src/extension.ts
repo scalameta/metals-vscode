@@ -123,6 +123,7 @@ import { downloadProgress } from "./downloadProgress";
 import { detectLaunchConfigurationChanges } from "./detectLaunchConfigurationChanges";
 import { registerCopyPasteHooks } from "./metalsCopyPaste";
 import { buildDocumentSelector } from "./documentSelector";
+import { jvmOptionPattern } from "./jvmOptionsPattern";
 
 const outputChannel = window.createOutputChannel("Metals", { log: true });
 
@@ -493,8 +494,8 @@ async function fetchAndLaunchMetals(
         process.platform == "win32")) ||
     process.platform.endsWith("bsd");
 
-  const jvmPattern =
-    /^-(X[a-zA-Z0-9:]+|D[a-zA-Z0-9._-]+(=[^\s]*)?|XX:[+-]?[a-zA-Z0-9]+(=[a-zA-Z0-9.,]+)?|[a-zA-Z0-9]+)$/;
+  const jvmPattern = jvmOptionPattern;
+
   let filteredServerProperties = serverProperties
     .map((arg) => arg.trim())
     .filter((arg) => arg !== "" && jvmPattern.test(arg));

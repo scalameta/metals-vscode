@@ -1,18 +1,29 @@
 import { assert } from "chai";
 import * as fs from "fs";
 import * as path from "path";
+import {
+  jvmOptionPattern,
+  jvmOptionPatternString,
+} from "../../jvmOptionsPattern";
 
 describe("serverProperties validation pattern", () => {
-  let pattern: RegExp;
+  let packageJsonPattern: string;
 
   before(() => {
     const packageJsonPath = path.join(__dirname, "../../../package.json");
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
-    const patternString =
+    packageJsonPattern =
       packageJson.contributes.configuration.properties[
         "metals.serverProperties"
       ].items.pattern;
-    pattern = new RegExp(patternString);
+  });
+
+  it("extension pattern matches package.json pattern", () => {
+    assert.strictEqual(
+      jvmOptionPatternString,
+      packageJsonPattern,
+      "Pattern from jvmOptionsPattern.ts should match the pattern defined in package.json",
+    );
   });
 
   describe("should accept valid JVM options", () => {
@@ -56,7 +67,7 @@ describe("serverProperties validation pattern", () => {
     validOptions.forEach((option) => {
       it(`accepts "${option}"`, () => {
         assert.isTrue(
-          pattern.test(option),
+          jvmOptionPattern.test(option),
           `Pattern should accept "${option}"`,
         );
       });
@@ -81,7 +92,7 @@ describe("serverProperties validation pattern", () => {
     invalidOptions.forEach((option) => {
       it(`rejects "${option}"`, () => {
         assert.isFalse(
-          pattern.test(option),
+          jvmOptionPattern.test(option),
           `Pattern should reject "${option}"`,
         );
       });
