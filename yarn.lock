@@ -2972,10 +2972,10 @@ ora@^8.1.0:
     string-width "^7.2.0"
     strip-ansi "^7.1.0"
 
-ovsx@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/ovsx/-/ovsx-1.0.1.tgz#2e446f699ff1cc4ab7f4cdac4c843bc8c0edb09d"
-  integrity sha512-dNIVv/33z/wURvH1wAw2PRicVM5CdQB3BRL3WhEeFEFMDUkKoujlBPpqMr/meIpf4xDYUEfRwFRBiDzs38vQvw==
+ovsx@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/ovsx/-/ovsx-1.0.2.tgz#cebc22b3c68f31ed543cd8131dd69999f5704e3b"
+  integrity sha512-N0gWlINGgoOA2Sn0AhrF9L3ap40a/QbsFUpMDKR+CKYyZGJeTFEoNGngplLHjAYtcjrrZv2jX2K7ktPzxWjPNg==
   dependencies:
     "@vscode/vsce" "^3.7.1"
     commander "^6.2.1"
