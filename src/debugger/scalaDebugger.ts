@@ -197,11 +197,21 @@ async function debug(
 ): Promise<boolean> {
   await commands.executeCommand("workbench.action.files.save");
 
+  // Only ScalaCodeLensesParams has a `dataKind` field here
+  // and only it needs to have the noDebug field added.
+  let paramsToSend: DebugDiscoveryParams | ScalaCodeLensesParams;
+  if ("dataKind" in debugParams) {
+    const codeLensParams: ScalaCodeLensesParams = { ...debugParams, noDebug };
+    paramsToSend = codeLensParams;
+  } else {
+    paramsToSend = debugParams;
+  }
+
   let response: DebugSession | undefined;
   try {
     response = await vscode.commands.executeCommand<DebugSession>(
       ServerCommands.DebugAdapterStart,
-      debugParams,
+      paramsToSend,
     );
   } catch (error) {
     if (error instanceof ResponseError && error.code === workspaceHadErrors) {

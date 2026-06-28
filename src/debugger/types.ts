@@ -20,6 +20,7 @@ interface BaseScalaRunMain {
   data: ScalaMainData;
   dataKind: "scala-main-class";
   targets: BuildTargetIdentifier[];
+  noDebug?: boolean;
 }
 export interface OldScalaRunMain extends BaseScalaRunMain {
   data: OldScalaMainData;
@@ -55,12 +56,14 @@ interface ScalaRunTestSuites {
   data: FullyQualifiedClassName[];
   dataKind: "scala-test-suite";
   targets: BuildTargetIdentifier[];
+  noDebug?: boolean;
 }
 
 interface ScalaRunTestSuitesSelection {
   data: ScalaTestSuites[];
   dataKind: "scala-test-suites-selection";
   targets: BuildTargetIdentifier[];
+  noDebug?: boolean;
 }
 
 type ScalaRunTests = ScalaRunTestSuites | ScalaRunTestSuitesSelection;
