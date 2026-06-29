@@ -1813,8 +1813,7 @@ function configureSettingsDefaults() {
     propertyKey: string,
     newValues: Record<string, boolean>,
     configurationTarget:
-      | ConfigurationTarget.Global
-      | ConfigurationTarget.Workspace,
+      ConfigurationTarget.Global | ConfigurationTarget.Workspace,
   ) {
     const config = workspace.getConfiguration(configKey);
     const configProperty = config.inspect<Record<string, boolean>>(propertyKey);
