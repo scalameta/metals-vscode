@@ -30,10 +30,7 @@ export interface BuildTargetUpdate {
   events: TestExplorerEvent[];
 }
 export type TestExplorerEvent =
-  | RemoveTestSuite
-  | AddTestSuite
-  | UpdateSuiteLocation
-  | AddTestCases;
+  RemoveTestSuite | AddTestSuite | UpdateSuiteLocation | AddTestCases;
 
 interface BaseTestExplorerEvent {
   fullyQualifiedClassName: FullyQualifiedClassName;
@@ -149,10 +146,7 @@ export interface TestSuiteRun {
 export type RunnableMetalsTestItemKind = "suite" | "testcase";
 
 export type MetalsTestItemKind =
-  | "workspaceFolder"
-  | "module"
-  | "package"
-  | RunnableMetalsTestItemKind;
+  "workspaceFolder" | "module" | "package" | RunnableMetalsTestItemKind;
 
 type BaseMetalsTestItem = vscode.TestItem & {
   _metalsKind: MetalsTestItemKind;
@@ -196,5 +190,4 @@ export type MetalsTestItem =
   | TestCaseMetalsTestItem;
 
 export type RunnableMetalsTestItem =
-  | SuiteMetalsTestItem
-  | TestCaseMetalsTestItem;
+  SuiteMetalsTestItem | TestCaseMetalsTestItem;

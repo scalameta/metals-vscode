@@ -1,8 +1,7 @@
 import { newtype } from "./util";
 
 export type Either<Left, Right> =
-  | { kind: "left"; value: Left }
-  | { kind: "right"; value: Right };
+  { kind: "left"; value: Left } | { kind: "right"; value: Right };
 
 export function makeLeft<T>(t: T): Either<T, never> {
   return { kind: "left", value: t };
