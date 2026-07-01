@@ -1,7 +1,4 @@
-import {
-  NotificationType,
-  ExecuteCommandParams,
-} from "vscode-languageclient";
+import { NotificationType, ExecuteCommandParams } from "vscode-languageclient";
 
 /**
  * The Metals execute client command is sent from the server to the client to
