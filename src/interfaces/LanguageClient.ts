@@ -2,7 +2,7 @@ import {
   RequestType0,
   CancellationToken,
   NotificationType0,
-} from "vscode-languageserver-protocol";
+} from "vscode-languageclient";
 
 export interface LanguageClient {
   sendRequest<R, E>(

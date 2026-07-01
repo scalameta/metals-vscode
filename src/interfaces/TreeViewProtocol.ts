@@ -6,7 +6,7 @@ import {
   RequestType,
   NotificationType,
   TextDocumentPositionParams,
-} from "vscode-languageserver-protocol";
+} from "vscode-languageclient";
 
 export interface MetalsTreeViews {
   disposables: Disposable[];

@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ResponseError } from "vscode-languageserver-protocol";
+import { ResponseError } from "vscode-languageclient";
 import {
   commands,
   DebugConfiguration,

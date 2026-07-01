@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import { NotificationType } from "vscode-jsonrpc";
+import { NotificationType } from "vscode-languageclient";
 import {
   DecorationRenderOptions,
   DecorationInstanceRenderOptions,

@@ -1,4 +1,4 @@
-import { RequestType0 } from "vscode-languageserver-protocol";
+import { RequestType0 } from "vscode-languageclient";
 
 /**
  * The Metals read clipboard request is sent from the server to the client to

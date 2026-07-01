@@ -9,7 +9,7 @@ import {
   TextEditor,
 } from "vscode";
 import { LanguageClient } from "vscode-languageclient/node";
-import { ExecuteCommandRequest } from "vscode-languageserver-protocol";
+import { ExecuteCommandRequest } from "vscode-languageclient";
 
 /**
  * Checks if the given language ID is a Scala language.
