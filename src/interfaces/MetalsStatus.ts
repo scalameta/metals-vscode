@@ -1,5 +1,5 @@
 import { Command } from "vscode";
-import { NotificationType } from "vscode-languageserver-protocol";
+import { NotificationType } from "vscode-languageclient";
 
 /**
  * The Metals status notification is sent from the server to the client to

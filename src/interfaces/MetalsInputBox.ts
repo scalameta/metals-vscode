@@ -1,4 +1,4 @@
-import { RequestType } from "vscode-languageserver-protocol";
+import { RequestType } from "vscode-languageclient";
 
 /**
  * The Metals input box request is sent from the server to the client to

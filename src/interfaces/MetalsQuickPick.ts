@@ -1,4 +1,4 @@
-import { RequestType } from "vscode-languageserver-protocol";
+import { RequestType } from "vscode-languageclient";
 /**
  * The Metals quick pick request is sent from the server to the client to let
  * the user provide a string value by picking one out of a number of given
