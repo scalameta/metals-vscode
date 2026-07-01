@@ -49,8 +49,6 @@
     "onDebugResolve:scala",
     "onLanguage:scala",
     "onLanguage:java",
-    "onLanguage:proto",
-    "onLanguage:prototext",
     "onLanguage:twirl-html",
     "onLanguage:twirl-xml",
     "onLanguage:twirl-js",
