@@ -3971,33 +3971,20 @@ version-range@^4.13.0:
   resolved "https://registry.yarnpkg.com/version-range/-/version-range-4.14.0.tgz#91c12e4665756a9101d1af43faeda399abe0edec"
   integrity sha512-gjb0ARm9qlcBAonU4zPwkl9ecKkas+tC2CGwFfptTCWWIVTWY1YUbT2zZKsOAF1jR/tNxxyLwwG0cb42XlYcTg==
 
-vscode-jsonrpc@9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/vscode-jsonrpc/-/vscode-jsonrpc-9.0.0.tgz#9ba600c90bee3933fffdf00ea5af57447fac36c5"
-  integrity sha512-+VvMmQPJhtvJ+8O+zu2JKIRiLxXF8NW7krWgyMGeOHrp4Cn23T5hc0v2LknNeopDOB70wghHAds7mKtcZ0I4Sg==
-
 vscode-jsonrpc@9.0.1:
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/vscode-jsonrpc/-/vscode-jsonrpc-9.0.1.tgz#5e848a4addf004b6337156f7858a006e0838b4f5"
   integrity sha512-rfuA6T75H6m5EkbhtEPzre9pT0HPcDI2MMy4+nPFIBks5J8JBAUHD4tRYSgaBOijIEC7SRkC1kKyXTLqbmh9jw==
 
-vscode-languageclient@10.0.1:
-  version "10.0.1"
-  resolved "https://registry.yarnpkg.com/vscode-languageclient/-/vscode-languageclient-10.0.1.tgz#7094dbba0c0599f6d91400b1b2317e69b8731b90"
-  integrity sha512-kXitJTQVKfv69/TY0LnQdsSMaqzRaeoJMMic+B6ad7HLtFPO46MLxpNjnFh1KF1nOhZUoLX+6e+JoIl+Jp3ycQ==
+vscode-languageclient@10.1.0:
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/vscode-languageclient/-/vscode-languageclient-10.1.0.tgz#38c09d836f5833d5972fb5524b362b9d1721f35f"
+  integrity sha512-XXRx6lqVitQy/oOLr9MfNYRG+MbQkhXkDaxbQMiKxEm8zZNfheRFUKNb8UYNh2stn9btl2wQM5wZFJjJvoc+jA==
   dependencies:
     minimatch "^10.2.5"
     semver "^7.8.1"
-    vscode-languageserver-protocol "3.18.1"
+    vscode-languageserver-protocol "3.18.2"
     vscode-languageserver-textdocument "1.0.13"
-
-vscode-languageserver-protocol@3.18.1:
-  version "3.18.1"
-  resolved "https://registry.yarnpkg.com/vscode-languageserver-protocol/-/vscode-languageserver-protocol-3.18.1.tgz#6d95382d480a305e2c89b35120493df0f51b3e8f"
-  integrity sha512-RTiiVHdpxpYcJVI5sq6S5TLjQ4WDR/rBrIWru+kPXe6sGQ9PFQ3GamrTKLvPqbR4ylr1SoodhmcqbFII0WXVuw==
-  dependencies:
-    vscode-jsonrpc "9.0.0"
-    vscode-languageserver-types "3.18.0"
 
 vscode-languageserver-protocol@3.18.2:
   version "3.18.2"
