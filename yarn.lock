@@ -687,10 +687,10 @@
   resolved "https://registry.yarnpkg.com/@types/shell-quote/-/shell-quote-1.7.5.tgz#6db4704742d307cd6d604e124e3ad6cd5ed943f3"
   integrity sha512-+UE8GAGRPbJVQDdxi16dgadcBfQ+KG2vgZhV1+3A1XmHbmwcdwhCUwIdy+d3pAGrbvgRoVSjeI9vOWyq376Yzw==
 
-"@types/sinon@^21.0.1":
-  version "21.0.1"
-  resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-21.0.1.tgz#f995e2afdf15be832d5f1645803d82a8eb95a1bc"
-  integrity sha512-5yoJSqLbjH8T9V2bksgRayuhpZy+723/z6wBOR+Soe4ZlXC0eW8Na71TeaZPUWDQvM7LYKa9UGFc6LRqxiR5fQ==
+"@types/sinon@^22.0.0":
+  version "22.0.0"
+  resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-22.0.0.tgz#396af07c4452efb57950ec260d450acedf025508"
+  integrity sha512-TDbVpbccc2HfiqHR09Argj3mHV1KMW7sCCKj52fsl8lbRLkEn7fB1966EWhOKWUBcqfBueZuPoA7/OK1CKiy3g==
   dependencies:
     "@types/sinonjs__fake-timers" "*"
 
