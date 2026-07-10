@@ -1429,7 +1429,7 @@
     "ansicolor": "^2.0.3",
     "fp-ts": "^2.16.11",
     "js-yaml": "5.2.1",
-    "marked": "^18.0.5",
+    "marked": "^18.0.6",
     "node-fetch": "^3.3.2",
     "promisify-child-process": "4.1.2",
     "semver": "^7.8.5",
