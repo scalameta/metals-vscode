@@ -687,6 +687,11 @@
           "default": "off",
           "description": "Traces the communication between VS Code and the Metals language server.",
           "scope": "window"
+        },
+        "metals.presentation-compiler-diagnostics": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Use Presentation Compiler."
         }
       }
     },
