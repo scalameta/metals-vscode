@@ -1407,7 +1407,7 @@
     "@types/sinon": "^22.0.0",
     "@types/vscode": "1.89.0",
     "@types/yauzl": "^3.4.0",
-    "@typescript-eslint/eslint-plugin": "^8.63.0",
+    "@typescript-eslint/eslint-plugin": "^8.64.0",
     "@typescript-eslint/parser": "^8.64.0",
     "@vscode/test-electron": "^3.0.0",
     "@vscode/vsce": "^3.9.2",
