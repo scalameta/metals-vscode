@@ -505,6 +505,11 @@
           },
           "markdownDescription": "List of Scalafix rules dependencies in case they are not available by default in Metals and running scalafix fails due to 'rule not found' exception. For example: `com.github.liancheng::organize-imports:0.6.0` which follows the [coursier](https://get-coursier.io/) convention."
         },
+        "metals.scalafixLintEnabled": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Enable/disable scalafix linting. If enabled, Metals will lint the codebase using scalafix with the currently defined rules."
+        },
         "metals.bloopVersion": {
           "type": "string",
           "scope": "machine",
