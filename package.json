@@ -1433,7 +1433,7 @@
   "dependencies": {
     "ansicolor": "^2.0.3",
     "fp-ts": "^2.16.11",
-    "js-yaml": "5.2.1",
+    "js-yaml": "5.2.2",
     "marked": "^18.0.7",
     "node-fetch": "^3.3.2",
     "promisify-child-process": "4.1.2",
