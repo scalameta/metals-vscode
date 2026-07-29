@@ -1715,10 +1715,10 @@ eslint-config-prettier@^10.1.8:
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-10.1.8.tgz#15734ce4af8c2778cc32f0b01b37b0b5cd1ecb97"
   integrity sha512-82GZUjRS0p/jganf6q1rEO25VSoHH0hKPCTrgillPjdI/3bgBhAE1QzHrHTizjpRvy6pGAvKjDJtk2pF9NDq8w==
 
-eslint-plugin-mocha@^12.0.0:
-  version "12.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-mocha/-/eslint-plugin-mocha-12.0.0.tgz#5c2903efbe9195da9cf1e4d930705f37b6bf030f"
-  integrity sha512-vMjec/KRiKxpdA5dKIYV5xRORrSnPvvfD2El3FGtUX2pP7JTP75KRCrwtBqRmKd8a8QWet1MsBKmfZIbQ6gdhA==
+eslint-plugin-mocha@^12.0.1:
+  version "12.0.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-mocha/-/eslint-plugin-mocha-12.0.1.tgz#90eb9c198bfbe1901e643763f8edb3d62c072de9"
+  integrity sha512-oBHxSHxkIKV4L+iFM6BSyVRUID5JiX85KV6omqRed6aGDa4jk2hkhgi9uDrdPjwu1qzJ4T/5WXucsJOES4aUEQ==
   dependencies:
     "@eslint-community/eslint-utils" "4.10.1"
     "@eslint/core" "1.2.1"
