@@ -61,6 +61,11 @@ import {
 } from "./findInFiles";
 import * as ext from "./hoverExtension";
 import { decodeAndShowFile, MetalsFileProvider } from "./metalsContentProvider";
+import {
+  JarFileSystemProvider,
+  translateJarFsToJar,
+  translateJarToJarFs,
+} from "./jarFileSystemProvider";
 import { registerMetalsClassFileCustomEditor } from "./classFileCustomEditor";
 import {
   currentWorkspaceFolder,
@@ -694,6 +699,16 @@ async function launchMetalsWithServerOptions(
     revealOutputChannelOn: RevealOutputChannelOn.Never,
     outputChannel: outputChannel as LogOutputChannel,
     initializationOptions,
+    uriConverters: {
+      code2Protocol: (uri: Uri) => translateJarFsToJar(uri),
+      protocol2Code: (uriString: string) => {
+        const uri = Uri.parse(uriString);
+        if (uri.scheme === "jar") {
+          return translateJarToJarFs(uri);
+        }
+        return uri;
+      },
+    },
     middleware: {
       provideHover: hoverLinksMiddlewareHook,
     },
@@ -772,9 +787,17 @@ async function launchMetalsWithServerOptions(
   }
 
   const metalsFileProvider = new MetalsFileProvider(client);
+  const jarFsProvider = new JarFileSystemProvider();
 
   registerTextDocumentContentProvider("metalsDecode", metalsFileProvider);
   registerTextDocumentContentProvider("jar", metalsFileProvider);
+
+  context.subscriptions.push(
+    workspace.registerFileSystemProvider("jar-fs", jarFsProvider, {
+      isReadonly: true,
+      isCaseSensitive: true,
+    }),
+  );
 
   registerMetalsClassFileCustomEditor(context, client, metalsFileProvider);
 
@@ -1048,6 +1071,10 @@ async function launchMetalsWithServerOptions(
       );
       languages.registerCodeLensProvider(
         { scheme: "jar", language: "scala" },
+        codeLensRefresher,
+      );
+      languages.registerCodeLensProvider(
+        { scheme: "jar-fs", language: "scala" },
         codeLensRefresher,
       );
 

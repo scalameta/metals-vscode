@@ -14,6 +14,8 @@ describe("buildDocumentSelector", () => {
         { scheme: "file", language: "twirl-txt" },
         { scheme: "jar", language: "scala" },
         { scheme: "jar", language: "java" },
+        { scheme: "jar-fs", language: "scala" },
+        { scheme: "jar-fs", language: "java" },
       ],
     );
   });
@@ -30,8 +32,11 @@ describe("buildDocumentSelector", () => {
         { scheme: "file", language: "twirl-txt" },
         { scheme: "jar", language: "scala" },
         { scheme: "jar", language: "java" },
+        { scheme: "jar-fs", language: "scala" },
+        { scheme: "jar-fs", language: "java" },
         { scheme: "file", language: "proto" },
         { scheme: "jar", language: "proto" },
+        { scheme: "jar-fs", language: "proto" },
       ],
     );
   });
@@ -48,8 +53,11 @@ describe("buildDocumentSelector", () => {
         { scheme: "file", language: "twirl-txt" },
         { scheme: "jar", language: "scala" },
         { scheme: "jar", language: "java" },
+        { scheme: "jar-fs", language: "scala" },
+        { scheme: "jar-fs", language: "java" },
         { scheme: "file", language: "prototext" },
         { scheme: "jar", language: "prototext" },
+        { scheme: "jar-fs", language: "prototext" },
       ],
     );
   });
@@ -66,10 +74,14 @@ describe("buildDocumentSelector", () => {
         { scheme: "file", language: "twirl-txt" },
         { scheme: "jar", language: "scala" },
         { scheme: "jar", language: "java" },
+        { scheme: "jar-fs", language: "scala" },
+        { scheme: "jar-fs", language: "java" },
         { scheme: "file", language: "proto" },
         { scheme: "jar", language: "proto" },
+        { scheme: "jar-fs", language: "proto" },
         { scheme: "file", language: "prototext" },
         { scheme: "jar", language: "prototext" },
+        { scheme: "jar-fs", language: "prototext" },
       ],
     );
   });

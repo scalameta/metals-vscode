@@ -1,6 +1,7 @@
 import { workspace, window, ViewColumn, Uri, Range } from "vscode";
 import { DocumentUri, Range as LspRange } from "vscode-languageclient/node";
 import { MetalsFileProvider } from "./metalsContentProvider";
+import { translateJarToJarFs } from "./jarFileSystemProvider";
 
 export interface WindowLocation {
   uri: DocumentUri;
@@ -29,7 +30,11 @@ export function gotoLocation(
         )
         .pop()?.viewColumn || ViewColumn.Beside;
   }
-  const uri = Uri.parse(location.uri);
+  let uri = Uri.parse(location.uri);
+  // Translate jar: URIs to jar-fs: URIs for better breadcrumb navigation
+  if (uri.scheme === "jar") {
+    uri = translateJarToJarFs(uri);
+  }
   // vscode will cache the virtual documents even after closing unless onDidChange is fired
   if (uri.scheme == "metalsDecode" && metalsFileProvider) {
     metalsFileProvider.onDidChangeEmitter.fire(uri);
