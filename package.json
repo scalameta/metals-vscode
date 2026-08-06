@@ -1407,7 +1407,7 @@
     "@types/mocha": "^10.0.10",
     "@types/node": "26.1.2",
     "@types/node-fetch": "^2.6.13",
-    "@types/semver": "^7.7.1",
+    "@types/semver": "^7.8.0",
     "@types/shell-quote": "^1.6.1",
     "@types/sinon": "^22.0.0",
     "@types/vscode": "1.89.0",
