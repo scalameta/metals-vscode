@@ -53,6 +53,7 @@
     "onLanguage:twirl-xml",
     "onLanguage:twirl-js",
     "onLanguage:twirl-txt",
+    "onFileSystem:jar-fs",
     "workspaceContains:build.sbt",
     "workspaceContains:build.sc",
     "workspaceContains:build.mill",

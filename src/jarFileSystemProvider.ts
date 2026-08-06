@@ -44,6 +44,18 @@ export function translateJarFsToJar(uri: Uri): string {
     return uri.toString();
   }
 
+  // First, try to reconstruct from query parameter (self-contained URI)
+  if (uri.query) {
+    const params = new URLSearchParams(uri.query);
+    const jarPath = params.get("jarPath");
+    if (jarPath) {
+      // Path format: /jarName.jar/internal/path
+      const pathParts = uri.path.split("/").filter((p) => p);
+      const internalPath = pathParts.slice(1).join("/");
+      return `jar:file://${jarPath}!/${internalPath}`;
+    }
+  }
+
   const uriString = uri.toString();
 
   // Direct lookup in the registry
@@ -261,16 +273,48 @@ export class JarFileSystemProvider implements FileSystemProvider {
    * Resolve a jar-fs URI to its JAR file path and internal path components.
    */
   private resolveJarComponents(uri: Uri): JarUriComponents | undefined {
+    // First, try to extract from query parameter (self-contained URI)
+    const fromQuery = this.parseJarFsUriFromQuery(uri);
+    if (fromQuery) {
+      return fromQuery;
+    }
+
+    // Fall back to registry lookup
     const originalJarUri = jarFsToJarUri.get(uri.toString());
-    if (!originalJarUri) {
-      const fromPath = this.parseJarFsUriFromPath(uri);
-      if (fromPath) {
-        return fromPath;
-      }
+    if (originalJarUri) {
+      return parseJarUri(originalJarUri);
+    }
+
+    // Try to find from path matching
+    return this.parseJarFsUriFromPath(uri);
+  }
+
+  /**
+   * Parse jar-fs URI components from the query parameter.
+   * URI format: jar-fs:/jarName.jar/internal/path?jarPath=%2Fpath%2Fto%2FjarName.jar
+   */
+  private parseJarFsUriFromQuery(uri: Uri): JarUriComponents | undefined {
+    if (!uri.query) {
       return undefined;
     }
 
-    return parseJarUri(originalJarUri);
+    const params = new URLSearchParams(uri.query);
+    const jarPath = params.get("jarPath");
+    if (!jarPath) {
+      return undefined;
+    }
+
+    // Path format: /jarName.jar/internal/path
+    // We need to extract the internal path (everything after the JAR name)
+    const pathParts = uri.path.split("/").filter((p) => p);
+    if (pathParts.length < 1) {
+      return undefined;
+    }
+
+    // First part is the JAR name, rest is the internal path
+    const internalPath = pathParts.slice(1).join("/");
+
+    return { jarPath, internalPath };
   }
 
   /**
@@ -430,9 +474,10 @@ export function parseJarUri(uriString: string): JarUriComponents | undefined {
  * Translates a jar: URI to a jar-fs: URI for use with the FileSystemProvider.
  *
  * Input format:  jar:file:///path/to/scala-library-2.13.12.jar!/scala/Option.scala
- * Output format: jar-fs:/scala-library-2.13.12.jar/scala/Option.scala
+ * Output format: jar-fs:/scala-library-2.13.12.jar/scala/Option.scala?jarPath=%2Fpath%2Fto%2Fscala-library-2.13.12.jar
  *
- * This also registers the mapping so the provider can resolve it back.
+ * The full JAR path is encoded in the query parameter so the URI is self-contained
+ * and can be resolved without needing a registry (survives extension restarts).
  */
 export function translateJarToJarFs(uri: Uri): Uri {
   if (uri.scheme !== "jar") {
@@ -446,14 +491,29 @@ export function translateJarToJarFs(uri: Uri): Uri {
     return uri;
   }
 
-  const jarPath = decoded.substring(0, jarSeparatorIndex);
+  let fullJarPath = decoded.substring(0, jarSeparatorIndex);
   const internalPath = decoded.substring(jarSeparatorIndex + 2);
 
-  const lastSlash = jarPath.lastIndexOf("/");
-  const jarName = lastSlash !== -1 ? jarPath.substring(lastSlash + 1) : jarPath;
+  // Extract the actual filesystem path from jar:file:// prefix
+  if (fullJarPath.startsWith("jar:file://")) {
+    fullJarPath = fullJarPath.substring("jar:file://".length);
+  } else if (fullJarPath.startsWith("jar:file:")) {
+    fullJarPath = fullJarPath.substring("jar:file:".length);
+  }
+  if (fullJarPath.startsWith("//")) {
+    fullJarPath = fullJarPath.substring(1);
+  }
 
-  const jarFsUri = Uri.parse(`jar-fs:/${jarName}/${internalPath}`);
+  const lastSlash = fullJarPath.lastIndexOf("/");
+  const jarName =
+    lastSlash !== -1 ? fullJarPath.substring(lastSlash + 1) : fullJarPath;
 
+  // Encode the full JAR path in the query parameter
+  const jarFsUri = Uri.parse(`jar-fs:/${jarName}/${internalPath}`).with({
+    query: `jarPath=${encodeURIComponent(fullJarPath)}`,
+  });
+
+  // Also store in registry for backwards compatibility and translateJarFsToJar
   jarFsToJarUri.set(jarFsUri.toString(), decoded);
 
   return jarFsUri;
