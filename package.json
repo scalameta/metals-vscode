@@ -1422,7 +1422,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-mocha": "^12.0.1",
     "glob": "^13.0.6",
-    "mocha": "^11.7.6",
+    "mocha": "^11.8.0",
     "ovsx": "1.0.2",
     "prettier": "3.9.6",
     "rimraf": "^6.1.3",
