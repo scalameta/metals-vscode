@@ -2687,10 +2687,10 @@ markdown-it@^14.1.0:
     punycode.js "^2.3.1"
     uc.micro "^2.1.0"
 
-marked@*, marked@^18.0.7:
-  version "18.0.7"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-18.0.7.tgz#6d8d4dd777730263e7e25bedad56a26bb2809232"
-  integrity sha512-iDVQ5ldaiKXn6b2JroX5kgRfmwgqolW7NpaEzTl1k/2Zh1njIEN9yniyLV/mOvWwtsE8OGgkjsCYvijuPk1dtA==
+marked@*, marked@^18.0.8:
+  version "18.0.8"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-18.0.8.tgz#97229a54940952af65f1f59474c59d6ae4233870"
+  integrity sha512-wsTzDkXm7dJwwTZ5nM2ZJFUsAZwUDPxFAl4MEb35pS14Gn/8KFlV8N5xE/sVIsTcZoYmwbTw/6pSba70mvfDRA==
 
 math-intrinsics@^1.1.0:
   version "1.1.0"
