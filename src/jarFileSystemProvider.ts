@@ -32,6 +32,10 @@ interface JarUriComponents {
 /**
  * Global registry mapping jar-fs URIs back to original jar: URIs.
  * This is populated by translateJarToJarFs and used by JarFileSystemProvider.
+ *
+ * Keys are the full document jar-fs URI (exact round-trip) and a query-free
+ * JAR-root URI (`jar-fs:/name.jar` → `jar:file://...jar!/`) used to resolve
+ * parent and sibling paths.
  */
 const jarFsToJarUri = new Map<string, string>();
 
@@ -44,6 +48,37 @@ function toJarUriString(jarPath: string, internalPath: string): string {
     scheme: "jar",
     path: `${Uri.file(jarPath).toString()}!/${internalPath}`,
   }).toString(true);
+}
+
+/**
+ * Query-free jar-fs root key, e.g. jar-fs:/scala-library-2.13.12.jar
+ */
+function toJarFsRootKey(jarName: string): string {
+  return Uri.from({
+    scheme: "jar-fs",
+    path: `/${jarName}`,
+  }).toString();
+}
+
+/**
+ * Look up the registered JAR root for a jar-fs URI and the internal path
+ * relative to that root. Works for query-free parent and sibling URIs.
+ */
+function lookupJarFsRoot(
+  uri: Uri,
+): { jarRootUri: string; internalPath: string } | undefined {
+  const pathParts = uri.path.split("/").filter((p) => p);
+  if (pathParts.length < 1) {
+    return undefined;
+  }
+  const jarRootUri = jarFsToJarUri.get(toJarFsRootKey(pathParts[0]));
+  if (!jarRootUri) {
+    return undefined;
+  }
+  return {
+    jarRootUri,
+    internalPath: pathParts.slice(1).join("/"),
+  };
 }
 
 /**
@@ -75,23 +110,15 @@ export function translateJarFsToJar(uri: Uri): string {
     }
   }
 
-  // Try to find a matching base URI and reconstruct the full path
-  const path = uri.path;
-  const parts = path.split("/").filter((p) => p);
-
-  for (let i = parts.length; i >= 1; i--) {
-    const testPath = "/" + parts.slice(0, i).join("/");
-    const testUri = uri.with({ path: testPath }).toString();
-
-    const jarUri = jarFsToJarUri.get(testUri);
-    if (jarUri) {
-      const additionalPath = path.substring(testPath.length);
-      const separatorIndex = jarUri.indexOf("!/");
-      if (separatorIndex !== -1) {
-        const basePart = jarUri.substring(0, separatorIndex + 2);
-        const internalPart = jarUri.substring(separatorIndex + 2);
-        return basePart + internalPart + additionalPath;
-      }
+  // Query-free parent/sibling: resolve internalPath relative to the JAR root
+  const fromRoot = lookupJarFsRoot(uri);
+  if (fromRoot) {
+    const separatorIndex = fromRoot.jarRootUri.indexOf("!/");
+    if (separatorIndex !== -1) {
+      return (
+        fromRoot.jarRootUri.substring(0, separatorIndex + 2) +
+        fromRoot.internalPath
+      );
     }
   }
 
@@ -329,34 +356,25 @@ export class JarFileSystemProvider implements FileSystemProvider {
   }
 
   /**
-   * Try to find the JAR path from a jar-fs URI by looking up parent paths
-   * in the registry.
+   * Resolve a query-free jar-fs URI from the registered JAR-root mapping.
+   * internalPath is the remainder after the JAR name, so parent and sibling
+   * paths resolve correctly.
    */
   private parseJarFsUriFromPath(uri: Uri): JarUriComponents | undefined {
-    const path = uri.path;
-    const parts = path.split("/").filter((p) => p);
-
-    for (let i = parts.length; i >= 1; i--) {
-      const testPath = "/" + parts.slice(0, i).join("/");
-      const testUri = uri.with({ path: testPath }).toString();
-
-      for (const [jarFsUri, jarUri] of jarFsToJarUri) {
-        if (jarFsUri.startsWith(testUri) || testUri.startsWith(jarFsUri)) {
-          const components = parseJarUri(jarUri);
-          if (components) {
-            const jarFsParsed = Uri.parse(jarFsUri);
-            const jarFsInternalStart = jarFsParsed.path.length;
-            const additionalPath = path.substring(jarFsInternalStart);
-            return {
-              jarPath: components.jarPath,
-              internalPath: components.internalPath + additionalPath,
-            };
-          }
-        }
-      }
+    const fromRoot = lookupJarFsRoot(uri);
+    if (!fromRoot) {
+      return undefined;
     }
 
-    return undefined;
+    const components = parseJarUri(fromRoot.jarRootUri);
+    if (!components) {
+      return undefined;
+    }
+
+    return {
+      jarPath: components.jarPath,
+      internalPath: fromRoot.internalPath,
+    };
   }
 
   /**
@@ -550,10 +568,17 @@ export function translateJarToJarFs(
   const jarFsUri = Uri.from({
     scheme: "jar-fs",
     path: `/${jarName}/${internalPath}`,
-    query: `jarPath=${fullJarPath}`,
+    query: new URLSearchParams({ jarPath: fullJarPath }).toString(),
   });
 
-  // Store the original serialized jar URI so round-trips keep Metals encoding
+  // Full document URI preserves Metals encoding on exact round-trip.
+  // Query-free JAR root lets parent/sibling paths resolve relative to the archive.
+  const separatorIndex = originalJarUri.indexOf("!/");
+  const jarRootUri =
+    separatorIndex === -1
+      ? originalJarUri
+      : originalJarUri.substring(0, separatorIndex + 2);
+  jarFsToJarUri.set(toJarFsRootKey(jarName), jarRootUri);
   jarFsToJarUri.set(jarFsUri.toString(), originalJarUri);
 
   return jarFsUri;

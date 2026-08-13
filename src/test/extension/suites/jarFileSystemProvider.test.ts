@@ -22,9 +22,20 @@ suite("jar URI translation", () => {
       "/scala-library-2.13.12.jar/scala/Option.scala",
     );
     assert.strictEqual(
-      jarFs.query,
-      "jarPath=/home/user/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.12/scala-library-2.13.12.jar",
+      new URLSearchParams(jarFs.query).get("jarPath"),
+      "/home/user/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.12/scala-library-2.13.12.jar",
     );
+    assert.strictEqual(translateJarFsToJar(jarFs), original);
+  });
+
+  test("round-trips a jar URI with an ampersand in the archive path", () => {
+    const original =
+      "jar:file:///home/user/foo%26bar/scala-library-2.13.12.jar!/scala/Option.scala";
+    const jarFs = translateJarToJarFs(Uri.parse(original), original);
+
+    assert.strictEqual(jarFs.scheme, "jar-fs");
+    const jarPath = new URLSearchParams(jarFs.query).get("jarPath");
+    assert.strictEqual(jarPath, "/home/user/foo&bar/scala-library-2.13.12.jar");
     assert.strictEqual(translateJarFsToJar(jarFs), original);
   });
 
@@ -37,6 +48,52 @@ suite("jar URI translation", () => {
     const jarPath = new URLSearchParams(jarFs.query).get("jarPath");
     assert.ok(jarPath?.includes("My Libraries"));
     assert.strictEqual(translateJarFsToJar(jarFs), original);
+  });
+
+  test("round-trips query-free parent and sibling URIs via the JAR root mapping", () => {
+    const jarFile =
+      "jar:file:///home/user/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.12/scala-library-2.13.12.jar";
+    const original = `${jarFile}!/scala/Option.scala`;
+    translateJarToJarFs(Uri.parse(original), original);
+
+    const parent = Uri.from({
+      scheme: "jar-fs",
+      path: "/scala-library-2.13.12.jar/scala",
+    });
+    const sibling = Uri.from({
+      scheme: "jar-fs",
+      path: "/scala-library-2.13.12.jar/scala/Some.scala",
+    });
+
+    assert.strictEqual(translateJarFsToJar(parent), `${jarFile}!/scala`);
+    assert.strictEqual(
+      translateJarFsToJar(sibling),
+      `${jarFile}!/scala/Some.scala`,
+    );
+  });
+
+  test("round-trips query-free parent and sibling URIs with encoded archive paths", () => {
+    const original =
+      "jar:file:///home/user/My%20Libraries/scala-library-2.13.12.jar!/scala/Option.scala";
+    translateJarToJarFs(Uri.parse(original), original);
+
+    const parent = Uri.from({
+      scheme: "jar-fs",
+      path: "/scala-library-2.13.12.jar/scala",
+    });
+    const sibling = Uri.from({
+      scheme: "jar-fs",
+      path: "/scala-library-2.13.12.jar/scala/Some.scala",
+    });
+
+    assert.strictEqual(
+      translateJarFsToJar(parent),
+      "jar:file:///home/user/My%20Libraries/scala-library-2.13.12.jar!/scala",
+    );
+    assert.strictEqual(
+      translateJarFsToJar(sibling),
+      "jar:file:///home/user/My%20Libraries/scala-library-2.13.12.jar!/scala/Some.scala",
+    );
   });
 
   test("reconstructs encoded archive paths from query without a registry entry", () => {
