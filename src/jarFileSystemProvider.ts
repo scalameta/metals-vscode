@@ -389,6 +389,7 @@ export class JarFileSystemProvider implements FileSystemProvider {
             type: isDirectory ? FileType.Directory : FileType.File,
             size: entry.uncompressedSize,
           });
+          addMissingParentDirectories(entries, name);
 
           zipfile.readEntry();
         });
@@ -448,6 +449,25 @@ export class JarFileSystemProvider implements FileSystemProvider {
         zipfile.on("error", reject);
       });
     });
+  }
+}
+
+/** Index implicit package directories without replacing explicit archive entries. */
+function addMissingParentDirectories(
+  entries: Map<string, JarEntry>,
+  entryPath: string,
+): void {
+  let slashIndex = entryPath.lastIndexOf("/");
+  while (slashIndex > 0) {
+    const parentPath = entryPath.substring(0, slashIndex);
+    if (!entries.has(parentPath)) {
+      entries.set(parentPath, {
+        name: parentPath.split("/").pop() || parentPath,
+        type: FileType.Directory,
+        size: 0,
+      });
+    }
+    slashIndex = parentPath.lastIndexOf("/");
   }
 }
 
