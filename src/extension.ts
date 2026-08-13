@@ -73,6 +73,7 @@ import {
   getJavaVersionOverride,
   getTextDocumentPositionParams,
   getValueFromConfig,
+  isExperimentalJarFileSystemEnabled,
   metalsDir,
 } from "./util";
 import { createTestManager } from "./testExplorer/testManager";
@@ -687,11 +688,13 @@ async function launchMetalsWithServerOptions(
   };
 
   const protobufLsp = config.get<boolean>("protobufLsp") ?? true;
+  const jarFileSystemEnabled = isExperimentalJarFileSystemEnabled();
 
   const clientOptions: LanguageClientOptions = {
     documentSelector: buildDocumentSelector({
       protobuf: protobufLsp,
       prototext: protobufLsp,
+      jarFileSystem: jarFileSystemEnabled,
     }),
     synchronize: {
       configurationSection: "metals",
@@ -699,16 +702,6 @@ async function launchMetalsWithServerOptions(
     revealOutputChannelOn: RevealOutputChannelOn.Never,
     outputChannel: outputChannel as LogOutputChannel,
     initializationOptions,
-    uriConverters: {
-      code2Protocol: (uri: Uri) => translateJarFsToJar(uri),
-      protocol2Code: (uriString: string) => {
-        const uri = Uri.parse(uriString);
-        if (uri.scheme === "jar") {
-          return translateJarToJarFs(uri, uriString);
-        }
-        return uri;
-      },
-    },
     middleware: {
       provideHover: hoverLinksMiddlewareHook,
     },
@@ -717,6 +710,19 @@ async function launchMetalsWithServerOptions(
     },
     diagnosticCollectionName: "Metals",
   };
+
+  if (jarFileSystemEnabled) {
+    clientOptions.uriConverters = {
+      code2Protocol: (uri: Uri) => translateJarFsToJar(uri),
+      protocol2Code: (uriString: string) => {
+        const uri = Uri.parse(uriString);
+        if (uri.scheme === "jar") {
+          return translateJarToJarFs(uri, uriString);
+        }
+        return uri;
+      },
+    };
+  }
 
   function hoverLinksMiddlewareHook(
     document: TextDocument,
@@ -787,17 +793,19 @@ async function launchMetalsWithServerOptions(
   }
 
   const metalsFileProvider = new MetalsFileProvider(client);
-  const jarFsProvider = new JarFileSystemProvider();
 
   registerTextDocumentContentProvider("metalsDecode", metalsFileProvider);
   registerTextDocumentContentProvider("jar", metalsFileProvider);
 
-  context.subscriptions.push(
-    workspace.registerFileSystemProvider("jar-fs", jarFsProvider, {
-      isReadonly: true,
-      isCaseSensitive: true,
-    }),
-  );
+  if (jarFileSystemEnabled) {
+    const jarFsProvider = new JarFileSystemProvider();
+    context.subscriptions.push(
+      workspace.registerFileSystemProvider("jar-fs", jarFsProvider, {
+        isReadonly: true,
+        isCaseSensitive: true,
+      }),
+    );
+  }
 
   registerMetalsClassFileCustomEditor(context, client, metalsFileProvider);
 
@@ -1073,10 +1081,12 @@ async function launchMetalsWithServerOptions(
         { scheme: "jar", language: "scala" },
         codeLensRefresher,
       );
-      languages.registerCodeLensProvider(
-        { scheme: "jar-fs", language: "scala" },
-        codeLensRefresher,
-      );
+      if (jarFileSystemEnabled) {
+        languages.registerCodeLensProvider(
+          { scheme: "jar-fs", language: "scala" },
+          codeLensRefresher,
+        );
+      }
 
       const getTestUI = () =>
         getValueFromConfig<TestUIKind>(

@@ -34,11 +34,8 @@ suite("jar URI translation", () => {
     const jarFs = translateJarToJarFs(Uri.parse(original), original);
 
     assert.strictEqual(jarFs.scheme, "jar-fs");
-    assert.ok(
-      jarFs.toString().includes("jarPath=") &&
-        (jarFs.toString().includes("My%20Libraries") ||
-          jarFs.query.includes("My Libraries")),
-    );
+    const jarPath = new URLSearchParams(jarFs.query).get("jarPath");
+    assert.ok(jarPath?.includes("My Libraries"));
     assert.strictEqual(translateJarFsToJar(jarFs), original);
   });
 

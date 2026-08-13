@@ -96,6 +96,14 @@ export function executeCommand<T>(
   });
 }
 
+export function isExperimentalJarFileSystemEnabled(): boolean {
+  return (
+    workspace
+      .getConfiguration("metals")
+      .get<boolean>("experimentalJarFileSystemEnabled") ?? false
+  );
+}
+
 export function getValueFromConfig<T>(
   config: WorkspaceConfiguration,
   key: string,
