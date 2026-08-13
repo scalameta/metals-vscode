@@ -36,6 +36,17 @@ interface JarUriComponents {
 const jarFsToJarUri = new Map<string, string>();
 
 /**
+ * Reconstruct a jar: URI from a filesystem JAR path and internal entry path.
+ * Uses the Uri API so spaces and other encoded archive-path characters survive.
+ */
+function toJarUriString(jarPath: string, internalPath: string): string {
+  return Uri.from({
+    scheme: "jar",
+    path: `${Uri.file(jarPath).toString()}!/${internalPath}`,
+  }).toString(true);
+}
+
+/**
  * Translates a jar-fs: URI back to the original jar: URI for sending to Metals.
  * Returns the original URI string if no translation is found or if not a jar-fs URI.
  */
@@ -44,7 +55,15 @@ export function translateJarFsToJar(uri: Uri): string {
     return uri.toString();
   }
 
-  // First, try to reconstruct from query parameter (self-contained URI)
+  const uriString = uri.toString();
+
+  // Direct lookup in the registry preserves the original serialized jar URI
+  const directMatch = jarFsToJarUri.get(uriString);
+  if (directMatch) {
+    return directMatch;
+  }
+
+  // Reconstruct from query parameter (self-contained URI, e.g. after restart)
   if (uri.query) {
     const params = new URLSearchParams(uri.query);
     const jarPath = params.get("jarPath");
@@ -52,16 +71,8 @@ export function translateJarFsToJar(uri: Uri): string {
       // Path format: /jarName.jar/internal/path
       const pathParts = uri.path.split("/").filter((p) => p);
       const internalPath = pathParts.slice(1).join("/");
-      return `jar:file://${jarPath}!/${internalPath}`;
+      return toJarUriString(jarPath, internalPath);
     }
-  }
-
-  const uriString = uri.toString();
-
-  // Direct lookup in the registry
-  const directMatch = jarFsToJarUri.get(uriString);
-  if (directMatch) {
-    return directMatch;
   }
 
   // Try to find a matching base URI and reconstruct the full path
@@ -478,8 +489,15 @@ export function parseJarUri(uriString: string): JarUriComponents | undefined {
  *
  * The full JAR path is encoded in the query parameter so the URI is self-contained
  * and can be resolved without needing a registry (survives extension restarts).
+ *
+ * @param uri Parsed jar URI
+ * @param originalJarUri Original serialized jar URI from Metals. Prefer this over
+ *   `uri.toString()` so percent-encoded archive paths are preserved when translating back.
  */
-export function translateJarToJarFs(uri: Uri): Uri {
+export function translateJarToJarFs(
+  uri: Uri,
+  originalJarUri: string = uri.toString(true),
+): Uri {
   if (uri.scheme !== "jar") {
     return uri;
   }
@@ -508,13 +526,15 @@ export function translateJarToJarFs(uri: Uri): Uri {
   const jarName =
     lastSlash !== -1 ? fullJarPath.substring(lastSlash + 1) : fullJarPath;
 
-  // Encode the full JAR path in the query parameter
-  const jarFsUri = Uri.parse(`jar-fs:/${jarName}/${internalPath}`).with({
-    query: `jarPath=${encodeURIComponent(fullJarPath)}`,
+  // Build via the Uri API so archive path and query encoding stay consistent
+  const jarFsUri = Uri.from({
+    scheme: "jar-fs",
+    path: `/${jarName}/${internalPath}`,
+    query: `jarPath=${fullJarPath}`,
   });
 
-  // Also store in registry for backwards compatibility and translateJarFsToJar
-  jarFsToJarUri.set(jarFsUri.toString(), decoded);
+  // Store the original serialized jar URI so round-trips keep Metals encoding
+  jarFsToJarUri.set(jarFsUri.toString(), originalJarUri);
 
   return jarFsUri;
 }

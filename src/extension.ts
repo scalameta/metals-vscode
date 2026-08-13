@@ -704,7 +704,7 @@ async function launchMetalsWithServerOptions(
       protocol2Code: (uriString: string) => {
         const uri = Uri.parse(uriString);
         if (uri.scheme === "jar") {
-          return translateJarToJarFs(uri);
+          return translateJarToJarFs(uri, uriString);
         }
         return uri;
       },

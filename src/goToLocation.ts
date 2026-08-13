@@ -33,7 +33,7 @@ export function gotoLocation(
   let uri = Uri.parse(location.uri);
   // Translate jar: URIs to jar-fs: URIs for better breadcrumb navigation
   if (uri.scheme === "jar") {
-    uri = translateJarToJarFs(uri);
+    uri = translateJarToJarFs(uri, location.uri);
   }
   // vscode will cache the virtual documents even after closing unless onDidChange is fired
   if (uri.scheme == "metalsDecode" && metalsFileProvider) {
