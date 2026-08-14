@@ -53,6 +53,7 @@
     "onLanguage:twirl-xml",
     "onLanguage:twirl-js",
     "onLanguage:twirl-txt",
+    "onFileSystem:jar-fs",
     "workspaceContains:build.sbt",
     "workspaceContains:build.sc",
     "workspaceContains:build.mill",
@@ -372,6 +373,12 @@
           "default": true,
           "scope": "window",
           "markdownDescription": "Enable Metals language server support for Protocol Buffers files. Requires another extension to contribute the `proto` language and reloading the window."
+        },
+        "metals.experimentalJarFileSystemEnabled": {
+          "type": "boolean",
+          "default": false,
+          "scope": "window",
+          "markdownDescription": "Enable the experimental JAR filesystem provider (`jar-fs:`). When enabled, dependency sources opened from JARs use a real filesystem provider, which improves breadcrumbs and navigation. Requires reloading the window."
         },
         "metals.defaultShell": {
           "type": "string",

@@ -17,6 +17,7 @@ import http from "https";
 
 import { UserConfiguration } from "./interfaces/UserConfiguration";
 import { JavaVersion } from "./getJavaHome";
+import { translateJarFsToJar } from "./jarFileSystemProvider";
 
 declare const sym: unique symbol;
 
@@ -76,8 +77,10 @@ export function getTextDocumentPositionParams(
   editor: TextEditor,
 ): TextDocumentPositionParams {
   const pos = editor.selection.active;
+  // Translate jar-fs URIs back to jar URIs for Metals
+  const uri = translateJarFsToJar(editor.document.uri);
   return {
-    textDocument: { uri: editor.document.uri.toString() },
+    textDocument: { uri },
     position: { line: pos.line, character: pos.character },
   };
 }
@@ -91,6 +94,14 @@ export function executeCommand<T>(
     command,
     arguments: args,
   });
+}
+
+export function isExperimentalJarFileSystemEnabled(): boolean {
+  return (
+    workspace
+      .getConfiguration("metals")
+      .get<boolean>("experimentalJarFileSystemEnabled") ?? false
+  );
 }
 
 export function getValueFromConfig<T>(

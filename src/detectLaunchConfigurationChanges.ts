@@ -20,6 +20,7 @@ export function detectLaunchConfigurationChanges(
       UserConfiguration.MetalsJavaHome,
       UserConfiguration.CustomRepositories,
       UserConfiguration.CoursierMirror,
+      "experimentalJarFileSystemEnabled",
       ...additionalRestartKeys,
     ];
     const shouldPromptRestart = promptRestartKeys.some((key) =>
