@@ -4227,6 +4227,11 @@ vscode-jsonrpc@9.0.1:
   resolved "https://registry.yarnpkg.com/vscode-jsonrpc/-/vscode-jsonrpc-9.0.1.tgz#5e848a4addf004b6337156f7858a006e0838b4f5"
   integrity sha512-rfuA6T75H6m5EkbhtEPzre9pT0HPcDI2MMy4+nPFIBks5J8JBAUHD4tRYSgaBOijIEC7SRkC1kKyXTLqbmh9jw==
 
+vscode-jsonrpc@9.0.2:
+  version "9.0.2"
+  resolved "https://registry.yarnpkg.com/vscode-jsonrpc/-/vscode-jsonrpc-9.0.2.tgz#086b76c4f94f1b0743deeac4e0b57c9c4a55e81d"
+  integrity sha512-SbQSV9yRemARxeXw6LU5sS6Zq0e9/DgCCX5yelH263ZQWukbTk8EF8fjTrr1dziasf4GwlJbvTwFnTrnQFWZXQ==
+
 vscode-languageclient@10.1.0:
   version "10.1.0"
   resolved "https://registry.yarnpkg.com/vscode-languageclient/-/vscode-languageclient-10.1.0.tgz#38c09d836f5833d5972fb5524b362b9d1721f35f"
@@ -4245,6 +4250,14 @@ vscode-languageserver-protocol@3.18.2:
     vscode-jsonrpc "9.0.1"
     vscode-languageserver-types "3.18.0"
 
+vscode-languageserver-protocol@3.18.3:
+  version "3.18.3"
+  resolved "https://registry.yarnpkg.com/vscode-languageserver-protocol/-/vscode-languageserver-protocol-3.18.3.tgz#6393a08060fb94f5529243fa3be056c676398211"
+  integrity sha512-DF49+WeV5py4zO5hhobp60jjsDSK0lAqA0OuKBLBvp423HPWQcCbhZz3JgyfIewsEz2f8U+X75xNIFHdiXZm2w==
+  dependencies:
+    vscode-jsonrpc "9.0.2"
+    vscode-languageserver-types "3.18.3"
+
 vscode-languageserver-textdocument@1.0.13:
   version "1.0.13"
   resolved "https://registry.yarnpkg.com/vscode-languageserver-textdocument/-/vscode-languageserver-textdocument-1.0.13.tgz#81846745d77b9fc787911e64e2e110d244c9b8b2"
@@ -4254,6 +4267,11 @@ vscode-languageserver-types@3.18.0:
   version "3.18.0"
   resolved "https://registry.yarnpkg.com/vscode-languageserver-types/-/vscode-languageserver-types-3.18.0.tgz#132321229604836bab710c97487e6cdafb9bd7bb"
   integrity sha512-8TsGPNMIMiiBdkORgRSvLjuiEIiAFtO+KssmYWxQ+uSVvlf7RjK8YKCOjPzZ+YA04jXEV7+7LvkSmHkhpNS99g==
+
+vscode-languageserver-types@3.18.3:
+  version "3.18.3"
+  resolved "https://registry.yarnpkg.com/vscode-languageserver-types/-/vscode-languageserver-types-3.18.3.tgz#eb296c42fd659375a82951b9cc33e7672ba9efe7"
+  integrity sha512-XIlzJ7Qp/jzSI1ds7/FwPAWrPeTZA7pAtlW4hdJ1J6xXWJL6dR9QYnDhJOdLzdKhUQ5Mm6mvUMw+3DcOQQasPw==
 
 web-streams-polyfill@^3.0.3:
   version "3.3.3"

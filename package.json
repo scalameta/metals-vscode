@@ -1447,7 +1447,7 @@
     "semver": "^7.8.5",
     "shell-quote": "^1.10.0",
     "vscode-languageclient": "10.1.0",
-    "vscode-languageserver-protocol": "3.18.2",
+    "vscode-languageserver-protocol": "3.18.3",
     "yauzl": "^3.4.0"
   },
   "extensionPack": [
