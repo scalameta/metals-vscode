@@ -736,6 +736,11 @@
         "title": "Import build"
       },
       {
+        "command": "metals.notebook-choose-build-target",
+        "category": "Metals",
+        "title": "Choose build target for notebook"
+      },
+      {
         "command": "metals.build-connect",
         "category": "Metals",
         "title": "Connect to build server"
