@@ -3357,10 +3357,10 @@ ora@^8.1.0:
     string-width "^7.2.0"
     strip-ansi "^7.1.0"
 
-ovsx@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/ovsx/-/ovsx-1.1.1.tgz#e5a063dc05f83e1a976552c6a3da5a336e62d60f"
-  integrity sha512-tklsCzvGVWKlM91Vc9U8tNnaQ+XacPJ12SWHjDaHGUJB49oMhoAULsJGeefhHebPvvckbcWbKqKIXODMZah5SA==
+ovsx@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/ovsx/-/ovsx-1.2.0.tgz#29e2ac269fa03b937923a09f7d64207de6f0c0da"
+  integrity sha512-12mauBqsLehlJ0cRiroQz4uKYVjblVS5OobgSJ278CdCtkDfRQD+SI3NQ00GNalDqzp5PDN11yx84miFUojeMw==
   dependencies:
     "@inquirer/prompts" "^7.10.1"
     "@vscode/vsce" "^3.7.1"
