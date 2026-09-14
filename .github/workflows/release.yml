@@ -28,12 +28,6 @@ jobs:
       - name: Yarn set version
         run: |
           yarn version --no-git-tag-version --new-version ${{ steps.get_version.outputs.NEW_VERSION }}
-      - name: Commit changes
-        run: |
-          git add .
-          git commit -m "v${{ steps.get_version.outputs.NEW_VERSION }}"
-      - name: Push changes
-        run: git push origin HEAD:main
       - name: Publish extension
         run: |
           yarn vscode:publish -p ${{ secrets.VS_MARKETPLACE_TOKEN }}
@@ -52,6 +46,12 @@ jobs:
           URL=$(curl --silent "https://api.github.com/repos/scalameta/metals-vscode/releases/latest" | jq -r '.upload_url')
           echo $URL
           echo "UPLOAD_URL=$URL" >> $GITHUB_OUTPUT
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m "v${{ steps.get_version.outputs.NEW_VERSION }}"
+      - name: Push changes
+        run: git push origin HEAD:main
       - name: Upload VSIX package to release
         uses: actions/upload-release-asset@v1.0.1
         env:
