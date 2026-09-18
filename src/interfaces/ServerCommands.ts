@@ -73,6 +73,12 @@ export const ServerCommands = {
   /** Retrieve a list of all build targets */
   ListBuildTargets: "list-build-targets",
   /**
+   * Associate a `.ipynb` notebook's Scala cells with one of the workspace's
+   * build targets, so hover/completion/definition/diagnostics for its cells
+   * see that target's real dependency classpath.
+   */
+  NotebookChooseBuildTarget: "notebook-choose-build-target",
+  /**
    * Detect the build tool for a workspace and generate the bsp config for the
    * build tool. If there are multiple build tools for a workspace ,the user
    * will be prompted to choose one.

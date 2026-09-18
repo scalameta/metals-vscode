@@ -967,6 +967,23 @@ async function launchMetalsWithServerOptions(
         }
       });
 
+      registerCommand(
+        `metals.${ServerCommands.NotebookChooseBuildTarget}`,
+        async () => {
+          const notebookUri = window.activeNotebookEditor?.notebook.uri;
+          if (!notebookUri) {
+            window.showErrorMessage(
+              "No active notebook to choose a build target for.",
+            );
+            return;
+          }
+          await client.sendRequest(ExecuteCommandRequest.type, {
+            command: ServerCommands.NotebookChooseBuildTarget,
+            arguments: [notebookUri.toString()],
+          });
+        },
+      );
+
       let channelOpen = false;
 
       registerCommand(ClientCommands.FocusDiagnostics, () =>
