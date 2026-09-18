@@ -967,6 +967,23 @@ async function launchMetalsWithServerOptions(
         }
       });
 
+      registerCommand(
+        `metals.${ServerCommands.NotebookInstallKernel}`,
+        async () => {
+          const notebookUri = window.activeNotebookEditor?.notebook.uri;
+          if (!notebookUri) {
+            window.showErrorMessage(
+              "No active notebook to install a kernel for.",
+            );
+            return;
+          }
+          await client.sendRequest(ExecuteCommandRequest.type, {
+            command: ServerCommands.NotebookInstallKernel,
+            arguments: [notebookUri.toString()],
+          });
+        },
+      );
+
       let channelOpen = false;
 
       registerCommand(ClientCommands.FocusDiagnostics, () =>

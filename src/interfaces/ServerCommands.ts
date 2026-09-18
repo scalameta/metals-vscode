@@ -73,6 +73,13 @@ export const ServerCommands = {
   /** Retrieve a list of all build targets */
   ListBuildTargets: "list-build-targets",
   /**
+   * Installs a real Jupyter kernel (via Almond) for a `.ipynb` notebook,
+   * sharing the classpath of whichever build target its cells currently
+   * resolve against, so "Run" actually executes cells against the same
+   * dependencies its language features already see.
+   */
+  NotebookInstallKernel: "notebook-install-kernel",
+  /**
    * Detect the build tool for a workspace and generate the bsp config for the
    * build tool. If there are multiple build tools for a workspace ,the user
    * will be prompted to choose one.
