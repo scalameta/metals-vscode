@@ -67,6 +67,16 @@ async function handleTextChange(
     return;
   }
 
+  // Avoid reading the clipboard on every edit. notifyPaste already requires a
+  // change matching the tracked copied text, so this check drops no pastes.
+  const copiedText = context.workspaceState.get<string>("copiedText");
+  if (!copiedText) {
+    return;
+  }
+  if (!event.contentChanges.some((change) => change.text === copiedText)) {
+    return;
+  }
+
   // Get clipboard content and check if it matches the copied text
   const clipboardText = await env.clipboard.readText();
   if (!clipboardText) {
