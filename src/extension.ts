@@ -968,7 +968,16 @@ async function launchMetalsWithServerOptions(
         }
       });
 
+      // Persisted (not just in-memory) so accepting the prompt once, in any
+      // past session, stops it from asking again for this notebook.
+      const kernelInstallAcceptedKey = (uri: Uri) =>
+        `notebookKernelInstallAccepted:${uri.toString()}`;
+
       const installKernelForNotebook = async (notebookUri: Uri) => {
+        await context.globalState.update(
+          kernelInstallAcceptedKey(notebookUri),
+          true,
+        );
         await client.sendRequest(ExecuteCommandRequest.type, {
           command: ServerCommands.NotebookInstallKernel,
           arguments: [notebookUri.toString()],
@@ -989,19 +998,15 @@ async function launchMetalsWithServerOptions(
         },
       );
 
-      // Offers to install a kernel once per notebook per session: there's no
-      // reliable, cheap way from here to tell whether one was already
-      // installed in a previous session (that's a filesystem check on the
-      // Jupyter kernels directory, keyed by a kernel id the server computes
-      // and could change independently of this client), and
-      // AlmondKernelInstaller's install is idempotent (`--force`), so
-      // re-offering across restarts is harmless.
       const promptedNotebooks = new Set<string>();
       const maybeProposeKernelInstall = async (notebook: NotebookDocument) => {
         if (notebook.notebookType !== "jupyter-notebook") {
           return;
         }
-        if (promptedNotebooks.has(notebook.uri.toString())) {
+        if (
+          promptedNotebooks.has(notebook.uri.toString()) ||
+          context.globalState.get(kernelInstallAcceptedKey(notebook.uri))
+        ) {
           return;
         }
         const hasScalaCells = notebook
