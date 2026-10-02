@@ -969,9 +969,12 @@ async function launchMetalsWithServerOptions(
       });
 
       // Persisted (not just in-memory) so accepting the prompt once, in any
-      // past session, stops it from asking again for this notebook.
+      // past session, stops it from asking again for this notebook — but
+      // keyed on serverVersion too, so a future Metals release that bumps
+      // the pinned Almond version re-prompts instead of leaving an already
+      // "accepted" notebook stuck on a stale kernel forever.
       const kernelInstallAcceptedKey = (uri: Uri) =>
-        `notebookKernelInstallAccepted:${uri.toString()}`;
+        `notebookKernelInstallAccepted:${serverVersion}:${uri.toString()}`;
 
       const installKernelForNotebook = async (notebookUri: Uri) => {
         await context.globalState.update(
