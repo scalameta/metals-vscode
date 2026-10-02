@@ -35,6 +35,7 @@ import {
   DebugSessionCustomEvent,
   ThemeColor,
   LogOutputChannel,
+  NotebookDocument,
 } from "vscode";
 import {
   LanguageClient,
@@ -967,6 +968,13 @@ async function launchMetalsWithServerOptions(
         }
       });
 
+      const installKernelForNotebook = async (notebookUri: Uri) => {
+        await client.sendRequest(ExecuteCommandRequest.type, {
+          command: ServerCommands.NotebookInstallKernel,
+          arguments: [notebookUri.toString()],
+        });
+      };
+
       registerCommand(
         `metals.${ServerCommands.NotebookInstallKernel}`,
         async () => {
@@ -977,11 +985,51 @@ async function launchMetalsWithServerOptions(
             );
             return;
           }
-          await client.sendRequest(ExecuteCommandRequest.type, {
-            command: ServerCommands.NotebookInstallKernel,
-            arguments: [notebookUri.toString()],
-          });
+          await installKernelForNotebook(notebookUri);
         },
+      );
+
+      // Offers to install a kernel once per notebook per session: there's no
+      // reliable, cheap way from here to tell whether one was already
+      // installed in a previous session (that's a filesystem check on the
+      // Jupyter kernels directory, keyed by a kernel id the server computes
+      // and could change independently of this client), and
+      // AlmondKernelInstaller's install is idempotent (`--force`), so
+      // re-offering across restarts is harmless.
+      const promptedNotebooks = new Set<string>();
+      const maybeProposeKernelInstall = async (notebook: NotebookDocument) => {
+        if (notebook.notebookType !== "jupyter-notebook") {
+          return;
+        }
+        if (promptedNotebooks.has(notebook.uri.toString())) {
+          return;
+        }
+        const hasScalaCells = notebook
+          .getCells()
+          .some((cell) => cell.document.languageId === "scala");
+        if (!hasScalaCells) {
+          return;
+        }
+
+        promptedNotebooks.add(notebook.uri.toString());
+        const installChoice = "Install Kernel";
+        const choice = await window.showInformationMessage(
+          "This notebook has Scala cells. Install a Jupyter kernel (via Almond) to run them?",
+          installChoice,
+          "Not now",
+        );
+        if (choice === installChoice) {
+          await installKernelForNotebook(notebook.uri);
+        }
+      };
+      // A notebook already open when we reach this point (e.g. restored as
+      // part of the window's previous layout) never fires its own
+      // `onDidOpenNotebookDocument` for us to catch — that already happened
+      // before this listener was registered — so check whatever's open now,
+      // in addition to listening for future opens.
+      workspace.notebookDocuments.forEach(maybeProposeKernelInstall);
+      context.subscriptions.push(
+        workspace.onDidOpenNotebookDocument(maybeProposeKernelInstall),
       );
 
       let channelOpen = false;
