@@ -376,7 +376,7 @@
         },
         "metals.experimentalJarFileSystemEnabled": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "scope": "window",
           "markdownDescription": "Enable the experimental JAR filesystem provider (`jar-fs:`). When enabled, dependency sources opened from JARs use a real filesystem provider, which improves breadcrumbs and navigation. Requires reloading the window."
         },
