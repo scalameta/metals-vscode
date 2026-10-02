@@ -968,24 +968,22 @@ async function launchMetalsWithServerOptions(
         }
       });
 
-      // Persisted (not just in-memory) so accepting the prompt once, in any
-      // past session, stops it from asking again for this notebook — but
-      // keyed on serverVersion too, so a future Metals release that bumps
-      // the pinned Almond version re-prompts instead of leaving an already
-      // "accepted" notebook stuck on a stale kernel forever.
-      const kernelInstallAcceptedKey = (uri: Uri) =>
-        `notebookKernelInstallAccepted:${serverVersion}:${uri.toString()}`;
-
       const installKernelForNotebook = async (notebookUri: Uri) => {
-        await context.globalState.update(
-          kernelInstallAcceptedKey(notebookUri),
-          true,
-        );
         await client.sendRequest(ExecuteCommandRequest.type, {
           command: ServerCommands.NotebookInstallKernel,
           arguments: [notebookUri.toString()],
         });
       };
+
+      // Asks the server rather than guessing here: it alone knows its own
+      // kernel-id/path scheme and the notebook's current classpath, so it
+      // can tell a stale kernel (Almond bumped, classpath changed, or the
+      // user deleted it by hand) from an up-to-date one.
+      const isKernelUpToDate = (notebookUri: Uri): Thenable<boolean> =>
+        client.sendRequest(ExecuteCommandRequest.type, {
+          command: ServerCommands.NotebookKernelUpToDate,
+          arguments: [notebookUri.toString()],
+        });
 
       registerCommand(
         `metals.${ServerCommands.NotebookInstallKernel}`,
@@ -1006,16 +1004,16 @@ async function launchMetalsWithServerOptions(
         if (notebook.notebookType !== "jupyter-notebook") {
           return;
         }
-        if (
-          promptedNotebooks.has(notebook.uri.toString()) ||
-          context.globalState.get(kernelInstallAcceptedKey(notebook.uri))
-        ) {
+        if (promptedNotebooks.has(notebook.uri.toString())) {
           return;
         }
         const hasScalaCells = notebook
           .getCells()
           .some((cell) => cell.document.languageId === "scala");
         if (!hasScalaCells) {
+          return;
+        }
+        if (await isKernelUpToDate(notebook.uri)) {
           return;
         }
 

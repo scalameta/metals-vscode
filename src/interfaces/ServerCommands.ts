@@ -80,6 +80,11 @@ export const ServerCommands = {
    */
   NotebookInstallKernel: "notebook-install-kernel",
   /**
+   * Returns whether a `.ipynb` notebook has an installed Jupyter kernel
+   * that still matches the current Almond version and project classpath.
+   */
+  NotebookKernelUpToDate: "notebook-kernel-up-to-date",
+  /**
    * Detect the build tool for a workspace and generate the bsp config for the
    * build tool. If there are multiple build tools for a workspace ,the user
    * will be prompted to choose one.
