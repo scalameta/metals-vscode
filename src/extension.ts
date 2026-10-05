@@ -975,10 +975,10 @@ async function launchMetalsWithServerOptions(
         });
       };
 
-      // Asks the server rather than guessing here: it alone knows its own
-      // kernel-id/path scheme and the notebook's current classpath, so it
-      // can tell a stale kernel (Almond bumped, classpath changed, or the
-      // user deleted it by hand) from an up-to-date one.
+      // Only the server knows its own kernel-id/path scheme and the
+      // notebook's current classpath, so only it can tell a stale kernel
+      // (Almond bumped, classpath changed, or the user deleted it by
+      // hand) from an up-to-date one.
       const isKernelUpToDate = (notebookUri: Uri): Thenable<boolean> =>
         client.sendRequest(ExecuteCommandRequest.type, {
           command: ServerCommands.NotebookKernelUpToDate,
@@ -1028,11 +1028,11 @@ async function launchMetalsWithServerOptions(
           await installKernelForNotebook(notebook.uri);
         }
       };
-      // A notebook already open when we reach this point (e.g. restored as
-      // part of the window's previous layout) never fires its own
-      // `onDidOpenNotebookDocument` for us to catch — that already happened
-      // before this listener was registered — so check whatever's open now,
-      // in addition to listening for future opens.
+      // A notebook already open when we reach this point (e.g. restored
+      // as part of the window's previous layout) never fires its own
+      // `onDidOpenNotebookDocument` for us to catch, since that already
+      // happened before this listener was registered. Check whatever's
+      // open now too, not just future opens.
       workspace.notebookDocuments.forEach(maybeProposeKernelInstall);
       context.subscriptions.push(
         workspace.onDidOpenNotebookDocument(maybeProposeKernelInstall),
