@@ -34,17 +34,7 @@ export async function checkServerVersion({
     serverVersionInfo(config);
   const isOutdated = (() => {
     try {
-      // A `-SNAPSHOT` version is a moving dev build (e.g. from `sbt
-      // publishLocal`), not a version someone forgot to bump: semver
-      // treats a pre-release as older than its own release (e.g.
-      // `1.6.9-SNAPSHOT` < `1.6.9`), which would otherwise flag any local
-      // dev build as "outdated" and offer to silently overwrite it with
-      // the stable release.
-      if (
-        serverVersion &&
-        latestServerVersion &&
-        !serverVersion.endsWith("SNAPSHOT")
-      ) {
+      if (serverVersion && latestServerVersion) {
         return semver.lt(serverVersion, latestServerVersion);
       } else {
         return false;
