@@ -10,6 +10,20 @@ interface CompilerInitializationOptions {
   snippetAutoIndent?: boolean;
 }
 
+/**
+ * How definitions from dependencies are indexed.
+ * Matches `DefinitionIndexStrategy` in Metals.
+ */
+export type DefinitionIndexStrategy = "classpath" | "sources";
+
+/**
+ * Settings from `metals.initializationSettings`.
+ * Forwarded as top-level initialization options before indexing starts.
+ */
+export interface InitializationSettings {
+  definitionIndexStrategy?: DefinitionIndexStrategy;
+}
+
 export interface MetalsInitializationOptions {
   compilerOptions?: CompilerInitializationOptions;
   runProvider?: boolean;
@@ -39,4 +53,5 @@ export interface MetalsInitializationOptions {
   doctorVisibilityProvider?: boolean;
   bspStatusBarProvider?: "on" | "off" | "log-message" | "show-message";
   moduleStatusBarProvider?: "on" | "off" | "log-message" | "show-message";
+  definitionIndexStrategy?: DefinitionIndexStrategy;
 }

@@ -21,6 +21,7 @@ export function detectLaunchConfigurationChanges(
       UserConfiguration.CustomRepositories,
       UserConfiguration.CoursierMirror,
       "experimentalJarFileSystemEnabled",
+      UserConfiguration.InitializationSettings,
       ...additionalRestartKeys,
     ];
     const shouldPromptRestart = promptRestartKeys.some((key) =>

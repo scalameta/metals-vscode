@@ -699,6 +699,26 @@
           "default": "off",
           "description": "Traces the communication between VS Code and the Metals language server.",
           "scope": "window"
+        },
+        "metals.initializationSettings": {
+          "type": "object",
+          "default": {},
+          "scope": "window",
+          "markdownDescription": "Supported in Metals 2.0.0 and later. Additional initialization settings to pass to the Metals server during initialization. These settings are applied before the server starts indexing and cannot be changed without reloading. They highly influence the performance and behavior of the server and should be used with caution.",
+          "properties": {
+            "definitionIndexStrategy": {
+              "type": "string",
+              "enum": [
+                "classpath",
+                "sources"
+              ],
+              "enumDescriptions": [
+                "Index definitions from class files. Faster, but misses features such as type member completions. Suited to larger codebases.",
+                "Index definitions from dependency sources. Slower, and supports features such as type member completions. Suited to smaller codebases."
+              ],
+              "markdownDescription": "How definitions from dependencies are indexed. When unset, Metals uses `classpath`."
+            }
+          }
         }
       }
     },
