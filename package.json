@@ -704,7 +704,7 @@
           "type": "object",
           "default": {},
           "scope": "window",
-          "markdownDescription": "Additional initialization settings to pass to the Metals server during initialization. These settings are applied before the server starts indexing and cannot be changed without reloading. They highly influence the performance and behavior of the server and should be used with caution.",
+          "markdownDescription": "Supported in Metals 2.0.0 and later. Additional initialization settings to pass to the Metals server during initialization. These settings are applied before the server starts indexing and cannot be changed without reloading. They highly influence the performance and behavior of the server and should be used with caution.",
           "properties": {
             "definitionIndexStrategy": {
               "type": "string",
