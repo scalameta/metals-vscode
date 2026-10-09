@@ -756,6 +756,11 @@
         "title": "Import build"
       },
       {
+        "command": "metals.notebook-install-kernel",
+        "category": "Metals",
+        "title": "Install Jupyter kernel for notebook"
+      },
+      {
         "command": "metals.build-connect",
         "category": "Metals",
         "title": "Connect to build server"

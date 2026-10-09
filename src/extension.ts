@@ -35,6 +35,7 @@ import {
   DebugSessionCustomEvent,
   ThemeColor,
   LogOutputChannel,
+  NotebookDocument,
 } from "vscode";
 import {
   LanguageClient,
@@ -973,6 +974,76 @@ async function launchMetalsWithServerOptions(
           }
         }
       });
+
+      const installKernelForNotebook = async (notebookUri: Uri) => {
+        await client.sendRequest(ExecuteCommandRequest.type, {
+          command: ServerCommands.NotebookInstallKernel,
+          arguments: [notebookUri.toString()],
+        });
+      };
+
+      // Only the server knows its own kernel-id/path scheme and the
+      // notebook's current classpath, so only it can tell a stale kernel
+      // (Almond bumped, classpath changed, or the user deleted it by
+      // hand) from an up-to-date one.
+      const isKernelUpToDate = (notebookUri: Uri): Thenable<boolean> =>
+        client.sendRequest(ExecuteCommandRequest.type, {
+          command: ServerCommands.NotebookKernelUpToDate,
+          arguments: [notebookUri.toString()],
+        });
+
+      registerCommand(
+        `metals.${ServerCommands.NotebookInstallKernel}`,
+        async () => {
+          const notebookUri = window.activeNotebookEditor?.notebook.uri;
+          if (!notebookUri) {
+            window.showErrorMessage(
+              "No active notebook to install a kernel for.",
+            );
+            return;
+          }
+          await installKernelForNotebook(notebookUri);
+        },
+      );
+
+      const promptedNotebooks = new Set<string>();
+      const maybeProposeKernelInstall = async (notebook: NotebookDocument) => {
+        if (notebook.notebookType !== "jupyter-notebook") {
+          return;
+        }
+        if (promptedNotebooks.has(notebook.uri.toString())) {
+          return;
+        }
+        const hasScalaCells = notebook
+          .getCells()
+          .some((cell) => cell.document.languageId === "scala");
+        if (!hasScalaCells) {
+          return;
+        }
+        if (await isKernelUpToDate(notebook.uri)) {
+          return;
+        }
+
+        promptedNotebooks.add(notebook.uri.toString());
+        const installChoice = "Install Kernel";
+        const choice = await window.showInformationMessage(
+          "This notebook has Scala cells. Install a Jupyter kernel (via Almond) to run them?",
+          installChoice,
+          "Not now",
+        );
+        if (choice === installChoice) {
+          await installKernelForNotebook(notebook.uri);
+        }
+      };
+      // A notebook already open when we reach this point (e.g. restored
+      // as part of the window's previous layout) never fires its own
+      // `onDidOpenNotebookDocument` for us to catch, since that already
+      // happened before this listener was registered. Check whatever's
+      // open now too, not just future opens.
+      workspace.notebookDocuments.forEach(maybeProposeKernelInstall);
+      context.subscriptions.push(
+        workspace.onDidOpenNotebookDocument(maybeProposeKernelInstall),
+      );
 
       let channelOpen = false;
 
