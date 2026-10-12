@@ -36,6 +36,8 @@ import {
   ThemeColor,
   LogOutputChannel,
   NotebookDocument,
+  NotebookEdit,
+  WorkspaceEdit,
 } from "vscode";
 import {
   LanguageClient,
@@ -95,6 +97,7 @@ import {
   MetalsTreeViewRevealType,
   MetalsTreeViews,
 } from "./interfaces/TreeViewProtocol";
+import { NotebookKernel } from "./interfaces/NotebookKernel";
 import { JavaVersion } from "./getJavaHome";
 import { setupCoursier } from "./setupCoursier";
 import { getJavaOptions } from "./getJavaOptions";
@@ -968,43 +971,131 @@ async function launchMetalsWithServerOptions(
         }
       });
 
-      const installKernelForNotebook = async (notebookUri: Uri) => {
-        await client.sendRequest(ExecuteCommandRequest.type, {
+      // The server installs a missing kernel and silently refreshes a stale
+      // one (Almond bumped, classpath changed, or deleted by hand), since
+      // only it knows its own kernel-id scheme and the current classpath.
+      // Resolves to null if no kernel is installed afterwards.
+      const ensureKernelForNotebook = (
+        notebook: NotebookDocument,
+        askBeforeInstall: boolean,
+      ): Thenable<NotebookKernel | null> =>
+        client.sendRequest(ExecuteCommandRequest.type, {
           command: ServerCommands.NotebookInstallKernel,
-          arguments: [notebookUri.toString()],
+          arguments: [{ uri: notebook.uri.toString(), askBeforeInstall }],
         });
+
+      // The Jupyter extension only creates a controller for a local
+      // kernelspec once the user picks it, so it can't be selected
+      // programmatically. Its kernelspec picker does recommend the one named
+      // in the notebook's `metadata.kernelspec`, though, so set that and open
+      // the picker.
+      const proposeKernel = async (
+        notebook: NotebookDocument,
+        kernel: NotebookKernel,
+      ) => {
+        const metadata = notebook.metadata?.metadata ?? {};
+        if (metadata.kernelspec?.name !== kernel.kernelId) {
+          const edit = new WorkspaceEdit();
+          edit.set(notebook.uri, [
+            NotebookEdit.updateNotebookMetadata({
+              ...notebook.metadata,
+              metadata: {
+                ...metadata,
+                kernelspec: {
+                  name: kernel.kernelId,
+                  display_name: kernel.displayName,
+                  language: "scala",
+                },
+              },
+            }),
+          ]);
+          await workspace.applyEdit(edit);
+        }
+        try {
+          await commands.executeCommand(
+            "jupyter.kernel.selectLocalKernelSpec",
+            notebook,
+          );
+        } catch (e) {
+          outputChannel.appendLine(
+            `Could not open the Jupyter kernel picker: ${e}`,
+          );
+          window.showInformationMessage(
+            `Select the '${kernel.displayName}' kernel with "Select Kernel" in the notebook toolbar to run this notebook.`,
+          );
+        }
       };
 
-      // Only the server knows its own kernel-id/path scheme and the
-      // notebook's current classpath, so only it can tell a stale kernel
-      // (Almond bumped, classpath changed, or the user deleted it by
-      // hand) from an up-to-date one.
-      const isKernelUpToDate = (notebookUri: Uri): Thenable<boolean> =>
-        client.sendRequest(ExecuteCommandRequest.type, {
-          command: ServerCommands.NotebookKernelUpToDate,
-          arguments: [notebookUri.toString()],
-        });
+      // Jupyter only scans kernelspecs on startup, so a freshly installed
+      // kernel can't be picked until the window reloads. Notebooks waiting
+      // for that are kept in workspace state, which survives the reload.
+      const pendingPickKey = "metals.notebookKernelPickPending";
+      const isPickPending = (notebook: NotebookDocument) =>
+        context.workspaceState
+          .get<string[]>(pendingPickKey, [])
+          .includes(notebook.uri.toString());
+      const setPickPending = (notebook: NotebookDocument, pending: boolean) => {
+        const uri = notebook.uri.toString();
+        const others = context.workspaceState
+          .get<string[]>(pendingPickKey, [])
+          .filter((u) => u !== uri);
+        return context.workspaceState.update(
+          pendingPickKey,
+          pending ? [...others, uri] : others,
+        );
+      };
+
+      const ensureAndProposeKernel = async (
+        notebook: NotebookDocument,
+        askBeforeInstall: boolean,
+        pickExisting: boolean,
+      ): Promise<NotebookKernel | null> => {
+        const kernel = await ensureKernelForNotebook(
+          notebook,
+          askBeforeInstall,
+        );
+        if (!kernel) {
+          return null;
+        }
+        if (kernel.newlyInstalled) {
+          await setPickPending(notebook, true);
+          const reload = "Reload Window";
+          const choice = await window.showInformationMessage(
+            `Installed Jupyter kernel '${kernel.displayName}'. Reload the window so Jupyter can find it.`,
+            reload,
+          );
+          if (choice === reload) {
+            await commands.executeCommand("workbench.action.reloadWindow");
+          }
+        } else if (pickExisting || isPickPending(notebook)) {
+          await setPickPending(notebook, false);
+          await proposeKernel(notebook, kernel);
+        }
+        return kernel;
+      };
 
       registerCommand(
         `metals.${ServerCommands.NotebookInstallKernel}`,
         async () => {
-          const notebookUri = window.activeNotebookEditor?.notebook.uri;
-          if (!notebookUri) {
+          const notebook = window.activeNotebookEditor?.notebook;
+          if (!notebook) {
             window.showErrorMessage(
               "No active notebook to install a kernel for.",
             );
             return;
           }
-          await installKernelForNotebook(notebookUri);
+          await ensureAndProposeKernel(notebook, false, true);
         },
       );
 
-      const promptedNotebooks = new Set<string>();
+      // Notebooks whose kernel install the user declined (or that failed),
+      // so reopening them doesn't ask again in this session.
+      const declinedNotebooks = new Set<string>();
       const maybeProposeKernelInstall = async (notebook: NotebookDocument) => {
         if (notebook.notebookType !== "jupyter-notebook") {
           return;
         }
-        if (promptedNotebooks.has(notebook.uri.toString())) {
+        if (declinedNotebooks.has(notebook.uri.toString())) {
           return;
         }
         const hasScalaCells = notebook
@@ -1013,19 +1104,9 @@ async function launchMetalsWithServerOptions(
         if (!hasScalaCells) {
           return;
         }
-        if (await isKernelUpToDate(notebook.uri)) {
-          return;
-        }
-
-        promptedNotebooks.add(notebook.uri.toString());
-        const installChoice = "Install Kernel";
-        const choice = await window.showInformationMessage(
-          "This notebook has Scala cells. Install a Jupyter kernel (via Almond) to run them?",
-          installChoice,
-          "Not now",
-        );
-        if (choice === installChoice) {
-          await installKernelForNotebook(notebook.uri);
+        const kernel = await ensureAndProposeKernel(notebook, true, false);
+        if (!kernel) {
+          declinedNotebooks.add(notebook.uri.toString());
         }
       };
       // A notebook already open when we reach this point (e.g. restored

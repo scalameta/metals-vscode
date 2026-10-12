@@ -73,17 +73,12 @@ export const ServerCommands = {
   /** Retrieve a list of all build targets */
   ListBuildTargets: "list-build-targets",
   /**
-   * Installs a real Jupyter kernel (via Almond) for a `.ipynb` notebook,
+   * Makes sure a `.ipynb` notebook has a real Jupyter kernel (via Almond)
    * sharing the classpath of whichever build target its cells currently
-   * resolve against, so "Run" actually executes cells against the same
-   * dependencies its language features already see.
+   * resolve against. Takes `{ uri, askBeforeInstall }` and returns the
+   * installed kernel (`{ kernelId, displayName }`) or null.
    */
   NotebookInstallKernel: "notebook-install-kernel",
-  /**
-   * Returns whether a `.ipynb` notebook has an installed Jupyter kernel
-   * that still matches the current Almond version and project classpath.
-   */
-  NotebookKernelUpToDate: "notebook-kernel-up-to-date",
   /**
    * Detect the build tool for a workspace and generate the bsp config for the
    * build tool. If there are multiple build tools for a workspace ,the user
