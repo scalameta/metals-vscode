@@ -1101,6 +1101,8 @@ async function launchMetalsWithServerOptions(
       // Declined or failed in this session, so reopening doesn't ask again.
       const declinedNotebooks = new Set<string>();
       const inProgressNotebooks = new Set<string>();
+      // Checked in this window, so editing their cells doesn't check again.
+      const checkedNotebooks = new Set<string>();
       const maybeProposeKernelInstall = async (notebook: NotebookDocument) => {
         const uri = notebook.uri.toString();
         if (
@@ -1113,6 +1115,7 @@ async function launchMetalsWithServerOptions(
         ) {
           return;
         }
+        checkedNotebooks.add(uri);
         inProgressNotebooks.add(uri);
         try {
           if (!(await ensureKernel(notebook, false))) {
@@ -1131,6 +1134,12 @@ async function launchMetalsWithServerOptions(
       workspace.notebookDocuments.forEach(maybeProposeKernelInstall);
       context.subscriptions.push(
         workspace.onDidOpenNotebookDocument(maybeProposeKernelInstall),
+        // A notebook opened without Scala cells may gain one later.
+        workspace.onDidChangeNotebookDocument(({ notebook }) => {
+          if (!checkedNotebooks.has(notebook.uri.toString())) {
+            maybeProposeKernelInstall(notebook);
+          }
+        }),
       );
 
       let channelOpen = false;
