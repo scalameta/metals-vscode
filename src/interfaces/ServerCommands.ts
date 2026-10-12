@@ -72,12 +72,7 @@ export const ServerCommands = {
   DecodeFile: "file-decode",
   /** Retrieve a list of all build targets */
   ListBuildTargets: "list-build-targets",
-  /**
-   * Makes sure a `.ipynb` notebook has a real Jupyter kernel (via Almond)
-   * sharing the classpath of whichever build target its cells currently
-   * resolve against. Takes `{ uri, askBeforeInstall }` and returns the
-   * installed kernel (`{ kernelId, displayName }`) or null.
-   */
+  /** Install or refresh a notebook's Jupyter kernel. Takes `{ uri, askBeforeInstall }`, returns `NotebookKernel` or null. */
   NotebookInstallKernel: "notebook-install-kernel",
   /**
    * Detect the build tool for a workspace and generate the bsp config for the
