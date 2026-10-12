@@ -993,6 +993,10 @@ async function launchMetalsWithServerOptions(
         notebook: NotebookDocument,
         kernel: NotebookKernel,
       ) => {
+        const selectManually = () =>
+          window.showInformationMessage(
+            `Select the '${kernel.displayName}' kernel with "Select Kernel" in the notebook toolbar to run this notebook.`,
+          );
         const metadata = notebook.metadata?.metadata ?? {};
         if (metadata.kernelspec?.name !== kernel.kernelId) {
           const edit = new WorkspaceEdit();
@@ -1009,7 +1013,11 @@ async function launchMetalsWithServerOptions(
               },
             }),
           ]);
-          await workspace.applyEdit(edit);
+          // Without it the picker won't recommend this kernel.
+          if (!(await workspace.applyEdit(edit))) {
+            selectManually();
+            return;
+          }
         }
         try {
           await commands.executeCommand(
@@ -1020,9 +1028,7 @@ async function launchMetalsWithServerOptions(
           outputChannel.appendLine(
             `Could not open the Jupyter kernel picker: ${e}`,
           );
-          window.showInformationMessage(
-            `Select the '${kernel.displayName}' kernel with "Select Kernel" in the notebook toolbar to run this notebook.`,
-          );
+          selectManually();
         }
       };
 
