@@ -694,7 +694,7 @@ async function launchMetalsWithServerOptions(
     ...initializationSettings,
   };
 
-  const protobufLsp = config.get<boolean>("protobufLsp") ?? true;
+  const protobufLsp = config.get<boolean>("protobufLspEnabled") || false;
   const jarFileSystemEnabled = isExperimentalJarFileSystemEnabled();
 
   const clientOptions: LanguageClientOptions = {
