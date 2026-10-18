@@ -366,13 +366,13 @@
           "type": "boolean",
           "default": false,
           "scope": "window",
-          "markdownDescription": "Enable best effort mode for Metals in Scala 3. If enabled, Metals will try to provide most up to date information from the codebase even if it's not compiling."
+          "markdownDescription": "When using Scala 3, use best effort compilation to improve Metals correctness when the workspace doesn't compile. Can be used instead of sourcepath based compilation."
         },
-        "metals.protobufLsp": {
+        "metals.protobufLspEnabled": {
           "type": "boolean",
           "default": true,
           "scope": "window",
-          "markdownDescription": "Enable Metals language server support for Protocol Buffers files. Requires another extension to contribute the `proto` language and reloading the window."
+          "markdownDescription": "If enabled, Metals will act as a Protobuf LSP server. Requires another extension to contribute the `proto` language and reloading the window."
         },
         "metals.experimentalJarFileSystemEnabled": {
           "type": "boolean",
@@ -383,7 +383,7 @@
         "metals.defaultShell": {
           "type": "string",
           "scope": "machine-overridable",
-          "markdownDescription": "Optionally provide a default shell executable to use for build operations."
+          "markdownDescription": "Optionally provide a default shell executable to use for build operations. This allows customizing the shell environment before build execution. When specified, it must be an absolute path to the shell. The configured shell will be used for all build-related subprocesses."
         },
         "metals.serverVersion": {
           "type": "string",
@@ -421,7 +421,7 @@
             "type": "string"
           },
           "default": [],
-          "markdownDescription": "List of packages you'd like to be left out of completions, symbol searches, and code actions.\n\nEx. `akka.actor.typed.javadsl` will ensure nothing in the `javadsl` package gets recommended to you.\n\nYou can find the list of default exclusions [here on the Metals website](https://scalameta.org/metals/docs/editors/user-configuration/#excluded-packages).\n\nIf you need to remove one of the defaults, you can simply include it and preface it with `--`."
+          "markdownDescription": "Packages that will be excluded from completions, imports, and symbol searches.\n\nThis is in addition to some default packages that are already excluded. You can find the list of default exclusions [here on the Metals website](https://scalameta.org/metals/docs/editors/user-configuration/#excluded-packages).\n\nEx. `akka.actor.typed.javadsl` will ensure nothing in the `javadsl` package gets recommended to you.\n\nIf you need to remove one of the defaults, include it and preface it with `--`, for example `--sun`."
         },
         "metals.inlayHints.inferredTypes.enable": {
           "type": "boolean",
@@ -510,18 +510,19 @@
           "items": {
             "type": "string"
           },
-          "markdownDescription": "List of Scalafix rules dependencies in case they are not available by default in Metals and running scalafix fails due to 'rule not found' exception. For example: `com.github.liancheng::organize-imports:0.6.0` which follows the [coursier](https://get-coursier.io/) convention."
+          "default": [],
+          "markdownDescription": "Optional list of Scalafix rules dependencies to use for running `scalafix --rules`. For example: `com.github.liancheng::organize-imports:0.6.0`."
         },
         "metals.scalafixLintEnabled": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "Enable/disable scalafix linting. If enabled, Metals will lint the codebase using scalafix with the currently defined rules."
+          "markdownDescription": "When enabled, Scalafix rules from `.scalafix.conf` will be run on SemanticDB updates and lint diagnostics will be published alongside compiler diagnostics. Only lint diagnostics are shown; no code rewrites are applied."
         },
         "metals.bloopVersion": {
           "type": "string",
           "scope": "machine",
-          "default": "2.1.2",
-          "markdownDescription": "This version will be used for the Bloop build tool plugin, for any supported build tool,while importing in Metals as well as for running the embedded server"
+          "default": "2.1.1",
+          "markdownDescription": "This version will be used for the Bloop build tool plugin, for any supported build tool, while importing in Metals."
         },
         "metals.bloopJvmProperties": {
           "type": "array",
@@ -529,11 +530,12 @@
           "items": {
             "type": "string"
           },
-          "markdownDescription": "Optional list of JVM properties to pass along to the Bloop server. Each property needs to be a separate item.\n\nExample: `-Xmx1G` or `-Xms100M`"
+          "markdownDescription": "Optional list of JVM properties to pass along to the Bloop server. Please follow [this guide](https://scalacenter.github.io/bloop/docs/server-reference#global-settings-for-the-server) for the format. Each property needs to be a separate item. The default is `-Xmx1G`."
         },
         "metals.bloopSbtAlreadyInstalled": {
           "type": "boolean",
-          "markdownDescription": "If true, Metals will not generate a `project/metals.sbt` file under the assumption that sbt-bloop is already manually installed in the sbt build. Build import will fail with a 'not valid command bloopInstall' error in case Bloop is not manually installed in the build when using this option."
+          "default": false,
+          "markdownDescription": "If true, Metals will not generate `metals.sbt` files under the assumption that sbt-bloop is already manually installed in the sbt build. Build import will fail with a 'not valid command bloopInstall' error in case Bloop is not manually installed in the build when using this option."
         },
         "metals.shutdownBloopOnEditorClose": {
           "type": "boolean",
@@ -551,7 +553,7 @@
         "metals.superMethodLensesEnabled": {
           "type": "boolean",
           "default": true,
-          "description": "Enable/disable goto super method code lens."
+          "markdownDescription": "Super method lenses are visible above methods that override another method. Clicking on a lens jumps to the super method definition. Disabled lenses are not calculated for opened documents, which might speed up document processing."
         },
         "metals.enableStripMarginOnTypeFormatting": {
           "type": "boolean",
@@ -561,12 +563,12 @@
         "metals.enableIndentOnPaste": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "When this option is enabled, when user pastes any snippet into a Scala file, Metals will try to adjust the indentation to that of the current cursor."
+          "markdownDescription": "When this option is enabled, when a snippet is pasted into a Scala file, Metals will try to adjust the indentation to that of the current cursor."
         },
         "metals.verboseCompilation": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "If a build server supports it (for example Bloop or Scala CLI), setting it to true will make the logs contain all the possible debugging information including that about incremental compilation in Zinc."
+          "markdownDescription": "If a build server supports it (for example Bloop or Scala CLI), setting it to true will make the logs contain all the possible debugging information, including information about incremental compilation in Zinc."
         },
         "metals.enableSemanticHighlighting": {
           "type": "boolean",
@@ -598,7 +600,7 @@
             "Test Explorer",
             "Code Lenses"
           ],
-          "markdownDescription": "Specifies which UI should be used for tests. `Code lenses` shows virtual text above test class, just like it was previously. `Test explorer` is a new option which shows gutter icons on the left of the file in a less intrusive way. Moreover, this option comes with a new panel called `Testing` which lists all test suites in your codebase and allows you to browse tests and navigate to the file which contains them."
+          "markdownDescription": "Default way of handling tests and test suites. Valid values are `Code Lenses` and `Test Explorer`. See [the test explorer docs](https://scalameta.org/metals/docs/integrations/test-explorer) for information on how to work with the test explorer.\n\n`Code Lenses` shows virtual text above a test class. `Test Explorer` shows gutter icons and a Testing panel that lists test suites in the workspace."
         },
         "metals.testEnvironmentVariables": {
           "type": "object",
@@ -626,7 +628,6 @@
             "2.12.20",
             "2.12.19",
             "2.12.18",
-            "2.11.12",
             "3.8.3",
             "3.8.2",
             "3.8.1",
@@ -635,24 +636,26 @@
             "3.7.3",
             "3.7.2",
             "3.7.1",
+            "3.3.8",
             "3.3.7",
             "3.3.6",
             "3.3.5",
             "3.3.4"
           ],
-          "markdownDescription": "The Scala compiler version that is used as the default or fallback in case a file doesn't belong to any build target or the specified Scala version isn't supported by Metals.\n\nThis applies to standalone Scala files, worksheets, and Scala CLI scripts.\n\n The `automatic` value means that the Scala version for these files will be inferred from the highest supported Scala version in your projects build definition"
+          "markdownDescription": "The Scala compiler version that is used as the default or fallback in case a file doesn't belong to any build target or the specified Scala version isn't supported by Metals. This applies to standalone Scala files, worksheets, and Scala CLI scripts.\n\nThe `automatic` value means that the Scala version for these files will be inferred from the highest supported Scala version in your project's build definition."
         },
-        "metals.javaFormat.eclipseConfigPath": {
+        "metals.eclipseFormat.configPath": {
           "type": "string",
-          "markdownDescription": "Optional custom path to the eclipse-formatter.xml file.\n\nShould be an absolute path and use forward slashes `/` for file separators (even on Windows)."
+          "markdownDescription": "Optional custom path to the eclipse-formatter.xml file. It should be a path (relative or absolute, though an absolute path is recommended) and use forward slashes `/` for file separators (even on Windows)."
         },
-        "metals.javaFormat.eclipseProfile": {
+        "metals.eclipseFormat.profile": {
           "type": "string",
-          "markdownDescription": "Optional Eclipse format profile to use."
+          "default": "GoogleStyle",
+          "markdownDescription": "If the Eclipse formatter file contains more than one profile, this option can be used to control which is used."
         },
         "metals.scalaCliLauncher": {
           "type": "string",
-          "markdownDescription": "Optional path to Scala CLI launcher to use."
+          "markdownDescription": "Optional absolute path to a `scala-cli` executable to use for running a Scala CLI BSP server. By default, Metals uses the `scala-cli` from the PATH, or if it's not found, downloads and runs Scala CLI on the JVM (slower than native Scala CLI). Update this if you want to use a custom Scala CLI launcher that is not available in PATH."
         },
         "metals.suggestLatestUpgrade": {
           "type": "string",
@@ -672,7 +675,7 @@
         "metals.defaultBspToBuildTool": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "Default to using build tool as your build server."
+          "markdownDescription": "If your build tool can also serve as a build server, default to using it instead of Bloop."
         },
         "metals.autoImportBuilds": {
           "type": "string",
@@ -682,12 +685,292 @@
             "initial",
             "all"
           ],
+          "enumDescriptions": [
+            "Prompt before importing a build.",
+            "Automatically import a build only when a project is first opened.",
+            "Automatically import a build on startup and after subsequent changes."
+          ],
           "markdownDescription": "Automatically import builds rather than prompting the user to choose. `initial` will only automatically import a build when a project is first opened, `all` will automate build imports after subsequent changes as well."
         },
         "metals.startMcpServer": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "If Metals should start an HTTP Model Context Protocol server, that can be used by AI tools to provide better context about the codebase. Needs to be enabled in the client as well."
+          "markdownDescription": "If Metals should start the MCP server that an AI agent can connect to. The server speaks HTTP and can be used by AI tools to provide better context about the codebase. It also needs to be enabled in the client."
+        },
+        "metals.symbolPrefixes": {
+          "type": "object",
+          "default": {},
+          "additionalProperties": {
+            "type": "string"
+          },
+          "markdownDescription": "Prefix replacements used when printing symbols. You can replace package names with shorter ones to make them more readable.\n\nExample: `{ \"scala/\": \"scala-standard.\" }`."
+        },
+        "metals.shimGlobs": {
+          "type": "object",
+          "default": {},
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "markdownDescription": "Named groups of file glob patterns used to detect shim files in the presentation compiler. Entries follow the `glob` syntax of `FileSystem.getPathMatcher`, for example `**/shims.scala` to match all `shims.scala` files in the workspace. Values from all groups are combined into a single list.\n\nExample: `{ \"default\": [\"shims.scala\", \"**/shims/*.scala\"] }`."
+        },
+        "metals.gotoTestLensesEnabled": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Show code lenses that jump to tests."
+        },
+        "metals.rangeFormattingProviders": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "scalafmt"
+            ]
+          },
+          "default": [
+            "scalafmt"
+          ],
+          "uniqueItems": true,
+          "markdownDescription": "Providers used for range formatting. Valid values are `scalafmt`."
+        },
+        "metals.worksheetCancelTimeout": {
+          "type": "number",
+          "default": 4,
+          "minimum": 0,
+          "markdownDescription": "Seconds to wait before offering to cancel a worksheet."
+        },
+        "metals.javaFormatter": {
+          "type": "string",
+          "default": "googleJavaFormat",
+          "enum": [
+            "eclipse",
+            "googleJavaFormat",
+            "none"
+          ],
+          "enumDescriptions": [
+            "Use the Eclipse Java formatter.",
+            "Use Google Java Format.",
+            "Disable Java formatting."
+          ],
+          "markdownDescription": "The Java formatter to use. Valid values are `eclipse`, `googleJavaFormat`, or `none`. If `none` is specified, Java formatting will be disabled."
+        },
+        "metals.scalaCliEnabled": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "When enabled, Metals starts a Scala CLI server for standalone files."
+        },
+        "metals.targetBuildTool": {
+          "type": "string",
+          "default": "none",
+          "enum": [
+            "sbt",
+            "gradle",
+            "mvn",
+            "mill",
+            "scala-cli",
+            "bazel",
+            "deder",
+            "none"
+          ],
+          "markdownDescription": "The preferred build tool to use when multiple build definitions are detected in the workspace. This prevents the build tool selection dialog from appearing on startup. Valid values are `sbt`, `gradle`, `mvn`, `mill`, `scala-cli`, `bazel`, `deder`, and `none`."
+        },
+        "metals.presentationCompilerDiagnostics": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Show presentation compiler errors and warnings as you type. This gives a much faster feedback loop but may show incorrect or incomplete error messages. Only supported in Scala 2."
+        },
+        "metals.buildChangedAction": {
+          "type": "string",
+          "default": "none",
+          "enum": [
+            "none",
+            "prompt"
+          ],
+          "enumDescriptions": [
+            "Do nothing when build files change.",
+            "Prompt when build files change."
+          ],
+          "markdownDescription": "What to do when build files change. Valid values are `none` and `prompt`."
+        },
+        "metals.buildOnChange": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "If enabled, Metals will automatically build the project when a file changes."
+        },
+        "metals.buildOnFocus": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "If enabled, Metals will automatically build the project when a file is focused (opened)."
+        },
+        "metals.preferredBuildServer": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "If set, Metals will prefer the specified build server when available instead of prompting the user."
+        },
+        "metals.workspaceSymbolProvider": {
+          "type": "string",
+          "default": "mbt",
+          "enum": [
+            "bsp",
+            "mbt"
+          ],
+          "enumDescriptions": [
+            "Index sources from the BSP server.",
+            "Index sources from the git repository without requiring BSP."
+          ],
+          "markdownDescription": "The workspace symbol provider to use. Valid values are `bsp` and `mbt`.\n\n- `bsp`: The classic solution that only indexes sources from the BSP server.\n- `mbt`: A BSP-free solution that indexes sources from the git repository."
+        },
+        "metals.definitionProviders": {
+          "type": "string",
+          "default": "all",
+          "enum": [
+            "mbt",
+            "protobuf",
+            "all"
+          ],
+          "markdownDescription": "Definition providers. Valid values are `mbt`, `protobuf`, and `all`. By default all are enabled."
+        },
+        "metals.javaSymbolLoader": {
+          "type": "string",
+          "default": "turbine-classpath",
+          "enum": [
+            "turbine-classpath",
+            "javac-sourcepath"
+          ],
+          "enumDescriptions": [
+            "Load Java symbols from the Turbine classpath.",
+            "Load Java symbols from the Java source path."
+          ],
+          "markdownDescription": "Java symbol loader to use when loading Java symbols in the Java presentation compiler.\n\n- `turbine-classpath`: Loads Java symbols from the Turbine classpath.\n- `javac-sourcepath`: Loads Java symbols from the Java source path."
+        },
+        "metals.javaTurbineRecompileDelay": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Delay before Turbine recompiles changed Java sources.\n\nExample: `1 minute`."
+        },
+        "metals.javaTurbineCache": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Persist Turbine compilation results between restarts."
+        },
+        "metals.compilerProgress": {
+          "type": "string",
+          "default": "enabled",
+          "enum": [
+            "enabled",
+            "disabled"
+          ],
+          "markdownDescription": "Compiler progress bars. Valid values are `enabled` and `disabled`."
+        },
+        "metals.referenceProvider": {
+          "type": "string",
+          "default": "mbt",
+          "enum": [
+            "bsp",
+            "mbt"
+          ],
+          "enumDescriptions": [
+            "Index sources based on SemanticDB documents.",
+            "Index sources from the git repository when SemanticDB documents are not available."
+          ],
+          "markdownDescription": "Reference provider to use when providing references to symbols in the presentation compiler.\n\n- `bsp`: The classic solution that only indexes sources based on SemanticDB documents.\n- `mbt`: A BSP-free solution that indexes sources from the git repository when SemanticDB documents are not available."
+        },
+        "metals.additionalPcChecks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "refchecks"
+            ]
+          },
+          "default": [],
+          "uniqueItems": true,
+          "markdownDescription": "Additional compiler phases to run in the presentation compiler. Valid values are `refchecks`. When `refchecks` is included, the presentation compiler will run the RefChecks phase for additional type checking diagnostics."
+        },
+        "metals.scalaImportsPlacement": {
+          "type": "string",
+          "default": "smart",
+          "enum": [
+            "append-last",
+            "smart"
+          ],
+          "enumDescriptions": [
+            "Append imports at the end of the import block.",
+            "Place imports based on prefix matching and alphabetical order."
+          ],
+          "markdownDescription": "Where to place new Scala imports. Valid values are `append-last` and `smart`.\n\n- `append-last`: Append imports at the end of the import block.\n- `smart`: Place imports intelligently based on prefix matching and alphabetical order."
+        },
+        "metals.batchSemanticdbCompilerInstances": {
+          "type": "number",
+          "default": 1,
+          "minimum": 1,
+          "markdownDescription": "Number of compiler instances used when generating SemanticDB in batch. This is useful to speed up SemanticDB generation when there are many files to process."
+        },
+        "metals.promptBuildImport": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "If enabled, Metals will prompt you to import or connect to a build server when a new workspace is detected. When disabled, you can still manually trigger import via the \"Import build\" command."
+        },
+        "metals.mcpClient": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Used when the client you are using does not match the editor, or when you also want an extra MCP config generated. For example, set this to `claude` if you use Claude Code in the terminal while Metals is running.\n\nMetals generates an extra config when it supports the client you pass in, and still generates the config for your editor when that is also supported."
+        },
+        "metals.mbt.importGeneratedSources": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "If enabled, Metals will try to find the sources generated by the build tool during MBT import and include them as unchecked sources."
+        },
+        "metals.mbt.semanticdbCacheEnabled": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "If enabled, Metals will persist SemanticDB documents to disk in the `.metals/semanticdb-cache` directory. This can improve performance for find references and implementations in MBT mode by avoiding recalculating SemanticDB when files have not changed."
+        },
+        "metals.mbt.semanticdbCacheMaxSize": {
+          "type": "number",
+          "default": 2147483647,
+          "minimum": 0,
+          "markdownDescription": "Maximum number of SemanticDB documents to keep in the in-memory cache. When this limit is exceeded, the least recently used documents are evicted."
+        },
+        "metals.mbt.referencesTimeoutSeconds": {
+          "type": "number",
+          "default": 20,
+          "minimum": 0,
+          "markdownDescription": "Number of seconds to wait for references operations in MBT mode."
+        },
+        "metals.fallbackClasspath": {
+          "type": "string",
+          "default": "default",
+          "enum": [
+            "none",
+            "all3rdparty",
+            "guessed",
+            "mbt",
+            "default"
+          ],
+          "enumDescriptions": [
+            "Do not use a fallback classpath.",
+            "Use all third-party dependencies.",
+            "Experimental. Try to guess the classpath based on the workspace.",
+            "Use the MBT classpath.",
+            "Use both MBT and all third-party dependencies."
+          ],
+          "markdownDescription": "Fallback classpath providers. Valid values are `none`, `all3rdparty`, `guessed`, `mbt`, and `default`. `default` includes both MBT and all third-party dependencies. `guessed` is experimental and tries to guess the classpath based on the workspace."
+        },
+        "metals.fallbackSourcepath": {
+          "type": "string",
+          "default": "allSources",
+          "enum": [
+            "allSources",
+            "none"
+          ],
+          "enumDescriptions": [
+            "Use all sources in the workspace.",
+            "Do not use any sources outside of existing build targets."
+          ],
+          "markdownDescription": "Fallback sourcepath to use for sources outside of existing build targets.\n\n- `allSources`: Use all sources in the workspace.\n- `none`: Do not use any sources outside of existing build targets."
         },
         "metals.trace.server": {
           "type": "string",
