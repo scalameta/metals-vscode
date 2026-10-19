@@ -32,7 +32,9 @@ export function buildDocumentSelector({
   if (protobuf) {
     documentSelector.push(
       { scheme: "file", language: "proto" },
+      { scheme: "file", language: "proto3" },
       { scheme: "jar", language: "proto" },
+      { scheme: "jar", language: "proto3" },
     );
     if (jarFileSystem) {
       documentSelector.push({ scheme: "jar-fs", language: "proto" });

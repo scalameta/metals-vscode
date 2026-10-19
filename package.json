@@ -179,6 +179,24 @@
         }
       },
       {
+        "id": "proto",
+        "extensions": [
+          ".proto"
+        ],
+        "aliases": [
+          "Protocol Buffers"
+        ]
+      },
+      {
+        "id": "prototext",
+        "extensions": [
+          ".prototext"
+        ],
+        "aliases": [
+          "Protocol Buffers Text"
+        ]
+      },
+      {
         "id": "twirl-xml",
         "aliases": [
           "Twirl XML"
@@ -293,6 +311,11 @@
         "embeddedLanguages": {
           "source.js": "javascript"
         }
+      },
+      {
+        "language": "proto",
+        "scopeName": "source.proto.metals",
+        "path": "./syntaxes/proto.json"
       }
     ],
     "configurationDefaults": {
@@ -372,7 +395,7 @@
           "type": "boolean",
           "default": true,
           "scope": "window",
-          "markdownDescription": "Enable Metals language server support for Protocol Buffers files. Requires another extension to contribute the `proto` language and reloading the window."
+          "markdownDescription": "Enable Metals language server support for Protocol Buffers files. Metals contributes the `proto` language id. Syntax highlighting is delegated to a `source.proto` grammar from another extension, such as vscode-proto3. Requires reloading the window."
         },
         "metals.experimentalJarFileSystemEnabled": {
           "type": "boolean",

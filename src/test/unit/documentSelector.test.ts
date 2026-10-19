@@ -39,7 +39,9 @@ describe("buildDocumentSelector", () => {
       [
         ...baseSelector,
         { scheme: "file", language: "proto" },
+        { scheme: "file", language: "proto3" },
         { scheme: "jar", language: "proto" },
+        { scheme: "jar", language: "proto3" },
       ],
     );
   });
@@ -69,7 +71,9 @@ describe("buildDocumentSelector", () => {
       [
         ...baseSelector,
         { scheme: "file", language: "proto" },
+        { scheme: "file", language: "proto3" },
         { scheme: "jar", language: "proto" },
+        { scheme: "jar", language: "proto3" },
         { scheme: "file", language: "prototext" },
         { scheme: "jar", language: "prototext" },
       ],
@@ -87,7 +91,9 @@ describe("buildDocumentSelector", () => {
         ...baseSelector,
         ...jarFsSelector,
         { scheme: "file", language: "proto" },
+        { scheme: "file", language: "proto3" },
         { scheme: "jar", language: "proto" },
+        { scheme: "jar", language: "proto3" },
         { scheme: "jar-fs", language: "proto" },
         { scheme: "file", language: "prototext" },
         { scheme: "jar", language: "prototext" },

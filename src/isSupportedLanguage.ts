@@ -7,6 +7,9 @@ export function isSupportedLanguage(languageId: string): boolean {
   switch (languageId) {
     case "scala":
     case "sc":
+    case "proto":
+    case "proto3":
+    case "prototext":
     case "java":
     case "twirl-html":
     case "twirl-xml":
