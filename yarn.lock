@@ -707,15 +707,15 @@
     "@sinonjs/commons" "^3.0.1"
     type-detect "^4.1.0"
 
-"@sourcegraph/scip-typescript@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@sourcegraph/scip-typescript/-/scip-typescript-0.4.0.tgz#0ec6ae61fc116a9ed33cd57197693c0cfcce6aa0"
-  integrity sha512-k+AtsrqmS41Sd5qjkZlHcmvoSQIvBOonRj4jpgp0KNFM6aqvMGpdSuPUqrUcg8ENTKjUbfaUVszgQwq3bCOvwA==
+"@sourcegraph/scip-typescript@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@sourcegraph/scip-typescript/-/scip-typescript-0.5.2.tgz#f9e1da881ea2e47487fe23417545bc75ae104bfb"
+  integrity sha512-zfN0gbIT1DPX3XgQ6LfGwrvqj//cC2MsPEnwbSBQbOrhFVBojxze3MhrybixqdiYBMq33ez833h9EVcdWWB75w==
   dependencies:
-    commander "^12.1.0"
-    google-protobuf "^3.21.4"
+    commander "^14.0.3"
+    google-protobuf "^4.0.2"
     progress "^2.0.3"
-    typescript "^5.6.2"
+    typescript "^6.0.3"
 
 "@tybys/wasm-util@^0.9.0":
   version "0.9.0"
@@ -1979,10 +1979,10 @@ globalthis@^1.0.2:
     define-properties "^1.2.1"
     gopd "^1.0.1"
 
-google-protobuf@^3.21.4:
-  version "3.21.4"
-  resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.21.4.tgz#2f933e8b6e5e9f8edde66b7be0024b68f77da6c9"
-  integrity sha512-MnG7N936zcKTco4Jd2PX2U96Kf9PxygAPKBug+74LHzmHXmceN16MmRcdgZv+DGef/S9YvQAfRsNCn4cjf9yyQ==
+google-protobuf@^4.0.2:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-4.0.3.tgz#10894e7dccf3b3cd5338922da0e1366f81987163"
+  integrity sha512-DI6iiRmF8fE/EzvGK5F9b8RxZeumHC2AAhi3xwOEh+GT5eRhJeW1aOtkDxn0W7cVCFQAtwK+ZDwIO1BYz+9WMA==
 
 gopd@^1.0.1, gopd@^1.2.0:
   version "1.2.0"
@@ -3305,15 +3305,10 @@ typed-rest-client@^1.8.11, typed-rest-client@^1.8.4:
     tunnel "0.0.6"
     underscore "^1.12.1"
 
-typescript@6.0.3:
+typescript@6.0.3, typescript@^6.0.3:
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-6.0.3.tgz#90251dc007916e972786cb94d74d15b185577d21"
   integrity sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==
-
-typescript@^5.6.2:
-  version "5.9.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.9.3.tgz#5b4f59e15310ab17a216f5d6cf53ee476ede670f"
-  integrity sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==
 
 uglify-js@^3.1.4:
   version "3.19.3"
