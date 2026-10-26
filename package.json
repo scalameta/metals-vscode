@@ -1450,7 +1450,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.7",
     "@eslint/js": "^10.0.1",
-    "@sourcegraph/scip-typescript": "^0.4.0",
+    "@sourcegraph/scip-typescript": "^0.5.2",
     "@types/chai": "^5.2.3",
     "@types/js-yaml": "4.0.9",
     "@types/marked": "^6.0.0",
