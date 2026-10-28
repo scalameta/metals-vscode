@@ -1459,7 +1459,7 @@
     "@types/node-fetch": "^2.6.13",
     "@types/semver": "^7.8.0",
     "@types/shell-quote": "^1.6.1",
-    "@types/sinon": "^22.0.0",
+    "@types/sinon": "^22.0.2",
     "@types/vscode": "1.89.0",
     "@types/yauzl": "^3.4.0",
     "@typescript-eslint/eslint-plugin": "^8.72.0",
