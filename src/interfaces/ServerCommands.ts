@@ -72,6 +72,8 @@ export const ServerCommands = {
   DecodeFile: "file-decode",
   /** Retrieve a list of all build targets */
   ListBuildTargets: "list-build-targets",
+  /** Install or refresh a notebook's Jupyter kernel. Takes `{ uri, askBeforeInstall }`, returns `NotebookKernel` or null. */
+  NotebookInstallKernel: "notebook-install-kernel",
   /**
    * Detect the build tool for a workspace and generate the bsp config for the
    * build tool. If there are multiple build tools for a workspace ,the user

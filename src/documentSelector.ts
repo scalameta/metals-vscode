@@ -20,6 +20,7 @@ export function buildDocumentSelector({
     { scheme: "file", language: "twirl-txt" },
     { scheme: "jar", language: "scala" },
     { scheme: "jar", language: "java" },
+    { notebook: "*", language: "scala" },
   ];
 
   if (jarFileSystem) {

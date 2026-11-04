@@ -712,6 +712,11 @@
           "default": false,
           "markdownDescription": "If Metals should start an HTTP Model Context Protocol server, that can be used by AI tools to provide better context about the codebase. Needs to be enabled in the client as well."
         },
+        "metals.notebookAlmondVersion": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Overrides the Almond version used to install a Jupyter kernel for a notebook (`Metals: Install Jupyter kernel for notebook`). Almond's supported Scala versions vary by release, so override this if the version bundled with Metals doesn't support your project's Scala version."
+        },
         "metals.trace.server": {
           "type": "string",
           "enum": [
@@ -777,6 +782,11 @@
         "command": "metals.build-import",
         "category": "Metals",
         "title": "Import build"
+      },
+      {
+        "command": "metals.notebook-install-kernel",
+        "category": "Metals",
+        "title": "Install Jupyter kernel for notebook"
       },
       {
         "command": "metals.build-connect",
