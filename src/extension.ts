@@ -1070,10 +1070,11 @@ async function launchMetalsWithServerOptions(
         if (!kernel) {
           await setPickPending(notebook, false);
         } else if (kernel.newlyInstalled) {
-          installedThisWindow.add(uri);
+          installedThisWindow.add(kernel.kernelId);
           await setPickPending(notebook, true);
           await offerReload(kernel);
-        } else if (installedThisWindow.has(uri)) {
+        } else if (installedThisWindow.has(kernel.kernelId)) {
+          await setPickPending(notebook, true);
           if (fromCommand) {
             await offerReload(kernel);
           }
