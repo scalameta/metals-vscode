@@ -3,6 +3,6 @@ export interface NotebookKernel {
   /** The kernelspec's directory name, as Jupyter lists it. */
   kernelId: string;
   displayName: string;
-  /** True if the kernel didn't exist before this install. */
+  /** True if this call installed or updated the kernelspec, which Jupyter only sees after a reload. */
   newlyInstalled: boolean;
 }

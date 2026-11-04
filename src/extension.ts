@@ -1046,7 +1046,7 @@ async function launchMetalsWithServerOptions(
       const offerReload = async (kernel: NotebookKernel) => {
         const reload = "Reload Window";
         const choice = await window.showInformationMessage(
-          `Installed Jupyter kernel '${kernel.displayName}'. Reload the window so Jupyter can find it.`,
+          `Installed or updated Jupyter kernel '${kernel.displayName}'. Reload the window so Jupyter can find it.`,
           reload,
         );
         if (choice === reload) {
