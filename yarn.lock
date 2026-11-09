@@ -741,10 +741,10 @@
     "@sinonjs/commons" "^3.0.1"
     type-detect "^4.1.0"
 
-"@sourcegraph/scip-typescript@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@sourcegraph/scip-typescript/-/scip-typescript-0.6.0.tgz#b5d67911e08606295bc287167e4a83c33409ed95"
-  integrity sha512-x+DseP0Z5GMqAg8GtBTeVZ/4DXb7d38M1f9TVHZ/KBTbe9XJxrZjtdqHF5Uwnu0M5s1kwE49Ty8pbLxrMH+Fbw==
+"@sourcegraph/scip-typescript@^0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@sourcegraph/scip-typescript/-/scip-typescript-0.6.1.tgz#4086af0fbae817f2a418be619b92f536c805d978"
+  integrity sha512-qzwShoo4+KKweXiok3bnJ9cE56e3t6LphsggHEPh9vqk9wFa0ND3Dx9K7mE1Qv+DxLKRxeoD6/wfqc7kSskLiA==
   dependencies:
     "@jridgewell/trace-mapping" "^0.3.31"
     commander "^15.0.0"
