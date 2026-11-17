@@ -134,6 +134,11 @@
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.29.7.tgz#12022450c45a4da6d8d8287b18a4ff2ddb23f768"
   integrity sha512-Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw==
 
+"@bufbuild/protobuf@^2.11.0", "@bufbuild/protobuf@^2.17.0":
+  version "2.17.0"
+  resolved "https://registry.yarnpkg.com/@bufbuild/protobuf/-/protobuf-2.17.0.tgz#231e87fc12d859bf95166890e9cebd64ac362810"
+  integrity sha512-hcPkSz6D7MiTU/5VBBhK+kxaYDoOdQ6yJRFJ3kS8Nydp+VZXfg1vrpABKPNod8bXMufsVCmiUJVIKFzCzta4uw==
+
 "@cacheable/memory@^2.2.0":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@cacheable/memory/-/memory-2.2.0.tgz#72aeb8b051f6d597d10ac8595b94ad8302bd2239"
@@ -684,6 +689,13 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
+"@scip-code/scip@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@scip-code/scip/-/scip-0.10.0.tgz#0bdf9a226797314e4d9233abafb8b987bfe185f5"
+  integrity sha512-tAQfyCv/Kap1XS3Xw/30JVxUfhmWCvfuIa7SOVOiY7xuUQhCa5A7SfevKVWzzB+6wxVo0rC+jUYSjwSP1YnvKw==
+  dependencies:
+    "@bufbuild/protobuf" "^2.11.0"
+
 "@secretlint/core@^10.2.2":
   version "10.2.2"
   resolved "https://registry.yarnpkg.com/@secretlint/core/-/core-10.2.2.tgz#cd41d5c27ba07c217f0af4e0e24dbdfe5ef62042"
@@ -746,17 +758,18 @@
     "@sinonjs/commons" "^3.0.1"
     type-detect "^4.1.0"
 
-"@sourcegraph/scip-typescript@^0.6.1":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@sourcegraph/scip-typescript/-/scip-typescript-0.6.1.tgz#4086af0fbae817f2a418be619b92f536c805d978"
-  integrity sha512-qzwShoo4+KKweXiok3bnJ9cE56e3t6LphsggHEPh9vqk9wFa0ND3Dx9K7mE1Qv+DxLKRxeoD6/wfqc7kSskLiA==
+"@sourcegraph/scip-typescript@^0.6.2":
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/@sourcegraph/scip-typescript/-/scip-typescript-0.6.2.tgz#9fa4f81a76d56beaac633da8622ef6dbe08cdffb"
+  integrity sha512-ABean4n8irltY8YAsaJXaJT2QnsM5ZwYjZXiL028HTrbUoAvw+BsIn3rN09lMhl8qH5EgZoq5is6Ux5odP8JMA==
   dependencies:
+    "@bufbuild/protobuf" "^2.17.0"
     "@jridgewell/trace-mapping" "^0.3.31"
-    commander "^15.0.0"
-    google-protobuf "^4.0.3"
+    "@scip-code/scip" "^0.10.0"
+    commander "^15.1.0"
     progress "^2.0.3"
     svelte "^5.57.3"
-    svelte2tsx "^0.7.62"
+    svelte2tsx "^0.7.63"
     typescript "^6.0.3"
 
 "@sveltejs/acorn-typescript@^1.0.13":
@@ -1406,10 +1419,10 @@ commander@^14.0.3:
   resolved "https://registry.yarnpkg.com/commander/-/commander-14.0.3.tgz#425d79b48f9af82fcd9e4fc1ea8af6c5ec07bbc2"
   integrity sha512-H+y0Jo/T1RZ9qPP4Eh1pkcQcLRglraJaSLoyOtHxu6AapkjWVCy2Sit1QQ4x3Dng8qDlSsZEet7g5Pq06MvTgw==
 
-commander@^15.0.0:
-  version "15.0.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-15.0.0.tgz#96f3961f12adac1799ef3fbd8bc61d40572d1b11"
-  integrity sha512-z67u4ZhzCL/Tydu1lJARtEZYWbWaN7oYLHbsuzocr6y4N6WZAagG3RQ4FW61V1/0+jImpj293XfrcYnd1qxtPg==
+commander@^15.1.0:
+  version "15.1.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-15.1.0.tgz#397e6a353fda8e9d4e1eb9e3c0c28644cfd69406"
+  integrity sha512-cgnQ88TRrWcC7pVq46RzJVRMktu3W2RcbnoidnfBsl1bmDCBwJS/udcIZpKoCrbAYYaCqsz1yZCVIgbIaU3ddQ==
 
 compare-func@^2.0.0:
   version "2.0.0"
@@ -2079,11 +2092,6 @@ globalthis@^1.0.2:
   dependencies:
     define-properties "^1.2.1"
     gopd "^1.0.1"
-
-google-protobuf@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-4.0.3.tgz#10894e7dccf3b3cd5338922da0e1366f81987163"
-  integrity sha512-DI6iiRmF8fE/EzvGK5F9b8RxZeumHC2AAhi3xwOEh+GT5eRhJeW1aOtkDxn0W7cVCFQAtwK+ZDwIO1BYz+9WMA==
 
 gopd@^1.0.1, gopd@^1.2.0:
   version "1.2.0"
@@ -3304,7 +3312,7 @@ supports-color@^8.1.1:
   dependencies:
     has-flag "^4.0.0"
 
-svelte2tsx@^0.7.62:
+svelte2tsx@^0.7.63:
   version "0.7.63"
   resolved "https://registry.yarnpkg.com/svelte2tsx/-/svelte2tsx-0.7.63.tgz#2ba0412e2b185c09e8e7fb56f153366c041c2382"
   integrity sha512-gRgz/V6wOx0NDZhm6OMD2VIh+/HrgZc3k6ibX93rkNPEkWNn/P3Uhb1fYCqOrimEUpQd8r65dhiHZIJXSQBeow==
