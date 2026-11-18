@@ -1468,7 +1468,7 @@
     "@vscode/vsce": "^4.1.1",
     "chai": "^6.3.0",
     "conventional-changelog-cli": "5.0.0",
-    "eslint": "^10.14.0",
+    "eslint": "^10.15.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-mocha": "^12.0.2",
     "mocha": "^11.8.0",
