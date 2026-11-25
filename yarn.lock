@@ -3524,11 +3524,6 @@ version-range@^4.13.0:
   resolved "https://registry.yarnpkg.com/version-range/-/version-range-4.14.0.tgz#91c12e4665756a9101d1af43faeda399abe0edec"
   integrity sha512-gjb0ARm9qlcBAonU4zPwkl9ecKkas+tC2CGwFfptTCWWIVTWY1YUbT2zZKsOAF1jR/tNxxyLwwG0cb42XlYcTg==
 
-vscode-jsonrpc@10.0.0:
-  version "10.0.0"
-  resolved "https://registry.yarnpkg.com/vscode-jsonrpc/-/vscode-jsonrpc-10.0.0.tgz#c83aa2fb5eb0529cd11022dbd82d8e7c6ad6ddfa"
-  integrity sha512-USSfxg0vDIpTQqlQBGxF3mBARyoS8cU7LHLpbYNh6dOJt32dlskxPWB0Irrh5TllTmyf7oNLAvqDqzklbwwnpA==
-
 vscode-jsonrpc@10.0.1:
   version "10.0.1"
   resolved "https://registry.yarnpkg.com/vscode-jsonrpc/-/vscode-jsonrpc-10.0.1.tgz#989ae6f2fbf14afdfd82b5f49009fe389121930d"
@@ -3544,14 +3539,6 @@ vscode-languageclient@11.0.1:
     vscode-languageserver-protocol "3.18.6"
     vscode-languageserver-textdocument "1.0.16"
 
-vscode-languageserver-protocol@3.18.5:
-  version "3.18.5"
-  resolved "https://registry.yarnpkg.com/vscode-languageserver-protocol/-/vscode-languageserver-protocol-3.18.5.tgz#7523315286e18037d95fb3c9ce0520fda92ad893"
-  integrity sha512-FW4fBMzZ99N8xeob4py0l050wgCoRgTpEq5Xcsb9lM1bc29UKGR/wSV+4knaqFxssFHajy7OzNiKP/m3U1ZEuA==
-  dependencies:
-    vscode-jsonrpc "10.0.0"
-    vscode-languageserver-types "3.18.5"
-
 vscode-languageserver-protocol@3.18.6:
   version "3.18.6"
   resolved "https://registry.yarnpkg.com/vscode-languageserver-protocol/-/vscode-languageserver-protocol-3.18.6.tgz#8920420610c8e0fca17a9949fca441d530f3b274"
@@ -3564,11 +3551,6 @@ vscode-languageserver-textdocument@1.0.16:
   version "1.0.16"
   resolved "https://registry.yarnpkg.com/vscode-languageserver-textdocument/-/vscode-languageserver-textdocument-1.0.16.tgz#10e752aa1deec8da4a4eb421669ad73a9bf69bc8"
   integrity sha512-qeNEuOi9a3qkqRf7Gfez2WL2VwlBTLCNekHBGO9kxPVUp9XuY15yfTJ9jwvOwKI0I2MhUUfZq95NSp+LK1CLQg==
-
-vscode-languageserver-types@3.18.5:
-  version "3.18.5"
-  resolved "https://registry.yarnpkg.com/vscode-languageserver-types/-/vscode-languageserver-types-3.18.5.tgz#b1a0555fa9bf75dd6e4ea211c732916b531ed37f"
-  integrity sha512-kPd6+JQNz3HMJvjKlqUxERSlZHAntl/aGpsk7ImwIh0ewDKDcjgAEyVSYciPiOJD3ftbK9IrfiqUeTZLSbCizw==
 
 vscode-languageserver-types@3.18.6:
   version "3.18.6"
