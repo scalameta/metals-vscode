@@ -10,6 +10,7 @@ const baseSelector = [
   { scheme: "file", language: "twirl-txt" },
   { scheme: "jar", language: "scala" },
   { scheme: "jar", language: "java" },
+  { notebook: "*", language: "scala" },
 ];
 
 const jarFsSelector = [
